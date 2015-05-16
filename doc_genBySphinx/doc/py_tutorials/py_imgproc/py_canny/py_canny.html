@@ -1,0 +1,270 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Canny Edge Detection &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../../index.html" />
+    <link rel="up" title="Image Processing in OpenCV" href="../py_table_of_contents_imgproc/py_table_of_contents_imgproc.html" />
+    <link rel="next" title="Image Pyramids" href="../py_pyramids/py_pyramids.html" />
+    <link rel="prev" title="Image Gradients" href="../py_gradients/py_gradients.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py_pyramids/py_pyramids.html" title="Image Pyramids"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../py_gradients/py_gradients.html" title="Image Gradients"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_imgproc/py_table_of_contents_imgproc.html" accesskey="U">Image Processing in OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Canny Edge Detection</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#theory">Theory</a></li>
+<li><a class="reference internal" href="#canny-edge-detection-in-opencv">Canny Edge Detection in OpenCV</a></li>
+<li><a class="reference internal" href="#additional-resources">Additional Resources</a></li>
+<li><a class="reference internal" href="#exercises">Exercises</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../py_gradients/py_gradients.html"
+                        title="previous chapter">Image Gradients</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../py_pyramids/py_pyramids.html"
+                        title="next chapter">Image Pyramids</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="canny-edge-detection">
+<span id="canny"></span><h1>Canny Edge Detection<a class="headerlink" href="#canny-edge-detection" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this chapter, we will learn about</p>
+<blockquote>
+<div><ul class="simple">
+<li>Concept of Canny edge detection</li>
+<li>OpenCV functions for that : <strong>cv2.Canny()</strong></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<p>Canny Edge Detection is a popular edge detection algorithm. It was developed by John F. Canny in 1986. It is a multi-stage algorithm and we will go through each stages.</p>
+<ol class="arabic simple">
+<li><strong>Noise Reduction</strong></li>
+</ol>
+<p>Since edge detection is susceptible to noise in the image, first step is to remove the noise in the image with a 5x5 Gaussian filter. We have already seen this in previous chapters.</p>
+<ol class="arabic simple" start="2">
+<li><strong>Finding Intensity Gradient of the Image</strong></li>
+</ol>
+<p>Smoothened image is then filtered with a Sobel kernel in both horizontal and vertical direction to get first derivative in horizontal direction (<span class="math">G_x</span>) and vertical direction (<span class="math">G_y</span>). From these two images, we can find edge gradient and direction for each pixel as follows:</p>
+<div class="math">
+<p><span class="math">Edge\_Gradient \; (G) = \sqrt{G_x^2 + G_y^2}
+
+Angle \; (\theta) = \tan^{-1} \bigg(\frac{G_y}{G_x}\bigg)</span></p>
+</div><p>Gradient direction is always perpendicular to edges. It is rounded to one of four angles representing vertical, horizontal and two diagonal directions.</p>
+<ol class="arabic simple" start="3">
+<li><strong>Non-maximum Suppression</strong></li>
+</ol>
+<p>After getting gradient magnitude and direction, a full scan of image is done to remove any unwanted pixels which may not constitute the edge. For this, at every pixel, pixel is checked if it is a local maximum in its neighborhood in the direction of gradient. Check the image below:</p>
+<blockquote>
+<div><img alt="Non-Maximum Suppression" class="align-center" src="../../../../_images/nms.jpg" />
+</div></blockquote>
+<p>Point A is on the edge ( in vertical direction). Gradient direction is normal to the edge. Point B and C are in gradient directions. So point A is checked with point B and C to see if it forms a local maximum. If so, it is considered for next stage, otherwise, it is suppressed ( put to zero).</p>
+<p>In short, the result you get is a binary image with &#8220;thin edges&#8221;.</p>
+<ol class="arabic simple" start="4">
+<li><strong>Hysteresis Thresholding</strong></li>
+</ol>
+<p>This stage decides which are all edges are really edges and which are not. For this, we need two threshold values, <cite>minVal</cite> and <cite>maxVal</cite>. Any edges with intensity gradient more than <cite>maxVal</cite> are sure to be edges and those below <cite>minVal</cite> are sure to be non-edges, so discarded. Those who lie between these two thresholds are classified edges or non-edges based on their connectivity. If they are connected to &#8220;sure-edge&#8221; pixels, they are considered to be part of edges. Otherwise, they are also discarded. See the image below:</p>
+<blockquote>
+<div><img alt="Hysteresis Thresholding" class="align-center" src="../../../../_images/hysteresis.jpg" />
+</div></blockquote>
+<p>The edge A is above the <cite>maxVal</cite>, so considered as &#8220;sure-edge&#8221;. Although edge C is below <cite>maxVal</cite>, it is connected to edge A, so that also considered as valid edge and we get that full curve. But edge B, although it is above <cite>minVal</cite> and is in same region as that of edge C, it is not connected to any &#8220;sure-edge&#8221;, so that is discarded. So it is very important that we have to select <cite>minVal</cite> and <cite>maxVal</cite> accordingly to get the correct result.</p>
+<p>This stage also removes small pixels noises on the assumption that edges are long lines.</p>
+<p>So what we finally get is strong edges in the image.</p>
+</div>
+<div class="section" id="canny-edge-detection-in-opencv">
+<h2>Canny Edge Detection in OpenCV<a class="headerlink" href="#canny-edge-detection-in-opencv" title="Permalink to this headline">¶</a></h2>
+<p>OpenCV puts all the above in single function, <strong>cv2.Canny()</strong>. We will see how to use it. First argument is our input image. Second and third arguments are our <cite>minVal</cite> and <cite>maxVal</cite> respectively. Third argument is <cite>aperture_size</cite>. It is the size of Sobel kernel used for find image gradients. By default it is 3. Last argument is <cite>L2gradient</cite> which specifies the equation for finding gradient magnitude. If it is <tt class="docutils literal"><span class="pre">True</span></tt>, it uses the equation mentioned above which is more accurate, otherwise it uses this function: <span class="math">Edge\_Gradient \; (G) = |G_x| + |G_y|</span>. By default, it is <tt class="docutils literal"><span class="pre">False</span></tt>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;messi5.jpg&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">edges</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">Canny</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">200</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">),</span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">cmap</span> <span class="o">=</span> <span class="s">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Original Image&#39;</span><span class="p">),</span> <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([]),</span> <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">([])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">),</span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span><span class="n">cmap</span> <span class="o">=</span> <span class="s">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Edge Image&#39;</span><span class="p">),</span> <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([]),</span> <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">([])</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>See the result below:</p>
+<blockquote>
+<div><img alt="Canny Edge Detection" class="align-center" src="../../../../_images/canny1.jpg" />
+</div></blockquote>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Canny edge detector at <a class="reference external" href="http://en.wikipedia.org/wiki/Canny_edge_detector">Wikipedia</a></li>
+<li><a class="reference external" href="http://dasl.mem.drexel.edu/alumni/bGreen/www.pages.drexel.edu/_weg22/can_tut.html">Canny Edge Detection Tutorial</a> by Bill Green, 2002.</li>
+</ol>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Write a small application to find the Canny edge detection whose threshold values can be varied using two trackbars. This way, you can understand the effect of threshold values.</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py_pyramids/py_pyramids.html" title="Image Pyramids"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../py_gradients/py_gradients.html" title="Image Gradients"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_imgproc/py_table_of_contents_imgproc.html" >Image Processing in OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../../_sources/doc/py_tutorials/py_imgproc/py_canny/py_canny.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

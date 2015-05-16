@@ -1,0 +1,392 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Common Interfaces of Feature Detectors &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="features2d. 2D Features Framework" href="features2d.html" />
+    <link rel="next" title="Common Interfaces of Descriptor Extractors" href="common_interfaces_of_descriptor_extractors.html" />
+    <link rel="prev" title="Feature Detection and Description" href="feature_detection_and_description.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="common_interfaces_of_descriptor_extractors.html" title="Common Interfaces of Descriptor Extractors"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="feature_detection_and_description.html" title="Feature Detection and Description"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="features2d.html" accesskey="U">features2d. 2D Features Framework</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Common Interfaces of Feature Detectors</a><ul>
+<li><a class="reference internal" href="#featuredetector">FeatureDetector</a></li>
+<li><a class="reference internal" href="#featuredetector-detect">FeatureDetector::detect</a></li>
+<li><a class="reference internal" href="#fastfeaturedetector">FastFeatureDetector</a></li>
+<li><a class="reference internal" href="#gfttdetector">GFTTDetector</a></li>
+<li><a class="reference internal" href="#mser">MSER</a></li>
+<li><a class="reference internal" href="#simpleblobdetector">SimpleBlobDetector</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="feature_detection_and_description.html"
+                        title="previous chapter">Feature Detection and Description</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="common_interfaces_of_descriptor_extractors.html"
+                        title="next chapter">Common Interfaces of Descriptor Extractors</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="common-interfaces-of-feature-detectors">
+<h1>Common Interfaces of Feature Detectors<a class="headerlink" href="#common-interfaces-of-feature-detectors" title="Permalink to this headline">¶</a></h1>
+<p>Feature detectors in OpenCV have wrappers with a common interface that enables you to easily switch
+between different algorithms solving the same problem. All objects that implement keypoint detectors
+inherit the
+<a class="reference internal" href="#FeatureDetector : public Algorithm" title="class FeatureDetector : public Algorithm"><tt class="xref ocv ocv-class docutils literal"><span class="pre">FeatureDetector</span></tt></a> interface.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example explaining keypoint detection can be found at opencv_source_code/samples/cpp/descriptor_extractor_matcher.cpp</li>
+</ul>
+</div>
+<div class="section" id="featuredetector">
+<h2>FeatureDetector<a class="headerlink" href="#featuredetector" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="FeatureDetector : public Algorithm">
+<em class="property">class </em><tt class="descname">FeatureDetector</tt> : <em class="property">public</em> <tt class="descname">Algorithm</tt><a class="headerlink" href="#FeatureDetector : public Algorithm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Abstract base class for 2D image feature detectors.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">FeatureDetector</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">FeatureDetector</span><span class="p">();</span>
+
+    <span class="kt">void</span> <span class="n">detect</span><span class="p">(</span> <span class="n">InputArray</span> <span class="n">image</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;&amp;</span> <span class="n">keypoints</span><span class="p">,</span>
+                 <span class="n">InputArray</span> <span class="n">mask</span><span class="o">=</span><span class="n">noArray</span><span class="p">()</span> <span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="kt">void</span> <span class="n">detect</span><span class="p">(</span> <span class="n">InputArrayOfArrays</span> <span class="n">images</span><span class="p">,</span>
+                 <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">keypoints</span><span class="p">,</span>
+                 <span class="n">InputArrayOfArrays</span> <span class="n">masks</span><span class="o">=</span><span class="n">noArray</span><span class="p">()</span> <span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">read</span><span class="p">(</span><span class="k">const</span> <span class="n">FileNode</span><span class="o">&amp;</span><span class="p">);</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">write</span><span class="p">(</span><span class="n">FileStorage</span><span class="o">&amp;</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="k">static</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">FeatureDetector</span><span class="o">&gt;</span> <span class="n">create</span><span class="p">(</span> <span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">detectorType</span> <span class="p">);</span>
+
+<span class="k">protected</span><span class="o">:</span>
+<span class="p">...</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="featuredetector-detect">
+<h2>FeatureDetector::detect<a class="headerlink" href="#featuredetector-detect" title="Permalink to this headline">¶</a></h2>
+<p>Detects keypoints in an image (first variant) or image set (second variant).</p>
+<dl class="function">
+<dt id="void FeatureDetector::detect(InputArray image, vector&lt;KeyPoint&gt;&amp; keypoints, InputArray mask) const">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">FeatureDetector::</tt><tt class="descname">detect</tt><big>(</big>InputArray <strong>image</strong>, vector&lt;KeyPoint&gt;&amp; <strong>keypoints</strong>, InputArray <strong>mask</strong>=noArray() <big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#void FeatureDetector::detect(InputArray image, vector<KeyPoint>& keypoints, InputArray mask) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void FeatureDetector::detect(InputArrayOfArrays images, vector&lt;vector&lt;KeyPoint&gt; &gt;&amp; keypoints, InputArrayOfArrays masks) const">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">FeatureDetector::</tt><tt class="descname">detect</tt><big>(</big>InputArrayOfArrays <strong>images</strong>, vector&lt;vector&lt;KeyPoint&gt;&gt;&amp; <strong>keypoints</strong>, InputArrayOfArrays <strong>masks</strong>=noArray() <big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#void FeatureDetector::detect(InputArrayOfArrays images, vector<vector<KeyPoint> >& keypoints, InputArrayOfArrays masks) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.FeatureDetector_create.detect">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.FeatureDetector_create.</tt><tt class="descname">detect</tt><big>(</big>image<span class="optional">[</span>, mask<span class="optional">]</span><big>)</big> &rarr; keypoints<a class="headerlink" href="#cv2.FeatureDetector_create.detect" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; Image.</li>
+<li><strong>images</strong> &#8211; Image set.</li>
+<li><strong>keypoints</strong> &#8211; The detected keypoints. In the second variant of the method <tt class="docutils literal"><span class="pre">keypoints[i]</span></tt> is a set of keypoints detected in <tt class="docutils literal"><span class="pre">images[i]</span></tt> .</li>
+<li><strong>mask</strong> &#8211; Mask specifying where to look for keypoints (optional). It must be a 8-bit integer matrix with non-zero values in the region of interest.</li>
+<li><strong>masks</strong> &#8211; Masks for each input image specifying where to look for keypoints (optional). <tt class="docutils literal"><span class="pre">masks[i]</span></tt> is a mask for <tt class="docutils literal"><span class="pre">images[i]</span></tt>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="fastfeaturedetector">
+<h2>FastFeatureDetector<a class="headerlink" href="#fastfeaturedetector" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="FastFeatureDetector : public Feature2D">
+<em class="property">class </em><tt class="descname">FastFeatureDetector</tt> : <em class="property">public</em> <tt class="descname">Feature2D</tt><a class="headerlink" href="#FastFeatureDetector : public Feature2D" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Wrapping class for feature detection using the
+<a class="reference internal" href="feature_detection_and_description.html#void FAST(InputArray image, vector&lt;KeyPoint&gt;&amp; keypoints, int threshold, bool nonmaxSuppression)" title="void FAST(InputArray image, vector&lt;KeyPoint&gt;&amp; keypoints, int threshold, bool nonmaxSuppression)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">FAST()</span></tt></a> method.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">FastFeatureDetector</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Feature2D</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">static</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">FastFeatureDetector</span><span class="o">&gt;</span> <span class="n">create</span><span class="p">(</span> <span class="kt">int</span> <span class="n">threshold</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">nonmaxSuppression</span><span class="o">=</span><span class="nb">true</span><span class="p">,</span> <span class="n">type</span><span class="o">=</span><span class="n">FastFeatureDetector</span><span class="o">::</span><span class="n">TYPE_9_16</span> <span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="gfttdetector">
+<h2>GFTTDetector<a class="headerlink" href="#gfttdetector" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="GFTTDetector : public FeatureDetector">
+<em class="property">class </em><tt class="descname">GFTTDetector</tt> : <em class="property">public</em> <tt class="descname">FeatureDetector</tt><a class="headerlink" href="#GFTTDetector : public FeatureDetector" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Wrapping class for feature detection using the
+<a class="reference internal" href="../../imgproc/doc/feature_detection.html#void goodFeaturesToTrack(InputArray image, OutputArray corners, int maxCorners, double qualityLevel, double minDistance, InputArray mask, int blockSize, bool useHarrisDetector, double k)" title="void goodFeaturesToTrack(InputArray image, OutputArray corners, int maxCorners, double qualityLevel, double minDistance, InputArray mask, int blockSize, bool useHarrisDetector, double k)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">goodFeaturesToTrack()</span></tt></a> function.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">GFTTDetector</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Feature2D</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">enum</span> <span class="p">{</span> <span class="n">USE_HARRIS_DETECTOR</span><span class="o">=</span><span class="mi">10000</span> <span class="p">};</span>
+    <span class="k">static</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">GFTTDetector</span><span class="o">&gt;</span> <span class="n">create</span><span class="p">(</span> <span class="kt">int</span> <span class="n">maxCorners</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="kt">double</span> <span class="n">qualityLevel</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+                                     <span class="kt">double</span> <span class="n">minDistance</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="kt">int</span> <span class="n">blockSize</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                                     <span class="kt">bool</span> <span class="n">useHarrisDetector</span><span class="o">=</span><span class="nb">false</span><span class="p">,</span> <span class="kt">double</span> <span class="n">k</span><span class="o">=</span><span class="mf">0.04</span> <span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="mser">
+<h2>MSER<a class="headerlink" href="#mser" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="MSER : public Feature2D">
+<em class="property">class </em><tt class="descname">MSER</tt> : <em class="property">public</em> <tt class="descname">Feature2D</tt><a class="headerlink" href="#MSER : public Feature2D" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Maximally stable region detector</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MSER</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Feature2D</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">enum</span>
+    <span class="p">{</span>
+        <span class="n">DELTA</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">MIN_AREA</span><span class="o">=</span><span class="mi">10001</span><span class="p">,</span> <span class="n">MAX_AREA</span><span class="o">=</span><span class="mi">10002</span><span class="p">,</span> <span class="n">PASS2_ONLY</span><span class="o">=</span><span class="mi">10003</span><span class="p">,</span>
+        <span class="n">MAX_EVOLUTION</span><span class="o">=</span><span class="mi">10004</span><span class="p">,</span> <span class="n">AREA_THRESHOLD</span><span class="o">=</span><span class="mi">10005</span><span class="p">,</span>
+        <span class="n">MIN_MARGIN</span><span class="o">=</span><span class="mi">10006</span><span class="p">,</span> <span class="n">EDGE_BLUR_SIZE</span><span class="o">=</span><span class="mi">10007</span>
+    <span class="p">};</span>
+
+    <span class="c1">//! the full constructor</span>
+    <span class="k">static</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">MSER</span><span class="o">&gt;</span> <span class="n">create</span><span class="p">(</span> <span class="kt">int</span> <span class="n">_delta</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="kt">int</span> <span class="n">_min_area</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="kt">int</span> <span class="n">_max_area</span><span class="o">=</span><span class="mi">14400</span><span class="p">,</span>
+          <span class="kt">double</span> <span class="n">_max_variation</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="kt">double</span> <span class="n">_min_diversity</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span>
+          <span class="kt">int</span> <span class="n">_max_evolution</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="kt">double</span> <span class="n">_area_threshold</span><span class="o">=</span><span class="mf">1.01</span><span class="p">,</span>
+          <span class="kt">double</span> <span class="n">_min_margin</span><span class="o">=</span><span class="mf">0.003</span><span class="p">,</span> <span class="kt">int</span> <span class="n">_edge_blur_size</span><span class="o">=</span><span class="mi">5</span> <span class="p">);</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">detectRegions</span><span class="p">(</span> <span class="n">InputArray</span> <span class="n">image</span><span class="p">,</span>
+                                <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Point</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">msers</span><span class="p">,</span>
+                                <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Rect</span><span class="o">&gt;&amp;</span> <span class="n">bboxes</span> <span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="simpleblobdetector">
+<h2>SimpleBlobDetector<a class="headerlink" href="#simpleblobdetector" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="SimpleBlobDetector : public FeatureDetector">
+<em class="property">class </em><tt class="descname">SimpleBlobDetector</tt> : <em class="property">public</em> <tt class="descname">FeatureDetector</tt><a class="headerlink" href="#SimpleBlobDetector : public FeatureDetector" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class for extracting blobs from an image.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">SimpleBlobDetector</span> <span class="o">:</span> <span class="k">public</span> <span class="n">FeatureDetector</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="k">struct</span> <span class="n">Params</span>
+<span class="p">{</span>
+    <span class="n">Params</span><span class="p">();</span>
+    <span class="kt">float</span> <span class="n">thresholdStep</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">minThreshold</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">maxThreshold</span><span class="p">;</span>
+    <span class="kt">size_t</span> <span class="n">minRepeatability</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">minDistBetweenBlobs</span><span class="p">;</span>
+
+    <span class="kt">bool</span> <span class="n">filterByColor</span><span class="p">;</span>
+    <span class="n">uchar</span> <span class="n">blobColor</span><span class="p">;</span>
+
+    <span class="kt">bool</span> <span class="n">filterByArea</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">minArea</span><span class="p">,</span> <span class="n">maxArea</span><span class="p">;</span>
+
+    <span class="kt">bool</span> <span class="n">filterByCircularity</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">minCircularity</span><span class="p">,</span> <span class="n">maxCircularity</span><span class="p">;</span>
+
+    <span class="kt">bool</span> <span class="n">filterByInertia</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">minInertiaRatio</span><span class="p">,</span> <span class="n">maxInertiaRatio</span><span class="p">;</span>
+
+    <span class="kt">bool</span> <span class="n">filterByConvexity</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">minConvexity</span><span class="p">,</span> <span class="n">maxConvexity</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">static</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">SimpleBlobDetector</span><span class="o">&gt;</span> <span class="n">create</span><span class="p">(</span><span class="k">const</span> <span class="n">SimpleBlobDetector</span><span class="o">::</span><span class="n">Params</span>
+                <span class="o">&amp;</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">SimpleBlobDetector</span><span class="o">::</span><span class="n">Params</span><span class="p">());</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The class implements a simple algorithm for extracting blobs from an image:</p>
+<ol class="arabic simple">
+<li>Convert the source image to binary images by applying thresholding with several thresholds from <tt class="docutils literal"><span class="pre">minThreshold</span></tt> (inclusive) to <tt class="docutils literal"><span class="pre">maxThreshold</span></tt> (exclusive) with distance <tt class="docutils literal"><span class="pre">thresholdStep</span></tt> between neighboring thresholds.</li>
+<li>Extract connected components from every binary image by  <a class="reference internal" href="../../imgproc/doc/structural_analysis_and_shape_descriptors.html#void findContours(InputOutputArray image, OutputArrayOfArrays contours, OutputArray hierarchy, int mode, int method, Point offset)" title="void findContours(InputOutputArray image, OutputArrayOfArrays contours, OutputArray hierarchy, int mode, int method, Point offset)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">findContours()</span></tt></a>  and calculate their centers.</li>
+<li>Group centers from several binary images by their coordinates. Close centers form one group that corresponds to one blob, which is controlled by the <tt class="docutils literal"><span class="pre">minDistBetweenBlobs</span></tt> parameter.</li>
+<li>From the groups, estimate final centers of blobs and their radiuses and return as locations and sizes of keypoints.</li>
+</ol>
+<p>This class performs several filtrations of returned blobs. You should set <tt class="docutils literal"><span class="pre">filterBy*</span></tt> to true/false to turn on/off corresponding filtration. Available filtrations:</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>By color</strong>. This filter compares the intensity of a binary image at the center of a blob to <tt class="docutils literal"><span class="pre">blobColor</span></tt>. If they differ, the blob is filtered out. Use <tt class="docutils literal"><span class="pre">blobColor</span> <span class="pre">=</span> <span class="pre">0</span></tt> to extract dark blobs and <tt class="docutils literal"><span class="pre">blobColor</span> <span class="pre">=</span> <span class="pre">255</span></tt> to extract light blobs.</li>
+<li><strong>By area</strong>. Extracted blobs have an area between <tt class="docutils literal"><span class="pre">minArea</span></tt> (inclusive) and <tt class="docutils literal"><span class="pre">maxArea</span></tt> (exclusive).</li>
+<li><strong>By circularity</strong>. Extracted blobs have circularity (<span class="math">\frac{4*\pi*Area}{perimeter * perimeter}</span>) between <tt class="docutils literal"><span class="pre">minCircularity</span></tt> (inclusive) and <tt class="docutils literal"><span class="pre">maxCircularity</span></tt> (exclusive).</li>
+<li><strong>By ratio of the minimum inertia to maximum inertia</strong>. Extracted blobs have this ratio between <tt class="docutils literal"><span class="pre">minInertiaRatio</span></tt> (inclusive) and <tt class="docutils literal"><span class="pre">maxInertiaRatio</span></tt> (exclusive).</li>
+<li><strong>By convexity</strong>. Extracted blobs have convexity (area / area of blob convex hull) between <tt class="docutils literal"><span class="pre">minConvexity</span></tt> (inclusive) and <tt class="docutils literal"><span class="pre">maxConvexity</span></tt> (exclusive).</li>
+</ul>
+</div></blockquote>
+<p>Default values of parameters are tuned to extract dark circular blobs.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="common_interfaces_of_descriptor_extractors.html" title="Common Interfaces of Descriptor Extractors"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="feature_detection_and_description.html" title="Feature Detection and Description"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="features2d.html" >features2d. 2D Features Framework</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/features2d/doc/common_interfaces_of_feature_detectors.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

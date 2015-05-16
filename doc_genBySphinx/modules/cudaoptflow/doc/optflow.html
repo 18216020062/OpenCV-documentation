@@ -1,0 +1,466 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Optical Flow &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="cudaoptflow. CUDA-accelerated Optical Flow" href="cudaoptflow.html" />
+    <link rel="next" title="cudastereo. CUDA-accelerated Stereo Correspondence" href="../../cudastereo/doc/cudastereo.html" />
+    <link rel="prev" title="cudaoptflow. CUDA-accelerated Optical Flow" href="cudaoptflow.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../cudastereo/doc/cudastereo.html" title="cudastereo. CUDA-accelerated Stereo Correspondence"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="cudaoptflow.html" title="cudaoptflow. CUDA-accelerated Optical Flow"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="cudaoptflow.html" accesskey="U">cudaoptflow. CUDA-accelerated Optical Flow</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Optical Flow</a><ul>
+<li><a class="reference internal" href="#cuda-broxopticalflow">cuda::BroxOpticalFlow</a></li>
+<li><a class="reference internal" href="#cuda-farnebackopticalflow">cuda::FarnebackOpticalFlow</a></li>
+<li><a class="reference internal" href="#cuda-farnebackopticalflow-operator">cuda::FarnebackOpticalFlow::operator ()</a></li>
+<li><a class="reference internal" href="#cuda-farnebackopticalflow-releasememory">cuda::FarnebackOpticalFlow::releaseMemory</a></li>
+<li><a class="reference internal" href="#cuda-pyrlkopticalflow">cuda::PyrLKOpticalFlow</a></li>
+<li><a class="reference internal" href="#cuda-pyrlkopticalflow-sparse">cuda::PyrLKOpticalFlow::sparse</a></li>
+<li><a class="reference internal" href="#cuda-pyrlkopticalflow-dense">cuda::PyrLKOpticalFlow::dense</a></li>
+<li><a class="reference internal" href="#cuda-pyrlkopticalflow-releasememory">cuda::PyrLKOpticalFlow::releaseMemory</a></li>
+<li><a class="reference internal" href="#cuda-interpolateframes">cuda::interpolateFrames</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="cudaoptflow.html"
+                        title="previous chapter">cudaoptflow. CUDA-accelerated Optical Flow</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../cudastereo/doc/cudastereo.html"
+                        title="next chapter">cudastereo. CUDA-accelerated Stereo Correspondence</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="optical-flow">
+<h1>Optical Flow<a class="headerlink" href="#optical-flow" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>A general optical flow example can be found at opencv_source_code/samples/gpu/optical_flow.cpp</li>
+<li>A general optical flow example using the Nvidia API can be found at opencv_source_code/samples/gpu/opticalflow_nvidia_api.cpp</li>
+</ul>
+</div>
+<div class="section" id="cuda-broxopticalflow">
+<h2>cuda::BroxOpticalFlow<a class="headerlink" href="#cuda-broxopticalflow" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cuda::BroxOpticalFlow">
+<em class="property">class </em><tt class="descclassname">cuda::</tt><tt class="descname">BroxOpticalFlow</tt><a class="headerlink" href="#cuda::BroxOpticalFlow" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class computing the optical flow for two images using Brox et al Optical Flow algorithm (<a class="reference internal" href="#brox2004" id="id1">[Brox2004]</a>).</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">BroxOpticalFlow</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">BroxOpticalFlow</span><span class="p">(</span><span class="kt">float</span> <span class="n">alpha_</span><span class="p">,</span> <span class="kt">float</span> <span class="n">gamma_</span><span class="p">,</span> <span class="kt">float</span> <span class="n">scale_factor_</span><span class="p">,</span> <span class="kt">int</span> <span class="n">inner_iterations_</span><span class="p">,</span> <span class="kt">int</span> <span class="n">outer_iterations_</span><span class="p">,</span> <span class="kt">int</span> <span class="n">solver_iterations_</span><span class="p">);</span>
+
+    <span class="c1">//! Compute optical flow</span>
+    <span class="c1">//! frame0 - source frame (supports only CV_32FC1 type)</span>
+    <span class="c1">//! frame1 - frame to track (with the same size and type as frame0)</span>
+    <span class="c1">//! u      - flow horizontal component (along x axis)</span>
+    <span class="c1">//! v      - flow vertical component (along y axis)</span>
+    <span class="kt">void</span> <span class="nf">operator</span> <span class="p">()(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">frame0</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">frame1</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">u</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">v</span><span class="p">,</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="o">::</span><span class="n">Null</span><span class="p">());</span>
+
+    <span class="c1">//! flow smoothness</span>
+    <span class="kt">float</span> <span class="n">alpha</span><span class="p">;</span>
+
+    <span class="c1">//! gradient constancy importance</span>
+    <span class="kt">float</span> <span class="n">gamma</span><span class="p">;</span>
+
+    <span class="c1">//! pyramid scale factor</span>
+    <span class="kt">float</span> <span class="n">scale_factor</span><span class="p">;</span>
+
+    <span class="c1">//! number of lagged non-linearity iterations (inner loop)</span>
+    <span class="kt">int</span> <span class="n">inner_iterations</span><span class="p">;</span>
+
+    <span class="c1">//! number of warping iterations (number of pyramid levels)</span>
+    <span class="kt">int</span> <span class="n">outer_iterations</span><span class="p">;</span>
+
+    <span class="c1">//! number of linear system solver iterations</span>
+    <span class="kt">int</span> <span class="n">solver_iterations</span><span class="p">;</span>
+
+    <span class="n">GpuMat</span> <span class="n">buf</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example illustrating the Brox et al optical flow algorithm can be found at opencv_source_code/samples/gpu/brox_optical_flow.cpp</li>
+</ul>
+</div>
+</div>
+<div class="section" id="cuda-farnebackopticalflow">
+<h2>cuda::FarnebackOpticalFlow<a class="headerlink" href="#cuda-farnebackopticalflow" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cuda::FarnebackOpticalFlow">
+<em class="property">class </em><tt class="descclassname">cuda::</tt><tt class="descname">FarnebackOpticalFlow</tt><a class="headerlink" href="#cuda::FarnebackOpticalFlow" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class computing a dense optical flow using the Gunnar Farneback’s algorithm.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">FarnebackOpticalFlow</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">FarnebackOpticalFlow</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">numLevels</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+        <span class="n">pyrScale</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">;</span>
+        <span class="n">fastPyramids</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">winSize</span> <span class="o">=</span> <span class="mi">13</span><span class="p">;</span>
+        <span class="n">numIters</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+        <span class="n">polyN</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+        <span class="n">polySigma</span> <span class="o">=</span> <span class="mf">1.1</span><span class="p">;</span>
+        <span class="n">flags</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">int</span> <span class="n">numLevels</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">pyrScale</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">fastPyramids</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">winSize</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">numIters</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">polyN</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">polySigma</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">flags</span><span class="p">;</span>
+
+    <span class="kt">void</span> <span class="nf">operator</span> <span class="p">()(</span><span class="k">const</span> <span class="n">GpuMat</span> <span class="o">&amp;</span><span class="n">frame0</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span> <span class="o">&amp;</span><span class="n">frame1</span><span class="p">,</span> <span class="n">GpuMat</span> <span class="o">&amp;</span><span class="n">flowx</span><span class="p">,</span> <span class="n">GpuMat</span> <span class="o">&amp;</span><span class="n">flowy</span><span class="p">,</span> <span class="n">Stream</span> <span class="o">&amp;</span><span class="n">s</span> <span class="o">=</span> <span class="n">Stream</span><span class="o">::</span><span class="n">Null</span><span class="p">());</span>
+
+    <span class="kt">void</span> <span class="nf">releaseMemory</span><span class="p">();</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="cm">/* hidden */</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cuda-farnebackopticalflow-operator">
+<h2>cuda::FarnebackOpticalFlow::operator ()<a class="headerlink" href="#cuda-farnebackopticalflow-operator" title="Permalink to this headline">¶</a></h2>
+<p>Computes a dense optical flow using the Gunnar Farneback’s algorithm.</p>
+<dl class="function">
+<dt id="void cuda::FarnebackOpticalFlow::operator ()(const GpuMat &amp;frame0, const GpuMat &amp;frame1, GpuMat &amp;flowx, GpuMat &amp;flowy, Stream &amp;s)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::FarnebackOpticalFlow::</tt><tt class="descname">operator()</tt><big>(</big>const GpuMat&amp; <strong>frame0</strong>, const GpuMat&amp; <strong>frame1</strong>, GpuMat&amp; <strong>flowx</strong>, GpuMat&amp; <strong>flowy</strong>, Stream&amp; <strong>s</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::FarnebackOpticalFlow::operator ()(const GpuMat &frame0, const GpuMat &frame1, GpuMat &flowx, GpuMat &flowy, Stream &s)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>frame0</strong> &#8211; First 8-bit gray-scale input image</li>
+<li><strong>frame1</strong> &#8211; Second 8-bit gray-scale input image</li>
+<li><strong>flowx</strong> &#8211; Flow horizontal component</li>
+<li><strong>flowy</strong> &#8211; Flow vertical component</li>
+<li><strong>s</strong> &#8211; Stream</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../video/doc/motion_analysis_and_object_tracking.html#void calcOpticalFlowFarneback(InputArray prev, InputArray next, InputOutputArray flow, double pyr_scale, int levels, int winsize, int iterations, int poly_n, double poly_sigma, int flags)" title="void calcOpticalFlowFarneback(InputArray prev, InputArray next, InputOutputArray flow, double pyr_scale, int levels, int winsize, int iterations, int poly_n, double poly_sigma, int flags)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">calcOpticalFlowFarneback()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-farnebackopticalflow-releasememory">
+<h2>cuda::FarnebackOpticalFlow::releaseMemory<a class="headerlink" href="#cuda-farnebackopticalflow-releasememory" title="Permalink to this headline">¶</a></h2>
+<p>Releases unused auxiliary memory buffers.</p>
+<dl class="function">
+<dt id="void cuda::FarnebackOpticalFlow::releaseMemory()">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::FarnebackOpticalFlow::</tt><tt class="descname">releaseMemory</tt><big>(</big><big>)</big><a class="headerlink" href="#void cuda::FarnebackOpticalFlow::releaseMemory()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="cuda-pyrlkopticalflow">
+<h2>cuda::PyrLKOpticalFlow<a class="headerlink" href="#cuda-pyrlkopticalflow" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cuda::PyrLKOpticalFlow">
+<em class="property">class </em><tt class="descclassname">cuda::</tt><tt class="descname">PyrLKOpticalFlow</tt><a class="headerlink" href="#cuda::PyrLKOpticalFlow" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class used for calculating an optical flow.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">PyrLKOpticalFlow</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">PyrLKOpticalFlow</span><span class="p">();</span>
+
+    <span class="kt">void</span> <span class="nf">sparse</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">prevImg</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">nextImg</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">prevPts</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">nextPts</span><span class="p">,</span>
+        <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">status</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">*</span> <span class="n">err</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">dense</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">prevImg</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">nextImg</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">u</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">v</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">*</span> <span class="n">err</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="n">Size</span> <span class="n">winSize</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">maxLevel</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">iters</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">useInitialFlow</span><span class="p">;</span>
+
+    <span class="kt">void</span> <span class="nf">releaseMemory</span><span class="p">();</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The class can calculate an optical flow for a sparse feature set or dense optical flow using the iterative Lucas-Kanade method with pyramids.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../video/doc/motion_analysis_and_object_tracking.html#void calcOpticalFlowPyrLK(InputArray prevImg, InputArray nextImg, InputArray prevPts, InputOutputArray nextPts, OutputArray status, OutputArray err, Size winSize, int maxLevel, TermCriteria criteria, int flags, double minEigThreshold)" title="void calcOpticalFlowPyrLK(InputArray prevImg, InputArray nextImg, InputArray prevPts, InputOutputArray nextPts, OutputArray status, OutputArray err, Size winSize, int maxLevel, TermCriteria criteria, int flags, double minEigThreshold)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">calcOpticalFlowPyrLK()</span></tt></a></p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example of the Lucas Kanade optical flow algorithm can be found at opencv_source_code/samples/gpu/pyrlk_optical_flow.cpp</li>
+</ul>
+</div>
+</div>
+<div class="section" id="cuda-pyrlkopticalflow-sparse">
+<h2>cuda::PyrLKOpticalFlow::sparse<a class="headerlink" href="#cuda-pyrlkopticalflow-sparse" title="Permalink to this headline">¶</a></h2>
+<p>Calculate an optical flow for a sparse feature set.</p>
+<dl class="function">
+<dt id="void cuda::PyrLKOpticalFlow::sparse(const GpuMat&amp; prevImg, const GpuMat&amp; nextImg, const GpuMat&amp; prevPts, GpuMat&amp; nextPts, GpuMat&amp; status, GpuMat* err)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::PyrLKOpticalFlow::</tt><tt class="descname">sparse</tt><big>(</big>const GpuMat&amp; <strong>prevImg</strong>, const GpuMat&amp; <strong>nextImg</strong>, const GpuMat&amp; <strong>prevPts</strong>, GpuMat&amp; <strong>nextPts</strong>, GpuMat&amp; <strong>status</strong>, GpuMat* <strong>err</strong>=0<big>)</big><a class="headerlink" href="#void cuda::PyrLKOpticalFlow::sparse(const GpuMat& prevImg, const GpuMat& nextImg, const GpuMat& prevPts, GpuMat& nextPts, GpuMat& status, GpuMat* err)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>prevImg</strong> &#8211; First 8-bit input image (supports both grayscale and color images).</li>
+<li><strong>nextImg</strong> &#8211; Second input image of the same size and the same type as  <tt class="docutils literal"><span class="pre">prevImg</span></tt> .</li>
+<li><strong>prevPts</strong> &#8211; Vector of 2D points for which the flow needs to be found. It must be one row matrix with CV_32FC2 type.</li>
+<li><strong>nextPts</strong> &#8211; Output vector of 2D points (with single-precision floating-point coordinates) containing the calculated new positions of input features in the second image. When <tt class="docutils literal"><span class="pre">useInitialFlow</span></tt> is true, the vector must have the same size as in the input.</li>
+<li><strong>status</strong> &#8211; Output status vector (CV_8UC1 type). Each element of the vector is set to 1 if the flow for the corresponding features has been found. Otherwise, it is set to 0.</li>
+<li><strong>err</strong> &#8211; Output vector (CV_32FC1 type) that contains the difference between patches around the original and moved points or min eigen value if <tt class="docutils literal"><span class="pre">getMinEigenVals</span></tt> is checked. It can be NULL, if not needed.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../video/doc/motion_analysis_and_object_tracking.html#void calcOpticalFlowPyrLK(InputArray prevImg, InputArray nextImg, InputArray prevPts, InputOutputArray nextPts, OutputArray status, OutputArray err, Size winSize, int maxLevel, TermCriteria criteria, int flags, double minEigThreshold)" title="void calcOpticalFlowPyrLK(InputArray prevImg, InputArray nextImg, InputArray prevPts, InputOutputArray nextPts, OutputArray status, OutputArray err, Size winSize, int maxLevel, TermCriteria criteria, int flags, double minEigThreshold)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">calcOpticalFlowPyrLK()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-pyrlkopticalflow-dense">
+<h2>cuda::PyrLKOpticalFlow::dense<a class="headerlink" href="#cuda-pyrlkopticalflow-dense" title="Permalink to this headline">¶</a></h2>
+<p>Calculate dense optical flow.</p>
+<dl class="function">
+<dt id="void cuda::PyrLKOpticalFlow::dense(const GpuMat&amp; prevImg, const GpuMat&amp; nextImg, GpuMat&amp; u, GpuMat&amp; v, GpuMat* err)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::PyrLKOpticalFlow::</tt><tt class="descname">dense</tt><big>(</big>const GpuMat&amp; <strong>prevImg</strong>, const GpuMat&amp; <strong>nextImg</strong>, GpuMat&amp; <strong>u</strong>, GpuMat&amp; <strong>v</strong>, GpuMat* <strong>err</strong>=0<big>)</big><a class="headerlink" href="#void cuda::PyrLKOpticalFlow::dense(const GpuMat& prevImg, const GpuMat& nextImg, GpuMat& u, GpuMat& v, GpuMat* err)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>prevImg</strong> &#8211; First 8-bit grayscale input image.</li>
+<li><strong>nextImg</strong> &#8211; Second input image of the same size and the same type as  <tt class="docutils literal"><span class="pre">prevImg</span></tt> .</li>
+<li><strong>u</strong> &#8211; Horizontal component of the optical flow of the same size as input images, 32-bit floating-point, single-channel</li>
+<li><strong>v</strong> &#8211; Vertical component of the optical flow of the same size as input images, 32-bit floating-point, single-channel</li>
+<li><strong>err</strong> &#8211; Output vector (CV_32FC1 type) that contains the difference between patches around the original and moved points or min eigen value if <tt class="docutils literal"><span class="pre">getMinEigenVals</span></tt> is checked. It can be NULL, if not needed.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-pyrlkopticalflow-releasememory">
+<h2>cuda::PyrLKOpticalFlow::releaseMemory<a class="headerlink" href="#cuda-pyrlkopticalflow-releasememory" title="Permalink to this headline">¶</a></h2>
+<p>Releases inner buffers memory.</p>
+<dl class="function">
+<dt id="void cuda::PyrLKOpticalFlow::releaseMemory()">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::PyrLKOpticalFlow::</tt><tt class="descname">releaseMemory</tt><big>(</big><big>)</big><a class="headerlink" href="#void cuda::PyrLKOpticalFlow::releaseMemory()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="cuda-interpolateframes">
+<h2>cuda::interpolateFrames<a class="headerlink" href="#cuda-interpolateframes" title="Permalink to this headline">¶</a></h2>
+<p>Interpolates frames (images) using provided optical flow (displacement field).</p>
+<dl class="function">
+<dt id="void cuda::interpolateFrames(const GpuMat&amp; frame0, const GpuMat&amp; frame1, const GpuMat&amp; fu, const GpuMat&amp; fv, const GpuMat&amp; bu, const GpuMat&amp; bv, float pos, GpuMat&amp; newFrame, GpuMat&amp; buf, Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">interpolateFrames</tt><big>(</big>const GpuMat&amp; <strong>frame0</strong>, const GpuMat&amp; <strong>frame1</strong>, const GpuMat&amp; <strong>fu</strong>, const GpuMat&amp; <strong>fv</strong>, const GpuMat&amp; <strong>bu</strong>, const GpuMat&amp; <strong>bv</strong>, float <strong>pos</strong>, GpuMat&amp; <strong>newFrame</strong>, GpuMat&amp; <strong>buf</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::interpolateFrames(const GpuMat& frame0, const GpuMat& frame1, const GpuMat& fu, const GpuMat& fv, const GpuMat& bu, const GpuMat& bv, float pos, GpuMat& newFrame, GpuMat& buf, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>frame0</strong> &#8211; First frame (32-bit floating point images, single channel).</li>
+<li><strong>frame1</strong> &#8211; Second frame. Must have the same type and size as <tt class="docutils literal"><span class="pre">frame0</span></tt> .</li>
+<li><strong>fu</strong> &#8211; Forward horizontal displacement.</li>
+<li><strong>fv</strong> &#8211; Forward vertical displacement.</li>
+<li><strong>bu</strong> &#8211; Backward horizontal displacement.</li>
+<li><strong>bv</strong> &#8211; Backward vertical displacement.</li>
+<li><strong>pos</strong> &#8211; New frame position.</li>
+<li><strong>newFrame</strong> &#8211; Output image.</li>
+<li><strong>buf</strong> &#8211; Temporary buffer, will have width x 6*height size, CV_32FC1 type and contain 6 GpuMat: occlusion masks for first frame, occlusion masks for second, interpolated forward horizontal flow, interpolated forward vertical flow, interpolated backward horizontal flow, interpolated backward vertical flow.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<table class="docutils citation" frame="void" id="brox2004" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[Brox2004]</a></td><td><ol class="first last upperalpha simple" start="20">
+<li>Brox, A. Bruhn, N. Papenberg, J. Weickert. <em>High accuracy optical flow estimation based on a theory for warping</em>. ECCV 2004.</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../cudastereo/doc/cudastereo.html" title="cudastereo. CUDA-accelerated Stereo Correspondence"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="cudaoptflow.html" title="cudaoptflow. CUDA-accelerated Optical Flow"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="cudaoptflow.html" >cudaoptflow. CUDA-accelerated Optical Flow</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/cudaoptflow/doc/optflow.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

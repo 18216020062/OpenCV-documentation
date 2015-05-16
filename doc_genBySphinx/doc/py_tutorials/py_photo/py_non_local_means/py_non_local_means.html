@@ -1,0 +1,309 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Image Denoising &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../../index.html" />
+    <link rel="up" title="Computational Photography" href="../py_table_of_contents_photo/py_table_of_contents_photo.html" />
+    <link rel="next" title="Image Inpainting" href="../py_inpainting/py_inpainting.html" />
+    <link rel="prev" title="Computational Photography" href="../py_table_of_contents_photo/py_table_of_contents_photo.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py_inpainting/py_inpainting.html" title="Image Inpainting"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../py_table_of_contents_photo/py_table_of_contents_photo.html" title="Computational Photography"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_photo/py_table_of_contents_photo.html" accesskey="U">Computational Photography</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Image Denoising</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#theory">Theory</a></li>
+<li><a class="reference internal" href="#image-denoising-in-opencv">Image Denoising in OpenCV</a><ul>
+<li><a class="reference internal" href="#cv2-fastnlmeansdenoisingcolored">1. cv2.fastNlMeansDenoisingColored()</a></li>
+<li><a class="reference internal" href="#cv2-fastnlmeansdenoisingmulti">2. cv2.fastNlMeansDenoisingMulti()</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#additional-resources">Additional Resources</a></li>
+<li><a class="reference internal" href="#exercises">Exercises</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../py_table_of_contents_photo/py_table_of_contents_photo.html"
+                        title="previous chapter">Computational Photography</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../py_inpainting/py_inpainting.html"
+                        title="next chapter">Image Inpainting</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="image-denoising">
+<span id="non-local-means"></span><h1>Image Denoising<a class="headerlink" href="#image-denoising" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this chapter,</p>
+<blockquote>
+<div><ul class="simple">
+<li>You will learn about Non-local Means Denoising algorithm to remove noise in the image.</li>
+<li>You will see different functions like <strong>cv2.fastNlMeansDenoising()</strong>, <strong>cv2.fastNlMeansDenoisingColored()</strong> etc.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<p>In earlier chapters, we have seen many image smoothing techniques like Gaussian Blurring, Median Blurring etc and they were good to some extent in removing small quantities of noise. In those techniques, we took a small neighbourhood around a pixel and did some operations like gaussian weighted average, median of the values etc to replace the central element. In short, noise removal at a pixel was local to its neighbourhood.</p>
+<p>There is a property of noise. Noise is generally considered to be a random variable with zero mean. Consider a noisy pixel, <span class="math">p = p_0 + n</span> where <span class="math">p_0</span> is the true value of pixel and <span class="math">n</span> is the noise in that pixel. You can take large number of same pixels (say <span class="math">N</span>) from different images and computes their average. Ideally, you should get <span class="math">p = p_0</span> since mean of noise is zero.</p>
+<p>You can verify it yourself by a simple setup. Hold a static camera to a certain location for a couple of seconds. This will give you plenty of frames, or a lot of images of the same scene. Then write a piece of code to find the average of all the frames in the video (This should be too simple for you now ). Compare the final result and first frame. You can see reduction in noise. Unfortunately this simple method is not robust to camera and scene motions. Also often there is only one noisy image available.</p>
+<p>So idea is simple, we need a set of similar images to average out the noise. Consider a small window (say 5x5 window) in the image. Chance is large that the same patch may be somewhere else in the image. Sometimes in a small neigbourhood around it. What about using these similar patches together and find their average? For that particular window, that is fine. See an example image below:</p>
+<blockquote>
+<div><img alt="Similar patches" class="align-center" src="../../../../_images/nlm_patch.jpg" />
+</div></blockquote>
+<p>The blue patches in the image looks the similar. Green patches looks similar. So we take a pixel, take small window around it, search for similar windows in the image, average all the windows and replace the pixel with the result we got. This method is Non-Local Means Denoising. It takes more time compared to blurring techniques we saw earlier, but its result is very good. More details and online demo can be found at first link in additional resources.</p>
+<p>For color images, image is converted to CIELAB colorspace and then it separately denoise L and AB components.</p>
+</div>
+<div class="section" id="image-denoising-in-opencv">
+<h2>Image Denoising in OpenCV<a class="headerlink" href="#image-denoising-in-opencv" title="Permalink to this headline">¶</a></h2>
+<p>OpenCV provides four variations of this technique.</p>
+<ol class="arabic simple">
+<li><strong>cv2.fastNlMeansDenoising()</strong> - works with a single grayscale images</li>
+<li><strong>cv2.fastNlMeansDenoisingColored()</strong> - works with a color image.</li>
+<li><strong>cv2.fastNlMeansDenoisingMulti()</strong> - works with image sequence captured in short period of time (grayscale images)</li>
+<li><strong>cv2.fastNlMeansDenoisingColoredMulti()</strong> - same as above, but for color images.</li>
+</ol>
+<dl class="docutils">
+<dt>Common arguments are:</dt>
+<dd><ul class="first last simple">
+<li>h : parameter deciding filter strength. Higher h value removes noise better, but removes details of image also. (10 is ok)</li>
+<li>hForColorComponents : same as h, but for color images only. (normally same as h)</li>
+<li>templateWindowSize : should be odd. (recommended 7)</li>
+<li>searchWindowSize : should be odd. (recommended 21)</li>
+</ul>
+</dd>
+</dl>
+<p>Please visit first link in additional resources for more details on these parameters.</p>
+<p>We will demonstrate 2 and 3 here. Rest is left for you.</p>
+<div class="section" id="cv2-fastnlmeansdenoisingcolored">
+<h3>1. cv2.fastNlMeansDenoisingColored()<a class="headerlink" href="#cv2-fastnlmeansdenoisingcolored" title="Permalink to this headline">¶</a></h3>
+<p>As mentioned above it is used to remove noise from color images. (Noise is expected to be gaussian). See the example below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;die.png&#39;</span><span class="p">)</span>
+
+<span class="n">dst</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">fastNlMeansDenoisingColored</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="bp">None</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">21</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">),</span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">),</span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">dst</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Below is a zoomed version of result. My input image has a gaussian noise of <span class="math">\sigma = 25</span>. See the result:</p>
+<blockquote>
+<div><img alt="Result of denoising" class="align-center" src="../../../../_images/nlm_result1.jpg" />
+</div></blockquote>
+</div>
+<div class="section" id="cv2-fastnlmeansdenoisingmulti">
+<h3>2. cv2.fastNlMeansDenoisingMulti()<a class="headerlink" href="#cv2-fastnlmeansdenoisingmulti" title="Permalink to this headline">¶</a></h3>
+<p>Now we will apply the same method to a video. The first argument is the list of noisy frames. Second argument <cite>imgToDenoiseIndex</cite> specifies which frame we need to denoise, for that we pass the index of frame in our input list. Third is the <cite>temporalWindowSize</cite> which specifies the number of nearby frames to be used for denoising. It should be odd. In that case, a total of <cite>temporalWindowSize</cite> frames are used where central frame is the frame to be denoised. For example, you passed a list of 5 frames as input. Let <cite>imgToDenoiseIndex = 2</cite> and <cite>temporalWindowSize = 3</cite>. Then frame-1, frame-2 and frame-3 are used to denoise frame-2. Let&#8217;s see an example.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">cap</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="s">&#39;vtest.avi&#39;</span><span class="p">)</span>
+
+<span class="c"># create a list of first 5 frames</span>
+<span class="n">img</span> <span class="o">=</span> <span class="p">[</span><span class="n">cap</span><span class="o">.</span><span class="n">read</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">5</span><span class="p">)]</span>
+
+<span class="c"># convert all to grayscale</span>
+<span class="n">gray</span> <span class="o">=</span> <span class="p">[</span><span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">img</span><span class="p">]</span>
+
+<span class="c"># convert all to float64</span>
+<span class="n">gray</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">gray</span><span class="p">]</span>
+
+<span class="c"># create a noise of variance 25</span>
+<span class="n">noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="o">*</span><span class="n">gray</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">*</span><span class="mi">10</span>
+
+<span class="c"># Add this noise to images</span>
+<span class="n">noisy</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">noise</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">gray</span><span class="p">]</span>
+
+<span class="c"># Convert back to uint8</span>
+<span class="n">noisy</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">noisy</span><span class="p">]</span>
+
+<span class="c"># Denoise 3rd frame considering all the 5 frames</span>
+<span class="n">dst</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">fastNlMeansDenoisingMulti</span><span class="p">(</span><span class="n">noisy</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">35</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">131</span><span class="p">),</span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">gray</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="s">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">132</span><span class="p">),</span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">noisy</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="s">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">133</span><span class="p">),</span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">dst</span><span class="p">,</span><span class="s">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Below image shows a zoomed version of the result we got:</p>
+<blockquote>
+<div><img alt="Denoising a frame" class="align-center" src="../../../../_images/nlm_multi.jpg" />
+</div></blockquote>
+<p>It takes considerable amount of time for computation. In the result, first image is the original frame, second is the noisy one, third is the denoised image.</p>
+</div>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><a class="reference external" href="http://www.ipol.im/pub/art/2011/bcm_nlm/">http://www.ipol.im/pub/art/2011/bcm_nlm/</a> (It has the details, online demo etc. Highly recommended to visit. Our test image is generated from this link)</li>
+<li><a class="reference external" href="https://www.coursera.org/course/images">Online course at coursera</a> (First image taken from here)</li>
+</ol>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py_inpainting/py_inpainting.html" title="Image Inpainting"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../py_table_of_contents_photo/py_table_of_contents_photo.html" title="Computational Photography"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_photo/py_table_of_contents_photo.html" >Computational Photography</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../../_sources/doc/py_tutorials/py_photo/py_non_local_means/py_non_local_means.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Boosting &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="ml. Machine Learning" href="ml.html" />
+    <link rel="next" title="Random Trees" href="random_trees.html" />
+    <link rel="prev" title="Decision Trees" href="decision_trees.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="random_trees.html" title="Random Trees"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="decision_trees.html" title="Decision Trees"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" accesskey="U">ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Boosting</a><ul>
+<li><a class="reference internal" href="#boost-params">Boost::Params</a></li>
+<li><a class="reference internal" href="#boost-params-params">Boost::Params::Params</a></li>
+<li><a class="reference internal" href="#boost">Boost</a></li>
+<li><a class="reference internal" href="#boost-create">Boost::create</a></li>
+<li><a class="reference internal" href="#boost-getbparams">Boost::getBParams</a></li>
+<li><a class="reference internal" href="#boost-setbparams">Boost::setBParams</a></li>
+<li><a class="reference internal" href="#prediction-with-boost">Prediction with Boost</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="decision_trees.html"
+                        title="previous chapter">Decision Trees</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="random_trees.html"
+                        title="next chapter">Random Trees</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="boosting">
+<span id="id1"></span><h1>Boosting<a class="headerlink" href="#boosting" title="Permalink to this headline">¶</a></h1>
+<p>A common machine learning task is supervised learning. In supervised learning, the goal is to learn the functional relationship
+<span class="math">F: y = F(x)</span> between the input
+<span class="math">x</span> and the output
+<span class="math">y</span> . Predicting the qualitative output is called <em>classification</em>, while predicting the quantitative output is called <em>regression</em>.</p>
+<p>Boosting is a powerful learning concept that provides a solution to the supervised classification learning task. It combines the performance of many &#8220;weak&#8221; classifiers to produce a powerful committee <a class="reference internal" href="#htf01" id="id2">[HTF01]</a>. A weak classifier is only required to be better than chance, and thus can be very simple and computationally inexpensive. However, many of them smartly combine results to a strong classifier that often outperforms most &#8220;monolithic&#8221; strong classifiers such as SVMs and Neural Networks.</p>
+<p>Decision trees are the most popular weak classifiers used in boosting schemes. Often the simplest decision trees with only a single split node per tree (called <tt class="docutils literal"><span class="pre">stumps</span></tt> ) are sufficient.</p>
+<p>The boosted model is based on
+<span class="math">N</span> training examples
+<span class="math">{(x_i,y_i)}1N</span> with
+<span class="math">x_i \in{R^K}</span> and
+<span class="math">y_i \in{-1, +1}</span> .
+<span class="math">x_i</span> is a
+<span class="math">K</span> -component vector. Each component encodes a feature relevant to the learning task at hand. The desired two-class output is encoded as -1 and +1.</p>
+<p>Different variants of boosting are known as Discrete Adaboost, Real AdaBoost, LogitBoost, and Gentle AdaBoost <a class="reference internal" href="#fht98" id="id3">[FHT98]</a>. All of them are very similar in their overall structure. Therefore, this chapter focuses only on the standard two-class Discrete AdaBoost algorithm, outlined below. Initially the same weight is assigned to each sample (step 2). Then, a weak classifier
+<span class="math">f_{m(x)}</span> is trained on the weighted training data (step 3a). Its weighted training error and scaling factor
+<span class="math">c_m</span> is computed (step 3b). The weights are increased for training samples that have been misclassified (step 3c). All weights are then normalized, and the process of finding the next weak classifier continues for another
+<span class="math">M</span> -1 times. The final classifier
+<span class="math">F(x)</span> is the sign of the weighted sum over the individual weak classifiers (step 4).</p>
+<p><strong>Two-class Discrete AdaBoost Algorithm</strong></p>
+<ol class="arabic">
+<li><p class="first">Set
+<span class="math">N</span>     examples
+<span class="math">{(x_i,y_i)}1N</span>     with
+<span class="math">x_i \in{R^K}, y_i \in{-1, +1}</span>     .</p>
+</li>
+<li><p class="first">Assign weights as
+<span class="math">w_i = 1/N, i = 1,...,N</span>     .</p>
+</li>
+<li><p class="first">Repeat for <span class="math">m = 1,2,...,M</span> :</p>
+<p>3.1. Fit the classifier <span class="math">f_m(x) \in{-1,1}</span>, using weights <span class="math">w_i</span> on the training data.</p>
+<p>3.2. Compute <span class="math">err_m = E_w [1_{(y \neq f_m(x))}], c_m = log((1 - err_m)/err_m)</span>         .</p>
+<p>3.3. Set <span class="math">w_i \Leftarrow w_i exp[c_m 1_{(y_i \neq f_m(x_i))}], i = 1,2,...,N,</span> and renormalize so that <span class="math">\Sigma i w_i = 1</span>         .</p>
+</li>
+<li><p class="first">Classify new samples <em>x</em> using the formula: <span class="math">\textrm{sign} (\Sigma m = 1M c_m f_m(x))</span>         .</p>
+</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Similar to the classical boosting methods, the current implementation supports two-class classifiers only. For <tt class="docutils literal"><span class="pre">M</span> <span class="pre">&gt;</span> <span class="pre">2</span></tt> classes, there is the <strong>AdaBoost.MH</strong> algorithm (described in <a class="reference internal" href="#fht98" id="id4">[FHT98]</a>) that reduces the problem to the two-class problem, yet with a much larger training set.</p>
+</div>
+<p>To reduce computation time for boosted models without substantially losing accuracy, the influence trimming technique can be employed. As the training algorithm proceeds and the number of trees in the ensemble is increased, a larger number of the training samples are classified correctly and with increasing confidence, thereby those samples receive smaller weights on the subsequent iterations. Examples with a very low relative weight have a small impact on the weak classifier training. Thus, such examples may be excluded during the weak classifier training without having much effect on the induced classifier. This process is controlled with the <tt class="docutils literal"><span class="pre">weight_trim_rate</span></tt> parameter. Only examples with the summary fraction <tt class="docutils literal"><span class="pre">weight_trim_rate</span></tt> of the total weight mass are used in the weak classifier training. Note that the weights for
+<strong>all</strong>
+training examples are recomputed at each training iteration. Examples deleted at a particular iteration may be used again for learning some of the weak classifiers further <a class="reference internal" href="#fht98" id="id5">[FHT98]</a>.</p>
+<table class="docutils citation" frame="void" id="htf01" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[HTF01]</a></td><td>Hastie, T., Tibshirani, R., Friedman, J. H. <em>The Elements of Statistical Learning: Data Mining, Inference, and Prediction. Springer Series in Statistics</em>. 2001.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="fht98" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[FHT98]</td><td><em>(<a class="fn-backref" href="#id3">1</a>, <a class="fn-backref" href="#id4">2</a>, <a class="fn-backref" href="#id5">3</a>)</em> Friedman, J. H., Hastie, T. and Tibshirani, R. Additive Logistic Regression: a Statistical View of Boosting. Technical Report, Dept. of Statistics*, Stanford University, 1998.</td></tr>
+</tbody>
+</table>
+<div class="section" id="boost-params">
+<h2>Boost::Params<a class="headerlink" href="#boost-params" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="Boost::Params : public DTree::Params">
+<em class="property">struct </em><tt class="descclassname">Boost::</tt><tt class="descname">Params</tt> : <em class="property">public</em> <tt class="descclassname">DTree::</tt><tt class="descname">Params</tt><a class="headerlink" href="#Boost::Params : public DTree::Params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Boosting training parameters.</p>
+</dd></dl>
+
+<p>The structure is derived from <tt class="docutils literal"><span class="pre">DTrees::Params</span></tt> but not all of the decision tree parameters are supported. In particular, cross-validation is not supported.</p>
+<p>All parameters are public. You can initialize them by a constructor and then override some of them directly if you want.</p>
+</div>
+<div class="section" id="boost-params-params">
+<h2>Boost::Params::Params<a class="headerlink" href="#boost-params-params" title="Permalink to this headline">¶</a></h2>
+<p>The constructors.</p>
+<dl class="function">
+<dt id="Boost::Params::Params()">
+<strong>C++:</strong><tt class="descname"> </tt> <tt class="descclassname">Boost::Params::</tt><tt class="descname">Params</tt><big>(</big><big>)</big><a class="headerlink" href="#Boost::Params::Params()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Boost::Params::Params(int boostType, int weakCount, double weightTrimRate, int maxDepth, bool useSurrogates, const Mat&amp; priors)">
+<strong>C++:</strong><tt class="descname"> </tt> <tt class="descclassname">Boost::Params::</tt><tt class="descname">Params</tt><big>(</big>int <strong>boostType</strong>, int <strong>weakCount</strong>, double <strong>weightTrimRate</strong>, int <strong>maxDepth</strong>, bool <strong>useSurrogates</strong>, const Mat&amp; <strong>priors</strong><big>)</big><a class="headerlink" href="#Boost::Params::Params(int boostType, int weakCount, double weightTrimRate, int maxDepth, bool useSurrogates, const Mat& priors)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>boost_type</strong> &#8211; <p>Type of the boosting algorithm. Possible values are:</p>
+<ul>
+<li><strong>Boost::DISCRETE</strong> Discrete AdaBoost.</li>
+<li><strong>Boost::REAL</strong> Real AdaBoost. It is a technique that utilizes confidence-rated predictions and works well with categorical data.</li>
+<li><strong>Boost::LOGIT</strong> LogitBoost. It can produce good regression fits.</li>
+<li><strong>Boost::GENTLE</strong> Gentle AdaBoost. It puts less weight on outlier data points and for that reason is often good with regression data.</li>
+</ul>
+<p>Gentle AdaBoost and Real AdaBoost are often the preferable choices.</p>
+</li>
+<li><strong>weak_count</strong> &#8211; The number of weak classifiers.</li>
+<li><strong>weight_trim_rate</strong> &#8211; A threshold between 0 and 1 used to save computational time. Samples with summary weight <span class="math">\leq 1 - weight\_trim\_rate</span> do not participate in the <em>next</em> iteration of training. Set this parameter to 0 to turn off this functionality.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>See <tt class="docutils literal"><span class="pre">DTrees::Params</span></tt> for description of other parameters.</p>
+<p>Default parameters are:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Boost</span><span class="o">::</span><span class="n">Params</span><span class="o">::</span><span class="n">Params</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">boostType</span> <span class="o">=</span> <span class="n">Boost</span><span class="o">::</span><span class="n">REAL</span><span class="p">;</span>
+    <span class="n">weakCount</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+    <span class="n">weightTrimRate</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">;</span>
+    <span class="n">CVFolds</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">maxDepth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="boost">
+<h2>Boost<a class="headerlink" href="#boost" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Boost : public DTrees">
+<em class="property">class </em><tt class="descname">Boost</tt> : <em class="property">public</em> <tt class="descname">DTrees</tt><a class="headerlink" href="#Boost : public DTrees" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Boosted tree classifier derived from <tt class="docutils literal"><span class="pre">DTrees</span></tt></p>
+</div>
+<div class="section" id="boost-create">
+<h2>Boost::create<a class="headerlink" href="#boost-create" title="Permalink to this headline">¶</a></h2>
+<p>Creates the empty model</p>
+<dl class="function">
+<dt id="Ptr&lt;Boost&gt; Boost::create(const Params&amp; params)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;Boost&gt; <tt class="descclassname">Boost::</tt><tt class="descname">create</tt><big>(</big>const Params&amp; <strong>params</strong>=Params()<big>)</big><a class="headerlink" href="#Ptr<Boost> Boost::create(const Params& params)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Use <tt class="docutils literal"><span class="pre">StatModel::train</span></tt> to train the model, <tt class="docutils literal"><span class="pre">StatModel::train&lt;Boost&gt;(traindata,</span> <span class="pre">params)</span></tt> to create and train the model, <tt class="docutils literal"><span class="pre">StatModel::load&lt;Boost&gt;(filename)</span></tt> to load the pre-trained model.</p>
+</div>
+<div class="section" id="boost-getbparams">
+<h2>Boost::getBParams<a class="headerlink" href="#boost-getbparams" title="Permalink to this headline">¶</a></h2>
+<p>Returns the boosting parameters</p>
+<dl class="function">
+<dt id="Params Boost::getBParams() const">
+<strong>C++:</strong><tt class="descname"> </tt>Params <tt class="descclassname">Boost::</tt><tt class="descname">getBParams</tt><big>(</big><big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#Params Boost::getBParams() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The method returns the training parameters.</p>
+</div>
+<div class="section" id="boost-setbparams">
+<h2>Boost::setBParams<a class="headerlink" href="#boost-setbparams" title="Permalink to this headline">¶</a></h2>
+<p>Sets the boosting parameters</p>
+<dl class="function">
+<dt id="void Boost::setBParams(const Params&amp; p)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">Boost::</tt><tt class="descname">setBParams</tt><big>(</big>const Params&amp; <strong>p</strong><big>)</big><a class="headerlink" href="#void Boost::setBParams(const Params& p)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>p</strong> &#8211; Training parameters of type Boost::Params.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The method sets the training parameters.</p>
+</div>
+<div class="section" id="prediction-with-boost">
+<h2>Prediction with Boost<a class="headerlink" href="#prediction-with-boost" title="Permalink to this headline">¶</a></h2>
+<p>StatModel::predict(samples, results, flags) should be used. Pass <tt class="docutils literal"><span class="pre">flags=StatModel::RAW_OUTPUT</span></tt> to get the raw sum from Boost classifier.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="random_trees.html" title="Random Trees"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="decision_trees.html" title="Decision Trees"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" >ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/ml/doc/boosting.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

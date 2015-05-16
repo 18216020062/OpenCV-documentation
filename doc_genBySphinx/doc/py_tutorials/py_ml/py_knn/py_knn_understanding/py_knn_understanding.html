@@ -1,0 +1,292 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Understanding k-Nearest Neighbour &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../../../index.html" />
+    <link rel="up" title="K-Nearest Neighbour" href="../py_knn_index.html" />
+    <link rel="next" title="OCR of Hand-written Data using kNN" href="../py_knn_opencv/py_knn_opencv.html" />
+    <link rel="prev" title="K-Nearest Neighbour" href="../py_knn_index.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py_knn_opencv/py_knn_opencv.html" title="OCR of Hand-written Data using kNN"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../py_knn_index.html" title="K-Nearest Neighbour"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../../py_table_of_contents_ml/py_table_of_contents_ml.html" >Machine Learning</a> &raquo;</li>
+          <li><a href="../py_knn_index.html" accesskey="U">K-Nearest Neighbour</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../../index.html">
+              <img class="logo" src="../../../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Understanding k-Nearest Neighbour</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#theory">Theory</a></li>
+<li><a class="reference internal" href="#knn-in-opencv">kNN in OpenCV</a></li>
+<li><a class="reference internal" href="#additional-resources">Additional Resources</a></li>
+<li><a class="reference internal" href="#exercises">Exercises</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../py_knn_index.html"
+                        title="previous chapter">K-Nearest Neighbour</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../py_knn_opencv/py_knn_opencv.html"
+                        title="next chapter">OCR of Hand-written Data using kNN</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="understanding-k-nearest-neighbour">
+<span id="knn-understanding"></span><h1>Understanding k-Nearest Neighbour<a class="headerlink" href="#understanding-k-nearest-neighbour" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this chapter, we will understand the concepts of k-Nearest Neighbour (kNN) algorithm.</p>
+</div>
+<div class="section" id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<p>kNN is one of the simplest of classification algorithms available for supervised learning. The idea is to search for closest match of the test data in feature space. We will look into it with below image.</p>
+<blockquote>
+<div><img alt="Understanding kNN" class="align-center" src="../../../../../_images/knn_theory.png" />
+</div></blockquote>
+<p>In the image, there are two families, <cite>Blue Squares and Red Triangles</cite>. We call each family as <strong>Class</strong>. Their houses are shown in their town map which we call <cite>feature space</cite>. <em>(You can consider a feature space as a space where all datas are projected. For example, consider a 2D coordinate space. Each data has two features, x and y coordinates. You can represent this data in your 2D coordinate space, right? Now imagine if there are three features, you need 3D space. Now consider N features, where you need N-dimensional space, right? This N-dimensional space is its feature space. In our image, you can consider it as a 2D case with two features)</em>.</p>
+<p>Now a new member comes into the town and creates a new home, which is shown as green circle. He should be added to one of these Blue/Red families. We call that process, <strong>Classification</strong>. What we do? Since we are dealing with kNN, let us apply this algorithm.</p>
+<p>One method is to check who is his nearest neighbour. From the image, it is clear it is the Red Triangle family. So he is also added into Red Triangle. This method is called simply <strong>Nearest Neighbour</strong>, because classification depends only on the nearest neighbour.</p>
+<p>But there is a problem with that. Red Triangle may be the nearest. But what if there are lot of Blue Squares near to him? Then Blue Squares have more strength in that locality than Red Triangle. So just checking nearest one is not sufficient. Instead we check some <cite>k</cite> nearest families. Then whoever is majority in them, the new guy belongs to that family. In our image, let&#8217;s take <cite>k=3</cite>, ie 3 nearest families. He has two Red and one Blue (there are two Blues equidistant, but since k=3, we take only one of them), so again he should be added to Red family. But what if we take <cite>k=7</cite>? Then he has 5 Blue families and 2 Red families. Great!! Now he should be added to Blue family. So it all changes with value of k. More funny thing is, what if <cite>k = 4</cite>? He has 2 Red and 2 Blue neighbours. It is a tie !!! So better take k as an odd number. So this method is called <strong>k-Nearest Neighbour</strong> since classification depends on k nearest neighbours.</p>
+<p>Again, in kNN, it is true we are considering k neighbours, but we are giving equal importance to all, right? Is it justice? For example, take the case of <cite>k=4</cite>. We told it is a tie. But see, the 2 Red families are more closer to him than the other 2 Blue families. So he is more eligible to be added to Red. So how do we mathematically explain that? We give some weights to each family depending on their distance to the new-comer. For those who are near to him get higher weights while those are far away get lower weights. Then we add total weights of each family separately. Whoever gets highest total weights, new-comer goes to that family. This is called <strong>modified kNN</strong>.</p>
+<p>So what are some important things you see here?</p>
+<blockquote>
+<div><ul class="simple">
+<li>You need to have information about all the houses in town, right? Because, we have to check the distance from new-comer to all the existing houses to find the nearest neighbour. If there are plenty of houses and families, it takes lots of memory, and more time for calculation also.</li>
+<li>There is almost zero time for any kind of training or preparation.</li>
+</ul>
+</div></blockquote>
+<p>Now let&#8217;s see it in OpenCV.</p>
+</div>
+<div class="section" id="knn-in-opencv">
+<h2>kNN in OpenCV<a class="headerlink" href="#knn-in-opencv" title="Permalink to this headline">¶</a></h2>
+<p>We will do a simple example here, with two families (classes), just like above. Then in the next chapter, we will do an even better example.</p>
+<p>So here, we label the Red family as <strong>Class-0</strong> (so denoted by 0) and Blue family as <strong>Class-1</strong> (denoted by 1). We create 25 families or 25 training data, and label them either Class-0 or Class-1. We do all these with the help of Random Number Generator in Numpy.</p>
+<p>Then we plot it with the help of Matplotlib. Red families are shown as Red Triangles and Blue families are shown as Blue Squares.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+
+<span class="c"># Feature set containing (x,y) values of 25 known/training data</span>
+<span class="n">trainData</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">,(</span><span class="mi">25</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+<span class="c"># Labels each one either Red or Blue with numbers 0 and 1</span>
+<span class="n">responses</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,(</span><span class="mi">25</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+<span class="c"># Take Red families and plot them</span>
+<span class="n">red</span> <span class="o">=</span> <span class="n">trainData</span><span class="p">[</span><span class="n">responses</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span><span class="o">==</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">red</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">red</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="mi">80</span><span class="p">,</span><span class="s">&#39;r&#39;</span><span class="p">,</span><span class="s">&#39;^&#39;</span><span class="p">)</span>
+
+<span class="c"># Take Blue families and plot them</span>
+<span class="n">blue</span> <span class="o">=</span> <span class="n">trainData</span><span class="p">[</span><span class="n">responses</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span><span class="o">==</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">blue</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">blue</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="mi">80</span><span class="p">,</span><span class="s">&#39;b&#39;</span><span class="p">,</span><span class="s">&#39;s&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>You will get something similar to our first image. Since you are using random number generator, you will be getting different data each time you run the code.</p>
+<p>Next initiate the kNN algorithm and pass the <cite>trainData</cite> and <cite>responses</cite> to train the kNN (It constructs a search tree).</p>
+<p>Then we will bring one new-comer and classify him to a family with the help of kNN in OpenCV. Before going to kNN, we need to know something on our test data (data of new comers). Our data should be a floating point array with size <span class="math">number \; of \; testdata \times number \; of \; features</span>. Then we find the nearest neighbours of new-comer. We can specify how many neighbours we want. It returns:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>The label given to new-comer depending upon the kNN theory we saw earlier. If you want Nearest Neighbour algorithm, just specify <cite>k=1</cite> where k is the number of neighbours.</li>
+<li>The labels of k-Nearest Neighbours.</li>
+<li>Corresponding distances from new-comer to each nearest neighbour.</li>
+</ol>
+</div></blockquote>
+<p>So let&#8217;s see how it works. New comer is marked in green color.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">newcomer</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">,(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">newcomer</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">newcomer</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="mi">80</span><span class="p">,</span><span class="s">&#39;g&#39;</span><span class="p">,</span><span class="s">&#39;o&#39;</span><span class="p">)</span>
+
+<span class="n">knn</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">KNearest</span><span class="p">()</span>
+<span class="n">knn</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">trainData</span><span class="p">,</span><span class="n">responses</span><span class="p">)</span>
+<span class="n">ret</span><span class="p">,</span> <span class="n">results</span><span class="p">,</span> <span class="n">neighbours</span> <span class="p">,</span><span class="n">dist</span> <span class="o">=</span> <span class="n">knn</span><span class="o">.</span><span class="n">find_nearest</span><span class="p">(</span><span class="n">newcomer</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="s">&quot;result: &quot;</span><span class="p">,</span> <span class="n">results</span><span class="p">,</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span>
+<span class="k">print</span> <span class="s">&quot;neighbours: &quot;</span><span class="p">,</span> <span class="n">neighbours</span><span class="p">,</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span>
+<span class="k">print</span> <span class="s">&quot;distance: &quot;</span><span class="p">,</span> <span class="n">dist</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>I got the result as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre>result:  [[ 1.]]
+neighbours:  [[ 1.  1.  1.]]
+distance:  [[ 53.  58.  61.]]
+</pre></div>
+</div>
+<p>It says our new-comer got 3 neighbours, all from Blue family. Therefore, he is labelled as Blue family. It is obvious from plot below:</p>
+<blockquote>
+<div><img alt="kNN Demo" class="align-center" src="../../../../../_images/knn_simple.png" />
+</div></blockquote>
+<p>If you have large number of data, you can just pass it as array. Corresponding results are also obtained as arrays.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># 10 new comers</span>
+<span class="n">newcomers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">,(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">ret</span><span class="p">,</span> <span class="n">results</span><span class="p">,</span><span class="n">neighbours</span><span class="p">,</span><span class="n">dist</span> <span class="o">=</span> <span class="n">knn</span><span class="o">.</span><span class="n">find_nearest</span><span class="p">(</span><span class="n">newcomer</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="c"># The results also will contain 10 labels.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><a class="reference external" href="http://www.nptel.iitm.ac.in/courses/106108057/12">NPTEL notes on Pattern Recognition, Chapter 11</a></li>
+</ol>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py_knn_opencv/py_knn_opencv.html" title="OCR of Hand-written Data using kNN"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../py_knn_index.html" title="K-Nearest Neighbour"
+             >previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../../py_table_of_contents_ml/py_table_of_contents_ml.html" >Machine Learning</a> &raquo;</li>
+          <li><a href="../py_knn_index.html" >K-Nearest Neighbour</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../../../_sources/doc/py_tutorials/py_ml/py_knn/py_knn_understanding/py_knn_understanding.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,291 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Histograms - 3 : 2D Histograms &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../../../index.html" />
+    <link rel="up" title="Histograms in OpenCV" href="../py_table_of_contents_histograms/py_table_of_contents_histograms.html" />
+    <link rel="next" title="Histogram - 4 : Histogram Backprojection" href="../py_histogram_backprojection/py_histogram_backprojection.html" />
+    <link rel="prev" title="Histograms - 2: Histogram Equalization" href="../py_histogram_equalization/py_histogram_equalization.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py_histogram_backprojection/py_histogram_backprojection.html" title="Histogram - 4 : Histogram Backprojection"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../py_histogram_equalization/py_histogram_equalization.html" title="Histograms - 2: Histogram Equalization"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../../py_table_of_contents_imgproc/py_table_of_contents_imgproc.html" >Image Processing in OpenCV</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_histograms/py_table_of_contents_histograms.html" accesskey="U">Histograms in OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../../index.html">
+              <img class="logo" src="../../../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Histograms - 3 : 2D Histograms</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#d-histogram-in-opencv">2D Histogram in OpenCV</a></li>
+<li><a class="reference internal" href="#d-histogram-in-numpy">2D Histogram in Numpy</a></li>
+<li><a class="reference internal" href="#plotting-2d-histograms">Plotting 2D Histograms</a><ul>
+<li><a class="reference internal" href="#method-1-using-cv2-imshow">Method - 1 : Using cv2.imshow()</a></li>
+<li><a class="reference internal" href="#method-2-using-matplotlib">Method - 2 : Using Matplotlib</a></li>
+<li><a class="reference internal" href="#method-3-opencv-sample-style">Method 3 : OpenCV sample style !!</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#additional-resources">Additional Resources</a></li>
+<li><a class="reference internal" href="#exercises">Exercises</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../py_histogram_equalization/py_histogram_equalization.html"
+                        title="previous chapter">Histograms - 2: Histogram Equalization</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../py_histogram_backprojection/py_histogram_backprojection.html"
+                        title="next chapter">Histogram - 4 : Histogram Backprojection</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="histograms-3-2d-histograms">
+<span id="twod-histogram"></span><h1>Histograms - 3 : 2D Histograms<a class="headerlink" href="#histograms-3-2d-histograms" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this chapter, we will learn to find and plot 2D histograms. It will be helpful in coming chapters.</p>
+</div>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>In the first article, we calculated and plotted one-dimensional histogram. It is called one-dimensional because we are taking only one feature into our consideration, ie grayscale intensity value of the pixel. But in two-dimensional histograms, you consider two features. Normally it is used for finding color histograms where two features are Hue &amp; Saturation values of every pixel.</p>
+<p>There is a <a class="reference external" href="https://github.com/Itseez/opencv/blob/master/samples/python2/color_histogram.py">python sample in the official samples</a> already for finding color histograms. We will try to understand how to create such a color histogram, and it will be useful in understanding further topics like Histogram Back-Projection.</p>
+</div>
+<div class="section" id="d-histogram-in-opencv">
+<h2>2D Histogram in OpenCV<a class="headerlink" href="#d-histogram-in-opencv" title="Permalink to this headline">¶</a></h2>
+<p>It is quite simple and calculated using the same function, <strong>cv2.calcHist()</strong>. For color histograms, we need to convert the image from BGR to HSV. (Remember, for 1D histogram, we converted from BGR to Grayscale). For 2D histograms, its parameters will be modified as follows:</p>
+<ul class="simple">
+<li><strong>channels = [0,1]</strong> <em>because we need to process both H and S plane.</em></li>
+<li><strong>bins = [180,256]</strong> <em>180 for H plane and 256 for S plane.</em></li>
+<li><strong>range = [0,180,0,256]</strong> <em>Hue value lies between 0 and 180 &amp; Saturation lies between 0 and 256.</em></li>
+</ul>
+<p>Now check the code below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;home.jpg&#39;</span><span class="p">)</span>
+<span class="n">hsv</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2HSV</span><span class="p">)</span>
+
+<span class="n">hist</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">calcHist</span><span class="p">([</span><span class="n">hsv</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="bp">None</span><span class="p">,</span> <span class="p">[</span><span class="mi">180</span><span class="p">,</span> <span class="mi">256</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">256</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>That&#8217;s it.</p>
+</div>
+<div class="section" id="d-histogram-in-numpy">
+<h2>2D Histogram in Numpy<a class="headerlink" href="#d-histogram-in-numpy" title="Permalink to this headline">¶</a></h2>
+<p>Numpy also provides a specific function for this : <strong>np.histogram2d()</strong>. (Remember, for 1D histogram we used <strong>np.histogram()</strong> ).</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;home.jpg&#39;</span><span class="p">)</span>
+<span class="n">hsv</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2HSV</span><span class="p">)</span>
+
+<span class="n">hist</span><span class="p">,</span> <span class="n">xbins</span><span class="p">,</span> <span class="n">ybins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram2d</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span><span class="n">s</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),[</span><span class="mi">180</span><span class="p">,</span><span class="mi">256</span><span class="p">],[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">180</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">256</span><span class="p">]])</span>
+</pre></div>
+</div>
+<p>First argument is H plane, second one is the S plane, third is number of bins for each and fourth is their range.</p>
+<p>Now we can check how to plot this color histogram.</p>
+</div>
+<div class="section" id="plotting-2d-histograms">
+<h2>Plotting 2D Histograms<a class="headerlink" href="#plotting-2d-histograms" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="method-1-using-cv2-imshow">
+<h3>Method - 1 : Using cv2.imshow()<a class="headerlink" href="#method-1-using-cv2-imshow" title="Permalink to this headline">¶</a></h3>
+<p>The result we get is a two dimensional array of size 180x256. So we can show them as we do normally, using cv2.imshow() function. It will be a grayscale image and it won&#8217;t give much idea what colors are there, unless you know the Hue values of different colors.</p>
+</div>
+<div class="section" id="method-2-using-matplotlib">
+<h3>Method - 2 : Using Matplotlib<a class="headerlink" href="#method-2-using-matplotlib" title="Permalink to this headline">¶</a></h3>
+<p>We can use <strong>matplotlib.pyplot.imshow()</strong> function to plot 2D histogram with different color maps. It gives us a much better idea about the different pixel density. But this also, doesn&#8217;t gives us idea what color is there on a first look, unless you know the Hue values of different colors. Still I prefer this method. It is simple and better.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">While using this function, remember, interpolation flag should be <tt class="docutils literal"><span class="pre">nearest</span></tt> for better results.</p>
+</div>
+<p>Consider code:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;home.jpg&#39;</span><span class="p">)</span>
+<span class="n">hsv</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2HSV</span><span class="p">)</span>
+<span class="n">hist</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">calcHist</span><span class="p">(</span> <span class="p">[</span><span class="n">hsv</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="bp">None</span><span class="p">,</span> <span class="p">[</span><span class="mi">180</span><span class="p">,</span> <span class="mi">256</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">256</span><span class="p">]</span> <span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">hist</span><span class="p">,</span><span class="n">interpolation</span> <span class="o">=</span> <span class="s">&#39;nearest&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Below is the input image and its color histogram plot. X axis shows S values and Y axis shows Hue.</p>
+<blockquote>
+<div><img alt="2D Histograms" class="align-center" src="../../../../../_images/2dhist_matplotlib.jpg" />
+</div></blockquote>
+<p>In histogram, you can see some high values near H = 100 and S = 200. It corresponds to blue of sky. Similarly another peak can be seen near H = 25 and S = 100. It corresponds to yellow of the palace. You can verify it with any image editing tools like GIMP.</p>
+</div>
+<div class="section" id="method-3-opencv-sample-style">
+<h3>Method 3 : OpenCV sample style !!<a class="headerlink" href="#method-3-opencv-sample-style" title="Permalink to this headline">¶</a></h3>
+<p>There is a <a class="reference external" href="https://github.com/Itseez/opencv/blob/master/samples/python2/color_histogram.py">sample code for color-histogram in OpenCV-Python2 samples</a>. If you run the code, you can see the histogram shows the corresponding color also. Or simply it outputs a color coded histogram. Its result is very good (although you need to add extra bunch of lines).</p>
+<p>In that code, the author created a color map in HSV. Then converted it into BGR. The resulting histogram image is multiplied with this color map. He also uses some preprocessing steps to remove small isolated pixels, resulting in a good histogram.</p>
+<p>I leave it to the readers to run the code, analyze it and have your own hack arounds. Below is the output of that code for the same image as above:</p>
+<blockquote>
+<div><img alt="2D Histograms using OpenCV-Python Samples" class="align-center" src="../../../../../_images/2dhist_opencv.jpg" />
+</div></blockquote>
+<p>You can clearly see in the histogram what colors are present, blue is there, yellow is there, and some white due to chessboard is there. Nice !!!</p>
+</div>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py_histogram_backprojection/py_histogram_backprojection.html" title="Histogram - 4 : Histogram Backprojection"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../py_histogram_equalization/py_histogram_equalization.html" title="Histograms - 2: Histogram Equalization"
+             >previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../../py_table_of_contents_imgproc/py_table_of_contents_imgproc.html" >Image Processing in OpenCV</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_histograms/py_table_of_contents_histograms.html" >Histograms in OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../../../_sources/doc/py_tutorials/py_imgproc/py_histograms/py_2d_histogram/py_2d_histogram.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

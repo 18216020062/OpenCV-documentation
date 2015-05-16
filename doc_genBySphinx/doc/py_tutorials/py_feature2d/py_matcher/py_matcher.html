@@ -1,0 +1,371 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Feature Matching &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../../index.html" />
+    <link rel="up" title="Feature Detection and Description" href="../py_table_of_contents_feature2d/py_table_of_contents_feature2d.html" />
+    <link rel="next" title="Feature Matching + Homography to find Objects" href="../py_feature_homography/py_feature_homography.html" />
+    <link rel="prev" title="ORB (Oriented FAST and Rotated BRIEF)" href="../py_orb/py_orb.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py_feature_homography/py_feature_homography.html" title="Feature Matching + Homography to find Objects"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../py_orb/py_orb.html" title="ORB (Oriented FAST and Rotated BRIEF)"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_feature2d/py_table_of_contents_feature2d.html" accesskey="U">Feature Detection and Description</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Feature Matching</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#basics-of-brute-force-matcher">Basics of Brute-Force Matcher</a><ul>
+<li><a class="reference internal" href="#brute-force-matching-with-orb-descriptors">Brute-Force Matching with ORB Descriptors</a></li>
+<li><a class="reference internal" href="#what-is-this-matcher-object">What is this Matcher Object?</a></li>
+<li><a class="reference internal" href="#brute-force-matching-with-sift-descriptors-and-ratio-test">Brute-Force Matching with SIFT Descriptors and Ratio Test</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#flann-based-matcher">FLANN based Matcher</a></li>
+<li><a class="reference internal" href="#additional-resources">Additional Resources</a></li>
+<li><a class="reference internal" href="#exercises">Exercises</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../py_orb/py_orb.html"
+                        title="previous chapter">ORB (Oriented FAST and Rotated BRIEF)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../py_feature_homography/py_feature_homography.html"
+                        title="next chapter">Feature Matching + Homography to find Objects</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="feature-matching">
+<span id="matcher"></span><h1>Feature Matching<a class="headerlink" href="#feature-matching" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>In this chapter</dt>
+<dd><ul class="first last simple">
+<li>We will see how to match features in one image with others.</li>
+<li>We will use the Brute-Force matcher and FLANN Matcher in OpenCV</li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="basics-of-brute-force-matcher">
+<h2>Basics of Brute-Force Matcher<a class="headerlink" href="#basics-of-brute-force-matcher" title="Permalink to this headline">¶</a></h2>
+<p>Brute-Force matcher is simple. It takes the descriptor of one feature in first set and is matched with all other features in second set using some distance calculation. And the closest one is returned.</p>
+<p>For BF matcher, first we have to create the BFMatcher object using <strong>cv2.BFMatcher()</strong>. It takes two optional params. First one is <tt class="docutils literal"><span class="pre">normType</span></tt>. It specifies the distance measurement to be used. By default, it is <tt class="docutils literal"><span class="pre">cv2.NORM_L2</span></tt>. It is good for SIFT, SURF etc (<tt class="docutils literal"><span class="pre">cv2.NORM_L1</span></tt> is also there). For binary string based descriptors like ORB, BRIEF, BRISK etc, <tt class="docutils literal"><span class="pre">cv2.NORM_HAMMING</span></tt> should be used, which used Hamming distance as measurement. If ORB is using <tt class="docutils literal"><span class="pre">WTA_K</span> <span class="pre">==</span> <span class="pre">3</span> <span class="pre">or</span> <span class="pre">4</span></tt>, <tt class="docutils literal"><span class="pre">cv2.NORM_HAMMING2</span></tt> should be used.</p>
+<p>Second param is boolean variable, <tt class="docutils literal"><span class="pre">crossCheck</span></tt> which is false by default. If it is true, Matcher returns only those matches with value (i,j) such that i-th descriptor in set A has j-th descriptor in set B as the best match and vice-versa. That is, the two features in both sets should match each other. It provides consistant result, and is a good alternative to ratio test proposed by D.Lowe in SIFT paper.</p>
+<p>Once it is created, two important methods are <em>BFMatcher.match()</em> and <em>BFMatcher.knnMatch()</em>. First one returns the best match. Second method returns <cite>k</cite> best matches where k is specified by the user. It may be useful when we need to do additional work on that.</p>
+<p>Like we used cv2.drawKeypoints() to draw keypoints, <strong>cv2.drawMatches()</strong> helps us to draw the matches. It stacks two images horizontally and draw lines from first image to second image showing best matches. There is also <strong>cv2.drawMatchesKnn</strong> which draws all the k best matches. If k=2, it will draw two match-lines for each keypoint. So we have to pass a mask if we want to selectively draw it.</p>
+<p>Let&#8217;s see one example for each of SURF and ORB (Both use different distance measurements).</p>
+<div class="section" id="brute-force-matching-with-orb-descriptors">
+<h3>Brute-Force Matching with ORB Descriptors<a class="headerlink" href="#brute-force-matching-with-orb-descriptors" title="Permalink to this headline">¶</a></h3>
+<p>Here, we will see a simple example on how to match features between two images. In this case, I have a queryImage and a trainImage. We will try to find the queryImage in trainImage using feature matching. ( The images are <tt class="docutils literal"><span class="pre">/samples/c/box.png</span></tt> and <tt class="docutils literal"><span class="pre">/samples/c/box_in_scene.png</span></tt>)</p>
+<p>We are using SIFT descriptors to match features. So let&#8217;s start with loading images, finding descriptors etc.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">img1</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;box.png&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>          <span class="c"># queryImage</span>
+<span class="n">img2</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;box_in_scene.png&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="c"># trainImage</span>
+
+<span class="c"># Initiate SIFT detector</span>
+<span class="n">orb</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">ORB</span><span class="p">()</span>
+
+<span class="c"># find the keypoints and descriptors with SIFT</span>
+<span class="n">kp1</span><span class="p">,</span> <span class="n">des1</span> <span class="o">=</span> <span class="n">orb</span><span class="o">.</span><span class="n">detectAndCompute</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span><span class="bp">None</span><span class="p">)</span>
+<span class="n">kp2</span><span class="p">,</span> <span class="n">des2</span> <span class="o">=</span> <span class="n">orb</span><span class="o">.</span><span class="n">detectAndCompute</span><span class="p">(</span><span class="n">img2</span><span class="p">,</span><span class="bp">None</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Next we create a BFMatcher object with distance measurement <tt class="docutils literal"><span class="pre">cv2.NORM_HAMMING</span></tt> (since we are using ORB) and <tt class="docutils literal"><span class="pre">crossCheck</span></tt> is switched on for better results. Then we use Matcher.match() method to get the best matches in two images. We sort them in ascending order of their distances so that best matches (with low distance) come to front. Then we draw only first 10 matches (Just for sake of visibility. You can increase it as you like)</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># create BFMatcher object</span>
+<span class="n">bf</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">BFMatcher</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">NORM_HAMMING</span><span class="p">,</span> <span class="n">crossCheck</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="c"># Match descriptors.</span>
+<span class="n">matches</span> <span class="o">=</span> <span class="n">bf</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">des1</span><span class="p">,</span><span class="n">des2</span><span class="p">)</span>
+
+<span class="c"># Sort them in the order of their distance.</span>
+<span class="n">matches</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">matches</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="o">.</span><span class="n">distance</span><span class="p">)</span>
+
+<span class="c"># Draw first 10 matches.</span>
+<span class="n">img3</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">drawMatches</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span><span class="n">kp1</span><span class="p">,</span><span class="n">img2</span><span class="p">,</span><span class="n">kp2</span><span class="p">,</span><span class="n">matches</span><span class="p">[:</span><span class="mi">10</span><span class="p">],</span> <span class="n">flags</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img3</span><span class="p">),</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Below is the result I got:</p>
+<blockquote>
+<div><img alt="ORB Feature Matching with Brute-Force" class="align-center" src="../../../../_images/matcher_result1.jpg" />
+</div></blockquote>
+</div>
+<div class="section" id="what-is-this-matcher-object">
+<h3>What is this Matcher Object?<a class="headerlink" href="#what-is-this-matcher-object" title="Permalink to this headline">¶</a></h3>
+<p>The result of <tt class="docutils literal"><span class="pre">matches</span> <span class="pre">=</span> <span class="pre">bf.match(des1,des2)</span></tt> line is a list of DMatch objects. This DMatch object has following attributes:</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">DMatch.distance</span></tt> - Distance between descriptors. The lower, the better it is.</li>
+<li><tt class="docutils literal"><span class="pre">DMatch.trainIdx</span></tt> - Index of the descriptor in train descriptors</li>
+<li><tt class="docutils literal"><span class="pre">DMatch.queryIdx</span></tt> - Index of the descriptor in query descriptors</li>
+<li><tt class="docutils literal"><span class="pre">DMatch.imgIdx</span></tt>   - Index of the train image.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="brute-force-matching-with-sift-descriptors-and-ratio-test">
+<h3>Brute-Force Matching with SIFT Descriptors and Ratio Test<a class="headerlink" href="#brute-force-matching-with-sift-descriptors-and-ratio-test" title="Permalink to this headline">¶</a></h3>
+<p>This time, we will use <tt class="docutils literal"><span class="pre">BFMatcher.knnMatch()</span></tt> to get k best matches. In this example, we will take k=2 so that we can apply ratio test explained by D.Lowe in his paper.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">img1</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;box.png&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>          <span class="c"># queryImage</span>
+<span class="n">img2</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;box_in_scene.png&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="c"># trainImage</span>
+
+<span class="c"># Initiate SIFT detector</span>
+<span class="n">sift</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">SIFT</span><span class="p">()</span>
+
+<span class="c"># find the keypoints and descriptors with SIFT</span>
+<span class="n">kp1</span><span class="p">,</span> <span class="n">des1</span> <span class="o">=</span> <span class="n">sift</span><span class="o">.</span><span class="n">detectAndCompute</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span><span class="bp">None</span><span class="p">)</span>
+<span class="n">kp2</span><span class="p">,</span> <span class="n">des2</span> <span class="o">=</span> <span class="n">sift</span><span class="o">.</span><span class="n">detectAndCompute</span><span class="p">(</span><span class="n">img2</span><span class="p">,</span><span class="bp">None</span><span class="p">)</span>
+
+<span class="c"># BFMatcher with default params</span>
+<span class="n">bf</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">BFMatcher</span><span class="p">()</span>
+<span class="n">matches</span> <span class="o">=</span> <span class="n">bf</span><span class="o">.</span><span class="n">knnMatch</span><span class="p">(</span><span class="n">des1</span><span class="p">,</span><span class="n">des2</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c"># Apply ratio test</span>
+<span class="n">good</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">m</span><span class="p">,</span><span class="n">n</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">distance</span> <span class="o">&lt;</span> <span class="mf">0.75</span><span class="o">*</span><span class="n">n</span><span class="o">.</span><span class="n">distance</span><span class="p">:</span>
+        <span class="n">good</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">m</span><span class="p">])</span>
+
+<span class="c"># cv2.drawMatchesKnn expects list of lists as matches.</span>
+<span class="n">img3</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">drawMatchesKnn</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span><span class="n">kp1</span><span class="p">,</span><span class="n">img2</span><span class="p">,</span><span class="n">kp2</span><span class="p">,</span><span class="n">good</span><span class="p">,</span><span class="n">flags</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img3</span><span class="p">),</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>See the result below:</p>
+<blockquote>
+<div><img alt="SIFT Descriptor with ratio test" class="align-center" src="../../../../_images/matcher_result2.jpg" />
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="flann-based-matcher">
+<h2>FLANN based Matcher<a class="headerlink" href="#flann-based-matcher" title="Permalink to this headline">¶</a></h2>
+<p>FLANN stands for Fast Library for Approximate Nearest Neighbors. It contains a collection of algorithms optimized for fast nearest neighbor search in large datasets and for high dimensional features. It works more faster than BFMatcher for large datasets. We will see the second example with FLANN based matcher.</p>
+<p>For FLANN based matcher, we need to pass two dictionaries which specifies the algorithm to be used, its related parameters etc. First one is IndexParams. For various algorithms, the information to be passed is explained in FLANN docs. As a summary, for algorithms like SIFT, SURF etc. you can pass following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">index_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">algorithm</span> <span class="o">=</span> <span class="n">FLANN_INDEX_KDTREE</span><span class="p">,</span> <span class="n">trees</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>While using ORB, you can pass the following. The commented values are recommended as per the docs, but it didn&#8217;t provide required results in some cases. Other values worked fine.:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">index_params</span><span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">algorithm</span> <span class="o">=</span> <span class="n">FLANN_INDEX_LSH</span><span class="p">,</span>
+                   <span class="n">table_number</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span> <span class="c"># 12</span>
+                   <span class="n">key_size</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>     <span class="c"># 20</span>
+                   <span class="n">multi_probe_level</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="c">#2</span>
+</pre></div>
+</div>
+<p>Second dictionary is the SearchParams. It specifies the number of times the trees in the index should be recursively traversed. Higher values gives better precision, but also takes more time. If you want to change the value, pass <tt class="docutils literal"><span class="pre">search_params</span> <span class="pre">=</span> <span class="pre">dict(checks=100)</span></tt>.</p>
+<p>With these informations, we are good to go.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">img1</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;box.png&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>          <span class="c"># queryImage</span>
+<span class="n">img2</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;box_in_scene.png&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="c"># trainImage</span>
+
+<span class="c"># Initiate SIFT detector</span>
+<span class="n">sift</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">SIFT</span><span class="p">()</span>
+
+<span class="c"># find the keypoints and descriptors with SIFT</span>
+<span class="n">kp1</span><span class="p">,</span> <span class="n">des1</span> <span class="o">=</span> <span class="n">sift</span><span class="o">.</span><span class="n">detectAndCompute</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span><span class="bp">None</span><span class="p">)</span>
+<span class="n">kp2</span><span class="p">,</span> <span class="n">des2</span> <span class="o">=</span> <span class="n">sift</span><span class="o">.</span><span class="n">detectAndCompute</span><span class="p">(</span><span class="n">img2</span><span class="p">,</span><span class="bp">None</span><span class="p">)</span>
+
+<span class="c"># FLANN parameters</span>
+<span class="n">FLANN_INDEX_KDTREE</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">index_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">algorithm</span> <span class="o">=</span> <span class="n">FLANN_INDEX_KDTREE</span><span class="p">,</span> <span class="n">trees</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">search_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">checks</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>   <span class="c"># or pass empty dictionary</span>
+
+<span class="n">flann</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">FlannBasedMatcher</span><span class="p">(</span><span class="n">index_params</span><span class="p">,</span><span class="n">search_params</span><span class="p">)</span>
+
+<span class="n">matches</span> <span class="o">=</span> <span class="n">flann</span><span class="o">.</span><span class="n">knnMatch</span><span class="p">(</span><span class="n">des1</span><span class="p">,</span><span class="n">des2</span><span class="p">,</span><span class="n">k</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c"># Need to draw only good matches, so create a mask</span>
+<span class="n">matchesMask</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">))]</span>
+
+<span class="c"># ratio test as per Lowe&#39;s paper</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,(</span><span class="n">m</span><span class="p">,</span><span class="n">n</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">matches</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">distance</span> <span class="o">&lt;</span> <span class="mf">0.7</span><span class="o">*</span><span class="n">n</span><span class="o">.</span><span class="n">distance</span><span class="p">:</span>
+        <span class="n">matchesMask</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">draw_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">matchColor</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span>
+                   <span class="n">singlePointColor</span> <span class="o">=</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span>
+                   <span class="n">matchesMask</span> <span class="o">=</span> <span class="n">matchesMask</span><span class="p">,</span>
+                   <span class="n">flags</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="n">img3</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">drawMatchesKnn</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span><span class="n">kp1</span><span class="p">,</span><span class="n">img2</span><span class="p">,</span><span class="n">kp2</span><span class="p">,</span><span class="n">matches</span><span class="p">,</span><span class="bp">None</span><span class="p">,</span><span class="o">**</span><span class="n">draw_params</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img3</span><span class="p">,),</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>See the result below:</p>
+<blockquote>
+<div><img alt="FLANN based matching" class="align-center" src="../../../../_images/matcher_flann.jpg" />
+</div></blockquote>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py_feature_homography/py_feature_homography.html" title="Feature Matching + Homography to find Objects"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../py_orb/py_orb.html" title="ORB (Oriented FAST and Rotated BRIEF)"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_feature2d/py_table_of_contents_feature2d.html" >Feature Detection and Description</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../../_sources/doc/py_tutorials/py_feature2d/py_matcher/py_matcher.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

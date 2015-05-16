@@ -1,0 +1,248 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ORB (Oriented FAST and Rotated BRIEF) &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../../index.html" />
+    <link rel="up" title="Feature Detection and Description" href="../py_table_of_contents_feature2d/py_table_of_contents_feature2d.html" />
+    <link rel="next" title="Feature Matching" href="../py_matcher/py_matcher.html" />
+    <link rel="prev" title="BRIEF (Binary Robust Independent Elementary Features)" href="../py_brief/py_brief.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py_matcher/py_matcher.html" title="Feature Matching"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../py_brief/py_brief.html" title="BRIEF (Binary Robust Independent Elementary Features)"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_feature2d/py_table_of_contents_feature2d.html" accesskey="U">Feature Detection and Description</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">ORB (Oriented FAST and Rotated BRIEF)</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#theory">Theory</a></li>
+<li><a class="reference internal" href="#orb-in-opencv">ORB in OpenCV</a></li>
+<li><a class="reference internal" href="#additional-resources">Additional Resources</a></li>
+<li><a class="reference internal" href="#exercises">Exercises</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../py_brief/py_brief.html"
+                        title="previous chapter">BRIEF (Binary Robust Independent Elementary Features)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../py_matcher/py_matcher.html"
+                        title="next chapter">Feature Matching</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="orb-oriented-fast-and-rotated-brief">
+<span id="orb"></span><h1>ORB (Oriented FAST and Rotated BRIEF)<a class="headerlink" href="#orb-oriented-fast-and-rotated-brief" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>In this chapter,</dt>
+<dd><ul class="first last simple">
+<li>We will see the basics of ORB</li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<p>As an OpenCV enthusiast, the most important thing about the ORB is that it came from &#8220;OpenCV Labs&#8221;. This algorithm was brought up by Ethan Rublee, Vincent Rabaud, Kurt Konolige and Gary R. Bradski in their paper <strong>ORB: An efficient alternative to SIFT or SURF</strong> in 2011. As the title says, it is a good alternative to SIFT and SURF in computation cost, matching performance and mainly the patents. Yes, SIFT and SURF are patented and you are supposed to pay them for its use. But ORB is not !!!</p>
+<p>ORB is basically a fusion of FAST keypoint detector and BRIEF descriptor with many modifications to enhance the performance. First it use FAST to find keypoints, then apply Harris corner measure to find top N points among them. It also use pyramid to produce multiscale-features. But one problem is that, FAST doesn&#8217;t compute the orientation. So what about rotation invariance? Authors came up with following modification.</p>
+<p>It computes the intensity weighted centroid of the patch with located corner at center. The direction of the vector from this corner point to centroid gives the orientation. To improve the rotation invariance, moments are computed with x and y which should be in a circular region of radius <span class="math">r</span>, where <span class="math">r</span> is the size of the patch.</p>
+<p>Now for descriptors, ORB use BRIEF descriptors. But we have already seen that BRIEF performs poorly with rotation. So what ORB does is to &#8220;steer&#8221; BRIEF according to the orientation of keypoints. For any feature set of <span class="math">n</span> binary tests at location
+<span class="math">(x_i, y_i)</span>, define a <span class="math">2 \times n</span> matrix, <span class="math">S</span> which contains the coordinates of these pixels. Then using the orientation of patch, <span class="math">\theta</span>, its rotation matrix is found and rotates the <span class="math">S</span> to get steered(rotated) version <span class="math">S_\theta</span>.</p>
+<p>ORB discretize the angle to increments of <span class="math">2 \pi /30</span> (12 degrees), and construct a lookup table of precomputed BRIEF patterns. As long as the keypoint orientation <span class="math">\theta</span> is consistent across views, the correct set of points <span class="math">S_\theta</span> will be used to compute its descriptor.</p>
+<p>BRIEF has an important property that each bit feature has a large variance and a mean near 0.5. But once it is oriented along keypoint direction, it loses this property and become more distributed. High variance makes a feature more discriminative, since it responds differentially to inputs. Another desirable property is to have the tests uncorrelated, since then each test will contribute to the result. To resolve all these, ORB runs a greedy search among all possible binary tests to find the ones that have both high variance and means close to 0.5, as well as being uncorrelated. The result is called <strong>rBRIEF</strong>.</p>
+<p>For descriptor matching, multi-probe LSH which improves on the traditional LSH, is used. The paper says ORB is much faster than SURF and SIFT and ORB descriptor works better than SURF. ORB is a good choice in low-power devices for panorama stitching etc.</p>
+</div>
+<div class="section" id="orb-in-opencv">
+<h2>ORB in OpenCV<a class="headerlink" href="#orb-in-opencv" title="Permalink to this headline">¶</a></h2>
+<p>As usual, we have to create an ORB object with the function, <strong>cv2.ORB()</strong> or using feature2d common interface. It has a number of optional parameters. Most useful ones are <tt class="docutils literal"><span class="pre">nFeatures</span></tt> which denotes maximum number of features to be retained (by default 500), <tt class="docutils literal"><span class="pre">scoreType</span></tt> which denotes whether Harris score or FAST score to rank the features (by default, Harris score) etc. Another parameter, <tt class="docutils literal"><span class="pre">WTA_K</span></tt> decides number of points that produce each element of the oriented BRIEF descriptor. By default it is two, ie selects two points at a time. In that case, for matching, <tt class="docutils literal"><span class="pre">NORM_HAMMING</span></tt> distance is used. If WTA_K is 3 or 4, which takes 3 or 4 points to produce BRIEF descriptor, then matching distance is defined by <tt class="docutils literal"><span class="pre">NORM_HAMMING2</span></tt>.</p>
+<p>Below is a simple code which shows the use of ORB.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;simple.jpg&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c"># Initiate STAR detector</span>
+<span class="n">orb</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">ORB</span><span class="p">()</span>
+
+<span class="c"># find the keypoints with ORB</span>
+<span class="n">kp</span> <span class="o">=</span> <span class="n">orb</span><span class="o">.</span><span class="n">detect</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="bp">None</span><span class="p">)</span>
+
+<span class="c"># compute the descriptors with ORB</span>
+<span class="n">kp</span><span class="p">,</span> <span class="n">des</span> <span class="o">=</span> <span class="n">orb</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">kp</span><span class="p">)</span>
+
+<span class="c"># draw only keypoints location,not size and orientation</span>
+<span class="n">img2</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">drawKeypoints</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">kp</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img2</span><span class="p">),</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>See the result below:</p>
+<blockquote>
+<div><img alt="ORB Keypoints" class="align-center" src="../../../../_images/orb_kp.jpg" />
+</div></blockquote>
+<p>ORB feature matching, we will do in another chapter.</p>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Ethan Rublee, Vincent Rabaud, Kurt Konolige, Gary R. Bradski: ORB: An efficient alternative to SIFT or SURF. ICCV 2011: 2564-2571.</li>
+</ol>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py_matcher/py_matcher.html" title="Feature Matching"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../py_brief/py_brief.html" title="BRIEF (Binary Robust Independent Elementary Features)"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_feature2d/py_table_of_contents_feature2d.html" >Feature Detection and Description</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../../_sources/doc/py_tutorials/py_feature2d/py_orb/py_orb.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

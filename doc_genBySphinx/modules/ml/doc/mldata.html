@@ -1,0 +1,335 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Training Data &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="ml. Machine Learning" href="ml.html" />
+    <link rel="next" title="flann. Clustering and Search in Multi-Dimensional Spaces" href="../../flann/doc/flann.html" />
+    <link rel="prev" title="Logistic Regression" href="logistic_regression.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../flann/doc/flann.html" title="flann. Clustering and Search in Multi-Dimensional Spaces"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="logistic_regression.html" title="Logistic Regression"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" accesskey="U">ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Training Data</a><ul>
+<li><a class="reference internal" href="#traindata">TrainData</a></li>
+<li><a class="reference internal" href="#traindata-loadfromcsv">TrainData::loadFromCSV</a></li>
+<li><a class="reference internal" href="#traindata-create">TrainData::create</a></li>
+<li><a class="reference internal" href="#traindata-gettrainsamples">TrainData::getTrainSamples</a></li>
+<li><a class="reference internal" href="#traindata-gettrainresponses">TrainData::getTrainResponses</a></li>
+<li><a class="reference internal" href="#traindata-getclasslabels">TrainData::getClassLabels</a></li>
+<li><a class="reference internal" href="#traindata-gettrainnormcatresponses">TrainData::getTrainNormCatResponses</a></li>
+<li><a class="reference internal" href="#traindata-settraintestsplitratio">TrainData::setTrainTestSplitRatio</a></li>
+<li><a class="reference internal" href="#other-methods">Other methods</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="logistic_regression.html"
+                        title="previous chapter">Logistic Regression</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../flann/doc/flann.html"
+                        title="next chapter">flann. Clustering and Search in Multi-Dimensional Spaces</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="training-data">
+<h1>Training Data<a class="headerlink" href="#training-data" title="Permalink to this headline">¶</a></h1>
+<p>In machine learning algorithms there is notion of training data. Training data includes several components:</p>
+<ul class="simple">
+<li>A set of training samples. Each training sample is a vector of values (in Computer Vision it&#8217;s sometimes referred to as feature vector). Usually all the vectors have the same number of components (features); OpenCV ml module assumes that. Each feature can be ordered (i.e. its values are floating-point numbers that can be compared with each other and strictly ordered, i.e. sorted) or categorical (i.e. its value belongs to a fixed set of values that can be integers, strings etc.).</li>
+<li>Optional set of responses corresponding to the samples. Training data with no responses is used in unsupervised learning algorithms that learn structure of the supplied data based on distances between different samples. Training data with responses is used in supervised learning algorithms, which learn the function mapping samples to responses. Usually the responses are scalar values, ordered (when we deal with regression problem) or categorical (when we deal with classification problem; in this case the responses are often called &#8220;labels&#8221;). Some algorithms, most noticeably Neural networks, can handle not only scalar, but also multi-dimensional or vector responses.</li>
+<li>Another optional component is the mask of missing measurements. Most algorithms require all the components in all the training samples be valid, but some other algorithms, such as decision tress, can handle the cases of missing measurements.</li>
+<li>In the case of classification problem user may want to give different weights to different classes. This is useful, for example, when
+* user wants to shift prediction accuracy towards lower false-alarm rate or higher hit-rate.
+* user wants to compensate for significantly different amounts of training samples from different classes.</li>
+<li>In addition to that, each training sample may be given a weight, if user wants the algorithm to pay special attention to certain training samples and adjust the training model accordingly.</li>
+<li>Also, user may wish not to use the whole training data at once, but rather use parts of it, e.g. to do parameter optimization via cross-validation procedure.</li>
+</ul>
+<p>As you can see, training data can have rather complex structure; besides, it may be very big and/or not entirely available, so there is need to make abstraction for this concept. In OpenCV ml there is <tt class="docutils literal"><span class="pre">cv::ml::TrainData</span></tt> class for that.</p>
+<div class="section" id="traindata">
+<h2>TrainData<a class="headerlink" href="#traindata" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="TrainData">
+<em class="property">class </em><tt class="descname">TrainData</tt><a class="headerlink" href="#TrainData" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class encapsulating training data. Please note that the class only specifies the interface of training data, but not implementation. All the statistical model classes in ml take Ptr&lt;TrainData&gt;. In other words, you can create your own class derived from <tt class="docutils literal"><span class="pre">TrainData</span></tt> and supply smart pointer to the instance of this class into <tt class="docutils literal"><span class="pre">StatModel::train</span></tt>.</p>
+</div>
+<div class="section" id="traindata-loadfromcsv">
+<h2>TrainData::loadFromCSV<a class="headerlink" href="#traindata-loadfromcsv" title="Permalink to this headline">¶</a></h2>
+<p>Reads the dataset from a .csv file and returns the ready-to-use training data.</p>
+<dl class="function">
+<dt id="Ptr&lt;TrainData&gt; loadFromCSV(const String&amp; filename, int headerLineCount, int responseStartIdx, int responseEndIdx, const String&amp; varTypeSpec, char delimiter,', char missch)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;TrainData&gt; <tt class="descname">loadFromCSV</tt><big>(</big>const String&amp; <strong>filename</strong>, int <strong>headerLineCount</strong>, int <strong>responseStartIdx</strong>=-1, int <strong>responseEndIdx</strong>=-1, const String&amp; <strong>varTypeSpec</strong>=String(), char <strong>delimiter</strong>=',', char <strong>missch</strong>='?'<big>)</big><a class="headerlink" href="#Ptr<TrainData> loadFromCSV(const String& filename, int headerLineCount, int responseStartIdx, int responseEndIdx, const String& varTypeSpec, char delimiter,', char missch)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> &#8211; The input file name</li>
+<li><strong>headerLineCount</strong> &#8211; The number of lines in the beginning to skip; besides the header, the function also skips empty lines and lines staring with &#8216;#&#8217;</li>
+<li><strong>responseStartIdx</strong> &#8211; Index of the first output variable. If -1, the function considers the last variable as the response</li>
+<li><strong>responseEndIdx</strong> &#8211; Index of the last output variable + 1. If -1, then there is single response variable at <tt class="docutils literal"><span class="pre">responseStartIdx</span></tt>.</li>
+<li><strong>varTypeSpec</strong> &#8211; The optional text string that specifies the variables&#8217; types. It has the format <tt class="docutils literal"><span class="pre">ord[n1-n2,n3,n4-n5,...]cat[n6,n7-n8,...]</span></tt>. That is, variables from n1 to n2 (inclusive range), n3, n4 to n5 ... are considered ordered and n6, n7 to n8 ... are considered as categorical. The range [n1..n2] + [n3] + [n4..n5] + ... + [n6] + [n7..n8] should cover all the variables. If varTypeSpec is not specified, then algorithm uses the following rules:
+1. all input variables are considered ordered by default. If some column contains has non-numerical values, e.g. &#8216;apple&#8217;, &#8216;pear&#8217;, &#8216;apple&#8217;, &#8216;apple&#8217;, &#8216;mango&#8217;, the corresponding variable is considered categorical.
+2. if there are several output variables, they are all considered as ordered. Error is reported when non-numerical values are used.
+3. if there is a single output variable, then if its values are non-numerical or are all integers, then it&#8217;s considered categorical. Otherwise, it&#8217;s considered ordered.</li>
+<li><strong>delimiter</strong> &#8211; The character used to separate values in each line.</li>
+<li><strong>missch</strong> &#8211; The character used to specify missing measurements. It should not be a digit. Although it&#8217;s a non-numerical value, it surely does not affect the decision of whether the variable ordered or categorical.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="traindata-create">
+<h2>TrainData::create<a class="headerlink" href="#traindata-create" title="Permalink to this headline">¶</a></h2>
+<p>Creates training data from in-memory arrays.</p>
+<dl class="function">
+<dt id="Ptr&lt;TrainData&gt; create(InputArray samples, int layout, InputArray responses, InputArray varIdx, InputArray sampleIdx, InputArray sampleWeights, InputArray varType)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;TrainData&gt; <tt class="descname">create</tt><big>(</big>InputArray <strong>samples</strong>, int <strong>layout</strong>, InputArray <strong>responses</strong>, InputArray <strong>varIdx</strong>=noArray(), InputArray <strong>sampleIdx</strong>=noArray(), InputArray <strong>sampleWeights</strong>=noArray(), InputArray <strong>varType</strong>=noArray()<big>)</big><a class="headerlink" href="#Ptr<TrainData> create(InputArray samples, int layout, InputArray responses, InputArray varIdx, InputArray sampleIdx, InputArray sampleWeights, InputArray varType)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>samples</strong> &#8211; matrix of samples. It should have <tt class="docutils literal"><span class="pre">CV_32F</span></tt> type.</li>
+<li><strong>layout</strong> &#8211; it&#8217;s either <tt class="docutils literal"><span class="pre">ROW_SAMPLE</span></tt>, which means that each training sample is a row of <tt class="docutils literal"><span class="pre">samples</span></tt>, or <tt class="docutils literal"><span class="pre">COL_SAMPLE</span></tt>, which means that each training sample occupies a column of <tt class="docutils literal"><span class="pre">samples</span></tt>.</li>
+<li><strong>responses</strong> &#8211; matrix of responses. If the responses are scalar, they should be stored as a single row or as a single column. The matrix should have type <tt class="docutils literal"><span class="pre">CV_32F</span></tt> or <tt class="docutils literal"><span class="pre">CV_32S</span></tt> (in the former case the responses are considered as ordered by default; in the latter case - as categorical)</li>
+<li><strong>varIdx</strong> &#8211; vector specifying which variables to use for training. It can be an integer vector (<tt class="docutils literal"><span class="pre">CV_32S</span></tt>) containing 0-based variable indices or byte vector (<tt class="docutils literal"><span class="pre">CV_8U</span></tt>) containing a mask of active variables.</li>
+<li><strong>sampleIdx</strong> &#8211; vector specifying which samples to use for training. It can be an integer vector (<tt class="docutils literal"><span class="pre">CV_32S</span></tt>) containing 0-based sample indices or byte vector (<tt class="docutils literal"><span class="pre">CV_8U</span></tt>) containing a mask of training samples.</li>
+<li><strong>sampleWeights</strong> &#8211; optional vector with weights for each sample. It should have <tt class="docutils literal"><span class="pre">CV_32F</span></tt> type.</li>
+<li><strong>varType</strong> &#8211; optional vector of type <tt class="docutils literal"><span class="pre">CV_8U</span></tt> and size &lt;number_of_variables_in_samples&gt; + &lt;number_of_variables_in_responses&gt;, containing types of each input and output variable. The ordered variables are denoted by value <tt class="docutils literal"><span class="pre">VAR_ORDERED</span></tt>, and categorical - by <tt class="docutils literal"><span class="pre">VAR_CATEGORICAL</span></tt>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="traindata-gettrainsamples">
+<h2>TrainData::getTrainSamples<a class="headerlink" href="#traindata-gettrainsamples" title="Permalink to this headline">¶</a></h2>
+<p>Returns matrix of train samples</p>
+<dl class="function">
+<dt id="Mat TrainData::getTrainSamples(int layout, bool compressSamples, bool compressVars) const">
+<strong>C++:</strong><tt class="descname"> </tt>Mat <tt class="descclassname">TrainData::</tt><tt class="descname">getTrainSamples</tt><big>(</big>int <strong>layout</strong>=ROW_SAMPLE, bool <strong>compressSamples</strong>=true, bool <strong>compressVars</strong>=true<big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#Mat TrainData::getTrainSamples(int layout, bool compressSamples, bool compressVars) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>layout</strong> &#8211; The requested layout. If it&#8217;s different from the initial one, the matrix is transposed.</li>
+<li><strong>compressSamples</strong> &#8211; if true, the function returns only the training samples (specified by sampleIdx)</li>
+<li><strong>compressVars</strong> &#8211; if true, the function returns the shorter training samples, containing only the active variables.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>In current implementation the function tries to avoid physical data copying and returns the matrix stored inside TrainData (unless the transposition or compression is needed).</p>
+</div>
+<div class="section" id="traindata-gettrainresponses">
+<h2>TrainData::getTrainResponses<a class="headerlink" href="#traindata-gettrainresponses" title="Permalink to this headline">¶</a></h2>
+<p>Returns the vector of responses</p>
+<dl class="function">
+<dt id="Mat TrainData::getTrainResponses() const">
+<strong>C++:</strong><tt class="descname"> </tt>Mat <tt class="descclassname">TrainData::</tt><tt class="descname">getTrainResponses</tt><big>(</big><big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#Mat TrainData::getTrainResponses() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The function returns ordered or the original categorical responses. Usually it&#8217;s used in regression algorithms.</p>
+</div>
+<div class="section" id="traindata-getclasslabels">
+<h2>TrainData::getClassLabels<a class="headerlink" href="#traindata-getclasslabels" title="Permalink to this headline">¶</a></h2>
+<p>Returns the vector of class labels</p>
+<dl class="function">
+<dt id="Mat TrainData::getClassLabels() const">
+<strong>C++:</strong><tt class="descname"> </tt>Mat <tt class="descclassname">TrainData::</tt><tt class="descname">getClassLabels</tt><big>(</big><big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#Mat TrainData::getClassLabels() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The function returns vector of unique labels occurred in the responses.</p>
+</div>
+<div class="section" id="traindata-gettrainnormcatresponses">
+<h2>TrainData::getTrainNormCatResponses<a class="headerlink" href="#traindata-gettrainnormcatresponses" title="Permalink to this headline">¶</a></h2>
+<p>Returns the vector of normalized categorical responses</p>
+<dl class="function">
+<dt id="Mat TrainData::getTrainNormCatResponses() const">
+<strong>C++:</strong><tt class="descname"> </tt>Mat <tt class="descclassname">TrainData::</tt><tt class="descname">getTrainNormCatResponses</tt><big>(</big><big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#Mat TrainData::getTrainNormCatResponses() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The function returns vector of responses. Each response is integer from 0 to &lt;number of classes&gt;-1. The actual label value can be retrieved then from the class label vector, see <tt class="docutils literal"><span class="pre">TrainData::getClassLabels</span></tt>.</p>
+</div>
+<div class="section" id="traindata-settraintestsplitratio">
+<h2>TrainData::setTrainTestSplitRatio<a class="headerlink" href="#traindata-settraintestsplitratio" title="Permalink to this headline">¶</a></h2>
+<p>Splits the training data into the training and test parts</p>
+<dl class="function">
+<dt id="void TrainData::setTrainTestSplitRatio(double ratio, bool shuffle)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">TrainData::</tt><tt class="descname">setTrainTestSplitRatio</tt><big>(</big>double <strong>ratio</strong>, bool <strong>shuffle</strong>=true<big>)</big><a class="headerlink" href="#void TrainData::setTrainTestSplitRatio(double ratio, bool shuffle)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The function selects a subset of specified relative size and then returns it as the training set. If the function is not called, all the data is used for training. Please, note that for each of <tt class="docutils literal"><span class="pre">TrainData::getTrain*</span></tt> there is corresponding <tt class="docutils literal"><span class="pre">TrainData::getTest*</span></tt>, so that the test subset can be retrieved and processed as well.</p>
+</div>
+<div class="section" id="other-methods">
+<h2>Other methods<a class="headerlink" href="#other-methods" title="Permalink to this headline">¶</a></h2>
+<p>The class includes many other methods that can be used to access normalized categorical input variables, access training data by parts, so that does not have to fit into the memory etc.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../flann/doc/flann.html" title="flann. Clustering and Search in Multi-Dimensional Spaces"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="logistic_regression.html" title="Logistic Regression"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" >ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/ml/doc/mldata.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

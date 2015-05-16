@@ -1,0 +1,496 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Support Vector Machines &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="ml. Machine Learning" href="ml.html" />
+    <link rel="next" title="Decision Trees" href="decision_trees.html" />
+    <link rel="prev" title="K-Nearest Neighbors" href="k_nearest_neighbors.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="decision_trees.html" title="Decision Trees"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="k_nearest_neighbors.html" title="K-Nearest Neighbors"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" accesskey="U">ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Support Vector Machines</a><ul>
+<li><a class="reference internal" href="#paramgrid">ParamGrid</a></li>
+<li><a class="reference internal" href="#paramgrid-paramgrid">ParamGrid::ParamGrid</a></li>
+<li><a class="reference internal" href="#svm-params">SVM::Params</a></li>
+<li><a class="reference internal" href="#svm-params-params">SVM::Params::Params</a></li>
+<li><a class="reference internal" href="#svm">SVM</a></li>
+<li><a class="reference internal" href="#svm-create">SVM::create</a></li>
+<li><a class="reference internal" href="#svm-trainauto">SVM::trainAuto</a></li>
+<li><a class="reference internal" href="#svm-getdefaulltgrid">SVM::getDefaulltGrid</a></li>
+<li><a class="reference internal" href="#svm-getparams">SVM::getParams</a></li>
+<li><a class="reference internal" href="#svm-getsupportvectors">SVM::getSupportVectors</a></li>
+<li><a class="reference internal" href="#svm-getdecisionfunction">SVM::getDecisionFunction</a></li>
+<li><a class="reference internal" href="#prediction-with-svm">Prediction with SVM</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="k_nearest_neighbors.html"
+                        title="previous chapter">K-Nearest Neighbors</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="decision_trees.html"
+                        title="next chapter">Decision Trees</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="support-vector-machines">
+<h1>Support Vector Machines<a class="headerlink" href="#support-vector-machines" title="Permalink to this headline">¶</a></h1>
+<p>Originally, support vector machines (SVM) was a technique for building an optimal binary (2-class) classifier. Later the technique was extended to regression and clustering problems. SVM is a partial case of kernel-based methods. It maps feature vectors into a higher-dimensional space using a kernel function and builds an optimal linear discriminating function in this space or an optimal hyper-plane that fits into the training data. In case of SVM, the kernel is not defined explicitly. Instead, a distance between any 2 points in the hyper-space needs to be defined.</p>
+<p>The solution is optimal, which means that the margin between the separating hyper-plane and the nearest feature vectors from both classes (in case of 2-class classifier) is maximal. The feature vectors that are the closest to the hyper-plane are called <em>support vectors</em>, which means that the position of other vectors does not affect the hyper-plane (the decision function).</p>
+<p>SVM implementation in OpenCV is based on <a class="reference internal" href="#libsvm" id="id1">[LibSVM]</a>.</p>
+<table class="docutils citation" frame="void" id="burges98" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[Burges98]</td><td><ol class="first last upperalpha simple" start="3">
+<li>Burges. <em>A tutorial on support vector machines for pattern recognition</em>, Knowledge Discovery and Data Mining 2(2), 1998 (available online at <a class="reference external" href="http://citeseer.ist.psu.edu/burges98tutorial.html">http://citeseer.ist.psu.edu/burges98tutorial.html</a>)</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="libsvm" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[LibSVM]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id2">2</a>)</em> C.-C. Chang and C.-J. Lin. <em>LIBSVM: a library for support vector machines</em>, ACM Transactions on Intelligent Systems and Technology, 2:27:1&#8211;27:27, 2011. (<a class="reference external" href="http://www.csie.ntu.edu.tw/~cjlin/papers/libsvm.pdf">http://www.csie.ntu.edu.tw/~cjlin/papers/libsvm.pdf</a>)</td></tr>
+</tbody>
+</table>
+<div class="section" id="paramgrid">
+<h2>ParamGrid<a class="headerlink" href="#paramgrid" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ParamGrid">
+<em class="property">class </em><tt class="descname">ParamGrid</tt><a class="headerlink" href="#ParamGrid" title="Permalink to this definition">¶</a></dt>
+<dd><p>The structure represents the logarithmic grid range of statmodel parameters. It is used for optimizing statmodel accuracy by varying model parameters, the accuracy estimate being computed by cross-validation.</p>
+<dl class="member">
+<dt id="double ParamGrid::minVal">
+double <tt class="descclassname">ParamGrid::</tt><tt class="descname">minVal</tt><a class="headerlink" href="#double ParamGrid::minVal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Minimum value of the statmodel parameter.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="double ParamGrid::maxVal">
+double <tt class="descclassname">ParamGrid::</tt><tt class="descname">maxVal</tt><a class="headerlink" href="#double ParamGrid::maxVal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum value of the statmodel parameter.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="double ParamGrid::logStep">
+double <tt class="descclassname">ParamGrid::</tt><tt class="descname">logStep</tt><a class="headerlink" href="#double ParamGrid::logStep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logarithmic step for iterating the statmodel parameter.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p>The grid determines the following iteration sequence of the statmodel parameter values:</p>
+<div class="math">
+<p><span class="math">(minVal, minVal*step, minVal*{step}^2, \dots,  minVal*{logStep}^n),</span></p>
+</div><p>where <span class="math">n</span> is the maximal index satisfying</p>
+<div class="math">
+<p><span class="math">\texttt{minVal} * \texttt{logStep} ^n &lt;  \texttt{maxVal}</span></p>
+</div><p>The grid is logarithmic, so <tt class="docutils literal"><span class="pre">logStep</span></tt> must always be greater then 1.</p>
+</div>
+<div class="section" id="paramgrid-paramgrid">
+<h2>ParamGrid::ParamGrid<a class="headerlink" href="#paramgrid-paramgrid" title="Permalink to this headline">¶</a></h2>
+<p>The constructors.</p>
+<dl class="function">
+<dt id="ParamGrid::ParamGrid()">
+<strong>C++:</strong><tt class="descname"> </tt> <tt class="descclassname">ParamGrid::</tt><tt class="descname">ParamGrid</tt><big>(</big><big>)</big><a class="headerlink" href="#ParamGrid::ParamGrid()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ParamGrid::ParamGrid(double minVal, double maxVal, double logStep)">
+<strong>C++:</strong><tt class="descname"> </tt> <tt class="descclassname">ParamGrid::</tt><tt class="descname">ParamGrid</tt><big>(</big>double <strong>minVal</strong>, double <strong>maxVal</strong>, double <strong>logStep</strong><big>)</big><a class="headerlink" href="#ParamGrid::ParamGrid(double minVal, double maxVal, double logStep)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The full constructor initializes corresponding members. The default constructor creates a dummy grid:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">ParamGrid</span><span class="o">::</span><span class="n">ParamGrid</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">minVal</span> <span class="o">=</span> <span class="n">maxVal</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">logStep</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="svm-params">
+<h2>SVM::Params<a class="headerlink" href="#svm-params" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="SVM::Params">
+<em class="property">class </em><tt class="descclassname">SVM::</tt><tt class="descname">Params</tt><a class="headerlink" href="#SVM::Params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>SVM training parameters.</p>
+<p>The structure must be initialized and passed to the training method of <a class="reference internal" href="#SVM : public StatModel" title="class SVM : public StatModel"><tt class="xref ocv ocv-class docutils literal"><span class="pre">SVM</span></tt></a>.</p>
+</div>
+<div class="section" id="svm-params-params">
+<h2>SVM::Params::Params<a class="headerlink" href="#svm-params-params" title="Permalink to this headline">¶</a></h2>
+<p>The constructors</p>
+<dl class="function">
+<dt id="SVM::Params::Params()">
+<strong>C++:</strong><tt class="descname"> </tt> <tt class="descclassname">SVM::Params::</tt><tt class="descname">Params</tt><big>(</big><big>)</big><a class="headerlink" href="#SVM::Params::Params()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="SVM::Params::Params(int svmType, int kernelType, double degree, double gamma, double coef0, double Cvalue, double nu, double p, const Mat&amp; classWeights, TermCriteria termCrit)">
+<strong>C++:</strong><tt class="descname"> </tt> <tt class="descclassname">SVM::Params::</tt><tt class="descname">Params</tt><big>(</big>int <strong>svmType</strong>, int <strong>kernelType</strong>, double <strong>degree</strong>, double <strong>gamma</strong>, double <strong>coef0</strong>, double <strong>Cvalue</strong>, double <strong>nu</strong>, double <strong>p</strong>, const Mat&amp; <strong>classWeights</strong>, TermCriteria <strong>termCrit</strong><big>)</big><a class="headerlink" href="#SVM::Params::Params(int svmType, int kernelType, double degree, double gamma, double coef0, double Cvalue, double nu, double p, const Mat& classWeights, TermCriteria termCrit)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>svmType</strong> &#8211; <p>Type of a SVM formulation. Possible values are:</p>
+<ul>
+<li><strong>SVM::C_SVC</strong> C-Support Vector Classification. <tt class="docutils literal"><span class="pre">n</span></tt>-class classification (<tt class="docutils literal"><span class="pre">n</span></tt> <span class="math">\geq</span> 2), allows imperfect separation of classes with penalty multiplier <tt class="docutils literal"><span class="pre">C</span></tt> for outliers.</li>
+<li><strong>SVM::NU_SVC</strong> <span class="math">\nu</span>-Support Vector Classification. <tt class="docutils literal"><span class="pre">n</span></tt>-class classification with possible imperfect separation. Parameter <span class="math">\nu</span>  (in the range 0..1, the larger the value, the smoother the decision boundary) is used instead of <tt class="docutils literal"><span class="pre">C</span></tt>.</li>
+<li><strong>SVM::ONE_CLASS</strong> Distribution Estimation (One-class SVM). All the training data are from the same class, SVM builds a boundary that separates the class from the rest of the feature space.</li>
+<li><strong>SVM::EPS_SVR</strong> <span class="math">\epsilon</span>-Support Vector Regression. The distance between feature vectors from the training set and the fitting hyper-plane must be less than <tt class="docutils literal"><span class="pre">p</span></tt>. For outliers the penalty multiplier <tt class="docutils literal"><span class="pre">C</span></tt> is used.</li>
+<li><strong>SVM::NU_SVR</strong> <span class="math">\nu</span>-Support Vector Regression. <span class="math">\nu</span> is used instead of <tt class="docutils literal"><span class="pre">p</span></tt>.</li>
+</ul>
+<p>See <a class="reference internal" href="#libsvm" id="id2">[LibSVM]</a> for details.</p>
+</li>
+<li><strong>kernelType</strong> &#8211; <p>Type of a SVM kernel. Possible values are:</p>
+<ul>
+<li><strong>SVM::LINEAR</strong> Linear kernel. No mapping is done, linear discrimination (or regression) is done in the original feature space. It is the fastest option. <span class="math">K(x_i, x_j) = x_i^T x_j</span>.</li>
+<li><strong>SVM::POLY</strong> Polynomial kernel: <span class="math">K(x_i, x_j) = (\gamma x_i^T x_j + coef0)^{degree}, \gamma &gt; 0</span>.</li>
+<li><strong>SVM::RBF</strong> Radial basis function (RBF), a good choice in most cases. <span class="math">K(x_i, x_j) = e^{-\gamma ||x_i - x_j||^2}, \gamma &gt; 0</span>.</li>
+<li><strong>SVM::SIGMOID</strong> Sigmoid kernel: <span class="math">K(x_i, x_j) = \tanh(\gamma x_i^T x_j + coef0)</span>.</li>
+<li><strong>SVM::CHI2</strong> Exponential Chi2 kernel, similar to the RBF kernel: <span class="math">K(x_i, x_j) = e^{-\gamma \chi^2(x_i,x_j)}, \chi^2(x_i,x_j) = (x_i-x_j)^2/(x_i+x_j), \gamma &gt; 0</span>.</li>
+<li><strong>SVM::INTER</strong> Histogram intersection kernel. A fast kernel. <span class="math">K(x_i, x_j) = min(x_i,x_j)</span>.</li>
+</ul>
+</li>
+<li><strong>degree</strong> &#8211; Parameter <tt class="docutils literal"><span class="pre">degree</span></tt> of a kernel function (POLY).</li>
+<li><strong>gamma</strong> &#8211; Parameter <span class="math">\gamma</span> of a kernel function (POLY / RBF / SIGMOID / CHI2).</li>
+<li><strong>coef0</strong> &#8211; Parameter <tt class="docutils literal"><span class="pre">coef0</span></tt> of a kernel function (POLY / SIGMOID).</li>
+<li><strong>Cvalue</strong> &#8211; Parameter <tt class="docutils literal"><span class="pre">C</span></tt> of a SVM optimization problem (C_SVC / EPS_SVR / NU_SVR).</li>
+<li><strong>nu</strong> &#8211; Parameter <span class="math">\nu</span> of a SVM optimization problem (NU_SVC / ONE_CLASS / NU_SVR).</li>
+<li><strong>p</strong> &#8211; Parameter <span class="math">\epsilon</span> of a SVM optimization problem (EPS_SVR).</li>
+<li><strong>classWeights</strong> &#8211; Optional weights in the C_SVC problem , assigned to particular classes. They are multiplied by <tt class="docutils literal"><span class="pre">C</span></tt> so the parameter <tt class="docutils literal"><span class="pre">C</span></tt> of class <tt class="docutils literal"><span class="pre">#i</span></tt> becomes <tt class="docutils literal"><span class="pre">classWeights(i)</span> <span class="pre">*</span> <span class="pre">C</span></tt>. Thus these weights affect the misclassification penalty for different classes. The larger weight, the larger penalty on misclassification of data from the corresponding class.</li>
+<li><strong>termCrit</strong> &#8211; Termination criteria of the iterative SVM training procedure which solves a partial case of constrained quadratic optimization problem. You can specify tolerance and/or the maximum number of iterations.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The default constructor initialize the structure with following values:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">SVMParams</span><span class="o">::</span><span class="n">SVMParams</span><span class="p">()</span> <span class="o">:</span>
+    <span class="n">svmType</span><span class="p">(</span><span class="n">SVM</span><span class="o">::</span><span class="n">C_SVC</span><span class="p">),</span> <span class="n">kernelType</span><span class="p">(</span><span class="n">SVM</span><span class="o">::</span><span class="n">RBF</span><span class="p">),</span> <span class="n">degree</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+    <span class="n">gamma</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">coef0</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">C</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">nu</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">p</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">classWeights</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">termCrit</span> <span class="o">=</span> <span class="n">TermCriteria</span><span class="p">(</span> <span class="n">TermCriteria</span><span class="o">::</span><span class="n">MAX_ITER</span><span class="o">+</span><span class="n">TermCriteria</span><span class="o">::</span><span class="n">EPS</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">FLT_EPSILON</span> <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>A comparison of different kernels on the following 2D test case with four classes. Four C_SVC SVMs have been trained (one against rest) with auto_train. Evaluation on three different kernels (CHI2, INTER, RBF). The color depicts the class with max score. Bright means max-score &gt; 0, dark means max-score &lt; 0.</p>
+<img alt="../../../_images/SVM_Comparison.png" src="../../../_images/SVM_Comparison.png" />
+</div>
+<div class="section" id="svm">
+<h2>SVM<a class="headerlink" href="#svm" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="SVM : public StatModel">
+<em class="property">class </em><tt class="descname">SVM</tt> : <em class="property">public</em> <tt class="descname">StatModel</tt><a class="headerlink" href="#SVM : public StatModel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Support Vector Machines.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>(Python) An example of digit recognition using SVM can be found at opencv_source/samples/python2/digits.py</li>
+<li>(Python) An example of grid search digit recognition using SVM can be found at opencv_source/samples/python2/digits_adjust.py</li>
+<li>(Python) An example of video digit recognition using SVM can be found at opencv_source/samples/python2/digits_video.py</li>
+</ul>
+</div>
+</div>
+<div class="section" id="svm-create">
+<h2>SVM::create<a class="headerlink" href="#svm-create" title="Permalink to this headline">¶</a></h2>
+<p>Creates empty model</p>
+<dl class="function">
+<dt id="Ptr&lt;SVM&gt; SVM::create(const Params&amp; p, const Ptr&lt;Kernel&gt;&amp; customKernel)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;SVM&gt; <tt class="descclassname">SVM::</tt><tt class="descname">create</tt><big>(</big>const Params&amp; <strong>p</strong>=Params(), const Ptr&lt;Kernel&gt;&amp; <strong>customKernel</strong>=Ptr&lt;Kernel&gt;()<big>)</big><a class="headerlink" href="#Ptr<SVM> SVM::create(const Params& p, const Ptr<Kernel>& customKernel)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>p</strong> &#8211; SVM parameters</li>
+<li><strong>customKernel</strong> &#8211; the optional custom kernel to use. It must implement <tt class="docutils literal"><span class="pre">SVM::Kernel</span></tt> interface.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Use <tt class="docutils literal"><span class="pre">StatModel::train</span></tt> to train the model, <tt class="docutils literal"><span class="pre">StatModel::train&lt;RTrees&gt;(traindata,</span> <span class="pre">params)</span></tt> to create and train the model, <tt class="docutils literal"><span class="pre">StatModel::load&lt;RTrees&gt;(filename)</span></tt> to load the pre-trained model. Since SVM has several parameters, you may want to find the best parameters for your problem. It can be done with <tt class="docutils literal"><span class="pre">SVM::trainAuto</span></tt>.</p>
+</div>
+<div class="section" id="svm-trainauto">
+<h2>SVM::trainAuto<a class="headerlink" href="#svm-trainauto" title="Permalink to this headline">¶</a></h2>
+<p>Trains an SVM with optimal parameters.</p>
+<dl class="function">
+<dt id="bool SVM::trainAuto(const Ptr&lt;TrainData&gt;&amp; data, int kFold , ParamGrid Cgrid , ParamGrid gammaGrid , ParamGrid pGrid , ParamGrid nuGrid , ParamGrid coeffGrid , ParamGrid degreeGrid , bool balanced)">
+<strong>C++:</strong><tt class="descname"> </tt>bool <tt class="descclassname">SVM::</tt><tt class="descname">trainAuto</tt><big>(</big>const Ptr&lt;TrainData&gt;&amp; <strong>data</strong>, int <strong>kFold</strong>=10, ParamGrid <strong>Cgrid</strong>=SVM::getDefaultGrid(SVM::C), ParamGrid <strong>gammaGrid</strong>=SVM::getDefaultGrid(SVM::GAMMA), ParamGrid <strong>pGrid</strong>=SVM::getDefaultGrid(SVM::P), ParamGrid <strong>nuGrid</strong>=SVM::getDefaultGrid(SVM::NU), ParamGrid <strong>coeffGrid</strong>=SVM::getDefaultGrid(SVM::COEF), ParamGrid <strong>degreeGrid</strong>=SVM::getDefaultGrid(SVM::DEGREE), bool <strong>balanced</strong>=false<big>)</big><a class="headerlink" href="#bool SVM::trainAuto(const Ptr<TrainData>& data, int kFold , ParamGrid Cgrid , ParamGrid gammaGrid , ParamGrid pGrid , ParamGrid nuGrid , ParamGrid coeffGrid , ParamGrid degreeGrid , bool balanced)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>data</strong> &#8211; the training data that can be constructed using <tt class="docutils literal"><span class="pre">TrainData::create</span></tt> or <tt class="docutils literal"><span class="pre">TrainData::loadFromCSV</span></tt>.</li>
+<li><strong>kFold</strong> &#8211; Cross-validation parameter. The training set is divided into <tt class="docutils literal"><span class="pre">kFold</span></tt> subsets. One subset is used to test the model, the others form the train set. So, the SVM algorithm is executed <tt class="docutils literal"><span class="pre">kFold</span></tt> times.</li>
+<li><strong>*Grid</strong> &#8211; Iteration grid for the corresponding SVM parameter.</li>
+<li><strong>balanced</strong> &#8211; If <tt class="docutils literal"><span class="pre">true</span></tt> and the problem is 2-class classification then the method creates more balanced cross-validation subsets that is proportions between classes in subsets are close to such proportion in the whole train dataset.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The method trains the SVM model automatically by choosing the optimal
+parameters <tt class="docutils literal"><span class="pre">C</span></tt>, <tt class="docutils literal"><span class="pre">gamma</span></tt>, <tt class="docutils literal"><span class="pre">p</span></tt>, <tt class="docutils literal"><span class="pre">nu</span></tt>, <tt class="docutils literal"><span class="pre">coef0</span></tt>, <tt class="docutils literal"><span class="pre">degree</span></tt> from
+<tt class="docutils literal"><span class="pre">SVM::Params</span></tt>. Parameters are considered optimal
+when the cross-validation estimate of the test set error
+is minimal.</p>
+<p>If there is no need to optimize a parameter, the corresponding grid step should be set to any value less than or equal to 1. For example, to avoid optimization in <tt class="docutils literal"><span class="pre">gamma</span></tt>, set <tt class="docutils literal"><span class="pre">gammaGrid.step</span> <span class="pre">=</span> <span class="pre">0</span></tt>, <tt class="docutils literal"><span class="pre">gammaGrid.minVal</span></tt>, <tt class="docutils literal"><span class="pre">gamma_grid.maxVal</span></tt> as arbitrary numbers. In this case, the value <tt class="docutils literal"><span class="pre">params.gamma</span></tt> is taken for <tt class="docutils literal"><span class="pre">gamma</span></tt>.</p>
+<p>And, finally, if the optimization in a parameter is required but
+the corresponding grid is unknown, you may call the function <a class="reference internal" href="#ParamGrid SVM::getDefaulltGrid(int param_id)" title="ParamGrid SVM::getDefaulltGrid(int param_id)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">SVM::getDefaulltGrid()</span></tt></a>. To generate a grid, for example, for <tt class="docutils literal"><span class="pre">gamma</span></tt>, call <tt class="docutils literal"><span class="pre">SVM::getDefaulltGrid(SVM::GAMMA)</span></tt>.</p>
+<p>This function works for the classification
+(<tt class="docutils literal"><span class="pre">params.svmType=SVM::C_SVC</span></tt> or <tt class="docutils literal"><span class="pre">params.svmType=SVM::NU_SVC</span></tt>)
+as well as for the regression
+(<tt class="docutils literal"><span class="pre">params.svmType=SVM::EPS_SVR</span></tt> or <tt class="docutils literal"><span class="pre">params.svmType=SVM::NU_SVR</span></tt>). If <tt class="docutils literal"><span class="pre">params.svmType=SVM::ONE_CLASS</span></tt>, no optimization is made and the usual SVM with parameters specified in <tt class="docutils literal"><span class="pre">params</span></tt> is executed.</p>
+</div>
+<div class="section" id="svm-getdefaulltgrid">
+<h2>SVM::getDefaulltGrid<a class="headerlink" href="#svm-getdefaulltgrid" title="Permalink to this headline">¶</a></h2>
+<p>Generates a grid for SVM parameters.</p>
+<dl class="function">
+<dt id="ParamGrid SVM::getDefaulltGrid(int param_id)">
+<strong>C++:</strong><tt class="descname"> </tt>ParamGrid <tt class="descclassname">SVM::</tt><tt class="descname">getDefaulltGrid</tt><big>(</big>int <strong>param_id</strong><big>)</big><a class="headerlink" href="#ParamGrid SVM::getDefaulltGrid(int param_id)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>param_id</strong> &#8211; <p>SVM parameters IDs that must be one of the following:</p>
+<blockquote>
+<div><ul>
+<li><strong>SVM::C</strong></li>
+<li><strong>SVM::GAMMA</strong></li>
+<li><strong>SVM::P</strong></li>
+<li><strong>SVM::NU</strong></li>
+<li><strong>SVM::COEF</strong></li>
+<li><strong>SVM::DEGREE</strong></li>
+</ul>
+</div></blockquote>
+<p>The grid is generated for the parameter with this ID.</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function generates a grid for the specified parameter of the SVM algorithm. The grid may be passed to the function <a class="reference internal" href="#bool SVM::trainAuto(const Ptr&lt;TrainData&gt;&amp; data, int kFold , ParamGrid Cgrid , ParamGrid gammaGrid , ParamGrid pGrid , ParamGrid nuGrid , ParamGrid coeffGrid , ParamGrid degreeGrid , bool balanced)" title="bool SVM::trainAuto(const Ptr&lt;TrainData&gt;&amp; data, int kFold , ParamGrid Cgrid , ParamGrid gammaGrid , ParamGrid pGrid , ParamGrid nuGrid , ParamGrid coeffGrid , ParamGrid degreeGrid , bool balanced)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">SVM::trainAuto()</span></tt></a>.</p>
+</div>
+<div class="section" id="svm-getparams">
+<h2>SVM::getParams<a class="headerlink" href="#svm-getparams" title="Permalink to this headline">¶</a></h2>
+<p>Returns the current SVM parameters.</p>
+<dl class="function">
+<dt id="SVM::Params SVM::getParams() const">
+<strong>C++:</strong><tt class="descname"> </tt>SVM::Params <tt class="descclassname">SVM::</tt><tt class="descname">getParams</tt><big>(</big><big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#SVM::Params SVM::getParams() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This function may be used to get the optimal parameters obtained while automatically training <tt class="docutils literal"><span class="pre">SVM::trainAuto</span></tt>.</p>
+</div>
+<div class="section" id="svm-getsupportvectors">
+<h2>SVM::getSupportVectors<a class="headerlink" href="#svm-getsupportvectors" title="Permalink to this headline">¶</a></h2>
+<p>Retrieves all the support vectors</p>
+<dl class="function">
+<dt id="Mat SVM::getSupportVectors() const">
+<strong>C++:</strong><tt class="descname"> </tt>Mat <tt class="descclassname">SVM::</tt><tt class="descname">getSupportVectors</tt><big>(</big><big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#Mat SVM::getSupportVectors() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The method returns all the support vector as floating-point matrix, where support vectors are stored as matrix rows.</p>
+</div>
+<div class="section" id="svm-getdecisionfunction">
+<h2>SVM::getDecisionFunction<a class="headerlink" href="#svm-getdecisionfunction" title="Permalink to this headline">¶</a></h2>
+<p>Retrieves the decision function</p>
+<dl class="function">
+<dt id="double SVM::getDecisionFunction(int i, OutputArray alpha, OutputArray svidx) const">
+<strong>C++:</strong><tt class="descname"> </tt>double <tt class="descclassname">SVM::</tt><tt class="descname">getDecisionFunction</tt><big>(</big>int <strong>i</strong>, OutputArray <strong>alpha</strong>, OutputArray <strong>svidx</strong><big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#double SVM::getDecisionFunction(int i, OutputArray alpha, OutputArray svidx) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>i</strong> &#8211; the index of the decision function. If the problem solved is regression, 1-class or 2-class classification, then there will be just one decision function and the index should always be 0. Otherwise, in the case of N-class classification, there will be N*(N-1)/2 decision functions.</li>
+<li><strong>alpha</strong> &#8211; the optional output vector for weights, corresponding to different support vectors. In the case of linear SVM all the alpha&#8217;s will be 1&#8217;s.</li>
+<li><strong>svidx</strong> &#8211; the optional output vector of indices of support vectors within the matrix of support vectors (which can be retrieved by <tt class="docutils literal"><span class="pre">SVM::getSupportVectors</span></tt>). In the case of linear SVM each decision function consists of a single &#8220;compressed&#8221; support vector.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The method returns <tt class="docutils literal"><span class="pre">rho</span></tt> parameter of the decision function, a scalar subtracted from the weighted sum of kernel responses.</p>
+</div>
+<div class="section" id="prediction-with-svm">
+<h2>Prediction with SVM<a class="headerlink" href="#prediction-with-svm" title="Permalink to this headline">¶</a></h2>
+<p>StatModel::predict(samples, results, flags) should be used. Pass <tt class="docutils literal"><span class="pre">flags=StatModel::RAW_OUTPUT</span></tt> to get the raw response from SVM (in the case of regression, 1-class or 2-class classification problem).</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="decision_trees.html" title="Decision Trees"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="k_nearest_neighbors.html" title="K-Nearest Neighbors"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" >ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/ml/doc/support_vector_machines.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

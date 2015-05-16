@@ -1,0 +1,236 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Normal Bayes Classifier &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="ml. Machine Learning" href="ml.html" />
+    <link rel="next" title="K-Nearest Neighbors" href="k_nearest_neighbors.html" />
+    <link rel="prev" title="Statistical Models" href="statistical_models.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="k_nearest_neighbors.html" title="K-Nearest Neighbors"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="statistical_models.html" title="Statistical Models"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" accesskey="U">ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Normal Bayes Classifier</a><ul>
+<li><a class="reference internal" href="#normalbayesclassifier">NormalBayesClassifier</a></li>
+<li><a class="reference internal" href="#normalbayesclassifier-create">NormalBayesClassifier::create</a></li>
+<li><a class="reference internal" href="#normalbayesclassifier-predictprob">NormalBayesClassifier::predictProb</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="statistical_models.html"
+                        title="previous chapter">Statistical Models</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="k_nearest_neighbors.html"
+                        title="next chapter">K-Nearest Neighbors</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="normal-bayes-classifier">
+<span id="bayes-classifier"></span><h1>Normal Bayes Classifier<a class="headerlink" href="#normal-bayes-classifier" title="Permalink to this headline">¶</a></h1>
+<p>This simple classification model assumes that feature vectors from each class are normally distributed (though, not necessarily independently distributed). So, the whole data distribution function is assumed to be a Gaussian mixture, one component per  class. Using the training data the algorithm estimates mean vectors and covariance matrices for every class, and then it uses them for prediction.</p>
+<table class="docutils citation" frame="void" id="fukunaga90" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[Fukunaga90]</td><td><ol class="first last upperalpha simple" start="11">
+<li>Fukunaga. <em>Introduction to Statistical Pattern Recognition</em>. second ed., New York: Academic Press, 1990.</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+<div class="section" id="normalbayesclassifier">
+<h2>NormalBayesClassifier<a class="headerlink" href="#normalbayesclassifier" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="NormalBayesClassifier : public StatModel">
+<em class="property">class </em><tt class="descname">NormalBayesClassifier</tt> : <em class="property">public</em> <tt class="descname">StatModel</tt><a class="headerlink" href="#NormalBayesClassifier : public StatModel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Bayes classifier for normally distributed data.</p>
+</div>
+<div class="section" id="normalbayesclassifier-create">
+<h2>NormalBayesClassifier::create<a class="headerlink" href="#normalbayesclassifier-create" title="Permalink to this headline">¶</a></h2>
+<p>Creates empty model</p>
+<dl class="function">
+<dt id="Ptr&lt;NormalBayesClassifier&gt; NormalBayesClassifier::create(const NormalBayesClassifier::Params&amp; params)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;NormalBayesClassifier&gt; <tt class="descclassname">NormalBayesClassifier::</tt><tt class="descname">create</tt><big>(</big>const NormalBayesClassifier::Params&amp; <strong>params</strong>=Params()<big>)</big><a class="headerlink" href="#Ptr<NormalBayesClassifier> NormalBayesClassifier::create(const NormalBayesClassifier::Params& params)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>params</strong> &#8211; The model parameters. There is none so far, the structure is used as a placeholder for possible extensions.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Use <tt class="docutils literal"><span class="pre">StatModel::train</span></tt> to train the model, <tt class="docutils literal"><span class="pre">StatModel::train&lt;NormalBayesClassifier&gt;(traindata,</span> <span class="pre">params)</span></tt> to create and train the model, <tt class="docutils literal"><span class="pre">StatModel::load&lt;NormalBayesClassifier&gt;(filename)</span></tt> to load the pre-trained model.</p>
+</div>
+<div class="section" id="normalbayesclassifier-predictprob">
+<h2>NormalBayesClassifier::predictProb<a class="headerlink" href="#normalbayesclassifier-predictprob" title="Permalink to this headline">¶</a></h2>
+<p>Predicts the response for sample(s).</p>
+<dl class="function">
+<dt id="float NormalBayesClassifier::predictProb(InputArray inputs, OutputArray outputs, OutputArray outputProbs, int flags) const">
+<strong>C++:</strong><tt class="descname"> </tt>float <tt class="descclassname">NormalBayesClassifier::</tt><tt class="descname">predictProb</tt><big>(</big>InputArray <strong>inputs</strong>, OutputArray <strong>outputs</strong>, OutputArray <strong>outputProbs</strong>, int <strong>flags</strong>=0 <big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#float NormalBayesClassifier::predictProb(InputArray inputs, OutputArray outputs, OutputArray outputProbs, int flags) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The method estimates the most probable classes for input vectors. Input vectors (one or more) are stored as rows of the matrix <tt class="docutils literal"><span class="pre">inputs</span></tt>. In case of multiple input vectors, there should be one output vector <tt class="docutils literal"><span class="pre">outputs</span></tt>. The predicted class for a single input vector is returned by the method. The vector <tt class="docutils literal"><span class="pre">outputProbs</span></tt> contains the output probabilities corresponding to each element of <tt class="docutils literal"><span class="pre">result</span></tt>.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="k_nearest_neighbors.html" title="K-Nearest Neighbors"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="statistical_models.html" title="Statistical Models"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" >ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/ml/doc/normal_bayes_classifier.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

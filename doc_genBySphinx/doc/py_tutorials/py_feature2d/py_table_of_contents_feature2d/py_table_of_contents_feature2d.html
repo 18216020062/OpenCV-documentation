@@ -1,0 +1,336 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Feature Detection and Description &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../../index.html" />
+    <link rel="up" title="OpenCV-Python Tutorials" href="../../py_tutorials.html" />
+    <link rel="next" title="Understanding Features" href="../py_features_meaning/py_features_meaning.html" />
+    <link rel="prev" title="Interactive Foreground Extraction using GrabCut Algorithm" href="../../py_imgproc/py_grabcut/py_grabcut.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py_features_meaning/py_features_meaning.html" title="Understanding Features"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../../py_imgproc/py_grabcut/py_grabcut.html" title="Interactive Foreground Extraction using GrabCut Algorithm"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" accesskey="U">OpenCV-Python Tutorials</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../../py_imgproc/py_grabcut/py_grabcut.html"
+                        title="previous chapter">Interactive Foreground Extraction using GrabCut Algorithm</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../py_features_meaning/py_features_meaning.html"
+                        title="next chapter">Understanding Features</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="feature-detection-and-description">
+<span id="py-table-of-content-feature2d"></span><h1>Feature Detection and Description<a class="headerlink" href="#feature-detection-and-description" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="../py_features_meaning/py_features_meaning.html#features-meaning"><em>Understanding Features</em></a></li>
+</ul>
+<blockquote>
+<div><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="11%" />
+<col width="89%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/features_icon.jpg"><img alt="f2d_1" src="../../../../_images/features_icon.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td>What are the main features in an image? How can finding those features be useful to us?</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<ul class="simple">
+<li><a class="reference internal" href="../py_features_harris/py_features_harris.html#harris-corners"><em>Harris Corner Detection</em></a></li>
+</ul>
+<blockquote>
+<div><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="16%" />
+<col width="84%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/harris_icon.jpg"><img alt="f2d_2" src="../../../../_images/harris_icon.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td>Okay, Corners are good features? But how do we find them?</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<ul class="simple">
+<li><a class="reference internal" href="../py_shi_tomasi/py_shi_tomasi.html#shi-tomasi"><em>Shi-Tomasi Corner Detector &amp; Good Features to Track</em></a></li>
+</ul>
+<blockquote>
+<div><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="17%" />
+<col width="83%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/shi_icon.jpg"><img alt="f2d_3" src="../../../../_images/shi_icon.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td>We will look into Shi-Tomasi corner detection</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<ul class="simple">
+<li><a class="reference internal" href="../py_sift_intro/py_sift_intro.html#sift-intro"><em>Introduction to SIFT (Scale-Invariant Feature Transform)</em></a></li>
+</ul>
+<blockquote>
+<div><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="6%" />
+<col width="94%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/sift_icon.jpg"><img alt="f2d_4" src="../../../../_images/sift_icon.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td>Harris corner detector is not good enough when scale of image changes. Lowe developed a breakthrough method to find scale-invariant features and it is called SIFT</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<ul class="simple">
+<li><a class="reference internal" href="../py_surf_intro/py_surf_intro.html#surf"><em>Introduction to SURF (Speeded-Up Robust Features)</em></a></li>
+</ul>
+<blockquote>
+<div><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/surf_icon.jpg"><img alt="f2d_5" src="../../../../_images/surf_icon.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td>SIFT is really good, but not fast enough, so people came up with a speeded-up version called SURF.</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<ul class="simple">
+<li><a class="reference internal" href="../py_fast/py_fast.html#fast"><em>FAST Algorithm for Corner Detection</em></a></li>
+</ul>
+<blockquote>
+<div><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="5%" />
+<col width="95%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/fast_icon.jpg"><img alt="f2d_06" src="../../../../_images/fast_icon.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td>All the above feature detection methods are good in some way. But they are not fast enough to work in real-time applications like SLAM. There comes the FAST algorithm, which is really &#8220;FAST&#8221;.</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<ul class="simple">
+<li><a class="reference internal" href="../py_brief/py_brief.html#brief"><em>BRIEF (Binary Robust Independent Elementary Features)</em></a></li>
+</ul>
+<blockquote>
+<div><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="3%" />
+<col width="97%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/brief.jpg"><img alt="f2d_07" src="../../../../_images/brief.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td>SIFT uses a feature descriptor with 128 floating point numbers. Consider thousands of such features. It takes lots of memory and more time for matching. We can compress it to make it faster. But still we have to calculate it first. There comes BRIEF which gives the shortcut to find binary descriptors with less memory, faster matching, still higher recognition rate.</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<ul class="simple">
+<li><a class="reference internal" href="../py_orb/py_orb.html#orb"><em>ORB (Oriented FAST and Rotated BRIEF)</em></a></li>
+</ul>
+<blockquote>
+<div><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="4%" />
+<col width="96%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/orb.jpg"><img alt="f2d_08" src="../../../../_images/orb.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td>SIFT and SURF are good in what they do, but what if you have to pay a few dollars every year to use them in your applications? Yeah, they are patented!!! To solve that problem, OpenCV devs came up with a new &#8220;FREE&#8221; alternative to SIFT &amp; SURF, and that is ORB.</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<ul class="simple">
+<li><a class="reference internal" href="../py_matcher/py_matcher.html#matcher"><em>Feature Matching</em></a></li>
+</ul>
+<blockquote>
+<div><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="5%" />
+<col width="95%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/matching.jpg"><img alt="f2d_09" src="../../../../_images/matching.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td>We know a great deal about feature detectors and descriptors. It is time to learn how to match different descriptors. OpenCV provides two techniques, Brute-Force matcher and FLANN based matcher.</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<ul class="simple">
+<li><a class="reference internal" href="../py_feature_homography/py_feature_homography.html#py-feature-homography"><em>Feature Matching + Homography to find Objects</em></a></li>
+</ul>
+<blockquote>
+<div><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="9%" />
+<col width="91%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/homography_icon.jpg"><img alt="f2d_10" src="../../../../_images/homography_icon.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td>Now we know about feature matching. Let&#8217;s mix it up with <cite>calib3d</cite> module to find objects in a complex image.</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py_features_meaning/py_features_meaning.html" title="Understanding Features"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../../py_imgproc/py_grabcut/py_grabcut.html" title="Interactive Foreground Extraction using GrabCut Algorithm"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../../_sources/doc/py_tutorials/py_feature2d/py_table_of_contents_feature2d/py_table_of_contents_feature2d.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

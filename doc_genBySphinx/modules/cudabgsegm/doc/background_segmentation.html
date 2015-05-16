@@ -1,0 +1,393 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Background Segmentation &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="cudabgsegm. CUDA-accelerated Background Segmentation" href="cudabgsegm.html" />
+    <link rel="next" title="cudacodec. CUDA-accelerated Video Encoding/Decoding" href="../../cudacodec/doc/cudacodec.html" />
+    <link rel="prev" title="cudabgsegm. CUDA-accelerated Background Segmentation" href="cudabgsegm.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../cudacodec/doc/cudacodec.html" title="cudacodec. CUDA-accelerated Video Encoding/Decoding"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="cudabgsegm.html" title="cudabgsegm. CUDA-accelerated Background Segmentation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="cudabgsegm.html" accesskey="U">cudabgsegm. CUDA-accelerated Background Segmentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Background Segmentation</a><ul>
+<li><a class="reference internal" href="#cuda-backgroundsubtractormog">cuda::BackgroundSubtractorMOG</a></li>
+<li><a class="reference internal" href="#cuda-createbackgroundsubtractormog">cuda::createBackgroundSubtractorMOG</a></li>
+<li><a class="reference internal" href="#cuda-backgroundsubtractormog2">cuda::BackgroundSubtractorMOG2</a></li>
+<li><a class="reference internal" href="#cuda-createbackgroundsubtractormog2">cuda::createBackgroundSubtractorMOG2</a></li>
+<li><a class="reference internal" href="#cuda-backgroundsubtractorgmg">cuda::BackgroundSubtractorGMG</a></li>
+<li><a class="reference internal" href="#cuda-createbackgroundsubtractorgmg">cuda::createBackgroundSubtractorGMG</a></li>
+<li><a class="reference internal" href="#cuda-backgroundsubtractorfgd">cuda::BackgroundSubtractorFGD</a></li>
+<li><a class="reference internal" href="#cuda-backgroundsubtractorfgd-getforegroundregions">cuda::BackgroundSubtractorFGD::getForegroundRegions</a></li>
+<li><a class="reference internal" href="#cuda-createbackgroundsubtractorfgd">cuda::createBackgroundSubtractorFGD</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="cudabgsegm.html"
+                        title="previous chapter">cudabgsegm. CUDA-accelerated Background Segmentation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../cudacodec/doc/cudacodec.html"
+                        title="next chapter">cudacodec. CUDA-accelerated Video Encoding/Decoding</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="background-segmentation">
+<h1>Background Segmentation<a class="headerlink" href="#background-segmentation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="cuda-backgroundsubtractormog">
+<h2>cuda::BackgroundSubtractorMOG<a class="headerlink" href="#cuda-backgroundsubtractormog" title="Permalink to this headline">¶</a></h2>
+<p>Gaussian Mixture-based Background/Foreground Segmentation Algorithm.</p>
+<dl class="class">
+<dt id="cuda::BackgroundSubtractorMOG : public cv::BackgroundSubtractorMOG">
+<em class="property">class </em><tt class="descclassname">cuda::</tt><tt class="descname">BackgroundSubtractorMOG</tt> : <em class="property">public</em> <tt class="descclassname">cv::</tt><tt class="descname">BackgroundSubtractorMOG</tt><a class="headerlink" href="#cuda::BackgroundSubtractorMOG : public cv::BackgroundSubtractorMOG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The class discriminates between foreground and background pixels by building and maintaining a model of the background. Any pixel which does not fit this model is then deemed to be foreground. The class implements algorithm described in <a class="reference internal" href="#mog2001" id="id1">[MOG2001]</a>.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../video/doc/motion_analysis_and_object_tracking.html#BackgroundSubtractorMOG : public BackgroundSubtractor" title="class BackgroundSubtractorMOG : public BackgroundSubtractor"><tt class="xref ocv ocv-class docutils literal"><span class="pre">BackgroundSubtractorMOG</span></tt></a></p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example on gaussian mixture based background/foreground segmantation can be found at opencv_source_code/samples/gpu/bgfg_segm.cpp</li>
+</ul>
+</div>
+</div>
+<div class="section" id="cuda-createbackgroundsubtractormog">
+<h2>cuda::createBackgroundSubtractorMOG<a class="headerlink" href="#cuda-createbackgroundsubtractormog" title="Permalink to this headline">¶</a></h2>
+<p>Creates mixture-of-gaussian background subtractor</p>
+<dl class="function">
+<dt id="Ptr&lt;cuda::BackgroundSubtractorMOG&gt; cuda::createBackgroundSubtractorMOG(int history, int nmixtures, double backgroundRatio, double noiseSigma)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;cuda::BackgroundSubtractorMOG&gt; <tt class="descclassname">cuda::</tt><tt class="descname">createBackgroundSubtractorMOG</tt><big>(</big>int <strong>history</strong>=200, int <strong>nmixtures</strong>=5, double <strong>backgroundRatio</strong>=0.7, double <strong>noiseSigma</strong>=0<big>)</big><a class="headerlink" href="#Ptr<cuda::BackgroundSubtractorMOG> cuda::createBackgroundSubtractorMOG(int history, int nmixtures, double backgroundRatio, double noiseSigma)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>history</strong> &#8211; Length of the history.</li>
+<li><strong>nmixtures</strong> &#8211; Number of Gaussian mixtures.</li>
+<li><strong>backgroundRatio</strong> &#8211; Background ratio.</li>
+<li><strong>noiseSigma</strong> &#8211; Noise strength (standard deviation of the brightness or each color channel). 0 means some automatic value.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-backgroundsubtractormog2">
+<h2>cuda::BackgroundSubtractorMOG2<a class="headerlink" href="#cuda-backgroundsubtractormog2" title="Permalink to this headline">¶</a></h2>
+<p>Gaussian Mixture-based Background/Foreground Segmentation Algorithm.</p>
+<dl class="class">
+<dt id="cuda::BackgroundSubtractorMOG2 : public cv::BackgroundSubtractorMOG2">
+<em class="property">class </em><tt class="descclassname">cuda::</tt><tt class="descname">BackgroundSubtractorMOG2</tt> : <em class="property">public</em> <tt class="descclassname">cv::</tt><tt class="descname">BackgroundSubtractorMOG2</tt><a class="headerlink" href="#cuda::BackgroundSubtractorMOG2 : public cv::BackgroundSubtractorMOG2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The class discriminates between foreground and background pixels by building and maintaining a model of the background. Any pixel which does not fit this model is then deemed to be foreground. The class implements algorithm described in <a class="reference internal" href="#mog2004" id="id2">[MOG2004]</a>.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../video/doc/motion_analysis_and_object_tracking.html#BackgroundSubtractorMOG2 : public BackgroundSubtractor" title="class BackgroundSubtractorMOG2 : public BackgroundSubtractor"><tt class="xref ocv ocv-class docutils literal"><span class="pre">BackgroundSubtractorMOG2</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-createbackgroundsubtractormog2">
+<h2>cuda::createBackgroundSubtractorMOG2<a class="headerlink" href="#cuda-createbackgroundsubtractormog2" title="Permalink to this headline">¶</a></h2>
+<p>Creates MOG2 Background Subtractor</p>
+<dl class="function">
+<dt id="Ptr&lt;cuda::BackgroundSubtractorMOG2&gt; cuda::createBackgroundSubtractorMOG2(int history, double varThreshold, bool detectShadows)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;cuda::BackgroundSubtractorMOG2&gt; <tt class="descclassname">cuda::</tt><tt class="descname">createBackgroundSubtractorMOG2</tt><big>(</big>int <strong>history</strong>=500, double <strong>varThreshold</strong>=16, bool <strong>detectShadows</strong>=true <big>)</big><a class="headerlink" href="#Ptr<cuda::BackgroundSubtractorMOG2> cuda::createBackgroundSubtractorMOG2(int history, double varThreshold, bool detectShadows)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>history</strong> &#8211; Length of the history.</li>
+<li><strong>varThreshold</strong> &#8211; Threshold on the squared Mahalanobis distance between the pixel and the model to decide whether a pixel is well described by the background model. This parameter does not affect the background update.</li>
+<li><strong>detectShadows</strong> &#8211; If true, the algorithm will detect shadows and mark them. It decreases the speed a bit, so if you do not need this feature, set the parameter to false.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-backgroundsubtractorgmg">
+<h2>cuda::BackgroundSubtractorGMG<a class="headerlink" href="#cuda-backgroundsubtractorgmg" title="Permalink to this headline">¶</a></h2>
+<p>Background/Foreground Segmentation Algorithm.</p>
+<dl class="class">
+<dt id="cuda::BackgroundSubtractorGMG : public cv::BackgroundSubtractorGMG">
+<em class="property">class </em><tt class="descclassname">cuda::</tt><tt class="descname">BackgroundSubtractorGMG</tt> : <em class="property">public</em> <tt class="descclassname">cv::</tt><tt class="descname">BackgroundSubtractorGMG</tt><a class="headerlink" href="#cuda::BackgroundSubtractorGMG : public cv::BackgroundSubtractorGMG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The class discriminates between foreground and background pixels by building and maintaining a model of the background. Any pixel which does not fit this model is then deemed to be foreground. The class implements algorithm described in <a class="reference internal" href="#gmg2012" id="id3">[GMG2012]</a>.</p>
+</div>
+<div class="section" id="cuda-createbackgroundsubtractorgmg">
+<h2>cuda::createBackgroundSubtractorGMG<a class="headerlink" href="#cuda-createbackgroundsubtractorgmg" title="Permalink to this headline">¶</a></h2>
+<p>Creates GMG Background Subtractor</p>
+<dl class="function">
+<dt id="Ptr&lt;cuda::BackgroundSubtractorGMG&gt; cuda::createBackgroundSubtractorGMG(int initializationFrames , double decisionThreshold)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;cuda::BackgroundSubtractorGMG&gt; <tt class="descclassname">cuda::</tt><tt class="descname">createBackgroundSubtractorGMG</tt><big>(</big>int <strong>initializationFrames</strong>=120, double <strong>decisionThreshold</strong>=0.8<big>)</big><a class="headerlink" href="#Ptr<cuda::BackgroundSubtractorGMG> cuda::createBackgroundSubtractorGMG(int initializationFrames , double decisionThreshold)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>initializationFrames</strong> &#8211; Number of frames of video to use to initialize histograms.</li>
+<li><strong>decisionThreshold</strong> &#8211; Value above which pixel is determined to be FG.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-backgroundsubtractorfgd">
+<h2>cuda::BackgroundSubtractorFGD<a class="headerlink" href="#cuda-backgroundsubtractorfgd" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cuda::BackgroundSubtractorFGD : public cv::BackgroundSubtractor">
+<em class="property">class </em><tt class="descclassname">cuda::</tt><tt class="descname">BackgroundSubtractorFGD</tt> : <em class="property">public</em> <tt class="descclassname">cv::</tt><tt class="descname">BackgroundSubtractor</tt><a class="headerlink" href="#cuda::BackgroundSubtractorFGD : public cv::BackgroundSubtractor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The class discriminates between foreground and background pixels by building and maintaining a model of the background. Any pixel which does not fit this model is then deemed to be foreground. The class implements algorithm described in <a class="reference internal" href="#fgd2003" id="id4">[FGD2003]</a>.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">BackgroundSubtractorFGD</span> <span class="p">:</span> <span class="k">public</span> <span class="n">cv</span><span class="o">::</span><span class="n">BackgroundSubtractor</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">getForegroundRegions</span><span class="p">(</span><span class="n">OutputArrayOfArrays</span> <span class="n">foreground_regions</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../video/doc/motion_analysis_and_object_tracking.html#BackgroundSubtractor : public Algorithm" title="class BackgroundSubtractor : public Algorithm"><tt class="xref ocv ocv-class docutils literal"><span class="pre">BackgroundSubtractor</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-backgroundsubtractorfgd-getforegroundregions">
+<h2>cuda::BackgroundSubtractorFGD::getForegroundRegions<a class="headerlink" href="#cuda-backgroundsubtractorfgd-getforegroundregions" title="Permalink to this headline">¶</a></h2>
+<p>Returns the output foreground regions calculated by <a class="reference internal" href="../../imgproc/doc/structural_analysis_and_shape_descriptors.html#void findContours(InputOutputArray image, OutputArrayOfArrays contours, OutputArray hierarchy, int mode, int method, Point offset)" title="void findContours(InputOutputArray image, OutputArrayOfArrays contours, OutputArray hierarchy, int mode, int method, Point offset)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">findContours()</span></tt></a>.</p>
+<dl class="function">
+<dt id="void cuda::BackgroundSubtractorFGD::getForegroundRegions(OutputArrayOfArrays foreground_regions)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::BackgroundSubtractorFGD::</tt><tt class="descname">getForegroundRegions</tt><big>(</big>OutputArrayOfArrays <strong>foreground_regions</strong><big>)</big><a class="headerlink" href="#void cuda::BackgroundSubtractorFGD::getForegroundRegions(OutputArrayOfArrays foreground_regions)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Params foreground_regions:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">Output array (CPU memory).</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-createbackgroundsubtractorfgd">
+<h2>cuda::createBackgroundSubtractorFGD<a class="headerlink" href="#cuda-createbackgroundsubtractorfgd" title="Permalink to this headline">¶</a></h2>
+<p>Creates FGD Background Subtractor</p>
+<dl class="function">
+<dt id="Ptr&lt;cuda::BackgroundSubtractorGMG&gt; cuda::createBackgroundSubtractorFGD(const FGDParams&amp; params)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;cuda::BackgroundSubtractorGMG&gt; <tt class="descclassname">cuda::</tt><tt class="descname">createBackgroundSubtractorFGD</tt><big>(</big>const FGDParams&amp; <strong>params</strong>=FGDParams()<big>)</big><a class="headerlink" href="#Ptr<cuda::BackgroundSubtractorGMG> cuda::createBackgroundSubtractorFGD(const FGDParams& params)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>params</strong> &#8211; Algorithm&#8217;s parameters. See <a class="reference internal" href="#fgd2003" id="id5">[FGD2003]</a> for explanation.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<table class="docutils citation" frame="void" id="fgd2003" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[FGD2003]</td><td><em>(<a class="fn-backref" href="#id4">1</a>, <a class="fn-backref" href="#id5">2</a>)</em> Liyuan Li, Weimin Huang, Irene Y.H. Gu, and Qi Tian. <em>Foreground Object Detection from Videos Containing Complex Background</em>. ACM MM2003 9p, 2003.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="mog2001" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[MOG2001]</a></td><td><ol class="first last upperalpha simple" start="16">
+<li>KadewTraKuPong and R. Bowden. <em>An improved adaptive background mixture model for real-time tracking with shadow detection</em>. Proc. 2nd European Workshop on Advanced Video-Based Surveillance Systems, 2001</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="mog2004" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[MOG2004]</a></td><td><ol class="first last upperalpha simple" start="26">
+<li>Zivkovic. <em>Improved adaptive Gausian mixture model for background subtraction</em>. International Conference Pattern Recognition, UK, August, 2004</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="gmg2012" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[GMG2012]</a></td><td><ol class="first last upperalpha simple">
+<li>Godbehere, A. Matsukawa and K. Goldberg. <em>Visual Tracking of Human Visitors under Variable-Lighting Conditions for a Responsive Audio Art Installation</em>. American Control Conference, Montreal, June 2012</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../cudacodec/doc/cudacodec.html" title="cudacodec. CUDA-accelerated Video Encoding/Decoding"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="cudabgsegm.html" title="cudabgsegm. CUDA-accelerated Background Segmentation"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="cudabgsegm.html" >cudabgsegm. CUDA-accelerated Background Segmentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/cudabgsegm/doc/background_segmentation.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

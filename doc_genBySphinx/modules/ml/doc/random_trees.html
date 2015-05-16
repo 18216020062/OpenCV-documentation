@@ -1,0 +1,290 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Random Trees &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="ml. Machine Learning" href="ml.html" />
+    <link rel="next" title="Expectation Maximization" href="expectation_maximization.html" />
+    <link rel="prev" title="Boosting" href="boosting.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="expectation_maximization.html" title="Expectation Maximization"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="boosting.html" title="Boosting"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" accesskey="U">ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Random Trees</a><ul>
+<li><a class="reference internal" href="#rtrees-params">RTrees::Params</a></li>
+<li><a class="reference internal" href="#rtrees-params-params">RTrees::Params::Params</a></li>
+<li><a class="reference internal" href="#rtrees">RTrees</a></li>
+<li><a class="reference internal" href="#rtrees-create">RTrees::create</a></li>
+<li><a class="reference internal" href="#rtrees-getvarimportance">RTrees::getVarImportance</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="boosting.html"
+                        title="previous chapter">Boosting</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="expectation_maximization.html"
+                        title="next chapter">Expectation Maximization</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="random-trees">
+<span id="id1"></span><h1>Random Trees<a class="headerlink" href="#random-trees" title="Permalink to this headline">¶</a></h1>
+<p>Random trees have been introduced by Leo Breiman and Adele Cutler:
+<a class="reference external" href="http://www.stat.berkeley.edu/users/breiman/RandomForests/">http://www.stat.berkeley.edu/users/breiman/RandomForests/</a>
+. The algorithm can deal with both classification and regression problems. Random trees is a collection (ensemble) of tree predictors that is called
+<em>forest</em>
+further in this section (the term has been also introduced by L. Breiman). The classification works as follows: the random trees classifier takes the input feature vector, classifies it with every tree in the forest, and outputs the class label that received the majority of &#8220;votes&#8221;. In case of a regression, the classifier response is the average of the responses over all the trees in the forest.</p>
+<p>All the trees are trained with the same parameters but on different training sets. These sets are generated from the original training set using the bootstrap procedure: for each training set, you randomly select the same number of vectors as in the original set ( <tt class="docutils literal"><span class="pre">=N</span></tt> ). The vectors are chosen with replacement. That is, some vectors will occur more than once and some will be absent. At each node of each trained tree,  not all the variables are used to find the best split, but a random subset of them. With each node a new subset is generated. However, its size is fixed for all the nodes and all the trees. It is a training parameter set to
+<span class="math">\sqrt{number\_of\_variables}</span> by default. None of the built trees are pruned.</p>
+<p>In random trees there is no need for any accuracy estimation procedures, such as cross-validation or bootstrap, or a separate test set to get an estimate of the training error. The error is estimated internally during the training. When the training set for the current tree is drawn by sampling with replacement, some vectors are left out (so-called
+<em>oob (out-of-bag) data</em>
+). The size of oob data is about <tt class="docutils literal"><span class="pre">N/3</span></tt> . The classification error is estimated by using this oob-data as follows:</p>
+<ol class="arabic simple">
+<li>Get a prediction for each vector, which is oob relative to the i-th tree, using the very i-th tree.</li>
+<li>After all the trees have been trained, for each vector that has ever been oob, find the class-<em>winner</em> for it (the class that has got the majority of votes in the trees where the vector was oob) and compare it to the ground-truth response.</li>
+<li>Compute the classification error estimate as a ratio of the number of misclassified oob vectors to all the vectors in the original data. In case of regression, the oob-error is computed as the squared error for oob vectors difference divided by the total number of vectors.</li>
+</ol>
+<p>For the random trees usage example, please, see letter_recog.cpp sample in OpenCV distribution.</p>
+<p><strong>References:</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li><em>Machine Learning</em>, Wald I, July 2002. <a class="reference external" href="http://stat-www.berkeley.edu/users/breiman/wald2002-1.pdf">http://stat-www.berkeley.edu/users/breiman/wald2002-1.pdf</a></li>
+<li><em>Looking Inside the Black Box</em>, Wald II, July 2002. <a class="reference external" href="http://stat-www.berkeley.edu/users/breiman/wald2002-2.pdf">http://stat-www.berkeley.edu/users/breiman/wald2002-2.pdf</a></li>
+<li><em>Software for the Masses</em>, Wald III, July 2002. <a class="reference external" href="http://stat-www.berkeley.edu/users/breiman/wald2002-3.pdf">http://stat-www.berkeley.edu/users/breiman/wald2002-3.pdf</a></li>
+<li>And other articles from the web site <a class="reference external" href="http://www.stat.berkeley.edu/users/breiman/RandomForests/cc_home.htm">http://www.stat.berkeley.edu/users/breiman/RandomForests/cc_home.htm</a></li>
+</ul>
+</div></blockquote>
+<div class="section" id="rtrees-params">
+<h2>RTrees::Params<a class="headerlink" href="#rtrees-params" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="RTrees::Params : public DTrees::Params">
+<em class="property">struct </em><tt class="descclassname">RTrees::</tt><tt class="descname">Params</tt> : <em class="property">public</em> <tt class="descclassname">DTrees::</tt><tt class="descname">Params</tt><a class="headerlink" href="#RTrees::Params : public DTrees::Params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Training parameters of random trees.</p>
+</dd></dl>
+
+<p>The set of training parameters for the forest is a superset of the training parameters for a single tree. However, random trees do not need all the functionality/features of decision trees. Most noticeably, the trees are not pruned, so the cross-validation parameters are not used.</p>
+</div>
+<div class="section" id="rtrees-params-params">
+<h2>RTrees::Params::Params<a class="headerlink" href="#rtrees-params-params" title="Permalink to this headline">¶</a></h2>
+<p>The constructors</p>
+<dl class="function">
+<dt id="RTrees::Params::Params()">
+<strong>C++:</strong><tt class="descname"> </tt> <tt class="descclassname">RTrees::Params::</tt><tt class="descname">Params</tt><big>(</big><big>)</big><a class="headerlink" href="#RTrees::Params::Params()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="RTrees::Params::Params(int maxDepth, int minSampleCount, double regressionAccuracy, bool useSurrogates, int maxCategories, const Mat&amp; priors, bool calcVarImportance, int nactiveVars, TermCriteria termCrit)">
+<strong>C++:</strong><tt class="descname"> </tt> <tt class="descclassname">RTrees::Params::</tt><tt class="descname">Params</tt><big>(</big>int <strong>maxDepth</strong>, int <strong>minSampleCount</strong>, double <strong>regressionAccuracy</strong>, bool <strong>useSurrogates</strong>, int <strong>maxCategories</strong>, const Mat&amp; <strong>priors</strong>, bool <strong>calcVarImportance</strong>, int <strong>nactiveVars</strong>, TermCriteria <strong>termCrit</strong><big>)</big><a class="headerlink" href="#RTrees::Params::Params(int maxDepth, int minSampleCount, double regressionAccuracy, bool useSurrogates, int maxCategories, const Mat& priors, bool calcVarImportance, int nactiveVars, TermCriteria termCrit)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>maxDepth</strong> &#8211; the depth of the tree. A low value will likely underfit and conversely a high value will likely overfit. The optimal value can be obtained using cross validation or other suitable methods.</li>
+<li><strong>minSampleCount</strong> &#8211; minimum samples required at a leaf node for it to be split. A reasonable value is a small percentage of the total data e.g. 1%.</li>
+<li><strong>maxCategories</strong> &#8211; Cluster possible values of a categorical variable into <tt class="docutils literal"><span class="pre">K</span> <span class="pre">&lt;=</span> <span class="pre">maxCategories</span></tt> clusters to find a suboptimal split. If a discrete variable, on which the training procedure tries to make a split, takes more than <tt class="docutils literal"><span class="pre">max_categories</span></tt> values, the precise best subset estimation may take a very long time because the algorithm is exponential. Instead, many decision trees engines (including ML) try to find sub-optimal split in this case by clustering all the samples into <tt class="docutils literal"><span class="pre">maxCategories</span></tt> clusters that is some categories are merged together. The clustering is applied only in <tt class="docutils literal"><span class="pre">n</span></tt>&gt;2-class classification problems for categorical variables with <tt class="docutils literal"><span class="pre">N</span> <span class="pre">&gt;</span> <span class="pre">max_categories</span></tt> possible values. In case of regression and 2-class classification the optimal split can be found efficiently without employing clustering, thus the parameter is not used in these cases.</li>
+<li><strong>calcVarImportance</strong> &#8211; If true then variable importance will be calculated and then it can be retrieved by <tt class="docutils literal"><span class="pre">RTrees::getVarImportance</span></tt>.</li>
+<li><strong>nactiveVars</strong> &#8211; The size of the randomly selected subset of features at each tree node and that are used to find the best split(s). If you set it to 0 then the size will be set to the square root of the total number of features.</li>
+<li><strong>termCrit</strong> &#8211; The termination criteria that specifies when the training algorithm stops - either when the specified number of trees is trained and added to the ensemble or when sufficient accuracy (measured as OOB error) is achieved. Typically the more trees you have the better the accuracy. However, the improvement in accuracy generally diminishes and asymptotes pass a certain number of trees. Also to keep in mind, the number of tree increases the prediction time linearly.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The default constructor sets all parameters to default values which are different from default values of <tt class="docutils literal"><span class="pre">DTrees::Params</span></tt>:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">RTrees</span><span class="o">::</span><span class="n">Params</span><span class="o">::</span><span class="n">Params</span><span class="p">()</span> <span class="o">:</span> <span class="n">DTrees</span><span class="o">::</span><span class="n">Params</span><span class="p">(</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="n">Mat</span><span class="p">()</span> <span class="p">),</span>
+    <span class="n">calcVarImportance</span><span class="p">(</span><span class="nb">false</span><span class="p">),</span> <span class="n">nactiveVars</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">termCrit</span> <span class="o">=</span> <span class="n">cvTermCriteria</span><span class="p">(</span> <span class="n">TermCriteria</span><span class="o">::</span><span class="n">MAX_ITERS</span> <span class="o">+</span> <span class="n">TermCriteria</span><span class="o">::</span><span class="n">EPS</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mf">0.1</span> <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="rtrees">
+<h2>RTrees<a class="headerlink" href="#rtrees" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="RTrees : public DTrees">
+<em class="property">class </em><tt class="descname">RTrees</tt> : <em class="property">public</em> <tt class="descname">DTrees</tt><a class="headerlink" href="#RTrees : public DTrees" title="Permalink to this definition">¶</a></dt>
+<dd><p>The class implements the random forest predictor as described in the beginning of this section.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="rtrees-create">
+<h2>RTrees::create<a class="headerlink" href="#rtrees-create" title="Permalink to this headline">¶</a></h2>
+<p>Creates the empty model</p>
+<dl class="function">
+<dt id="bool RTrees::create(const RTrees::Params&amp; params)">
+<strong>C++:</strong><tt class="descname"> </tt>bool <tt class="descclassname">RTrees::</tt><tt class="descname">create</tt><big>(</big>const RTrees::Params&amp; <strong>params</strong>=Params()<big>)</big><a class="headerlink" href="#bool RTrees::create(const RTrees::Params& params)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Use <tt class="docutils literal"><span class="pre">StatModel::train</span></tt> to train the model, <tt class="docutils literal"><span class="pre">StatModel::train&lt;RTrees&gt;(traindata,</span> <span class="pre">params)</span></tt> to create and train the model, <tt class="docutils literal"><span class="pre">StatModel::load&lt;RTrees&gt;(filename)</span></tt> to load the pre-trained model.</p>
+</div>
+<div class="section" id="rtrees-getvarimportance">
+<h2>RTrees::getVarImportance<a class="headerlink" href="#rtrees-getvarimportance" title="Permalink to this headline">¶</a></h2>
+<p>Returns the variable importance array.</p>
+<dl class="function">
+<dt id="Mat RTrees::getVarImportance() const">
+<strong>C++:</strong><tt class="descname"> </tt>Mat <tt class="descclassname">RTrees::</tt><tt class="descname">getVarImportance</tt><big>(</big><big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#Mat RTrees::getVarImportance() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The method returns the variable importance vector, computed at the training stage when <tt class="docutils literal"><span class="pre">RTParams::calcVarImportance</span></tt> is set to true. If this flag was set to false, the empty matrix is returned.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="expectation_maximization.html" title="Expectation Maximization"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="boosting.html" title="Boosting"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" >ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/ml/doc/random_trees.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

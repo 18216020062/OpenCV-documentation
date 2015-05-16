@@ -1,0 +1,876 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Feature Detection and Description &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="cudafeatures2d. CUDA-accelerated Feature Detection and Description" href="cudafeatures2d.html" />
+    <link rel="next" title="cudafilters. CUDA-accelerated Image Filtering" href="../../cudafilters/doc/cudafilters.html" />
+    <link rel="prev" title="cudafeatures2d. CUDA-accelerated Feature Detection and Description" href="cudafeatures2d.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../cudafilters/doc/cudafilters.html" title="cudafilters. CUDA-accelerated Image Filtering"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="cudafeatures2d.html" title="cudafeatures2d. CUDA-accelerated Feature Detection and Description"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="cudafeatures2d.html" accesskey="U">cudafeatures2d. CUDA-accelerated Feature Detection and Description</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Feature Detection and Description</a><ul>
+<li><a class="reference internal" href="#cuda-fast-cuda">cuda::FAST_CUDA</a></li>
+<li><a class="reference internal" href="#cuda-fast-cuda-fast-cuda">cuda::FAST_CUDA::FAST_CUDA</a></li>
+<li><a class="reference internal" href="#cuda-fast-cuda-operator">cuda::FAST_CUDA::operator ()</a></li>
+<li><a class="reference internal" href="#cuda-fast-cuda-downloadkeypoints">cuda::FAST_CUDA::downloadKeypoints</a></li>
+<li><a class="reference internal" href="#cuda-fast-cuda-convertkeypoints">cuda::FAST_CUDA::convertKeypoints</a></li>
+<li><a class="reference internal" href="#cuda-fast-cuda-release">cuda::FAST_CUDA::release</a></li>
+<li><a class="reference internal" href="#cuda-fast-cuda-calckeypointslocation">cuda::FAST_CUDA::calcKeyPointsLocation</a></li>
+<li><a class="reference internal" href="#cuda-fast-cuda-getkeypoints">cuda::FAST_CUDA::getKeyPoints</a></li>
+<li><a class="reference internal" href="#cuda-orb-cuda">cuda::ORB_CUDA</a></li>
+<li><a class="reference internal" href="#cuda-orb-cuda-orb-cuda">cuda::ORB_CUDA::ORB_CUDA</a></li>
+<li><a class="reference internal" href="#cuda-orb-cuda-operator">cuda::ORB_CUDA::operator()</a></li>
+<li><a class="reference internal" href="#cuda-orb-cuda-downloadkeypoints">cuda::ORB_CUDA::downloadKeyPoints</a></li>
+<li><a class="reference internal" href="#cuda-orb-cuda-convertkeypoints">cuda::ORB_CUDA::convertKeyPoints</a></li>
+<li><a class="reference internal" href="#cuda-orb-cuda-release">cuda::ORB_CUDA::release</a></li>
+<li><a class="reference internal" href="#cuda-bfmatcher-cuda">cuda::BFMatcher_CUDA</a></li>
+<li><a class="reference internal" href="#cuda-bfmatcher-cuda-match">cuda::BFMatcher_CUDA::match</a></li>
+<li><a class="reference internal" href="#cuda-bfmatcher-cuda-makegpucollection">cuda::BFMatcher_CUDA::makeGpuCollection</a></li>
+<li><a class="reference internal" href="#cuda-bfmatcher-cuda-matchdownload">cuda::BFMatcher_CUDA::matchDownload</a></li>
+<li><a class="reference internal" href="#cuda-bfmatcher-cuda-matchconvert">cuda::BFMatcher_CUDA::matchConvert</a></li>
+<li><a class="reference internal" href="#cuda-bfmatcher-cuda-knnmatch">cuda::BFMatcher_CUDA::knnMatch</a></li>
+<li><a class="reference internal" href="#cuda-bfmatcher-cuda-knnmatchdownload">cuda::BFMatcher_CUDA::knnMatchDownload</a></li>
+<li><a class="reference internal" href="#cuda-bfmatcher-cuda-knnmatchconvert">cuda::BFMatcher_CUDA::knnMatchConvert</a></li>
+<li><a class="reference internal" href="#cuda-bfmatcher-cuda-radiusmatch">cuda::BFMatcher_CUDA::radiusMatch</a></li>
+<li><a class="reference internal" href="#cuda-bfmatcher-cuda-radiusmatchdownload">cuda::BFMatcher_CUDA::radiusMatchDownload</a></li>
+<li><a class="reference internal" href="#cuda-bfmatcher-cuda-radiusmatchconvert">cuda::BFMatcher_CUDA::radiusMatchConvert</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="cudafeatures2d.html"
+                        title="previous chapter">cudafeatures2d. CUDA-accelerated Feature Detection and Description</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../cudafilters/doc/cudafilters.html"
+                        title="next chapter">cudafilters. CUDA-accelerated Image Filtering</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="feature-detection-and-description">
+<h1>Feature Detection and Description<a class="headerlink" href="#feature-detection-and-description" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="cuda-fast-cuda">
+<h2>cuda::FAST_CUDA<a class="headerlink" href="#cuda-fast-cuda" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cuda::FAST_CUDA">
+<em class="property">class </em><tt class="descclassname">cuda::</tt><tt class="descname">FAST_CUDA</tt><a class="headerlink" href="#cuda::FAST_CUDA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class used for corner detection using the FAST algorithm.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">FAST_CUDA</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">enum</span>
+    <span class="p">{</span>
+        <span class="n">LOCATION_ROW</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">RESPONSE_ROW</span><span class="p">,</span>
+        <span class="n">ROWS_COUNT</span>
+    <span class="p">};</span>
+
+    <span class="c1">// all features have same size</span>
+    <span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">FEATURE_SIZE</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+
+    <span class="k">explicit</span> <span class="nf">FAST_CUDA</span><span class="p">(</span><span class="kt">int</span> <span class="n">threshold</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">nonmaxSuppression</span> <span class="o">=</span> <span class="nb">true</span><span class="p">,</span>
+                      <span class="kt">double</span> <span class="n">keypointsRatio</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">operator</span> <span class="p">()(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">image</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">mask</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">keypoints</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="nf">operator</span> <span class="p">()(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">image</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">mask</span><span class="p">,</span>
+                     <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;&amp;</span> <span class="n">keypoints</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">downloadKeypoints</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">d_keypoints</span><span class="p">,</span>
+                           <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;&amp;</span> <span class="n">keypoints</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">convertKeypoints</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">h_keypoints</span><span class="p">,</span>
+                          <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;&amp;</span> <span class="n">keypoints</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">release</span><span class="p">();</span>
+
+    <span class="kt">bool</span> <span class="n">nonmaxSuppression</span><span class="p">;</span>
+
+    <span class="kt">int</span> <span class="n">threshold</span><span class="p">;</span>
+
+    <span class="kt">double</span> <span class="n">keypointsRatio</span><span class="p">;</span>
+
+    <span class="kt">int</span> <span class="nf">calcKeyPointsLocation</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">image</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">mask</span><span class="p">);</span>
+
+    <span class="kt">int</span> <span class="nf">getKeyPoints</span><span class="p">(</span><span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">keypoints</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The class <tt class="docutils literal"><span class="pre">FAST_CUDA</span></tt> implements FAST corner detection algorithm.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../features2d/doc/feature_detection_and_description.html#void FAST(InputArray image, vector&lt;KeyPoint&gt;&amp; keypoints, int threshold, bool nonmaxSuppression)" title="void FAST(InputArray image, vector&lt;KeyPoint&gt;&amp; keypoints, int threshold, bool nonmaxSuppression)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">FAST()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-fast-cuda-fast-cuda">
+<h2>cuda::FAST_CUDA::FAST_CUDA<a class="headerlink" href="#cuda-fast-cuda-fast-cuda" title="Permalink to this headline">¶</a></h2>
+<p>Constructor.</p>
+<dl class="function">
+<dt id="cuda::FAST_CUDA::FAST_CUDA(int threshold, bool nonmaxSuppression , double keypointsRatio)">
+<strong>C++:</strong><tt class="descname"> </tt> <tt class="descclassname">cuda::FAST_CUDA::</tt><tt class="descname">FAST_CUDA</tt><big>(</big>int <strong>threshold</strong>, bool <strong>nonmaxSuppression</strong>=true, double <strong>keypointsRatio</strong>=0.05<big>)</big><a class="headerlink" href="#cuda::FAST_CUDA::FAST_CUDA(int threshold, bool nonmaxSuppression , double keypointsRatio)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>threshold</strong> &#8211; Threshold on difference between intensity of the central pixel and pixels on a circle around this pixel.</li>
+<li><strong>nonmaxSuppression</strong> &#8211; If it is true, non-maximum suppression is applied to detected corners (keypoints).</li>
+<li><strong>keypointsRatio</strong> &#8211; Inner buffer size for keypoints store is determined as (keypointsRatio * image_width * image_height).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-fast-cuda-operator">
+<h2>cuda::FAST_CUDA::operator ()<a class="headerlink" href="#cuda-fast-cuda-operator" title="Permalink to this headline">¶</a></h2>
+<p>Finds the keypoints using FAST detector.</p>
+<dl class="function">
+<dt id="void cuda::FAST_CUDA::operator ()(const GpuMat&amp; image, const GpuMat&amp; mask, GpuMat&amp; keypoints)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::FAST_CUDA::</tt><tt class="descname">operator()</tt><big>(</big>const GpuMat&amp; <strong>image</strong>, const GpuMat&amp; <strong>mask</strong>, GpuMat&amp; <strong>keypoints</strong><big>)</big><a class="headerlink" href="#void cuda::FAST_CUDA::operator ()(const GpuMat& image, const GpuMat& mask, GpuMat& keypoints)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void cuda::FAST_CUDA::operator ()(const GpuMat&amp; image, const GpuMat&amp; mask, std::vector&lt;KeyPoint&gt;&amp; keypoints)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::FAST_CUDA::</tt><tt class="descname">operator()</tt><big>(</big>const GpuMat&amp; <strong>image</strong>, const GpuMat&amp; <strong>mask</strong>, std::vector&lt;KeyPoint&gt;&amp; <strong>keypoints</strong><big>)</big><a class="headerlink" href="#void cuda::FAST_CUDA::operator ()(const GpuMat& image, const GpuMat& mask, std::vector<KeyPoint>& keypoints)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; Image where keypoints (corners) are detected. Only 8-bit grayscale images are supported.</li>
+<li><strong>mask</strong> &#8211; Optional input mask that marks the regions where we should detect features.</li>
+<li><strong>keypoints</strong> &#8211; <p>The output vector of keypoints. Can be stored both in CPU and GPU memory. For GPU memory:</p>
+<ul>
+<li>keypoints.ptr&lt;Vec2s&gt;(LOCATION_ROW)[i] will contain location of i&#8217;th point</li>
+<li>keypoints.ptr&lt;float&gt;(RESPONSE_ROW)[i] will contain response of i&#8217;th point (if non-maximum suppression is applied)</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-fast-cuda-downloadkeypoints">
+<h2>cuda::FAST_CUDA::downloadKeypoints<a class="headerlink" href="#cuda-fast-cuda-downloadkeypoints" title="Permalink to this headline">¶</a></h2>
+<p>Download keypoints from GPU to CPU memory.</p>
+<dl class="function">
+<dt id="void cuda::FAST_CUDA::downloadKeypoints(const GpuMat&amp; d_keypoints, std::vector&lt;KeyPoint&gt;&amp; keypoints)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::FAST_CUDA::</tt><tt class="descname">downloadKeypoints</tt><big>(</big>const GpuMat&amp; <strong>d_keypoints</strong>, std::vector&lt;KeyPoint&gt;&amp; <strong>keypoints</strong><big>)</big><a class="headerlink" href="#void cuda::FAST_CUDA::downloadKeypoints(const GpuMat& d_keypoints, std::vector<KeyPoint>& keypoints)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="cuda-fast-cuda-convertkeypoints">
+<h2>cuda::FAST_CUDA::convertKeypoints<a class="headerlink" href="#cuda-fast-cuda-convertkeypoints" title="Permalink to this headline">¶</a></h2>
+<p>Converts keypoints from CUDA representation to vector of <tt class="docutils literal"><span class="pre">KeyPoint</span></tt>.</p>
+<dl class="function">
+<dt id="void cuda::FAST_CUDA::convertKeypoints(const Mat&amp; h_keypoints, std::vector&lt;KeyPoint&gt;&amp; keypoints)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::FAST_CUDA::</tt><tt class="descname">convertKeypoints</tt><big>(</big>const Mat&amp; <strong>h_keypoints</strong>, std::vector&lt;KeyPoint&gt;&amp; <strong>keypoints</strong><big>)</big><a class="headerlink" href="#void cuda::FAST_CUDA::convertKeypoints(const Mat& h_keypoints, std::vector<KeyPoint>& keypoints)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="cuda-fast-cuda-release">
+<h2>cuda::FAST_CUDA::release<a class="headerlink" href="#cuda-fast-cuda-release" title="Permalink to this headline">¶</a></h2>
+<p>Releases inner buffer memory.</p>
+<dl class="function">
+<dt id="void cuda::FAST_CUDA::release()">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::FAST_CUDA::</tt><tt class="descname">release</tt><big>(</big><big>)</big><a class="headerlink" href="#void cuda::FAST_CUDA::release()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="cuda-fast-cuda-calckeypointslocation">
+<h2>cuda::FAST_CUDA::calcKeyPointsLocation<a class="headerlink" href="#cuda-fast-cuda-calckeypointslocation" title="Permalink to this headline">¶</a></h2>
+<p>Find keypoints and compute it&#8217;s response if <tt class="docutils literal"><span class="pre">nonmaxSuppression</span></tt> is true.</p>
+<dl class="function">
+<dt id="int cuda::FAST_CUDA::calcKeyPointsLocation(const GpuMat&amp; image, const GpuMat&amp; mask)">
+<strong>C++:</strong><tt class="descname"> </tt>int <tt class="descclassname">cuda::FAST_CUDA::</tt><tt class="descname">calcKeyPointsLocation</tt><big>(</big>const GpuMat&amp; <strong>image</strong>, const GpuMat&amp; <strong>mask</strong><big>)</big><a class="headerlink" href="#int cuda::FAST_CUDA::calcKeyPointsLocation(const GpuMat& image, const GpuMat& mask)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; Image where keypoints (corners) are detected. Only 8-bit grayscale images are supported.</li>
+<li><strong>mask</strong> &#8211; Optional input mask that marks the regions where we should detect features.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function returns count of detected keypoints.</p>
+</div>
+<div class="section" id="cuda-fast-cuda-getkeypoints">
+<h2>cuda::FAST_CUDA::getKeyPoints<a class="headerlink" href="#cuda-fast-cuda-getkeypoints" title="Permalink to this headline">¶</a></h2>
+<p>Gets final array of keypoints.</p>
+<dl class="function">
+<dt id="int cuda::FAST_CUDA::getKeyPoints(GpuMat&amp; keypoints)">
+<strong>C++:</strong><tt class="descname"> </tt>int <tt class="descclassname">cuda::FAST_CUDA::</tt><tt class="descname">getKeyPoints</tt><big>(</big>GpuMat&amp; <strong>keypoints</strong><big>)</big><a class="headerlink" href="#int cuda::FAST_CUDA::getKeyPoints(GpuMat& keypoints)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>keypoints</strong> &#8211; The output vector of keypoints.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function performs non-max suppression if needed and returns final count of keypoints.</p>
+</div>
+<div class="section" id="cuda-orb-cuda">
+<h2>cuda::ORB_CUDA<a class="headerlink" href="#cuda-orb-cuda" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cuda::ORB_CUDA">
+<em class="property">class </em><tt class="descclassname">cuda::</tt><tt class="descname">ORB_CUDA</tt><a class="headerlink" href="#cuda::ORB_CUDA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class for extracting ORB features and descriptors from an image.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">ORB_CUDA</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">enum</span>
+    <span class="p">{</span>
+        <span class="n">X_ROW</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">Y_ROW</span><span class="p">,</span>
+        <span class="n">RESPONSE_ROW</span><span class="p">,</span>
+        <span class="n">ANGLE_ROW</span><span class="p">,</span>
+        <span class="n">OCTAVE_ROW</span><span class="p">,</span>
+        <span class="n">SIZE_ROW</span><span class="p">,</span>
+        <span class="n">ROWS_COUNT</span>
+    <span class="p">};</span>
+
+    <span class="k">enum</span>
+    <span class="p">{</span>
+        <span class="n">DEFAULT_FAST_THRESHOLD</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="p">};</span>
+
+    <span class="k">explicit</span> <span class="nf">ORB_CUDA</span><span class="p">(</span><span class="kt">int</span> <span class="n">nFeatures</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span> <span class="kt">float</span> <span class="n">scaleFactor</span> <span class="o">=</span> <span class="mf">1.2f</span><span class="p">,</span>
+                     <span class="kt">int</span> <span class="n">nLevels</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> <span class="kt">int</span> <span class="n">edgeThreshold</span> <span class="o">=</span> <span class="mi">31</span><span class="p">,</span>
+                     <span class="kt">int</span> <span class="n">firstLevel</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="kt">int</span> <span class="n">WTA_K</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+                     <span class="kt">int</span> <span class="n">scoreType</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="kt">int</span> <span class="n">patchSize</span> <span class="o">=</span> <span class="mi">31</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">image</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">mask</span><span class="p">,</span>
+                    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;&amp;</span> <span class="n">keypoints</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="nf">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">image</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">mask</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">keypoints</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">image</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">mask</span><span class="p">,</span>
+                    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;&amp;</span> <span class="n">keypoints</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">descriptors</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="nf">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">image</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">mask</span><span class="p">,</span>
+                    <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">keypoints</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">descriptors</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">downloadKeyPoints</span><span class="p">(</span><span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">d_keypoints</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;&amp;</span> <span class="n">keypoints</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">convertKeyPoints</span><span class="p">(</span><span class="n">Mat</span><span class="o">&amp;</span> <span class="n">d_keypoints</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;&amp;</span> <span class="n">keypoints</span><span class="p">);</span>
+
+    <span class="kt">int</span> <span class="n">descriptorSize</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="kt">void</span> <span class="nf">setParams</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">n_features</span><span class="p">,</span> <span class="k">const</span> <span class="n">ORB</span><span class="o">::</span><span class="n">CommonParams</span><span class="o">&amp;</span> <span class="n">detector_params</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="nf">setFastParams</span><span class="p">(</span><span class="kt">int</span> <span class="n">threshold</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">nonmaxSuppression</span> <span class="o">=</span> <span class="nb">true</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">release</span><span class="p">();</span>
+
+    <span class="kt">bool</span> <span class="n">blurForDescriptor</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The class implements ORB feature detection and description algorithm.</p>
+</div>
+<div class="section" id="cuda-orb-cuda-orb-cuda">
+<h2>cuda::ORB_CUDA::ORB_CUDA<a class="headerlink" href="#cuda-orb-cuda-orb-cuda" title="Permalink to this headline">¶</a></h2>
+<p>Constructor.</p>
+<dl class="function">
+<dt id="cuda::ORB_CUDA::ORB_CUDA(int nFeatures , float scaleFactor , int nLevels , int edgeThreshold , int firstLevel , int WTA_K , int scoreType , int patchSize)">
+<strong>C++:</strong><tt class="descname"> </tt> <tt class="descclassname">cuda::ORB_CUDA::</tt><tt class="descname">ORB_CUDA</tt><big>(</big>int <strong>nFeatures</strong>=500, float <strong>scaleFactor</strong>=1.2f, int <strong>nLevels</strong>=8, int <strong>edgeThreshold</strong>=31, int <strong>firstLevel</strong>=0, int <strong>WTA_K</strong>=2, int <strong>scoreType</strong>=0, int <strong>patchSize</strong>=31<big>)</big><a class="headerlink" href="#cuda::ORB_CUDA::ORB_CUDA(int nFeatures , float scaleFactor , int nLevels , int edgeThreshold , int firstLevel , int WTA_K , int scoreType , int patchSize)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>nFeatures</strong> &#8211; The number of desired features.</li>
+<li><strong>scaleFactor</strong> &#8211; Coefficient by which we divide the dimensions from one scale pyramid level to the next.</li>
+<li><strong>nLevels</strong> &#8211; The number of levels in the scale pyramid.</li>
+<li><strong>edgeThreshold</strong> &#8211; How far from the boundary the points should be.</li>
+<li><strong>firstLevel</strong> &#8211; The level at which the image is given. If 1, that means we will also look at the image  <cite>scaleFactor</cite>  times bigger.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-orb-cuda-operator">
+<h2>cuda::ORB_CUDA::operator()<a class="headerlink" href="#cuda-orb-cuda-operator" title="Permalink to this headline">¶</a></h2>
+<p>Detects keypoints and computes descriptors for them.</p>
+<dl class="function">
+<dt id="void cuda::ORB_CUDA::operator()(const GpuMat&amp; image, const GpuMat&amp; mask, std::vector&lt;KeyPoint&gt;&amp; keypoints)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::ORB_CUDA::</tt><tt class="descname">operator()</tt><big>(</big>const GpuMat&amp; <strong>image</strong>, const GpuMat&amp; <strong>mask</strong>, std::vector&lt;KeyPoint&gt;&amp; <strong>keypoints</strong><big>)</big><a class="headerlink" href="#void cuda::ORB_CUDA::operator()(const GpuMat& image, const GpuMat& mask, std::vector<KeyPoint>& keypoints)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void cuda::ORB_CUDA::operator()(const GpuMat&amp; image, const GpuMat&amp; mask, GpuMat&amp; keypoints)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::ORB_CUDA::</tt><tt class="descname">operator()</tt><big>(</big>const GpuMat&amp; <strong>image</strong>, const GpuMat&amp; <strong>mask</strong>, GpuMat&amp; <strong>keypoints</strong><big>)</big><a class="headerlink" href="#void cuda::ORB_CUDA::operator()(const GpuMat& image, const GpuMat& mask, GpuMat& keypoints)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void cuda::ORB_CUDA::operator()(const GpuMat&amp; image, const GpuMat&amp; mask, std::vector&lt;KeyPoint&gt;&amp; keypoints, GpuMat&amp; descriptors)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::ORB_CUDA::</tt><tt class="descname">operator()</tt><big>(</big>const GpuMat&amp; <strong>image</strong>, const GpuMat&amp; <strong>mask</strong>, std::vector&lt;KeyPoint&gt;&amp; <strong>keypoints</strong>, GpuMat&amp; <strong>descriptors</strong><big>)</big><a class="headerlink" href="#void cuda::ORB_CUDA::operator()(const GpuMat& image, const GpuMat& mask, std::vector<KeyPoint>& keypoints, GpuMat& descriptors)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void cuda::ORB_CUDA::operator()(const GpuMat&amp; image, const GpuMat&amp; mask, GpuMat&amp; keypoints, GpuMat&amp; descriptors)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::ORB_CUDA::</tt><tt class="descname">operator()</tt><big>(</big>const GpuMat&amp; <strong>image</strong>, const GpuMat&amp; <strong>mask</strong>, GpuMat&amp; <strong>keypoints</strong>, GpuMat&amp; <strong>descriptors</strong><big>)</big><a class="headerlink" href="#void cuda::ORB_CUDA::operator()(const GpuMat& image, const GpuMat& mask, GpuMat& keypoints, GpuMat& descriptors)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; Input 8-bit grayscale image.</li>
+<li><strong>mask</strong> &#8211; Optional input mask that marks the regions where we should detect features.</li>
+<li><strong>keypoints</strong> &#8211; <p>The input/output vector of keypoints. Can be stored both in CPU and GPU memory. For GPU memory:</p>
+<ul>
+<li><tt class="docutils literal"><span class="pre">keypoints.ptr&lt;float&gt;(X_ROW)[i]</span></tt> contains x coordinate of the i&#8217;th feature.</li>
+<li><tt class="docutils literal"><span class="pre">keypoints.ptr&lt;float&gt;(Y_ROW)[i]</span></tt> contains y coordinate of the i&#8217;th feature.</li>
+<li><tt class="docutils literal"><span class="pre">keypoints.ptr&lt;float&gt;(RESPONSE_ROW)[i]</span></tt> contains the response of the i&#8217;th feature.</li>
+<li><tt class="docutils literal"><span class="pre">keypoints.ptr&lt;float&gt;(ANGLE_ROW)[i]</span></tt> contains orientation of the i&#8217;th feature.</li>
+<li><tt class="docutils literal"><span class="pre">keypoints.ptr&lt;float&gt;(OCTAVE_ROW)[i]</span></tt> contains the octave of the i&#8217;th feature.</li>
+<li><tt class="docutils literal"><span class="pre">keypoints.ptr&lt;float&gt;(SIZE_ROW)[i]</span></tt> contains the size of the i&#8217;th feature.</li>
+</ul>
+</li>
+<li><strong>descriptors</strong> &#8211; Computed descriptors. if <tt class="docutils literal"><span class="pre">blurForDescriptor</span></tt> is true, image will be blurred before descriptors calculation.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-orb-cuda-downloadkeypoints">
+<h2>cuda::ORB_CUDA::downloadKeyPoints<a class="headerlink" href="#cuda-orb-cuda-downloadkeypoints" title="Permalink to this headline">¶</a></h2>
+<p>Download keypoints from GPU to CPU memory.</p>
+<dl class="function">
+<dt id="static void cuda::ORB_CUDA::downloadKeyPoints(const GpuMat&amp; d_keypoints, std::vector&lt;KeyPoint&gt;&amp; keypoints)">
+<strong>C++:</strong><tt class="descname"> </tt><em class="property">static</em> void <tt class="descclassname">cuda::ORB_CUDA::</tt><tt class="descname">downloadKeyPoints</tt><big>(</big>const GpuMat&amp; <strong>d_keypoints</strong>, std::vector&lt;KeyPoint&gt;&amp; <strong>keypoints</strong><big>)</big><a class="headerlink" href="#static void cuda::ORB_CUDA::downloadKeyPoints(const GpuMat& d_keypoints, std::vector<KeyPoint>& keypoints)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="cuda-orb-cuda-convertkeypoints">
+<h2>cuda::ORB_CUDA::convertKeyPoints<a class="headerlink" href="#cuda-orb-cuda-convertkeypoints" title="Permalink to this headline">¶</a></h2>
+<p>Converts keypoints from CUDA representation to vector of <tt class="docutils literal"><span class="pre">KeyPoint</span></tt>.</p>
+<dl class="function">
+<dt id="static void cuda::ORB_CUDA::convertKeyPoints(const Mat&amp; d_keypoints, std::vector&lt;KeyPoint&gt;&amp; keypoints)">
+<strong>C++:</strong><tt class="descname"> </tt><em class="property">static</em> void <tt class="descclassname">cuda::ORB_CUDA::</tt><tt class="descname">convertKeyPoints</tt><big>(</big>const Mat&amp; <strong>d_keypoints</strong>, std::vector&lt;KeyPoint&gt;&amp; <strong>keypoints</strong><big>)</big><a class="headerlink" href="#static void cuda::ORB_CUDA::convertKeyPoints(const Mat& d_keypoints, std::vector<KeyPoint>& keypoints)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="cuda-orb-cuda-release">
+<h2>cuda::ORB_CUDA::release<a class="headerlink" href="#cuda-orb-cuda-release" title="Permalink to this headline">¶</a></h2>
+<p>Releases inner buffer memory.</p>
+<dl class="function">
+<dt id="void cuda::ORB_CUDA::release()">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::ORB_CUDA::</tt><tt class="descname">release</tt><big>(</big><big>)</big><a class="headerlink" href="#void cuda::ORB_CUDA::release()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="cuda-bfmatcher-cuda">
+<h2>cuda::BFMatcher_CUDA<a class="headerlink" href="#cuda-bfmatcher-cuda" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cuda::BFMatcher_CUDA">
+<em class="property">class </em><tt class="descclassname">cuda::</tt><tt class="descname">BFMatcher_CUDA</tt><a class="headerlink" href="#cuda::BFMatcher_CUDA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Brute-force descriptor matcher. For each descriptor in the first set, this matcher finds the closest descriptor in the second set by trying each one. This descriptor matcher supports masking permissible matches between descriptor sets.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">BFMatcher_CUDA</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">explicit</span> <span class="n">BFMatcher_CUDA</span><span class="p">(</span><span class="kt">int</span> <span class="n">norm</span> <span class="o">=</span> <span class="n">cv</span><span class="o">::</span><span class="n">NORM_L2</span><span class="p">);</span>
+
+    <span class="c1">// Add descriptors to train descriptor collection.</span>
+    <span class="kt">void</span> <span class="nf">add</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">GpuMat</span><span class="o">&gt;&amp;</span> <span class="n">descCollection</span><span class="p">);</span>
+
+    <span class="c1">// Get train descriptors collection.</span>
+    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">GpuMat</span><span class="o">&gt;&amp;</span> <span class="n">getTrainDescriptors</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="c1">// Clear train descriptors collection.</span>
+    <span class="kt">void</span> <span class="nf">clear</span><span class="p">();</span>
+
+    <span class="c1">// Return true if there are no train descriptors in collection.</span>
+    <span class="kt">bool</span> <span class="n">empty</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="c1">// Return true if the matcher supports mask in match methods.</span>
+    <span class="kt">bool</span> <span class="n">isMaskSupported</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="kt">void</span> <span class="nf">matchSingle</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">query</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">train</span><span class="p">,</span>
+        <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">GpuMat</span><span class="p">(),</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="o">::</span><span class="n">Null</span><span class="p">());</span>
+
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">matchDownload</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">);</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">matchConvert</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">match</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">query</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">train</span><span class="p">,</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">GpuMat</span><span class="p">());</span>
+
+    <span class="kt">void</span> <span class="nf">makeGpuCollection</span><span class="p">(</span><span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">trainCollection</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">maskCollection</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">GpuMat</span><span class="o">&gt;&amp;</span> <span class="n">masks</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">GpuMat</span><span class="o">&gt;</span><span class="p">());</span>
+
+    <span class="kt">void</span> <span class="nf">matchCollection</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">query</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">trainCollection</span><span class="p">,</span>
+        <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">imgIdx</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">maskCollection</span><span class="p">,</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="o">::</span><span class="n">Null</span><span class="p">());</span>
+
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">matchDownload</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">imgIdx</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">);</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">matchConvert</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">imgIdx</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">match</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">query</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">GpuMat</span><span class="o">&gt;&amp;</span> <span class="n">masks</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">GpuMat</span><span class="o">&gt;</span><span class="p">());</span>
+
+    <span class="kt">void</span> <span class="nf">knnMatchSingle</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">query</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">train</span><span class="p">,</span>
+        <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">allDist</span><span class="p">,</span> <span class="kt">int</span> <span class="n">k</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">GpuMat</span><span class="p">(),</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="o">::</span><span class="n">Null</span><span class="p">());</span>
+
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">knnMatchDownload</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">compactResult</span> <span class="o">=</span> <span class="nb">false</span><span class="p">);</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">knnMatchConvert</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">compactResult</span> <span class="o">=</span> <span class="nb">false</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">knnMatch</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">query</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">train</span><span class="p">,</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="kt">int</span> <span class="n">k</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">GpuMat</span><span class="p">(),</span> <span class="kt">bool</span> <span class="n">compactResult</span> <span class="o">=</span> <span class="nb">false</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">knnMatch2Collection</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">query</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">trainCollection</span><span class="p">,</span>
+        <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">imgIdx</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">maskCollection</span> <span class="o">=</span> <span class="n">GpuMat</span><span class="p">(),</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="o">::</span><span class="n">Null</span><span class="p">());</span>
+
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">knnMatch2Download</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">imgIdx</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">compactResult</span> <span class="o">=</span> <span class="nb">false</span><span class="p">);</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">knnMatch2Convert</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">imgIdx</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">compactResult</span> <span class="o">=</span> <span class="nb">false</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">knnMatch</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">query</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="kt">int</span> <span class="n">k</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">GpuMat</span><span class="o">&gt;&amp;</span> <span class="n">masks</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">GpuMat</span><span class="o">&gt;</span><span class="p">(),</span>
+        <span class="kt">bool</span> <span class="n">compactResult</span> <span class="o">=</span> <span class="nb">false</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">radiusMatchSingle</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">query</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">train</span><span class="p">,</span>
+        <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">nMatches</span><span class="p">,</span> <span class="kt">float</span> <span class="n">maxDistance</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">GpuMat</span><span class="p">(),</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="o">::</span><span class="n">Null</span><span class="p">());</span>
+
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">radiusMatchDownload</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">nMatches</span><span class="p">,</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">compactResult</span> <span class="o">=</span> <span class="nb">false</span><span class="p">);</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">radiusMatchConvert</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">nMatches</span><span class="p">,</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">compactResult</span> <span class="o">=</span> <span class="nb">false</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">radiusMatch</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">query</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">train</span><span class="p">,</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="kt">float</span> <span class="n">maxDistance</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">GpuMat</span><span class="p">(),</span> <span class="kt">bool</span> <span class="n">compactResult</span> <span class="o">=</span> <span class="nb">false</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">radiusMatchCollection</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">query</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">imgIdx</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">nMatches</span><span class="p">,</span> <span class="kt">float</span> <span class="n">maxDistance</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">GpuMat</span><span class="o">&gt;&amp;</span> <span class="n">masks</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">GpuMat</span><span class="o">&gt;</span><span class="p">(),</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="o">::</span><span class="n">Null</span><span class="p">());</span>
+
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">radiusMatchDownload</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">imgIdx</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">nMatches</span><span class="p">,</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">compactResult</span> <span class="o">=</span> <span class="nb">false</span><span class="p">);</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">radiusMatchConvert</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">imgIdx</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">nMatches</span><span class="p">,</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">compactResult</span> <span class="o">=</span> <span class="nb">false</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">radiusMatch</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">query</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="kt">float</span> <span class="n">maxDistance</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">GpuMat</span><span class="o">&gt;&amp;</span> <span class="n">masks</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">GpuMat</span><span class="o">&gt;</span><span class="p">(),</span> <span class="kt">bool</span> <span class="n">compactResult</span> <span class="o">=</span> <span class="nb">false</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">GpuMat</span><span class="o">&gt;</span> <span class="n">trainDescCollection</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The class <tt class="docutils literal"><span class="pre">BFMatcher_CUDA</span></tt> has an interface similar to the class <a class="reference internal" href="../../features2d/doc/common_interfaces_of_descriptor_matchers.html#DescriptorMatcher : public Algorithm" title="class DescriptorMatcher : public Algorithm"><tt class="xref ocv ocv-class docutils literal"><span class="pre">DescriptorMatcher</span></tt></a>. It has two groups of <tt class="docutils literal"><span class="pre">match</span></tt> methods: for matching descriptors of one image with another image or with an image set. Also, all functions have an alternative to save results either to the GPU memory or to the CPU memory.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../features2d/doc/common_interfaces_of_descriptor_matchers.html#DescriptorMatcher : public Algorithm" title="class DescriptorMatcher : public Algorithm"><tt class="xref ocv ocv-class docutils literal"><span class="pre">DescriptorMatcher</span></tt></a>, <a class="reference internal" href="../../features2d/doc/common_interfaces_of_descriptor_matchers.html#BFMatcher : public DescriptorMatcher" title="class BFMatcher : public DescriptorMatcher"><tt class="xref ocv ocv-class docutils literal"><span class="pre">BFMatcher</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-bfmatcher-cuda-match">
+<h2>cuda::BFMatcher_CUDA::match<a class="headerlink" href="#cuda-bfmatcher-cuda-match" title="Permalink to this headline">¶</a></h2>
+<p>Finds the best match for each descriptor from a query set with train descriptors.</p>
+<dl class="function">
+<dt id="void cuda::BFMatcher_CUDA::match(const GpuMat&amp; query, const GpuMat&amp; train, std::vector&lt;DMatch&gt;&amp; matches, const GpuMat&amp; mask)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::BFMatcher_CUDA::</tt><tt class="descname">match</tt><big>(</big>const GpuMat&amp; <strong>query</strong>, const GpuMat&amp; <strong>train</strong>, std::vector&lt;DMatch&gt;&amp; <strong>matches</strong>, const GpuMat&amp; <strong>mask</strong>=GpuMat()<big>)</big><a class="headerlink" href="#void cuda::BFMatcher_CUDA::match(const GpuMat& query, const GpuMat& train, std::vector<DMatch>& matches, const GpuMat& mask)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void cuda::BFMatcher_CUDA::matchSingle(const GpuMat&amp; query, const GpuMat&amp; train, GpuMat&amp; trainIdx, GpuMat&amp; distance, const GpuMat&amp; mask , Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::BFMatcher_CUDA::</tt><tt class="descname">matchSingle</tt><big>(</big>const GpuMat&amp; <strong>query</strong>, const GpuMat&amp; <strong>train</strong>, GpuMat&amp; <strong>trainIdx</strong>, GpuMat&amp; <strong>distance</strong>, const GpuMat&amp; <strong>mask</strong>=GpuMat(), Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::BFMatcher_CUDA::matchSingle(const GpuMat& query, const GpuMat& train, GpuMat& trainIdx, GpuMat& distance, const GpuMat& mask , Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void cuda::BFMatcher_CUDA::match(const GpuMat&amp; query, std::vector&lt;DMatch&gt;&amp; matches, const std::vector&lt;GpuMat&gt;&amp; masks)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::BFMatcher_CUDA::</tt><tt class="descname">match</tt><big>(</big>const GpuMat&amp; <strong>query</strong>, std::vector&lt;DMatch&gt;&amp; <strong>matches</strong>, const std::vector&lt;GpuMat&gt;&amp; <strong>masks</strong>=std::vector&lt;GpuMat&gt;()<big>)</big><a class="headerlink" href="#void cuda::BFMatcher_CUDA::match(const GpuMat& query, std::vector<DMatch>& matches, const std::vector<GpuMat>& masks)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void cuda::BFMatcher_CUDA::matchCollection(const GpuMat&amp; query, const GpuMat&amp; trainCollection, GpuMat&amp; trainIdx, GpuMat&amp; imgIdx, GpuMat&amp; distance, const GpuMat&amp; masks, Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::BFMatcher_CUDA::</tt><tt class="descname">matchCollection</tt><big>(</big>const GpuMat&amp; <strong>query</strong>, const GpuMat&amp; <strong>trainCollection</strong>, GpuMat&amp; <strong>trainIdx</strong>, GpuMat&amp; <strong>imgIdx</strong>, GpuMat&amp; <strong>distance</strong>, const GpuMat&amp; <strong>masks</strong>=GpuMat(), Stream&amp; <strong>stream</strong>=Stream::Null() <big>)</big><a class="headerlink" href="#void cuda::BFMatcher_CUDA::matchCollection(const GpuMat& query, const GpuMat& trainCollection, GpuMat& trainIdx, GpuMat& imgIdx, GpuMat& distance, const GpuMat& masks, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../features2d/doc/common_interfaces_of_descriptor_matchers.html#void DescriptorMatcher::match(InputArray queryDescriptors, InputArray trainDescriptors, vector&lt;DMatch&gt;&amp; matches, InputArray mask) const" title="void DescriptorMatcher::match(InputArray queryDescriptors, InputArray trainDescriptors, vector&lt;DMatch&gt;&amp; matches, InputArray mask) const"><tt class="xref ocv ocv-func docutils literal"><span class="pre">DescriptorMatcher::match()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-bfmatcher-cuda-makegpucollection">
+<h2>cuda::BFMatcher_CUDA::makeGpuCollection<a class="headerlink" href="#cuda-bfmatcher-cuda-makegpucollection" title="Permalink to this headline">¶</a></h2>
+<p>Performs a GPU collection of train descriptors and masks in a suitable format for the <a class="reference internal" href="#void cuda::BFMatcher_CUDA::matchCollection(const GpuMat&amp; query, const GpuMat&amp; trainCollection, GpuMat&amp; trainIdx, GpuMat&amp; imgIdx, GpuMat&amp; distance, const GpuMat&amp; masks, Stream&amp; stream)" title="void cuda::BFMatcher_CUDA::matchCollection(const GpuMat&amp; query, const GpuMat&amp; trainCollection, GpuMat&amp; trainIdx, GpuMat&amp; imgIdx, GpuMat&amp; distance, const GpuMat&amp; masks, Stream&amp; stream)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cuda::BFMatcher_CUDA::matchCollection()</span></tt></a> function.</p>
+<dl class="function">
+<dt id="void cuda::BFMatcher_CUDA::makeGpuCollection(GpuMat&amp; trainCollection, GpuMat&amp; maskCollection, const vector&lt;GpuMat&gt;&amp; masks)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::BFMatcher_CUDA::</tt><tt class="descname">makeGpuCollection</tt><big>(</big>GpuMat&amp; <strong>trainCollection</strong>, GpuMat&amp; <strong>maskCollection</strong>, const vector&lt;GpuMat&gt;&amp; <strong>masks</strong>=std::vector&lt;GpuMat&gt;()<big>)</big><a class="headerlink" href="#void cuda::BFMatcher_CUDA::makeGpuCollection(GpuMat& trainCollection, GpuMat& maskCollection, const vector<GpuMat>& masks)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="cuda-bfmatcher-cuda-matchdownload">
+<h2>cuda::BFMatcher_CUDA::matchDownload<a class="headerlink" href="#cuda-bfmatcher-cuda-matchdownload" title="Permalink to this headline">¶</a></h2>
+<p>Downloads matrices obtained via <a class="reference internal" href="#void cuda::BFMatcher_CUDA::matchSingle(const GpuMat&amp; query, const GpuMat&amp; train, GpuMat&amp; trainIdx, GpuMat&amp; distance, const GpuMat&amp; mask , Stream&amp; stream)" title="void cuda::BFMatcher_CUDA::matchSingle(const GpuMat&amp; query, const GpuMat&amp; train, GpuMat&amp; trainIdx, GpuMat&amp; distance, const GpuMat&amp; mask , Stream&amp; stream)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cuda::BFMatcher_CUDA::matchSingle()</span></tt></a> or <a class="reference internal" href="#void cuda::BFMatcher_CUDA::matchCollection(const GpuMat&amp; query, const GpuMat&amp; trainCollection, GpuMat&amp; trainIdx, GpuMat&amp; imgIdx, GpuMat&amp; distance, const GpuMat&amp; masks, Stream&amp; stream)" title="void cuda::BFMatcher_CUDA::matchCollection(const GpuMat&amp; query, const GpuMat&amp; trainCollection, GpuMat&amp; trainIdx, GpuMat&amp; imgIdx, GpuMat&amp; distance, const GpuMat&amp; masks, Stream&amp; stream)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cuda::BFMatcher_CUDA::matchCollection()</span></tt></a> to vector with <a class="reference internal" href="../../core/doc/basic_structures.html#DMatch" title="class DMatch"><tt class="xref ocv ocv-class docutils literal"><span class="pre">DMatch</span></tt></a>.</p>
+<dl class="function">
+<dt id="static void cuda::BFMatcher_CUDA::matchDownload(const GpuMat&amp; trainIdx, const GpuMat&amp; distance, std::vector&lt;DMatch&gt;&amp;matches)">
+<strong>C++:</strong><tt class="descname"> </tt><em class="property">static</em> void <tt class="descclassname">cuda::BFMatcher_CUDA::</tt><tt class="descname">matchDownload</tt><big>(</big>const GpuMat&amp; <strong>trainIdx</strong>, const GpuMat&amp; <strong>distance</strong>, std::vector&lt;DMatch&gt;&amp; <strong>matches</strong><big>)</big><a class="headerlink" href="#static void cuda::BFMatcher_CUDA::matchDownload(const GpuMat& trainIdx, const GpuMat& distance, std::vector<DMatch>&matches)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="static void cuda::BFMatcher_CUDA::matchDownload(const GpuMat&amp; trainIdx, const GpuMat&amp; imgIdx, const GpuMat&amp; distance, std::vector&lt;DMatch&gt;&amp; matches)">
+<strong>C++:</strong><tt class="descname"> </tt><em class="property">static</em> void <tt class="descclassname">cuda::BFMatcher_CUDA::</tt><tt class="descname">matchDownload</tt><big>(</big>const GpuMat&amp; <strong>trainIdx</strong>, const GpuMat&amp; <strong>imgIdx</strong>, const GpuMat&amp; <strong>distance</strong>, std::vector&lt;DMatch&gt;&amp; <strong>matches</strong><big>)</big><a class="headerlink" href="#static void cuda::BFMatcher_CUDA::matchDownload(const GpuMat& trainIdx, const GpuMat& imgIdx, const GpuMat& distance, std::vector<DMatch>& matches)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="cuda-bfmatcher-cuda-matchconvert">
+<h2>cuda::BFMatcher_CUDA::matchConvert<a class="headerlink" href="#cuda-bfmatcher-cuda-matchconvert" title="Permalink to this headline">¶</a></h2>
+<p>Converts matrices obtained via <a class="reference internal" href="#void cuda::BFMatcher_CUDA::matchSingle(const GpuMat&amp; query, const GpuMat&amp; train, GpuMat&amp; trainIdx, GpuMat&amp; distance, const GpuMat&amp; mask , Stream&amp; stream)" title="void cuda::BFMatcher_CUDA::matchSingle(const GpuMat&amp; query, const GpuMat&amp; train, GpuMat&amp; trainIdx, GpuMat&amp; distance, const GpuMat&amp; mask , Stream&amp; stream)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cuda::BFMatcher_CUDA::matchSingle()</span></tt></a> or <a class="reference internal" href="#void cuda::BFMatcher_CUDA::matchCollection(const GpuMat&amp; query, const GpuMat&amp; trainCollection, GpuMat&amp; trainIdx, GpuMat&amp; imgIdx, GpuMat&amp; distance, const GpuMat&amp; masks, Stream&amp; stream)" title="void cuda::BFMatcher_CUDA::matchCollection(const GpuMat&amp; query, const GpuMat&amp; trainCollection, GpuMat&amp; trainIdx, GpuMat&amp; imgIdx, GpuMat&amp; distance, const GpuMat&amp; masks, Stream&amp; stream)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cuda::BFMatcher_CUDA::matchCollection()</span></tt></a> to vector with <a class="reference internal" href="../../core/doc/basic_structures.html#DMatch" title="class DMatch"><tt class="xref ocv ocv-class docutils literal"><span class="pre">DMatch</span></tt></a>.</p>
+<dl class="function">
+<dt id="void cuda::BFMatcher_CUDA::matchConvert(const Mat&amp; trainIdx, const Mat&amp; distance, std::vector&lt;DMatch&gt;&amp;matches)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::BFMatcher_CUDA::</tt><tt class="descname">matchConvert</tt><big>(</big>const Mat&amp; <strong>trainIdx</strong>, const Mat&amp; <strong>distance</strong>, std::vector&lt;DMatch&gt;&amp; <strong>matches</strong><big>)</big><a class="headerlink" href="#void cuda::BFMatcher_CUDA::matchConvert(const Mat& trainIdx, const Mat& distance, std::vector<DMatch>&matches)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void cuda::BFMatcher_CUDA::matchConvert(const Mat&amp; trainIdx, const Mat&amp; imgIdx, const Mat&amp; distance, std::vector&lt;DMatch&gt;&amp;matches)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::BFMatcher_CUDA::</tt><tt class="descname">matchConvert</tt><big>(</big>const Mat&amp; <strong>trainIdx</strong>, const Mat&amp; <strong>imgIdx</strong>, const Mat&amp; <strong>distance</strong>, std::vector&lt;DMatch&gt;&amp; <strong>matches</strong><big>)</big><a class="headerlink" href="#void cuda::BFMatcher_CUDA::matchConvert(const Mat& trainIdx, const Mat& imgIdx, const Mat& distance, std::vector<DMatch>&matches)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="cuda-bfmatcher-cuda-knnmatch">
+<h2>cuda::BFMatcher_CUDA::knnMatch<a class="headerlink" href="#cuda-bfmatcher-cuda-knnmatch" title="Permalink to this headline">¶</a></h2>
+<p>Finds the <tt class="docutils literal"><span class="pre">k</span></tt> best matches for each descriptor from a query set with train descriptors.</p>
+<dl class="function">
+<dt id="void cuda::BFMatcher_CUDA::knnMatch(const GpuMat&amp; query, const GpuMat&amp; train, std::vector&lt; std::vector&lt;DMatch&gt; &gt;&amp;matches, int k, const GpuMat&amp; mask , bool compactResult)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::BFMatcher_CUDA::</tt><tt class="descname">knnMatch</tt><big>(</big>const GpuMat&amp; <strong>query</strong>, const GpuMat&amp; <strong>train</strong>, std::vector&lt;std::vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, int <strong>k</strong>, const GpuMat&amp; <strong>mask</strong>=GpuMat(), bool <strong>compactResult</strong>=false<big>)</big><a class="headerlink" href="#void cuda::BFMatcher_CUDA::knnMatch(const GpuMat& query, const GpuMat& train, std::vector< std::vector<DMatch> >&matches, int k, const GpuMat& mask , bool compactResult)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void cuda::BFMatcher_CUDA::knnMatchSingle(const GpuMat&amp; query, const GpuMat&amp; train, GpuMat&amp; trainIdx, GpuMat&amp; distance, GpuMat&amp; allDist, int k, const GpuMat&amp; mask , Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::BFMatcher_CUDA::</tt><tt class="descname">knnMatchSingle</tt><big>(</big>const GpuMat&amp; <strong>query</strong>, const GpuMat&amp; <strong>train</strong>, GpuMat&amp; <strong>trainIdx</strong>, GpuMat&amp; <strong>distance</strong>, GpuMat&amp; <strong>allDist</strong>, int <strong>k</strong>, const GpuMat&amp; <strong>mask</strong>=GpuMat(), Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::BFMatcher_CUDA::knnMatchSingle(const GpuMat& query, const GpuMat& train, GpuMat& trainIdx, GpuMat& distance, GpuMat& allDist, int k, const GpuMat& mask , Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void cuda::BFMatcher_CUDA::knnMatch(const GpuMat&amp; query, std::vector&lt; std::vector&lt;DMatch&gt; &gt;&amp;matches, int k, const std::vector&lt;GpuMat&gt;&amp;masks , bool compactResult)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::BFMatcher_CUDA::</tt><tt class="descname">knnMatch</tt><big>(</big>const GpuMat&amp; <strong>query</strong>, std::vector&lt;std::vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, int <strong>k</strong>, const std::vector&lt;GpuMat&gt;&amp; <strong>masks</strong>=std::vector&lt;GpuMat&gt;(), bool <strong>compactResult</strong>=false <big>)</big><a class="headerlink" href="#void cuda::BFMatcher_CUDA::knnMatch(const GpuMat& query, std::vector< std::vector<DMatch> >&matches, int k, const std::vector<GpuMat>&masks , bool compactResult)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void cuda::BFMatcher_CUDA::knnMatch2Collection(const GpuMat&amp; query, const GpuMat&amp; trainCollection, GpuMat&amp; trainIdx, GpuMat&amp; imgIdx, GpuMat&amp; distance, const GpuMat&amp; maskCollection , Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::BFMatcher_CUDA::</tt><tt class="descname">knnMatch2Collection</tt><big>(</big>const GpuMat&amp; <strong>query</strong>, const GpuMat&amp; <strong>trainCollection</strong>, GpuMat&amp; <strong>trainIdx</strong>, GpuMat&amp; <strong>imgIdx</strong>, GpuMat&amp; <strong>distance</strong>, const GpuMat&amp; <strong>maskCollection</strong>=GpuMat(), Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::BFMatcher_CUDA::knnMatch2Collection(const GpuMat& query, const GpuMat& trainCollection, GpuMat& trainIdx, GpuMat& imgIdx, GpuMat& distance, const GpuMat& maskCollection , Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>query</strong> &#8211; Query set of descriptors.</li>
+<li><strong>train</strong> &#8211; Training set of descriptors. It is not be added to train descriptors collection stored in the class object.</li>
+<li><strong>k</strong> &#8211; Number of the best matches per each query descriptor (or less if it is not possible).</li>
+<li><strong>mask</strong> &#8211; Mask specifying permissible matches between the input query and train matrices of descriptors.</li>
+<li><strong>compactResult</strong> &#8211; If <tt class="docutils literal"><span class="pre">compactResult</span></tt> is <tt class="docutils literal"><span class="pre">true</span></tt> , the <tt class="docutils literal"><span class="pre">matches</span></tt> vector does not contain matches for fully masked-out query descriptors.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function returns detected <tt class="docutils literal"><span class="pre">k</span></tt> (or less if not possible) matches in the increasing order by distance.</p>
+<p>The third variant of the method stores the results in GPU memory.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../features2d/doc/common_interfaces_of_descriptor_matchers.html#void DescriptorMatcher::knnMatch(InputArray queryDescriptors, InputArray trainDescriptors, vector&lt;vector&lt;DMatch&gt; &gt;&amp; matches, int k, InputArray mask, bool compactResult) const" title="void DescriptorMatcher::knnMatch(InputArray queryDescriptors, InputArray trainDescriptors, vector&lt;vector&lt;DMatch&gt; &gt;&amp; matches, int k, InputArray mask, bool compactResult) const"><tt class="xref ocv ocv-func docutils literal"><span class="pre">DescriptorMatcher::knnMatch()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-bfmatcher-cuda-knnmatchdownload">
+<h2>cuda::BFMatcher_CUDA::knnMatchDownload<a class="headerlink" href="#cuda-bfmatcher-cuda-knnmatchdownload" title="Permalink to this headline">¶</a></h2>
+<p>Downloads matrices obtained via <a class="reference internal" href="#void cuda::BFMatcher_CUDA::knnMatchSingle(const GpuMat&amp; query, const GpuMat&amp; train, GpuMat&amp; trainIdx, GpuMat&amp; distance, GpuMat&amp; allDist, int k, const GpuMat&amp; mask , Stream&amp; stream)" title="void cuda::BFMatcher_CUDA::knnMatchSingle(const GpuMat&amp; query, const GpuMat&amp; train, GpuMat&amp; trainIdx, GpuMat&amp; distance, GpuMat&amp; allDist, int k, const GpuMat&amp; mask , Stream&amp; stream)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cuda::BFMatcher_CUDA::knnMatchSingle()</span></tt></a> or <a class="reference internal" href="#void cuda::BFMatcher_CUDA::knnMatch2Collection(const GpuMat&amp; query, const GpuMat&amp; trainCollection, GpuMat&amp; trainIdx, GpuMat&amp; imgIdx, GpuMat&amp; distance, const GpuMat&amp; maskCollection , Stream&amp; stream)" title="void cuda::BFMatcher_CUDA::knnMatch2Collection(const GpuMat&amp; query, const GpuMat&amp; trainCollection, GpuMat&amp; trainIdx, GpuMat&amp; imgIdx, GpuMat&amp; distance, const GpuMat&amp; maskCollection , Stream&amp; stream)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cuda::BFMatcher_CUDA::knnMatch2Collection()</span></tt></a> to vector with <a class="reference internal" href="../../core/doc/basic_structures.html#DMatch" title="class DMatch"><tt class="xref ocv ocv-class docutils literal"><span class="pre">DMatch</span></tt></a>.</p>
+<dl class="function">
+<dt id="void cuda::BFMatcher_CUDA::knnMatchDownload(const GpuMat&amp; trainIdx, const GpuMat&amp; distance, std::vector&lt; std::vector&lt;DMatch&gt; &gt;&amp;matches, bool compactResult)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::BFMatcher_CUDA::</tt><tt class="descname">knnMatchDownload</tt><big>(</big>const GpuMat&amp; <strong>trainIdx</strong>, const GpuMat&amp; <strong>distance</strong>, std::vector&lt;std::vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, bool <strong>compactResult</strong>=false<big>)</big><a class="headerlink" href="#void cuda::BFMatcher_CUDA::knnMatchDownload(const GpuMat& trainIdx, const GpuMat& distance, std::vector< std::vector<DMatch> >&matches, bool compactResult)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void cuda::BFMatcher_CUDA::knnMatch2Download(const GpuMat&amp; trainIdx, const GpuMat&amp; imgIdx, const GpuMat&amp; distance, std::vector&lt; std::vector&lt;DMatch&gt; &gt;&amp; matches, bool compactResult)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::BFMatcher_CUDA::</tt><tt class="descname">knnMatch2Download</tt><big>(</big>const GpuMat&amp; <strong>trainIdx</strong>, const GpuMat&amp; <strong>imgIdx</strong>, const GpuMat&amp; <strong>distance</strong>, std::vector&lt;std::vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, bool <strong>compactResult</strong>=false<big>)</big><a class="headerlink" href="#void cuda::BFMatcher_CUDA::knnMatch2Download(const GpuMat& trainIdx, const GpuMat& imgIdx, const GpuMat& distance, std::vector< std::vector<DMatch> >& matches, bool compactResult)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>If <tt class="docutils literal"><span class="pre">compactResult</span></tt> is <tt class="docutils literal"><span class="pre">true</span></tt> , the <tt class="docutils literal"><span class="pre">matches</span></tt> vector does not contain matches for fully masked-out query descriptors.</p>
+</div>
+<div class="section" id="cuda-bfmatcher-cuda-knnmatchconvert">
+<h2>cuda::BFMatcher_CUDA::knnMatchConvert<a class="headerlink" href="#cuda-bfmatcher-cuda-knnmatchconvert" title="Permalink to this headline">¶</a></h2>
+<p>Converts matrices obtained via <a class="reference internal" href="#void cuda::BFMatcher_CUDA::knnMatchSingle(const GpuMat&amp; query, const GpuMat&amp; train, GpuMat&amp; trainIdx, GpuMat&amp; distance, GpuMat&amp; allDist, int k, const GpuMat&amp; mask , Stream&amp; stream)" title="void cuda::BFMatcher_CUDA::knnMatchSingle(const GpuMat&amp; query, const GpuMat&amp; train, GpuMat&amp; trainIdx, GpuMat&amp; distance, GpuMat&amp; allDist, int k, const GpuMat&amp; mask , Stream&amp; stream)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cuda::BFMatcher_CUDA::knnMatchSingle()</span></tt></a> or <a class="reference internal" href="#void cuda::BFMatcher_CUDA::knnMatch2Collection(const GpuMat&amp; query, const GpuMat&amp; trainCollection, GpuMat&amp; trainIdx, GpuMat&amp; imgIdx, GpuMat&amp; distance, const GpuMat&amp; maskCollection , Stream&amp; stream)" title="void cuda::BFMatcher_CUDA::knnMatch2Collection(const GpuMat&amp; query, const GpuMat&amp; trainCollection, GpuMat&amp; trainIdx, GpuMat&amp; imgIdx, GpuMat&amp; distance, const GpuMat&amp; maskCollection , Stream&amp; stream)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cuda::BFMatcher_CUDA::knnMatch2Collection()</span></tt></a> to CPU vector with <a class="reference internal" href="../../core/doc/basic_structures.html#DMatch" title="class DMatch"><tt class="xref ocv ocv-class docutils literal"><span class="pre">DMatch</span></tt></a>.</p>
+<dl class="function">
+<dt id="void cuda::BFMatcher_CUDA::knnMatchConvert(const Mat&amp; trainIdx, const Mat&amp; distance, std::vector&lt; std::vector&lt;DMatch&gt; &gt;&amp;matches, bool compactResult)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::BFMatcher_CUDA::</tt><tt class="descname">knnMatchConvert</tt><big>(</big>const Mat&amp; <strong>trainIdx</strong>, const Mat&amp; <strong>distance</strong>, std::vector&lt;std::vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, bool <strong>compactResult</strong>=false<big>)</big><a class="headerlink" href="#void cuda::BFMatcher_CUDA::knnMatchConvert(const Mat& trainIdx, const Mat& distance, std::vector< std::vector<DMatch> >&matches, bool compactResult)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void cuda::BFMatcher_CUDA::knnMatch2Convert(const Mat&amp; trainIdx, const Mat&amp; imgIdx, const Mat&amp; distance, std::vector&lt; std::vector&lt;DMatch&gt; &gt;&amp; matches, bool compactResult)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::BFMatcher_CUDA::</tt><tt class="descname">knnMatch2Convert</tt><big>(</big>const Mat&amp; <strong>trainIdx</strong>, const Mat&amp; <strong>imgIdx</strong>, const Mat&amp; <strong>distance</strong>, std::vector&lt;std::vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, bool <strong>compactResult</strong>=false<big>)</big><a class="headerlink" href="#void cuda::BFMatcher_CUDA::knnMatch2Convert(const Mat& trainIdx, const Mat& imgIdx, const Mat& distance, std::vector< std::vector<DMatch> >& matches, bool compactResult)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>If <tt class="docutils literal"><span class="pre">compactResult</span></tt> is <tt class="docutils literal"><span class="pre">true</span></tt> , the <tt class="docutils literal"><span class="pre">matches</span></tt> vector does not contain matches for fully masked-out query descriptors.</p>
+</div>
+<div class="section" id="cuda-bfmatcher-cuda-radiusmatch">
+<h2>cuda::BFMatcher_CUDA::radiusMatch<a class="headerlink" href="#cuda-bfmatcher-cuda-radiusmatch" title="Permalink to this headline">¶</a></h2>
+<p>For each query descriptor, finds the best matches with a distance less than a given threshold.</p>
+<dl class="function">
+<dt id="void cuda::BFMatcher_CUDA::radiusMatch(const GpuMat&amp; query, const GpuMat&amp; train, std::vector&lt; std::vector&lt;DMatch&gt; &gt;&amp;matches, float maxDistance, const GpuMat&amp; mask , bool compactResult)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::BFMatcher_CUDA::</tt><tt class="descname">radiusMatch</tt><big>(</big>const GpuMat&amp; <strong>query</strong>, const GpuMat&amp; <strong>train</strong>, std::vector&lt;std::vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, float <strong>maxDistance</strong>, const GpuMat&amp; <strong>mask</strong>=GpuMat(), bool <strong>compactResult</strong>=false<big>)</big><a class="headerlink" href="#void cuda::BFMatcher_CUDA::radiusMatch(const GpuMat& query, const GpuMat& train, std::vector< std::vector<DMatch> >&matches, float maxDistance, const GpuMat& mask , bool compactResult)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void cuda::BFMatcher_CUDA::radiusMatchSingle(const GpuMat&amp; query, const GpuMat&amp; train, GpuMat&amp; trainIdx, GpuMat&amp; distance, GpuMat&amp; nMatches, float maxDistance, const GpuMat&amp; mask , Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::BFMatcher_CUDA::</tt><tt class="descname">radiusMatchSingle</tt><big>(</big>const GpuMat&amp; <strong>query</strong>, const GpuMat&amp; <strong>train</strong>, GpuMat&amp; <strong>trainIdx</strong>, GpuMat&amp; <strong>distance</strong>, GpuMat&amp; <strong>nMatches</strong>, float <strong>maxDistance</strong>, const GpuMat&amp; <strong>mask</strong>=GpuMat(), Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::BFMatcher_CUDA::radiusMatchSingle(const GpuMat& query, const GpuMat& train, GpuMat& trainIdx, GpuMat& distance, GpuMat& nMatches, float maxDistance, const GpuMat& mask , Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void cuda::BFMatcher_CUDA::radiusMatch(const GpuMat&amp; query, std::vector&lt; std::vector&lt;DMatch&gt; &gt;&amp;matches, float maxDistance, const std::vector&lt;GpuMat&gt;&amp; masks , bool compactResult)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::BFMatcher_CUDA::</tt><tt class="descname">radiusMatch</tt><big>(</big>const GpuMat&amp; <strong>query</strong>, std::vector&lt;std::vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, float <strong>maxDistance</strong>, const std::vector&lt;GpuMat&gt;&amp; <strong>masks</strong>=std::vector&lt;GpuMat&gt;(), bool <strong>compactResult</strong>=false<big>)</big><a class="headerlink" href="#void cuda::BFMatcher_CUDA::radiusMatch(const GpuMat& query, std::vector< std::vector<DMatch> >&matches, float maxDistance, const std::vector<GpuMat>& masks , bool compactResult)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void cuda::BFMatcher_CUDA::radiusMatchCollection(const GpuMat&amp; query, GpuMat&amp; trainIdx, GpuMat&amp; imgIdx, GpuMat&amp; distance, GpuMat&amp; nMatches, float maxDistance, const std::vector&lt;GpuMat&gt;&amp; masks , Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::BFMatcher_CUDA::</tt><tt class="descname">radiusMatchCollection</tt><big>(</big>const GpuMat&amp; <strong>query</strong>, GpuMat&amp; <strong>trainIdx</strong>, GpuMat&amp; <strong>imgIdx</strong>, GpuMat&amp; <strong>distance</strong>, GpuMat&amp; <strong>nMatches</strong>, float <strong>maxDistance</strong>, const std::vector&lt;GpuMat&gt;&amp; <strong>masks</strong>=std::vector&lt;GpuMat&gt;(), Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::BFMatcher_CUDA::radiusMatchCollection(const GpuMat& query, GpuMat& trainIdx, GpuMat& imgIdx, GpuMat& distance, GpuMat& nMatches, float maxDistance, const std::vector<GpuMat>& masks , Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>query</strong> &#8211; Query set of descriptors.</li>
+<li><strong>train</strong> &#8211; Training set of descriptors. It is not added to train descriptors collection stored in the class object.</li>
+<li><strong>maxDistance</strong> &#8211; Distance threshold.</li>
+<li><strong>mask</strong> &#8211; Mask specifying permissible matches between the input query and train matrices of descriptors.</li>
+<li><strong>compactResult</strong> &#8211; If <tt class="docutils literal"><span class="pre">compactResult</span></tt> is <tt class="docutils literal"><span class="pre">true</span></tt> , the <tt class="docutils literal"><span class="pre">matches</span></tt> vector does not contain matches for fully masked-out query descriptors.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function returns detected matches in the increasing order by distance.</p>
+<p>The methods work only on devices with the compute capability  <span class="math">&gt;=</span> 1.1.</p>
+<p>The third variant of the method stores the results in GPU memory and does not store the points by the distance.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../features2d/doc/common_interfaces_of_descriptor_matchers.html#void DescriptorMatcher::radiusMatch(InputArray queryDescriptors, InputArray trainDescriptors, vector&lt;vector&lt;DMatch&gt; &gt;&amp; matches, float maxDistance, InputArray mask, bool compactResult) const" title="void DescriptorMatcher::radiusMatch(InputArray queryDescriptors, InputArray trainDescriptors, vector&lt;vector&lt;DMatch&gt; &gt;&amp; matches, float maxDistance, InputArray mask, bool compactResult) const"><tt class="xref ocv ocv-func docutils literal"><span class="pre">DescriptorMatcher::radiusMatch()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-bfmatcher-cuda-radiusmatchdownload">
+<h2>cuda::BFMatcher_CUDA::radiusMatchDownload<a class="headerlink" href="#cuda-bfmatcher-cuda-radiusmatchdownload" title="Permalink to this headline">¶</a></h2>
+<p>Downloads matrices obtained via <a class="reference internal" href="#void cuda::BFMatcher_CUDA::radiusMatchSingle(const GpuMat&amp; query, const GpuMat&amp; train, GpuMat&amp; trainIdx, GpuMat&amp; distance, GpuMat&amp; nMatches, float maxDistance, const GpuMat&amp; mask , Stream&amp; stream)" title="void cuda::BFMatcher_CUDA::radiusMatchSingle(const GpuMat&amp; query, const GpuMat&amp; train, GpuMat&amp; trainIdx, GpuMat&amp; distance, GpuMat&amp; nMatches, float maxDistance, const GpuMat&amp; mask , Stream&amp; stream)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cuda::BFMatcher_CUDA::radiusMatchSingle()</span></tt></a> or <a class="reference internal" href="#void cuda::BFMatcher_CUDA::radiusMatchCollection(const GpuMat&amp; query, GpuMat&amp; trainIdx, GpuMat&amp; imgIdx, GpuMat&amp; distance, GpuMat&amp; nMatches, float maxDistance, const std::vector&lt;GpuMat&gt;&amp; masks , Stream&amp; stream)" title="void cuda::BFMatcher_CUDA::radiusMatchCollection(const GpuMat&amp; query, GpuMat&amp; trainIdx, GpuMat&amp; imgIdx, GpuMat&amp; distance, GpuMat&amp; nMatches, float maxDistance, const std::vector&lt;GpuMat&gt;&amp; masks , Stream&amp; stream)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cuda::BFMatcher_CUDA::radiusMatchCollection()</span></tt></a> to vector with <a class="reference internal" href="../../core/doc/basic_structures.html#DMatch" title="class DMatch"><tt class="xref ocv ocv-class docutils literal"><span class="pre">DMatch</span></tt></a>.</p>
+<dl class="function">
+<dt id="void cuda::BFMatcher_CUDA::radiusMatchDownload(const GpuMat&amp; trainIdx, const GpuMat&amp; distance, const GpuMat&amp; nMatches, std::vector&lt; std::vector&lt;DMatch&gt; &gt;&amp;matches, bool compactResult)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::BFMatcher_CUDA::</tt><tt class="descname">radiusMatchDownload</tt><big>(</big>const GpuMat&amp; <strong>trainIdx</strong>, const GpuMat&amp; <strong>distance</strong>, const GpuMat&amp; <strong>nMatches</strong>, std::vector&lt;std::vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, bool <strong>compactResult</strong>=false<big>)</big><a class="headerlink" href="#void cuda::BFMatcher_CUDA::radiusMatchDownload(const GpuMat& trainIdx, const GpuMat& distance, const GpuMat& nMatches, std::vector< std::vector<DMatch> >&matches, bool compactResult)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void cuda::BFMatcher_CUDA::radiusMatchDownload(const GpuMat&amp; trainIdx, const GpuMat&amp; imgIdx, const GpuMat&amp; distance, const GpuMat&amp; nMatches, std::vector&lt; std::vector&lt;DMatch&gt; &gt;&amp; matches, bool compactResult)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::BFMatcher_CUDA::</tt><tt class="descname">radiusMatchDownload</tt><big>(</big>const GpuMat&amp; <strong>trainIdx</strong>, const GpuMat&amp; <strong>imgIdx</strong>, const GpuMat&amp; <strong>distance</strong>, const GpuMat&amp; <strong>nMatches</strong>, std::vector&lt;std::vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, bool <strong>compactResult</strong>=false<big>)</big><a class="headerlink" href="#void cuda::BFMatcher_CUDA::radiusMatchDownload(const GpuMat& trainIdx, const GpuMat& imgIdx, const GpuMat& distance, const GpuMat& nMatches, std::vector< std::vector<DMatch> >& matches, bool compactResult)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>If <tt class="docutils literal"><span class="pre">compactResult</span></tt> is <tt class="docutils literal"><span class="pre">true</span></tt> , the <tt class="docutils literal"><span class="pre">matches</span></tt> vector does not contain matches for fully masked-out query descriptors.</p>
+</div>
+<div class="section" id="cuda-bfmatcher-cuda-radiusmatchconvert">
+<h2>cuda::BFMatcher_CUDA::radiusMatchConvert<a class="headerlink" href="#cuda-bfmatcher-cuda-radiusmatchconvert" title="Permalink to this headline">¶</a></h2>
+<p>Converts matrices obtained via <a class="reference internal" href="#void cuda::BFMatcher_CUDA::radiusMatchSingle(const GpuMat&amp; query, const GpuMat&amp; train, GpuMat&amp; trainIdx, GpuMat&amp; distance, GpuMat&amp; nMatches, float maxDistance, const GpuMat&amp; mask , Stream&amp; stream)" title="void cuda::BFMatcher_CUDA::radiusMatchSingle(const GpuMat&amp; query, const GpuMat&amp; train, GpuMat&amp; trainIdx, GpuMat&amp; distance, GpuMat&amp; nMatches, float maxDistance, const GpuMat&amp; mask , Stream&amp; stream)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cuda::BFMatcher_CUDA::radiusMatchSingle()</span></tt></a> or <a class="reference internal" href="#void cuda::BFMatcher_CUDA::radiusMatchCollection(const GpuMat&amp; query, GpuMat&amp; trainIdx, GpuMat&amp; imgIdx, GpuMat&amp; distance, GpuMat&amp; nMatches, float maxDistance, const std::vector&lt;GpuMat&gt;&amp; masks , Stream&amp; stream)" title="void cuda::BFMatcher_CUDA::radiusMatchCollection(const GpuMat&amp; query, GpuMat&amp; trainIdx, GpuMat&amp; imgIdx, GpuMat&amp; distance, GpuMat&amp; nMatches, float maxDistance, const std::vector&lt;GpuMat&gt;&amp; masks , Stream&amp; stream)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cuda::BFMatcher_CUDA::radiusMatchCollection()</span></tt></a> to vector with <a class="reference internal" href="../../core/doc/basic_structures.html#DMatch" title="class DMatch"><tt class="xref ocv ocv-class docutils literal"><span class="pre">DMatch</span></tt></a>.</p>
+<dl class="function">
+<dt id="void cuda::BFMatcher_CUDA::radiusMatchConvert(const Mat&amp; trainIdx, const Mat&amp; distance, const Mat&amp; nMatches, std::vector&lt; std::vector&lt;DMatch&gt; &gt;&amp;matches, bool compactResult)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::BFMatcher_CUDA::</tt><tt class="descname">radiusMatchConvert</tt><big>(</big>const Mat&amp; <strong>trainIdx</strong>, const Mat&amp; <strong>distance</strong>, const Mat&amp; <strong>nMatches</strong>, std::vector&lt;std::vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, bool <strong>compactResult</strong>=false<big>)</big><a class="headerlink" href="#void cuda::BFMatcher_CUDA::radiusMatchConvert(const Mat& trainIdx, const Mat& distance, const Mat& nMatches, std::vector< std::vector<DMatch> >&matches, bool compactResult)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void cuda::BFMatcher_CUDA::radiusMatchConvert(const Mat&amp; trainIdx, const Mat&amp; imgIdx, const Mat&amp; distance, const Mat&amp; nMatches, std::vector&lt; std::vector&lt;DMatch&gt; &gt;&amp; matches, bool compactResult)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::BFMatcher_CUDA::</tt><tt class="descname">radiusMatchConvert</tt><big>(</big>const Mat&amp; <strong>trainIdx</strong>, const Mat&amp; <strong>imgIdx</strong>, const Mat&amp; <strong>distance</strong>, const Mat&amp; <strong>nMatches</strong>, std::vector&lt;std::vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, bool <strong>compactResult</strong>=false<big>)</big><a class="headerlink" href="#void cuda::BFMatcher_CUDA::radiusMatchConvert(const Mat& trainIdx, const Mat& imgIdx, const Mat& distance, const Mat& nMatches, std::vector< std::vector<DMatch> >& matches, bool compactResult)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>If <tt class="docutils literal"><span class="pre">compactResult</span></tt> is <tt class="docutils literal"><span class="pre">true</span></tt> , the <tt class="docutils literal"><span class="pre">matches</span></tt> vector does not contain matches for fully masked-out query descriptors.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../cudafilters/doc/cudafilters.html" title="cudafilters. CUDA-accelerated Image Filtering"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="cudafeatures2d.html" title="cudafeatures2d. CUDA-accelerated Feature Detection and Description"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="cudafeatures2d.html" >cudafeatures2d. CUDA-accelerated Feature Detection and Description</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/cudafeatures2d/doc/feature_detection_and_description.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

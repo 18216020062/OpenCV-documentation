@@ -1,0 +1,328 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>FAST Algorithm for Corner Detection &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../../index.html" />
+    <link rel="up" title="Feature Detection and Description" href="../py_table_of_contents_feature2d/py_table_of_contents_feature2d.html" />
+    <link rel="next" title="BRIEF (Binary Robust Independent Elementary Features)" href="../py_brief/py_brief.html" />
+    <link rel="prev" title="Introduction to SURF (Speeded-Up Robust Features)" href="../py_surf_intro/py_surf_intro.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py_brief/py_brief.html" title="BRIEF (Binary Robust Independent Elementary Features)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../py_surf_intro/py_surf_intro.html" title="Introduction to SURF (Speeded-Up Robust Features)"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_feature2d/py_table_of_contents_feature2d.html" accesskey="U">Feature Detection and Description</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">FAST Algorithm for Corner Detection</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#theory">Theory</a><ul>
+<li><a class="reference internal" href="#feature-detection-using-fast">Feature Detection using FAST</a></li>
+<li><a class="reference internal" href="#machine-learning-a-corner-detector">Machine Learning a Corner Detector</a></li>
+<li><a class="reference internal" href="#non-maximal-suppression">Non-maximal Suppression</a></li>
+<li><a class="reference internal" href="#summary">Summary</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fast-feature-detector-in-opencv">FAST Feature Detector in OpenCV</a></li>
+<li><a class="reference internal" href="#additional-resources">Additional Resources</a></li>
+<li><a class="reference internal" href="#exercises">Exercises</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../py_surf_intro/py_surf_intro.html"
+                        title="previous chapter">Introduction to SURF (Speeded-Up Robust Features)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../py_brief/py_brief.html"
+                        title="next chapter">BRIEF (Binary Robust Independent Elementary Features)</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="fast-algorithm-for-corner-detection">
+<span id="fast"></span><h1>FAST Algorithm for Corner Detection<a class="headerlink" href="#fast-algorithm-for-corner-detection" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>In this chapter,</dt>
+<dd><ul class="first last simple">
+<li>We will understand the basics of FAST algorithm</li>
+<li>We will find corners using OpenCV functionalities for FAST algorithm.</li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<p>We saw several feature detectors and many of them are really good. But when looking from a real-time application point of view, they are not fast enough. One best example would be SLAM (Simultaneous Localization and Mapping) mobile robot which have limited computational resources.</p>
+<p>As a solution to this, FAST (Features from Accelerated Segment Test) algorithm was proposed by Edward Rosten and Tom Drummond in their paper &#8220;Machine learning for high-speed corner detection&#8221; in 2006 (Later revised it in 2010). A basic summary of the algorithm is presented below. Refer original paper for more details (All the images are taken from original paper).</p>
+<div class="section" id="feature-detection-using-fast">
+<h3>Feature Detection using FAST<a class="headerlink" href="#feature-detection-using-fast" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p class="first">Select a pixel <span class="math">p</span> in the image which is to be identified as an interest point or not. Let its intensity be <span class="math">I_p</span>.</p>
+</li>
+<li><p class="first">Select appropriate threshold value <span class="math">t</span>.</p>
+</li>
+<li><p class="first">Consider a circle of 16 pixels around the pixel under test. (See the image below)</p>
+<blockquote>
+<div><img alt="A corner in the image" class="align-center" src="../../../../_images/fast_speedtest.jpg" />
+</div></blockquote>
+</li>
+<li><p class="first">Now the pixel <span class="math">p</span> is a corner if there exists a set of <span class="math">n</span> contiguous pixels in the circle (of 16 pixels) which are all brighter than <span class="math">I_p + t</span>, or all darker than <span class="math">I_p − t</span>. (Shown as white dash lines in the above image). <span class="math">n</span> was chosen to be 12.</p>
+</li>
+<li><p class="first">A <strong>high-speed test</strong> was proposed to exclude a large number of non-corners. This test examines only the four pixels at 1, 9, 5 and 13 (First 1 and 9 are tested if they are too brighter or darker. If so, then checks 5 and 13). If <span class="math">p</span> is a corner, then at least three of these must all be brighter than <span class="math">I_p + t</span> or darker than <span class="math">I_p − t</span>. If neither of these is the case, then <span class="math">p</span> cannot be a corner. The full segment test criterion can then be applied to the passed candidates by examining all pixels in the circle. This detector in itself exhibits high performance, but there are several weaknesses:</p>
+<blockquote>
+<div><ul class="simple">
+<li>It does not reject as many candidates for n &lt; 12.</li>
+<li>The choice of pixels is not optimal because its efficiency depends on ordering of the questions and distribution of corner appearances.</li>
+<li>Results of high-speed tests are thrown away.</li>
+<li>Multiple features are detected adjacent to one another.</li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+<p>First 3 points are addressed with a machine learning approach. Last one is addressed using non-maximal suppression.</p>
+</div>
+<div class="section" id="machine-learning-a-corner-detector">
+<h3>Machine Learning a Corner Detector<a class="headerlink" href="#machine-learning-a-corner-detector" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p class="first">Select a set of images for training (preferably from the target application domain)</p>
+</li>
+<li><p class="first">Run FAST algorithm in every images to find feature points.</p>
+</li>
+<li><p class="first">For every feature point, store the 16 pixels around it as a vector. Do it for all the images to get feature vector <span class="math">P</span>.</p>
+</li>
+<li><p class="first">Each pixel (say <span class="math">x</span>) in these 16 pixels can have one of the following three states:</p>
+<blockquote>
+<div><img alt="FAST equation" class="align-center" src="../../../../_images/fast_eqns.jpg" />
+</div></blockquote>
+</li>
+<li><p class="first">Depending on these states, the feature vector <span class="math">P</span> is subdivided into 3 subsets, <span class="math">P_d</span>, <span class="math">P_s</span>, <span class="math">P_b</span>.</p>
+</li>
+<li><p class="first">Define a new boolean variable, <span class="math">K_p</span>, which is true if <span class="math">p</span> is a corner and false otherwise.</p>
+</li>
+<li><p class="first">Use the ID3 algorithm (decision tree classifier) to query each subset using the variable <span class="math">K_p</span> for the knowledge about the true class. It selects the <span class="math">x</span> which yields the most information about whether the candidate pixel is a corner, measured by the entropy of <span class="math">K_p</span>.</p>
+</li>
+<li><p class="first">This is recursively applied to all the subsets until its entropy is zero.</p>
+</li>
+<li><p class="first">The decision tree so created is used for fast detection in other images.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="non-maximal-suppression">
+<h3>Non-maximal Suppression<a class="headerlink" href="#non-maximal-suppression" title="Permalink to this headline">¶</a></h3>
+<p>Detecting multiple interest points in adjacent locations is another problem. It is solved by using Non-maximum Suppression.</p>
+<ol class="arabic simple">
+<li>Compute a score function, <span class="math">V</span> for all the detected feature points. <span class="math">V</span> is the sum of absolute difference between <span class="math">p</span> and 16 surrounding pixels values.</li>
+<li>Consider two adjacent keypoints and compute their <span class="math">V</span> values.</li>
+<li>Discard the one with lower <span class="math">V</span> value.</li>
+</ol>
+</div>
+<div class="section" id="summary">
+<h3>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h3>
+<p>It is several times faster than other existing corner detectors.</p>
+<p>But it is not robust to high levels of noise. It is dependant on a threshold.</p>
+</div>
+</div>
+<div class="section" id="fast-feature-detector-in-opencv">
+<h2>FAST Feature Detector in OpenCV<a class="headerlink" href="#fast-feature-detector-in-opencv" title="Permalink to this headline">¶</a></h2>
+<p>It is called as any other feature detector in OpenCV. If you want, you can specify the threshold, whether non-maximum suppression to be applied or not, the neighborhood to be used etc.</p>
+<p>For the neighborhood, three flags are defined, <tt class="docutils literal"><span class="pre">cv2.FAST_FEATURE_DETECTOR_TYPE_5_8</span></tt>, <tt class="docutils literal"><span class="pre">cv2.FAST_FEATURE_DETECTOR_TYPE_7_12</span></tt> and  <tt class="docutils literal"><span class="pre">cv2.FAST_FEATURE_DETECTOR_TYPE_9_16</span></tt>. Below is a simple code on how to detect and draw the FAST feature points.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;simple.jpg&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c"># Initiate FAST object with default values</span>
+<span class="n">fast</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">FastFeatureDetector</span><span class="p">()</span>
+
+<span class="c"># find and draw the keypoints</span>
+<span class="n">kp</span> <span class="o">=</span> <span class="n">fast</span><span class="o">.</span><span class="n">detect</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="bp">None</span><span class="p">)</span>
+<span class="n">img2</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">drawKeypoints</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">kp</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+
+<span class="c"># Print all default params</span>
+<span class="k">print</span> <span class="s">&quot;Threshold: &quot;</span><span class="p">,</span> <span class="n">fast</span><span class="o">.</span><span class="n">getInt</span><span class="p">(</span><span class="s">&#39;threshold&#39;</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&quot;nonmaxSuppression: &quot;</span><span class="p">,</span> <span class="n">fast</span><span class="o">.</span><span class="n">getBool</span><span class="p">(</span><span class="s">&#39;nonmaxSuppression&#39;</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&quot;neighborhood: &quot;</span><span class="p">,</span> <span class="n">fast</span><span class="o">.</span><span class="n">getInt</span><span class="p">(</span><span class="s">&#39;type&#39;</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&quot;Total Keypoints with nonmaxSuppression: &quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">kp</span><span class="p">)</span>
+
+<span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="s">&#39;fast_true.png&#39;</span><span class="p">,</span><span class="n">img2</span><span class="p">)</span>
+
+<span class="c"># Disable nonmaxSuppression</span>
+<span class="n">fast</span><span class="o">.</span><span class="n">setBool</span><span class="p">(</span><span class="s">&#39;nonmaxSuppression&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">kp</span> <span class="o">=</span> <span class="n">fast</span><span class="o">.</span><span class="n">detect</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="bp">None</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="s">&quot;Total Keypoints without nonmaxSuppression: &quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">kp</span><span class="p">)</span>
+
+<span class="n">img3</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">drawKeypoints</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">kp</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+
+<span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="s">&#39;fast_false.png&#39;</span><span class="p">,</span><span class="n">img3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See the results. First image shows FAST with nonmaxSuppression and second one without nonmaxSuppression:</p>
+<blockquote>
+<div><img alt="FAST Keypoints" class="align-center" src="../../../../_images/fast_kp.jpg" />
+</div></blockquote>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Edward Rosten and Tom Drummond, “Machine learning for high speed corner detection” in 9th European Conference on Computer Vision, vol. 1, 2006, pp. 430–443.</li>
+<li>Edward Rosten, Reid Porter, and Tom Drummond, &#8220;Faster and better: a machine learning approach to corner detection&#8221; in IEEE Trans. Pattern Analysis and Machine Intelligence, 2010, vol 32, pp. 105-119.</li>
+</ol>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py_brief/py_brief.html" title="BRIEF (Binary Robust Independent Elementary Features)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../py_surf_intro/py_surf_intro.html" title="Introduction to SURF (Speeded-Up Robust Features)"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_feature2d/py_table_of_contents_feature2d.html" >Feature Detection and Description</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../../_sources/doc/py_tutorials/py_feature2d/py_fast/py_fast.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

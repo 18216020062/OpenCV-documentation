@@ -1,0 +1,276 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>K-Nearest Neighbors &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="ml. Machine Learning" href="ml.html" />
+    <link rel="next" title="Support Vector Machines" href="support_vector_machines.html" />
+    <link rel="prev" title="Normal Bayes Classifier" href="normal_bayes_classifier.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="support_vector_machines.html" title="Support Vector Machines"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="normal_bayes_classifier.html" title="Normal Bayes Classifier"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" accesskey="U">ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">K-Nearest Neighbors</a><ul>
+<li><a class="reference internal" href="#knearest">KNearest</a></li>
+<li><a class="reference internal" href="#knearest-create">KNearest::create</a></li>
+<li><a class="reference internal" href="#knearest-findnearest">KNearest::findNearest</a></li>
+<li><a class="reference internal" href="#knearest-getdefaultk">KNearest::getDefaultK</a></li>
+<li><a class="reference internal" href="#knearest-setdefaultk">KNearest::setDefaultK</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="normal_bayes_classifier.html"
+                        title="previous chapter">Normal Bayes Classifier</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="support_vector_machines.html"
+                        title="next chapter">Support Vector Machines</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="k-nearest-neighbors">
+<h1>K-Nearest Neighbors<a class="headerlink" href="#k-nearest-neighbors" title="Permalink to this headline">¶</a></h1>
+<p>The algorithm caches all training samples and predicts the response for a new sample by analyzing a certain number (<strong>K</strong>) of the nearest neighbors of the sample using voting, calculating weighted sum, and so on. The method is sometimes referred to as &#8220;learning by example&#8221; because for prediction it looks for the feature vector with a known response that is closest to the given vector.</p>
+<div class="section" id="knearest">
+<h2>KNearest<a class="headerlink" href="#knearest" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="KNearest : public StatModel">
+<em class="property">class </em><tt class="descname">KNearest</tt> : <em class="property">public</em> <tt class="descname">StatModel</tt><a class="headerlink" href="#KNearest : public StatModel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The class implements K-Nearest Neighbors model as described in the beginning of this section.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>(Python) An example of digit recognition using KNearest can be found at opencv_source/samples/python2/digits.py</li>
+<li>(Python) An example of grid search digit recognition using KNearest can be found at opencv_source/samples/python2/digits_adjust.py</li>
+<li>(Python) An example of video digit recognition using KNearest can be found at opencv_source/samples/python2/digits_video.py</li>
+</ul>
+</div>
+</div>
+<div class="section" id="knearest-create">
+<h2>KNearest::create<a class="headerlink" href="#knearest-create" title="Permalink to this headline">¶</a></h2>
+<p>Creates the empty model</p>
+<dl class="function">
+<dt id="Ptr&lt;KNearest&gt; KNearest::create(const Params&amp; params)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;KNearest&gt; <tt class="descclassname">KNearest::</tt><tt class="descname">create</tt><big>(</big>const Params&amp; <strong>params</strong>=Params()<big>)</big><a class="headerlink" href="#Ptr<KNearest> KNearest::create(const Params& params)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>params</strong> &#8211; The model parameters: default number of neighbors to use in predict method (in <tt class="docutils literal"><span class="pre">KNearest::findNearest</span></tt> this number must be passed explicitly) and the flag on whether classification or regression model should be trained.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The static method creates empty KNearest classifier. It should be then trained using <tt class="docutils literal"><span class="pre">train</span></tt> method (see <tt class="docutils literal"><span class="pre">StatModel::train</span></tt>). Alternatively, you can load boost model from file using <tt class="docutils literal"><span class="pre">StatModel::load&lt;KNearest&gt;(filename)</span></tt>.</p>
+</div>
+<div class="section" id="knearest-findnearest">
+<h2>KNearest::findNearest<a class="headerlink" href="#knearest-findnearest" title="Permalink to this headline">¶</a></h2>
+<p>Finds the neighbors and predicts responses for input vectors.</p>
+<dl class="function">
+<dt id="float KNearest::findNearest(InputArray samples, int k, OutputArray results, OutputArray neighborResponses, OutputArray dist) const">
+<strong>C++:</strong><tt class="descname"> </tt>float <tt class="descclassname">KNearest::</tt><tt class="descname">findNearest</tt><big>(</big>InputArray <strong>samples</strong>, int <strong>k</strong>, OutputArray <strong>results</strong>, OutputArray <strong>neighborResponses</strong>=noArray(), OutputArray <strong>dist</strong>=noArray() <big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#float KNearest::findNearest(InputArray samples, int k, OutputArray results, OutputArray neighborResponses, OutputArray dist) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>samples</strong> &#8211; Input samples stored by rows. It is a single-precision floating-point matrix of <tt class="docutils literal"><span class="pre">&lt;number_of_samples&gt;</span> <span class="pre">*</span> <span class="pre">k</span></tt> size.</li>
+<li><strong>k</strong> &#8211; Number of used nearest neighbors. Should be greater than 1.</li>
+<li><strong>results</strong> &#8211; Vector with results of prediction (regression or classification) for each input sample. It is a single-precision floating-point vector with <tt class="docutils literal"><span class="pre">&lt;number_of_samples&gt;</span></tt> elements.</li>
+<li><strong>neighborResponses</strong> &#8211; Optional output values for corresponding neighbors. It is a single-precision floating-point matrix of <tt class="docutils literal"><span class="pre">&lt;number_of_samples&gt;</span> <span class="pre">*</span> <span class="pre">k</span></tt> size.</li>
+<li><strong>dist</strong> &#8211; Optional output distances from the input vectors to the corresponding neighbors. It is a single-precision floating-point matrix of <tt class="docutils literal"><span class="pre">&lt;number_of_samples&gt;</span> <span class="pre">*</span> <span class="pre">k</span></tt> size.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>For each input vector (a row of the matrix <tt class="docutils literal"><span class="pre">samples</span></tt>), the method finds the <tt class="docutils literal"><span class="pre">k</span></tt> nearest neighbors.  In case of regression, the predicted result is a mean value of the particular vector&#8217;s neighbor responses. In case of classification, the class is determined by voting.</p>
+<p>For each input vector, the neighbors are sorted by their distances to the vector.</p>
+<p>In case of C++ interface you can use output pointers to empty matrices and the function will allocate memory itself.</p>
+<p>If only a single input vector is passed, all output matrices are optional and the predicted value is returned by the method.</p>
+<p>The function is parallelized with the TBB library.</p>
+</div>
+<div class="section" id="knearest-getdefaultk">
+<h2>KNearest::getDefaultK<a class="headerlink" href="#knearest-getdefaultk" title="Permalink to this headline">¶</a></h2>
+<p>Returns the default number of neighbors</p>
+<dl class="function">
+<dt id="int KNearest::getDefaultK() const">
+<strong>C++:</strong><tt class="descname"> </tt>int <tt class="descclassname">KNearest::</tt><tt class="descname">getDefaultK</tt><big>(</big><big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#int KNearest::getDefaultK() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The function returns the default number of neighbors that is used in a simpler <tt class="docutils literal"><span class="pre">predict</span></tt> method, not <tt class="docutils literal"><span class="pre">findNearest</span></tt>.</p>
+</div>
+<div class="section" id="knearest-setdefaultk">
+<h2>KNearest::setDefaultK<a class="headerlink" href="#knearest-setdefaultk" title="Permalink to this headline">¶</a></h2>
+<p>Returns the default number of neighbors</p>
+<dl class="function">
+<dt id="void KNearest::setDefaultK(int k)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">KNearest::</tt><tt class="descname">setDefaultK</tt><big>(</big>int <strong>k</strong><big>)</big><a class="headerlink" href="#void KNearest::setDefaultK(int k)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The function sets the default number of neighbors that is used in a simpler <tt class="docutils literal"><span class="pre">predict</span></tt> method, not <tt class="docutils literal"><span class="pre">findNearest</span></tt>.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="support_vector_machines.html" title="Support Vector Machines"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="normal_bayes_classifier.html" title="Normal Bayes Classifier"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" >ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/ml/doc/k_nearest_neighbors.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

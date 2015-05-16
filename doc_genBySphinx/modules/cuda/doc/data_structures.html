@@ -1,0 +1,561 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Data Structures &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="cuda. CUDA-accelerated Computer Vision" href="cuda.html" />
+    <link rel="next" title="Object Detection" href="object_detection.html" />
+    <link rel="prev" title="Initalization and Information" href="initalization_and_information.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="object_detection.html" title="Object Detection"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="initalization_and_information.html" title="Initalization and Information"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="cuda.html" accesskey="U">cuda. CUDA-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Data Structures</a><ul>
+<li><a class="reference internal" href="#cuda-ptrstepsz">cuda::PtrStepSz</a></li>
+<li><a class="reference internal" href="#cuda-ptrstep">cuda::PtrStep</a></li>
+<li><a class="reference internal" href="#cuda-gpumat">cuda::GpuMat</a></li>
+<li><a class="reference internal" href="#cuda-createcontinuous">cuda::createContinuous</a></li>
+<li><a class="reference internal" href="#cuda-ensuresizeisenough">cuda::ensureSizeIsEnough</a></li>
+<li><a class="reference internal" href="#cuda-cudamem">cuda::CudaMem</a></li>
+<li><a class="reference internal" href="#cuda-cudamem-creatematheader">cuda::CudaMem::createMatHeader</a></li>
+<li><a class="reference internal" href="#cuda-cudamem-creategpumatheader">cuda::CudaMem::createGpuMatHeader</a></li>
+<li><a class="reference internal" href="#cuda-registerpagelocked">cuda::registerPageLocked</a></li>
+<li><a class="reference internal" href="#cuda-unregisterpagelocked">cuda::unregisterPageLocked</a></li>
+<li><a class="reference internal" href="#cuda-stream">cuda::Stream</a></li>
+<li><a class="reference internal" href="#cuda-stream-queryifcomplete">cuda::Stream::queryIfComplete</a></li>
+<li><a class="reference internal" href="#cuda-stream-waitforcompletion">cuda::Stream::waitForCompletion</a></li>
+<li><a class="reference internal" href="#cuda-stream-waitevent">cuda::Stream::waitEvent</a></li>
+<li><a class="reference internal" href="#cuda-stream-enqueuehostcallback">cuda::Stream::enqueueHostCallback</a></li>
+<li><a class="reference internal" href="#cuda-streamaccessor">cuda::StreamAccessor</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="initalization_and_information.html"
+                        title="previous chapter">Initalization and Information</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="object_detection.html"
+                        title="next chapter">Object Detection</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="data-structures">
+<h1>Data Structures<a class="headerlink" href="#data-structures" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="cuda-ptrstepsz">
+<h2>cuda::PtrStepSz<a class="headerlink" href="#cuda-ptrstepsz" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cuda::PtrStepSz">
+<em class="property">class </em><tt class="descclassname">cuda::</tt><tt class="descname">PtrStepSz</tt><a class="headerlink" href="#cuda::PtrStepSz" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Lightweight class encapsulating pitched memory on a GPU and passed to nvcc-compiled code (CUDA kernels). Typically, it is used internally by OpenCV and by users who write device code. You can call its members from both host and device code.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> <span class="k">struct</span> <span class="nl">PtrStepSz</span> <span class="p">:</span> <span class="k">public</span> <span class="n">PtrStep</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span>
+<span class="p">{</span>
+    <span class="n">__CV_GPU_HOST_DEVICE__</span> <span class="n">PtrStepSz</span><span class="p">()</span> <span class="o">:</span> <span class="n">cols</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">rows</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{}</span>
+    <span class="n">__CV_GPU_HOST_DEVICE__</span> <span class="n">PtrStepSz</span><span class="p">(</span><span class="kt">int</span> <span class="n">rows_</span><span class="p">,</span> <span class="kt">int</span> <span class="n">cols_</span><span class="p">,</span> <span class="n">T</span><span class="o">*</span> <span class="n">data_</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">step_</span><span class="p">)</span>
+        <span class="o">:</span> <span class="n">PtrStep</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">data_</span><span class="p">,</span> <span class="n">step_</span><span class="p">),</span> <span class="n">cols</span><span class="p">(</span><span class="n">cols_</span><span class="p">),</span> <span class="n">rows</span><span class="p">(</span><span class="n">rows_</span><span class="p">)</span> <span class="p">{}</span>
+
+    <span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">U</span><span class="o">&gt;</span>
+    <span class="k">explicit</span> <span class="n">PtrStepSz</span><span class="p">(</span><span class="k">const</span> <span class="n">PtrStepSz</span><span class="o">&lt;</span><span class="n">U</span><span class="o">&gt;&amp;</span> <span class="n">d</span><span class="p">)</span> <span class="o">:</span> <span class="n">PtrStep</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">((</span><span class="n">T</span><span class="o">*</span><span class="p">)</span><span class="n">d</span><span class="p">.</span><span class="n">data</span><span class="p">,</span> <span class="n">d</span><span class="p">.</span><span class="n">step</span><span class="p">),</span> <span class="n">cols</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">cols</span><span class="p">),</span> <span class="n">rows</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">rows</span><span class="p">){}</span>
+
+    <span class="kt">int</span> <span class="n">cols</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">rows</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">typedef</span> <span class="n">PtrStepSz</span><span class="o">&lt;</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">&gt;</span> <span class="n">PtrStepSzb</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">PtrStepSz</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">PtrStepSzf</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">PtrStepSz</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">PtrStepSzi</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cuda-ptrstep">
+<h2>cuda::PtrStep<a class="headerlink" href="#cuda-ptrstep" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cuda::PtrStep">
+<em class="property">class </em><tt class="descclassname">cuda::</tt><tt class="descname">PtrStep</tt><a class="headerlink" href="#cuda::PtrStep" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Structure similar to <a class="reference internal" href="#cuda::PtrStepSz" title="class cuda::PtrStepSz"><tt class="xref ocv ocv-class docutils literal"><span class="pre">cuda::PtrStepSz</span></tt></a> but containing only a pointer and row step. Width and height fields are excluded due to performance reasons. The structure is intended for internal use or for users who write device code.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> <span class="k">struct</span> <span class="nl">PtrStep</span> <span class="p">:</span> <span class="k">public</span> <span class="n">DevPtr</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span>
+<span class="p">{</span>
+    <span class="n">__CV_GPU_HOST_DEVICE__</span> <span class="n">PtrStep</span><span class="p">()</span> <span class="o">:</span> <span class="n">step</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{}</span>
+    <span class="n">__CV_GPU_HOST_DEVICE__</span> <span class="n">PtrStep</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">data_</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">step_</span><span class="p">)</span> <span class="o">:</span> <span class="n">DevPtr</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">data_</span><span class="p">),</span> <span class="n">step</span><span class="p">(</span><span class="n">step_</span><span class="p">)</span> <span class="p">{}</span>
+
+    <span class="c1">//! stride between two consecutive rows in bytes. Step is stored always and everywhere in bytes!!!</span>
+    <span class="kt">size_t</span> <span class="n">step</span><span class="p">;</span>
+
+    <span class="n">__CV_GPU_HOST_DEVICE__</span>       <span class="n">T</span><span class="o">*</span> <span class="nf">ptr</span><span class="p">(</span><span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>       <span class="p">{</span> <span class="k">return</span> <span class="p">(</span>      <span class="n">T</span><span class="o">*</span><span class="p">)(</span> <span class="p">(</span>      <span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">DevPtr</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">data</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">step</span><span class="p">);</span> <span class="p">}</span>
+    <span class="n">__CV_GPU_HOST_DEVICE__</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="nf">ptr</span><span class="p">(</span><span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">*</span><span class="p">)(</span> <span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">DevPtr</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">data</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">step</span><span class="p">);</span> <span class="p">}</span>
+
+    <span class="n">__CV_GPU_HOST_DEVICE__</span>       <span class="n">T</span><span class="o">&amp;</span> <span class="k">operator</span> <span class="p">()(</span><span class="kt">int</span> <span class="n">y</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">)</span>       <span class="p">{</span> <span class="k">return</span> <span class="n">ptr</span><span class="p">(</span><span class="n">y</span><span class="p">)[</span><span class="n">x</span><span class="p">];</span> <span class="p">}</span>
+    <span class="n">__CV_GPU_HOST_DEVICE__</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="k">operator</span> <span class="p">()(</span><span class="kt">int</span> <span class="n">y</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ptr</span><span class="p">(</span><span class="n">y</span><span class="p">)[</span><span class="n">x</span><span class="p">];</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">typedef</span> <span class="n">PtrStep</span><span class="o">&lt;</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">&gt;</span> <span class="n">PtrStepb</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">PtrStep</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">PtrStepf</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">PtrStep</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">PtrStepi</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cuda-gpumat">
+<h2>cuda::GpuMat<a class="headerlink" href="#cuda-gpumat" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cuda::GpuMat">
+<em class="property">class </em><tt class="descclassname">cuda::</tt><tt class="descname">GpuMat</tt><a class="headerlink" href="#cuda::GpuMat" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base storage class for GPU memory with reference counting. Its interface matches the <a class="reference internal" href="../../core/doc/basic_structures.html#Mat" title="class Mat"><tt class="xref ocv ocv-class docutils literal"><span class="pre">Mat</span></tt></a> interface with the following limitations:</p>
+<ul class="simple">
+<li>no arbitrary dimensions support (only 2D)</li>
+<li>no functions that return references to their data (because references on GPU are not valid for CPU)</li>
+<li>no expression templates technique support</li>
+</ul>
+<p>Beware that the latter limitation may lead to overloaded matrix operators that cause memory allocations. The <tt class="docutils literal"><span class="pre">GpuMat</span></tt> class is convertible to <a class="reference internal" href="#cuda::PtrStepSz" title="class cuda::PtrStepSz"><tt class="xref ocv ocv-class docutils literal"><span class="pre">cuda::PtrStepSz</span></tt></a> and <a class="reference internal" href="#cuda::PtrStep" title="class cuda::PtrStep"><tt class="xref ocv ocv-class docutils literal"><span class="pre">cuda::PtrStep</span></tt></a> so it can be passed directly to the kernel.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In contrast with <a class="reference internal" href="../../core/doc/basic_structures.html#Mat" title="class Mat"><tt class="xref ocv ocv-class docutils literal"><span class="pre">Mat</span></tt></a>, in most cases <tt class="docutils literal"><span class="pre">GpuMat::isContinuous()</span> <span class="pre">==</span> <span class="pre">false</span></tt> . This means that rows are aligned to a size depending on the hardware. Single-row <tt class="docutils literal"><span class="pre">GpuMat</span></tt> is always a continuous matrix.</p>
+</div>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">GpuMat</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="c1">//! default constructor</span>
+    <span class="n">GpuMat</span><span class="p">();</span>
+
+    <span class="c1">//! constructs GpuMat of the specified size and type</span>
+    <span class="n">GpuMat</span><span class="p">(</span><span class="kt">int</span> <span class="n">rows</span><span class="p">,</span> <span class="kt">int</span> <span class="n">cols</span><span class="p">,</span> <span class="kt">int</span> <span class="n">type</span><span class="p">);</span>
+    <span class="n">GpuMat</span><span class="p">(</span><span class="n">Size</span> <span class="n">size</span><span class="p">,</span> <span class="kt">int</span> <span class="n">type</span><span class="p">);</span>
+
+    <span class="p">.....</span>
+
+    <span class="c1">//! builds GpuMat from host memory (Blocking call)</span>
+    <span class="k">explicit</span> <span class="n">GpuMat</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">arr</span><span class="p">);</span>
+
+    <span class="c1">//! returns lightweight PtrStepSz structure for passing</span>
+    <span class="c1">//to nvcc-compiled code. Contains size, data ptr and step.</span>
+    <span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="k">operator</span> <span class="n">PtrStepSz</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="k">operator</span> <span class="n">PtrStep</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="c1">//! pefroms upload data to GpuMat (Blocking call)</span>
+    <span class="kt">void</span> <span class="nf">upload</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">arr</span><span class="p">);</span>
+
+    <span class="c1">//! pefroms upload data to GpuMat (Non-Blocking call)</span>
+    <span class="kt">void</span> <span class="nf">upload</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">arr</span><span class="p">,</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">stream</span><span class="p">);</span>
+
+    <span class="c1">//! pefroms download data from device to host memory (Blocking call)</span>
+    <span class="kt">void</span> <span class="n">download</span><span class="p">(</span><span class="n">OutputArray</span> <span class="n">dst</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="c1">//! pefroms download data from device to host memory (Non-Blocking call)</span>
+    <span class="kt">void</span> <span class="n">download</span><span class="p">(</span><span class="n">OutputArray</span> <span class="n">dst</span><span class="p">,</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">stream</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You are not recommended to leave static or global <tt class="docutils literal"><span class="pre">GpuMat</span></tt> variables allocated, that is, to rely on its destructor. The destruction order of such variables and CUDA context is undefined. GPU memory release function returns error if the CUDA context has been destroyed before.</p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/basic_structures.html#Mat" title="class Mat"><tt class="xref ocv ocv-class docutils literal"><span class="pre">Mat</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-createcontinuous">
+<h2>cuda::createContinuous<a class="headerlink" href="#cuda-createcontinuous" title="Permalink to this headline">¶</a></h2>
+<p>Creates a continuous matrix.</p>
+<dl class="function">
+<dt id="void cuda::createContinuous(int rows, int cols, int type, OutputArray arr)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">createContinuous</tt><big>(</big>int <strong>rows</strong>, int <strong>cols</strong>, int <strong>type</strong>, OutputArray <strong>arr</strong><big>)</big><a class="headerlink" href="#void cuda::createContinuous(int rows, int cols, int type, OutputArray arr)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>rows</strong> &#8211; Row count.</li>
+<li><strong>cols</strong> &#8211; Column count.</li>
+<li><strong>type</strong> &#8211; Type of the matrix.</li>
+<li><strong>arr</strong> &#8211; Destination matrix. This parameter changes only if it has a proper type and area ( <span class="math">\texttt{rows} \times \texttt{cols}</span> ).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Matrix is called continuous if its elements are stored continuously, that is, without gaps at the end of each row.</p>
+</div>
+<div class="section" id="cuda-ensuresizeisenough">
+<h2>cuda::ensureSizeIsEnough<a class="headerlink" href="#cuda-ensuresizeisenough" title="Permalink to this headline">¶</a></h2>
+<p>Ensures that the size of a matrix is big enough and the matrix has a proper type.</p>
+<dl class="function">
+<dt id="void cuda::ensureSizeIsEnough(int rows, int cols, int type, OutputArray arr)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">ensureSizeIsEnough</tt><big>(</big>int <strong>rows</strong>, int <strong>cols</strong>, int <strong>type</strong>, OutputArray <strong>arr</strong><big>)</big><a class="headerlink" href="#void cuda::ensureSizeIsEnough(int rows, int cols, int type, OutputArray arr)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>rows</strong> &#8211; Minimum desired number of rows.</li>
+<li><strong>cols</strong> &#8211; Minimum desired number of columns.</li>
+<li><strong>type</strong> &#8211; Desired matrix type.</li>
+<li><strong>arr</strong> &#8211; Destination matrix.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function does not reallocate memory if the matrix has proper attributes already.</p>
+</div>
+<div class="section" id="cuda-cudamem">
+<h2>cuda::CudaMem<a class="headerlink" href="#cuda-cudamem" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cuda::CudaMem">
+<em class="property">class </em><tt class="descclassname">cuda::</tt><tt class="descname">CudaMem</tt><a class="headerlink" href="#cuda::CudaMem" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class with reference counting wrapping special memory type allocation functions from CUDA. Its interface is also <tt class="xref ocv ocv-func docutils literal"><span class="pre">Mat()</span></tt>-like but with additional memory type parameters.</p>
+<ul class="simple">
+<li><strong>PAGE_LOCKED</strong> sets a page locked memory type used commonly for fast and asynchronous uploading/downloading data from/to GPU.</li>
+<li><strong>SHARED</strong> specifies a zero copy memory allocation that enables mapping the host memory to GPU address space, if supported.</li>
+<li><strong>WRITE_COMBINED</strong>  sets the write combined buffer that is not cached by CPU. Such buffers are used to supply GPU with data when GPU only reads it. The advantage is a better CPU cache utilization.</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Allocation size of such memory types is usually limited. For more details, see <em>CUDA 2.2 Pinned Memory APIs</em> document or <em>CUDA C Programming Guide</em>.</p>
+</div>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">CudaMem</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">enum</span> <span class="n">AllocType</span> <span class="p">{</span> <span class="n">PAGE_LOCKED</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">SHARED</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">WRITE_COMBINED</span> <span class="o">=</span> <span class="mi">4</span> <span class="p">};</span>
+
+    <span class="k">explicit</span> <span class="nf">CudaMem</span><span class="p">(</span><span class="n">AllocType</span> <span class="n">alloc_type</span> <span class="o">=</span> <span class="n">PAGE_LOCKED</span><span class="p">);</span>
+
+    <span class="n">CudaMem</span><span class="p">(</span><span class="kt">int</span> <span class="n">rows</span><span class="p">,</span> <span class="kt">int</span> <span class="n">cols</span><span class="p">,</span> <span class="kt">int</span> <span class="n">type</span><span class="p">,</span> <span class="n">AllocType</span> <span class="n">alloc_type</span> <span class="o">=</span> <span class="n">PAGE_LOCKED</span><span class="p">);</span>
+    <span class="n">CudaMem</span><span class="p">(</span><span class="n">Size</span> <span class="n">size</span><span class="p">,</span> <span class="kt">int</span> <span class="n">type</span><span class="p">,</span> <span class="n">AllocType</span> <span class="n">alloc_type</span> <span class="o">=</span> <span class="n">PAGE_LOCKED</span><span class="p">);</span>
+
+    <span class="c1">//! creates from host memory with coping data</span>
+    <span class="k">explicit</span> <span class="nf">CudaMem</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">arr</span><span class="p">,</span> <span class="n">AllocType</span> <span class="n">alloc_type</span> <span class="o">=</span> <span class="n">PAGE_LOCKED</span><span class="p">);</span>
+
+    <span class="p">......</span>
+
+    <span class="c1">//! returns matrix header with disabled reference counting for CudaMem data.</span>
+    <span class="n">Mat</span> <span class="n">createMatHeader</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="c1">//! maps host memory into device address space and returns GpuMat header for it. Throws exception if not supported by hardware.</span>
+    <span class="n">GpuMat</span> <span class="n">createGpuMatHeader</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="p">......</span>
+
+    <span class="n">AllocType</span> <span class="n">alloc_type</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cuda-cudamem-creatematheader">
+<h2>cuda::CudaMem::createMatHeader<a class="headerlink" href="#cuda-cudamem-creatematheader" title="Permalink to this headline">¶</a></h2>
+<p>Creates a header without reference counting to <a class="reference internal" href="#cuda::CudaMem" title="class cuda::CudaMem"><tt class="xref ocv ocv-class docutils literal"><span class="pre">cuda::CudaMem</span></tt></a> data.</p>
+<dl class="function">
+<dt id="Mat cuda::CudaMem::createMatHeader() const">
+<strong>C++:</strong><tt class="descname"> </tt>Mat <tt class="descclassname">cuda::CudaMem::</tt><tt class="descname">createMatHeader</tt><big>(</big><big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#Mat cuda::CudaMem::createMatHeader() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="cuda-cudamem-creategpumatheader">
+<h2>cuda::CudaMem::createGpuMatHeader<a class="headerlink" href="#cuda-cudamem-creategpumatheader" title="Permalink to this headline">¶</a></h2>
+<p>Maps CPU memory to GPU address space and creates the <a class="reference internal" href="#cuda::GpuMat" title="class cuda::GpuMat"><tt class="xref ocv ocv-class docutils literal"><span class="pre">cuda::GpuMat</span></tt></a> header without reference counting for it.</p>
+<dl class="function">
+<dt id="GpuMat cuda::CudaMem::createGpuMatHeader() const">
+<strong>C++:</strong><tt class="descname"> </tt>GpuMat <tt class="descclassname">cuda::CudaMem::</tt><tt class="descname">createGpuMatHeader</tt><big>(</big><big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#GpuMat cuda::CudaMem::createGpuMatHeader() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This can be done only if memory was allocated with the <tt class="docutils literal"><span class="pre">SHARED</span></tt> flag and if it is supported by the hardware. Laptops often share video and CPU memory, so address spaces can be mapped, which eliminates an extra copy.</p>
+</div>
+<div class="section" id="cuda-registerpagelocked">
+<h2>cuda::registerPageLocked<a class="headerlink" href="#cuda-registerpagelocked" title="Permalink to this headline">¶</a></h2>
+<p>Page-locks the memory of matrix and maps it for the device(s).</p>
+<dl class="function">
+<dt id="void cuda::registerPageLocked(Mat&amp; m)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">registerPageLocked</tt><big>(</big>Mat&amp; <strong>m</strong><big>)</big><a class="headerlink" href="#void cuda::registerPageLocked(Mat& m)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>m</strong> &#8211; Input matrix.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-unregisterpagelocked">
+<h2>cuda::unregisterPageLocked<a class="headerlink" href="#cuda-unregisterpagelocked" title="Permalink to this headline">¶</a></h2>
+<p>Unmaps the memory of matrix and makes it pageable again.</p>
+<dl class="function">
+<dt id="void cuda::unregisterPageLocked(Mat&amp; m)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">unregisterPageLocked</tt><big>(</big>Mat&amp; <strong>m</strong><big>)</big><a class="headerlink" href="#void cuda::unregisterPageLocked(Mat& m)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>m</strong> &#8211; Input matrix.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-stream">
+<h2>cuda::Stream<a class="headerlink" href="#cuda-stream" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cuda::Stream">
+<em class="property">class </em><tt class="descclassname">cuda::</tt><tt class="descname">Stream</tt><a class="headerlink" href="#cuda::Stream" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This class encapsulates a queue of asynchronous calls.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Currently, you may face problems if an operation is enqueued twice with different data. Some functions use the constant GPU memory, and next call may update the memory before the previous one has been finished. But calling different operations asynchronously is safe because each operation has its own constant buffer. Memory copy/upload/download/set operations to the buffers you hold are also safe.</p>
+</div>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">Stream</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">Stream</span><span class="p">();</span>
+
+    <span class="c1">//! queries an asynchronous stream for completion status</span>
+    <span class="kt">bool</span> <span class="n">queryIfComplete</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="c1">//! waits for stream tasks to complete</span>
+    <span class="kt">void</span> <span class="nf">waitForCompletion</span><span class="p">();</span>
+
+    <span class="c1">//! makes a compute stream wait on an event</span>
+    <span class="kt">void</span> <span class="nf">waitEvent</span><span class="p">(</span><span class="k">const</span> <span class="n">Event</span><span class="o">&amp;</span> <span class="n">event</span><span class="p">);</span>
+
+    <span class="c1">//! adds a callback to be called on the host after all currently enqueued items in the stream have completed</span>
+    <span class="kt">void</span> <span class="nf">enqueueHostCallback</span><span class="p">(</span><span class="n">StreamCallback</span> <span class="n">callback</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">userData</span><span class="p">);</span>
+
+    <span class="c1">//! return Stream object for default CUDA stream</span>
+    <span class="k">static</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">Null</span><span class="p">();</span>
+
+    <span class="c1">//! returns true if stream object is not default (!= 0)</span>
+    <span class="k">operator</span> <span class="n">bool_type</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cuda-stream-queryifcomplete">
+<h2>cuda::Stream::queryIfComplete<a class="headerlink" href="#cuda-stream-queryifcomplete" title="Permalink to this headline">¶</a></h2>
+<p>Returns <tt class="docutils literal"><span class="pre">true</span></tt> if the current stream queue is finished. Otherwise, it returns false.</p>
+<dl class="function">
+<dt id="bool cuda::Stream::queryIfComplete()">
+<strong>C++:</strong><tt class="descname"> </tt>bool <tt class="descclassname">cuda::Stream::</tt><tt class="descname">queryIfComplete</tt><big>(</big><big>)</big><a class="headerlink" href="#bool cuda::Stream::queryIfComplete()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="cuda-stream-waitforcompletion">
+<h2>cuda::Stream::waitForCompletion<a class="headerlink" href="#cuda-stream-waitforcompletion" title="Permalink to this headline">¶</a></h2>
+<p>Blocks the current CPU thread until all operations in the stream are complete.</p>
+<dl class="function">
+<dt id="void cuda::Stream::waitForCompletion()">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::Stream::</tt><tt class="descname">waitForCompletion</tt><big>(</big><big>)</big><a class="headerlink" href="#void cuda::Stream::waitForCompletion()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="cuda-stream-waitevent">
+<h2>cuda::Stream::waitEvent<a class="headerlink" href="#cuda-stream-waitevent" title="Permalink to this headline">¶</a></h2>
+<p>Makes a compute stream wait on an event.</p>
+<dl class="function">
+<dt id="void cuda::Stream::waitEvent(const Event&amp; event)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::Stream::</tt><tt class="descname">waitEvent</tt><big>(</big>const Event&amp; <strong>event</strong><big>)</big><a class="headerlink" href="#void cuda::Stream::waitEvent(const Event& event)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="cuda-stream-enqueuehostcallback">
+<h2>cuda::Stream::enqueueHostCallback<a class="headerlink" href="#cuda-stream-enqueuehostcallback" title="Permalink to this headline">¶</a></h2>
+<p>Adds a callback to be called on the host after all currently enqueued items in the stream have completed.</p>
+<dl class="function">
+<dt id="void cuda::Stream::enqueueHostCallback(StreamCallback callback, void* userData)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::Stream::</tt><tt class="descname">enqueueHostCallback</tt><big>(</big>StreamCallback <strong>callback</strong>, void* <strong>userData</strong><big>)</big><a class="headerlink" href="#void cuda::Stream::enqueueHostCallback(StreamCallback callback, void* userData)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Callbacks must not make any CUDA API calls. Callbacks must not perform any synchronization that may depend on outstanding device work or other callbacks that are not mandated to run earlier.  Callbacks without a mandated order (in independent streams) execute in undefined order and may be serialized.</p>
+</div>
+</div>
+<div class="section" id="cuda-streamaccessor">
+<h2>cuda::StreamAccessor<a class="headerlink" href="#cuda-streamaccessor" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="cuda::StreamAccessor">
+<em class="property">struct </em><tt class="descclassname">cuda::</tt><tt class="descname">StreamAccessor</tt><a class="headerlink" href="#cuda::StreamAccessor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class that enables getting <tt class="docutils literal"><span class="pre">cudaStream_t</span></tt> from <a class="reference internal" href="#cuda::Stream" title="class cuda::Stream"><tt class="xref ocv ocv-class docutils literal"><span class="pre">cuda::Stream</span></tt></a> and is declared in <tt class="docutils literal"><span class="pre">stream_accessor.hpp</span></tt> because it is the only public header that depends on the CUDA Runtime API. Including it brings a dependency to your code.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">struct</span> <span class="n">StreamAccessor</span>
+<span class="p">{</span>
+    <span class="n">CV_EXPORTS</span> <span class="k">static</span> <span class="n">cudaStream_t</span> <span class="n">getStream</span><span class="p">(</span><span class="k">const</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">stream</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="object_detection.html" title="Object Detection"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="initalization_and_information.html" title="Initalization and Information"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="cuda.html" >cuda. CUDA-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/cuda/doc/data_structures.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

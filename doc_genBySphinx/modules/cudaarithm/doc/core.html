@@ -1,0 +1,407 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Core Operations on Matrices &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="cudaarithm. CUDA-accelerated Operations on Matrices" href="cudaarithm.html" />
+    <link rel="next" title="Per-element Operations" href="element_operations.html" />
+    <link rel="prev" title="cudaarithm. CUDA-accelerated Operations on Matrices" href="cudaarithm.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="element_operations.html" title="Per-element Operations"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="cudaarithm.html" title="cudaarithm. CUDA-accelerated Operations on Matrices"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="cudaarithm.html" accesskey="U">cudaarithm. CUDA-accelerated Operations on Matrices</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Core Operations on Matrices</a><ul>
+<li><a class="reference internal" href="#cuda-merge">cuda::merge</a></li>
+<li><a class="reference internal" href="#cuda-split">cuda::split</a></li>
+<li><a class="reference internal" href="#cuda-transpose">cuda::transpose</a></li>
+<li><a class="reference internal" href="#cuda-flip">cuda::flip</a></li>
+<li><a class="reference internal" href="#cuda-lookuptable">cuda::LookUpTable</a></li>
+<li><a class="reference internal" href="#cuda-lookuptable-transform">cuda::LookUpTable::transform</a></li>
+<li><a class="reference internal" href="#cuda-createlookuptable">cuda::createLookUpTable</a></li>
+<li><a class="reference internal" href="#cuda-copymakeborder">cuda::copyMakeBorder</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="cudaarithm.html"
+                        title="previous chapter">cudaarithm. CUDA-accelerated Operations on Matrices</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="element_operations.html"
+                        title="next chapter">Per-element Operations</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="core-operations-on-matrices">
+<h1>Core Operations on Matrices<a class="headerlink" href="#core-operations-on-matrices" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="cuda-merge">
+<h2>cuda::merge<a class="headerlink" href="#cuda-merge" title="Permalink to this headline">¶</a></h2>
+<p>Makes a multi-channel matrix out of several single-channel matrices.</p>
+<dl class="function">
+<dt id="void cuda::merge(const GpuMat* src, size_t n, OutputArray dst, Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">merge</tt><big>(</big>const GpuMat* <strong>src</strong>, size_t <strong>n</strong>, OutputArray <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::merge(const GpuMat* src, size_t n, OutputArray dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void cuda::merge(const std::vector&lt;GpuMat&gt;&amp; src, OutputArray dst, Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">merge</tt><big>(</big>const std::vector&lt;GpuMat&gt;&amp; <strong>src</strong>, OutputArray <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::merge(const std::vector<GpuMat>& src, OutputArray dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Array/vector of source matrices.</li>
+<li><strong>n</strong> &#8211; Number of source matrices.</li>
+<li><strong>dst</strong> &#8211; Destination matrix.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void merge(const Mat* mv, size_t count, OutputArray dst)" title="void merge(const Mat* mv, size_t count, OutputArray dst)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">merge()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-split">
+<h2>cuda::split<a class="headerlink" href="#cuda-split" title="Permalink to this headline">¶</a></h2>
+<p>Copies each plane of a multi-channel matrix into an array.</p>
+<dl class="function">
+<dt id="void cuda::split(InputArray src, GpuMat* dst, Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">split</tt><big>(</big>InputArray <strong>src</strong>, GpuMat* <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::split(InputArray src, GpuMat* dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void cuda::split(InputArray src, vector&lt;GpuMat&gt;&amp; dst, Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">split</tt><big>(</big>InputArray <strong>src</strong>, vector&lt;GpuMat&gt;&amp; <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::split(InputArray src, vector<GpuMat>& dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source matrix.</li>
+<li><strong>dst</strong> &#8211; Destination array/vector of single-channel matrices.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void split(const Mat&amp; src, Mat* mvbegin)" title="void split(const Mat&amp; src, Mat* mvbegin)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">split()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-transpose">
+<h2>cuda::transpose<a class="headerlink" href="#cuda-transpose" title="Permalink to this headline">¶</a></h2>
+<p>Transposes a matrix.</p>
+<dl class="function">
+<dt id="void cuda::transpose(InputArray src1, OutputArray dst, Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">transpose</tt><big>(</big>InputArray <strong>src1</strong>, OutputArray <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::transpose(InputArray src1, OutputArray dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src1</strong> &#8211; Source matrix. 1-, 4-, 8-byte element sizes are supported for now.</li>
+<li><strong>dst</strong> &#8211; Destination matrix.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void transpose(InputArray src, OutputArray dst)" title="void transpose(InputArray src, OutputArray dst)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">transpose()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-flip">
+<h2>cuda::flip<a class="headerlink" href="#cuda-flip" title="Permalink to this headline">¶</a></h2>
+<p>Flips a 2D matrix around vertical, horizontal, or both axes.</p>
+<dl class="function">
+<dt id="void cuda::flip(InputArray src, OutputArray dst, int flipCode, Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">flip</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, int <strong>flipCode</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::flip(InputArray src, OutputArray dst, int flipCode, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source matrix. Supports 1, 3 and 4 channels images with <tt class="docutils literal"><span class="pre">CV_8U</span></tt>, <tt class="docutils literal"><span class="pre">CV_16U</span></tt>, <tt class="docutils literal"><span class="pre">CV_32S</span></tt> or <tt class="docutils literal"><span class="pre">CV_32F</span></tt> depth.</li>
+<li><strong>dst</strong> &#8211; Destination matrix.</li>
+<li><strong>flipCode</strong> &#8211; <p>Flip mode for the source:</p>
+<ul>
+<li><tt class="docutils literal"><span class="pre">0</span></tt> Flips around x-axis.</li>
+<li><tt class="docutils literal"><span class="pre">&gt;</span> <span class="pre">0</span></tt> Flips around y-axis.</li>
+<li><tt class="docutils literal"><span class="pre">&lt;</span> <span class="pre">0</span></tt> Flips around both axes.</li>
+</ul>
+</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void flip(InputArray src, OutputArray dst, int flipCode)" title="void flip(InputArray src, OutputArray dst, int flipCode)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">flip()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-lookuptable">
+<h2>cuda::LookUpTable<a class="headerlink" href="#cuda-lookuptable" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cuda::LookUpTable : public Algorithm">
+<em class="property">class </em><tt class="descclassname">cuda::</tt><tt class="descname">LookUpTable</tt> : <em class="property">public</em> <tt class="descname">Algorithm</tt><a class="headerlink" href="#cuda::LookUpTable : public Algorithm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base class for transform using lookup table.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">LookUpTable</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Algorithm</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">transform</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">src</span><span class="p">,</span> <span class="n">OutputArray</span> <span class="n">dst</span><span class="p">,</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="o">::</span><span class="n">Null</span><span class="p">())</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void LUT(InputArray src, InputArray lut, OutputArray dst)" title="void LUT(InputArray src, InputArray lut, OutputArray dst)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">LUT()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-lookuptable-transform">
+<h2>cuda::LookUpTable::transform<a class="headerlink" href="#cuda-lookuptable-transform" title="Permalink to this headline">¶</a></h2>
+<p>Transforms the source matrix into the destination matrix using the given look-up table: <tt class="docutils literal"><span class="pre">dst(I)</span> <span class="pre">=</span> <span class="pre">lut(src(I))</span></tt> .</p>
+<dl class="function">
+<dt id="void cuda::LookUpTable::transform(InputArray src, OutputArray dst, Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::LookUpTable::</tt><tt class="descname">transform</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::LookUpTable::transform(InputArray src, OutputArray dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source matrix.  <tt class="docutils literal"><span class="pre">CV_8UC1</span></tt>  and  <tt class="docutils literal"><span class="pre">CV_8UC3</span></tt>  matrices are supported for now.</li>
+<li><strong>dst</strong> &#8211; Destination matrix.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-createlookuptable">
+<h2>cuda::createLookUpTable<a class="headerlink" href="#cuda-createlookuptable" title="Permalink to this headline">¶</a></h2>
+<p>Creates implementation for <a class="reference internal" href="#cuda::LookUpTable : public Algorithm" title="class cuda::LookUpTable : public Algorithm"><tt class="xref ocv ocv-class docutils literal"><span class="pre">cuda::LookUpTable</span></tt></a> .</p>
+<dl class="function">
+<dt id="Ptr&lt;LookUpTable&gt; createLookUpTable(InputArray lut)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;LookUpTable&gt; <tt class="descname">createLookUpTable</tt><big>(</big>InputArray <strong>lut</strong><big>)</big><a class="headerlink" href="#Ptr<LookUpTable> createLookUpTable(InputArray lut)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>lut</strong> &#8211; Look-up table of 256 elements. It is a continuous <tt class="docutils literal"><span class="pre">CV_8U</span></tt> matrix.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-copymakeborder">
+<h2>cuda::copyMakeBorder<a class="headerlink" href="#cuda-copymakeborder" title="Permalink to this headline">¶</a></h2>
+<p>Forms a border around an image.</p>
+<dl class="function">
+<dt id="void cuda::copyMakeBorder(InputArray src, OutputArray dst, int top, int bottom, int left, int right, int borderType, Scalar value , Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">copyMakeBorder</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, int <strong>top</strong>, int <strong>bottom</strong>, int <strong>left</strong>, int <strong>right</strong>, int <strong>borderType</strong>, Scalar <strong>value</strong>=Scalar(), Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::copyMakeBorder(InputArray src, OutputArray dst, int top, int bottom, int left, int right, int borderType, Scalar value , Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image. <tt class="docutils literal"><span class="pre">CV_8UC1</span></tt> , <tt class="docutils literal"><span class="pre">CV_8UC4</span></tt> , <tt class="docutils literal"><span class="pre">CV_32SC1</span></tt> , and <tt class="docutils literal"><span class="pre">CV_32FC1</span></tt> types are supported.</li>
+<li><strong>dst</strong> &#8211; Destination image with the same type as  <tt class="docutils literal"><span class="pre">src</span></tt>. The size is <tt class="docutils literal"><span class="pre">Size(src.cols+left+right,</span> <span class="pre">src.rows+top+bottom)</span></tt> .</li>
+<li><strong>top</strong> &#8211; </li>
+<li><strong>bottom</strong> &#8211; </li>
+<li><strong>left</strong> &#8211; </li>
+<li><strong>right</strong> &#8211; Number of pixels in each direction from the source image rectangle to extrapolate. For example:  <tt class="docutils literal"><span class="pre">top=1,</span> <span class="pre">bottom=1,</span> <span class="pre">left=1,</span> <span class="pre">right=1</span></tt> mean that 1 pixel-wide border needs to be built.</li>
+<li><strong>borderType</strong> &#8211; Border type. See  <a class="reference internal" href="../../core/doc/operations_on_arrays.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></tt></a> for details. <tt class="docutils literal"><span class="pre">BORDER_REFLECT101</span></tt> , <tt class="docutils literal"><span class="pre">BORDER_REPLICATE</span></tt> , <tt class="docutils literal"><span class="pre">BORDER_CONSTANT</span></tt> , <tt class="docutils literal"><span class="pre">BORDER_REFLECT</span></tt> and <tt class="docutils literal"><span class="pre">BORDER_WRAP</span></tt> are supported for now.</li>
+<li><strong>value</strong> &#8211; Border value.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void copyMakeBorder(InputArray src, OutputArray dst, int top, int bottom, int left, int right, int borderType, const Scalar&amp; value)" title="void copyMakeBorder(InputArray src, OutputArray dst, int top, int bottom, int left, int right, int borderType, const Scalar&amp; value)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">copyMakeBorder()</span></tt></a></p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="element_operations.html" title="Per-element Operations"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="cudaarithm.html" title="cudaarithm. CUDA-accelerated Operations on Matrices"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="cudaarithm.html" >cudaarithm. CUDA-accelerated Operations on Matrices</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/cudaarithm/doc/core.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

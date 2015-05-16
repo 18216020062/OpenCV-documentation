@@ -1,0 +1,306 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Seamless Cloning &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="photo. Computational Photography" href="photo.html" />
+    <link rel="next" title="Non-Photorealistic Rendering" href="npr.html" />
+    <link rel="prev" title="Decolorization" href="decolor.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="npr.html" title="Non-Photorealistic Rendering"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="decolor.html" title="Decolorization"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="photo.html" accesskey="U">photo. Computational Photography</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Seamless Cloning</a><ul>
+<li><a class="reference internal" href="#seamlessclone">seamlessClone</a></li>
+<li><a class="reference internal" href="#colorchange">colorChange</a></li>
+<li><a class="reference internal" href="#illuminationchange">illuminationChange</a></li>
+<li><a class="reference internal" href="#textureflattening">textureFlattening</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="decolor.html"
+                        title="previous chapter">Decolorization</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="npr.html"
+                        title="next chapter">Non-Photorealistic Rendering</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="seamless-cloning">
+<h1>Seamless Cloning<a class="headerlink" href="#seamless-cloning" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="seamlessclone">
+<h2>seamlessClone<a class="headerlink" href="#seamlessclone" title="Permalink to this headline">¶</a></h2>
+<p>Image editing tasks concern either global changes (color/intensity corrections, filters, deformations) or local changes concerned to a selection.
+Here we are interested in achieving local changes, ones that are restricted to a region manually selected (ROI), in a seamless and effortless manner.
+The extent of the changes ranges from slight distortions to complete replacement by novel content <a class="reference internal" href="#pm03" id="id1">[PM03]</a>.</p>
+<dl class="function">
+<dt id="void seamlessClone(InputArray src, InputArray dst, InputArray mask, Point p, OutputArray blend, int flags)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">seamlessClone</tt><big>(</big>InputArray <strong>src</strong>, InputArray <strong>dst</strong>, InputArray <strong>mask</strong>, Point <strong>p</strong>, OutputArray <strong>blend</strong>, int <strong>flags</strong><big>)</big><a class="headerlink" href="#void seamlessClone(InputArray src, InputArray dst, InputArray mask, Point p, OutputArray blend, int flags)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Input 8-bit 3-channel image.</li>
+<li><strong>dst</strong> &#8211; Input 8-bit 3-channel image.</li>
+<li><strong>mask</strong> &#8211; Input 8-bit 1 or 3-channel image.</li>
+<li><strong>p</strong> &#8211; Point in dst image where object is placed.</li>
+<li><strong>result</strong> &#8211; Output image with the same size and type as <tt class="docutils literal"><span class="pre">dst</span></tt>.</li>
+<li><strong>flags</strong> &#8211; <p>Cloning method that could be one of the following:</p>
+<ul>
+<li><strong>NORMAL_CLONE</strong>     The power of the method is fully expressed when inserting objects with complex outlines into a new background</li>
+<li><strong>MIXED_CLONE</strong>    The classic method, color-based selection and alpha masking might be time consuming and often leaves an undesirable halo. Seamless cloning, even averaged with the original image, is not effective. Mixed seamless cloning based on a loose selection proves effective.</li>
+<li><strong>FEATURE_EXCHANGE</strong>     Feature exchange allows the user to easily replace certain features of one object by alternative features.</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="colorchange">
+<h2>colorChange<a class="headerlink" href="#colorchange" title="Permalink to this headline">¶</a></h2>
+<p>Given an original color image, two differently colored versions of this image can be mixed seamlessly.</p>
+<dl class="function">
+<dt id="void colorChange(InputArray src, InputArray mask, OutputArray dst, float red_mul , float green_mul , float blue_mul)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">colorChange</tt><big>(</big>InputArray <strong>src</strong>, InputArray <strong>mask</strong>, OutputArray <strong>dst</strong>, float <strong>red_mul</strong>=1.0f, float <strong>green_mul</strong>=1.0f, float <strong>blue_mul</strong>=1.0f<big>)</big><a class="headerlink" href="#void colorChange(InputArray src, InputArray mask, OutputArray dst, float red_mul , float green_mul , float blue_mul)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Input 8-bit 3-channel image.</li>
+<li><strong>mask</strong> &#8211; Input 8-bit 1 or 3-channel image.</li>
+<li><strong>dst</strong> &#8211; Output image with the same size and type as  <tt class="docutils literal"><span class="pre">src</span></tt> .</li>
+<li><strong>red_mul</strong> &#8211; R-channel multiply factor.</li>
+<li><strong>green_mul</strong> &#8211; G-channel multiply factor.</li>
+<li><strong>blue_mul</strong> &#8211; B-channel multiply factor.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Multiplication factor is between .5 to 2.5.</p>
+</div>
+<div class="section" id="illuminationchange">
+<h2>illuminationChange<a class="headerlink" href="#illuminationchange" title="Permalink to this headline">¶</a></h2>
+<p>Applying an appropriate non-linear transformation to the gradient field inside the selection and then integrating back with a Poisson
+solver, modifies locally the apparent illumination of an image.</p>
+<dl class="function">
+<dt id="void illuminationChange(InputArray src, InputArray mask, OutputArray dst, float alpha , float beta)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">illuminationChange</tt><big>(</big>InputArray <strong>src</strong>, InputArray <strong>mask</strong>, OutputArray <strong>dst</strong>, float <strong>alpha</strong>=0.2f, float <strong>beta</strong>=0.4f<big>)</big><a class="headerlink" href="#void illuminationChange(InputArray src, InputArray mask, OutputArray dst, float alpha , float beta)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Input 8-bit 3-channel image.</li>
+<li><strong>mask</strong> &#8211; Input 8-bit 1 or 3-channel image.</li>
+<li><strong>dst</strong> &#8211; Output image with the same size and type as  <tt class="docutils literal"><span class="pre">src</span></tt>.</li>
+<li><strong>alpha</strong> &#8211; Value ranges between 0-2.</li>
+<li><strong>beta</strong> &#8211; Value ranges between 0-2.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This is useful to highlight under-exposed foreground objects or to reduce specular reflections.</p>
+</div>
+<div class="section" id="textureflattening">
+<h2>textureFlattening<a class="headerlink" href="#textureflattening" title="Permalink to this headline">¶</a></h2>
+<p>By retaining only the gradients at edge locations, before integrating with the Poisson solver, one washes out the texture of the selected
+region, giving its contents a flat aspect. Here Canny Edge Detector is used.</p>
+<dl class="function">
+<dt id="void textureFlattening(InputArray src, InputArray mask, OutputArray dst, double low_threshold, double high_threshold, int kernel_size)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">textureFlattening</tt><big>(</big>InputArray <strong>src</strong>, InputArray <strong>mask</strong>, OutputArray <strong>dst</strong>, double <strong>low_threshold</strong>=30 , double <strong>high_threshold</strong>=45, int <strong>kernel_size</strong>=3<big>)</big><a class="headerlink" href="#void textureFlattening(InputArray src, InputArray mask, OutputArray dst, double low_threshold, double high_threshold, int kernel_size)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Input 8-bit 3-channel image.</li>
+<li><strong>mask</strong> &#8211; Input 8-bit 1 or 3-channel image.</li>
+<li><strong>dst</strong> &#8211; Output image with the same size and type as  <tt class="docutils literal"><span class="pre">src</span></tt>.</li>
+<li><strong>low_threshold</strong> &#8211; Range from 0 to 100.</li>
+<li><strong>high_threshold</strong> &#8211; Value &gt; 100.</li>
+<li><strong>kernel_size</strong> &#8211; The size of the Sobel kernel to be used.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p><strong>NOTE:</strong></p>
+<p>The algorithm assumes that the color of the source image is close to that of the destination. This assumption means that when the colors don&#8217;t match, the source image color gets tinted toward the color of the destination image.</p>
+<table class="docutils citation" frame="void" id="pm03" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[PM03]</a></td><td>Patrick Perez, Michel Gangnet, Andrew Blake, &#8220;Poisson image editing&#8221;, ACM Transactions on Graphics (SIGGRAPH), 2003.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="npr.html" title="Non-Photorealistic Rendering"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="decolor.html" title="Decolorization"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="photo.html" >photo. Computational Photography</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/photo/doc/cloning.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

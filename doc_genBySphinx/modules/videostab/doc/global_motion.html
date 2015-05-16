@@ -1,0 +1,613 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Global Motion Estimation &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="videostab. Video Stabilization" href="videostab.html" />
+    <link rel="next" title="Fast Marching Method" href="fast_marching.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="fast_marching.html" title="Fast Marching Method"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="introduction.html" title="Introduction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="videostab.html" accesskey="U">videostab. Video Stabilization</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Global Motion Estimation</a><ul>
+<li><a class="reference internal" href="#videostab-motionmodel">videostab::MotionModel</a></li>
+<li><a class="reference internal" href="#videostab-ransacparams">videostab::RansacParams</a></li>
+<li><a class="reference internal" href="#videostab-ransacparams-ransacparams">videostab::RansacParams::RansacParams</a></li>
+<li><a class="reference internal" href="#id1">videostab::RansacParams::RansacParams</a></li>
+<li><a class="reference internal" href="#videostab-ransacparams-niters">videostab::RansacParams::niters</a></li>
+<li><a class="reference internal" href="#videostab-ransacparams-default2dmotion">videostab::RansacParams::default2dMotion</a></li>
+<li><a class="reference internal" href="#videostab-estimateglobalmotionleastsquares">videostab::estimateGlobalMotionLeastSquares</a></li>
+<li><a class="reference internal" href="#videostab-estimateglobalmotionransac">videostab::estimateGlobalMotionRansac</a></li>
+<li><a class="reference internal" href="#videostab-getmotion">videostab::getMotion</a></li>
+<li><a class="reference internal" href="#videostab-motionestimatorbase">videostab::MotionEstimatorBase</a></li>
+<li><a class="reference internal" href="#videostab-motionestimatorbase-setmotionmodel">videostab::MotionEstimatorBase::setMotionModel</a></li>
+<li><a class="reference internal" href="#videostab-motionestimatorbase-motionmodel">videostab::MotionEstimatorBase::motionModel</a></li>
+<li><a class="reference internal" href="#videostab-motionestimatorbase-estimate">videostab::MotionEstimatorBase::estimate</a></li>
+<li><a class="reference internal" href="#videostab-motionestimatorransacl2">videostab::MotionEstimatorRansacL2</a></li>
+<li><a class="reference internal" href="#videostab-motionestimatorl1">videostab::MotionEstimatorL1</a></li>
+<li><a class="reference internal" href="#videostab-imagemotionestimatorbase">videostab::ImageMotionEstimatorBase</a></li>
+<li><a class="reference internal" href="#videostab-keypointbasedmotionestimator">videostab::KeypointBasedMotionEstimator</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="introduction.html"
+                        title="previous chapter">Introduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="fast_marching.html"
+                        title="next chapter">Fast Marching Method</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="global-motion-estimation">
+<h1>Global Motion Estimation<a class="headerlink" href="#global-motion-estimation" title="Permalink to this headline">¶</a></h1>
+<p>The video stabilization module contains a set of functions and classes for global motion estimation between point clouds or between images. In the last case  features are extracted and matched internally. For the sake of convenience the motion estimation functions are wrapped into classes. Both the functions and the classes are available.</p>
+<div class="section" id="videostab-motionmodel">
+<h2>videostab::MotionModel<a class="headerlink" href="#videostab-motionmodel" title="Permalink to this headline">¶</a></h2>
+<p>Describes motion model between two point clouds.</p>
+<dl class="enum">
+<dt id="videostab::MotionModel">
+<strong>C++:</strong><tt class="descname"> </tt><em class="property">enum </em><tt class="descclassname">videostab::</tt><tt class="descname">MotionModel</tt><a class="headerlink" href="#videostab::MotionModel" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="emember">
+<dt id="MM_TRANSLATION">
+<tt class="descname">MM_TRANSLATION</tt> = 0<a class="headerlink" href="#MM_TRANSLATION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="MM_TRANSLATION_AND_SCALE">
+<tt class="descname">MM_TRANSLATION_AND_SCALE</tt> = 1<a class="headerlink" href="#MM_TRANSLATION_AND_SCALE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="MM_ROTATION">
+<tt class="descname">MM_ROTATION</tt> = 2<a class="headerlink" href="#MM_ROTATION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="MM_RIGID">
+<tt class="descname">MM_RIGID</tt> = 3<a class="headerlink" href="#MM_RIGID" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="MM_SIMILARITY">
+<tt class="descname">MM_SIMILARITY</tt> = 4<a class="headerlink" href="#MM_SIMILARITY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="MM_AFFINE">
+<tt class="descname">MM_AFFINE</tt> = 5<a class="headerlink" href="#MM_AFFINE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="MM_HOMOGRAPHY">
+<tt class="descname">MM_HOMOGRAPHY</tt> = 6<a class="headerlink" href="#MM_HOMOGRAPHY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="MM_UNKNOWN">
+<tt class="descname">MM_UNKNOWN</tt> = 7<a class="headerlink" href="#MM_UNKNOWN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="videostab-ransacparams">
+<h2>videostab::RansacParams<a class="headerlink" href="#videostab-ransacparams" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="videostab::RansacParams">
+<em class="property">struct </em><tt class="descclassname">videostab::</tt><tt class="descname">RansacParams</tt><a class="headerlink" href="#videostab::RansacParams" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Describes RANSAC method parameters.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">struct</span> <span class="n">RansacParams</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">size</span><span class="p">;</span> <span class="c1">// subset size</span>
+    <span class="kt">float</span> <span class="n">thresh</span><span class="p">;</span> <span class="c1">// max error to classify as inlier</span>
+    <span class="kt">float</span> <span class="n">eps</span><span class="p">;</span> <span class="c1">// max outliers ratio</span>
+    <span class="kt">float</span> <span class="n">prob</span><span class="p">;</span> <span class="c1">// probability of success</span>
+
+    <span class="n">RansacParams</span><span class="p">()</span> <span class="o">:</span> <span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">thresh</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">eps</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">prob</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{}</span>
+    <span class="n">RansacParams</span><span class="p">(</span><span class="kt">int</span> <span class="n">size</span><span class="p">,</span> <span class="kt">float</span> <span class="n">thresh</span><span class="p">,</span> <span class="kt">float</span> <span class="n">eps</span><span class="p">,</span> <span class="kt">float</span> <span class="n">prob</span><span class="p">);</span>
+
+    <span class="kt">int</span> <span class="n">niters</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="k">static</span> <span class="n">RansacParams</span> <span class="nf">default2dMotion</span><span class="p">(</span><span class="n">MotionModel</span> <span class="n">model</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="videostab-ransacparams-ransacparams">
+<h2>videostab::RansacParams::RansacParams<a class="headerlink" href="#videostab-ransacparams-ransacparams" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="videostab::RansacParams::RansacParams()">
+<strong>C++:</strong><tt class="descname"> </tt> <tt class="descclassname">videostab::RansacParams::</tt><tt class="descname">RansacParams</tt><big>(</big><big>)</big><a class="headerlink" href="#videostab::RansacParams::RansacParams()" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">RANSAC method empty parameters object.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="id1">
+<h2>videostab::RansacParams::RansacParams<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="videostab::RansacParams::RansacParams(int size, float thresh, float eps, float prob)">
+<strong>C++:</strong><tt class="descname"> </tt> <tt class="descclassname">videostab::RansacParams::</tt><tt class="descname">RansacParams</tt><big>(</big>int <strong>size</strong>, float <strong>thresh</strong>, float <strong>eps</strong>, float <strong>prob</strong><big>)</big><a class="headerlink" href="#videostab::RansacParams::RansacParams(int size, float thresh, float eps, float prob)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>size</strong> &#8211; Subset size.</li>
+<li><strong>thresh</strong> &#8211; Maximum re-projection error value to classify as inlier.</li>
+<li><strong>eps</strong> &#8211; Maximum ratio of incorrect correspondences.</li>
+<li><strong>prob</strong> &#8211; Required success probability.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">RANSAC method parameters object.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="videostab-ransacparams-niters">
+<h2>videostab::RansacParams::niters<a class="headerlink" href="#videostab-ransacparams-niters" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="int videostab::RansacParams::niters() const">
+<strong>C++:</strong><tt class="descname"> </tt>int <tt class="descclassname">videostab::RansacParams::</tt><tt class="descname">niters</tt><big>(</big><big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#int videostab::RansacParams::niters() const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Number of iterations that&#8217;ll be performed by RANSAC method.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="videostab-ransacparams-default2dmotion">
+<h2>videostab::RansacParams::default2dMotion<a class="headerlink" href="#videostab-ransacparams-default2dmotion" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="static RansacParams videostab::RansacParams::default2dMotion(MotionModel model)">
+<strong>C++:</strong><tt class="descname"> </tt><em class="property">static</em> RansacParams <tt class="descclassname">videostab::RansacParams::</tt><tt class="descname">default2dMotion</tt><big>(</big>MotionModel <strong>model</strong><big>)</big><a class="headerlink" href="#static RansacParams videostab::RansacParams::default2dMotion(MotionModel model)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>model</strong> &#8211; Motion model. See <a class="reference internal" href="#videostab::MotionModel" title="videostab::MotionModel"><tt class="xref ocv ocv-enum docutils literal"><span class="pre">videostab::MotionModel</span></tt></a>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Default RANSAC method parameters for the given motion model.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="videostab-estimateglobalmotionleastsquares">
+<h2>videostab::estimateGlobalMotionLeastSquares<a class="headerlink" href="#videostab-estimateglobalmotionleastsquares" title="Permalink to this headline">¶</a></h2>
+<p>Estimates best global motion between two 2D point clouds in the least-squares sense.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Works in-place and changes input point arrays.</p>
+</div>
+<dl class="function">
+<dt id="Mat videostab::estimateGlobalMotionLeastSquares(InputOutputArray points0, InputOutputArray points1, int model , float *rmse)">
+<strong>C++:</strong><tt class="descname"> </tt>Mat <tt class="descclassname">videostab::</tt><tt class="descname">estimateGlobalMotionLeastSquares</tt><big>(</big>InputOutputArray <strong>points0</strong>, InputOutputArray <strong>points1</strong>, int <strong>model</strong>=MM_AFFINE, float* <strong>rmse</strong>=0<big>)</big><a class="headerlink" href="#Mat videostab::estimateGlobalMotionLeastSquares(InputOutputArray points0, InputOutputArray points1, int model , float *rmse)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>points0</strong> &#8211; Source set of 2D points (<tt class="docutils literal"><span class="pre">32F</span></tt>).</li>
+<li><strong>points1</strong> &#8211; Destination set of 2D points (<tt class="docutils literal"><span class="pre">32F</span></tt>).</li>
+<li><strong>model</strong> &#8211; Motion model (up to <tt class="docutils literal"><span class="pre">MM_AFFINE</span></tt>).</li>
+<li><strong>rmse</strong> &#8211; Final root-mean-square error.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">3x3 2D transformation matrix (<tt class="docutils literal"><span class="pre">32F</span></tt>).</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="videostab-estimateglobalmotionransac">
+<h2>videostab::estimateGlobalMotionRansac<a class="headerlink" href="#videostab-estimateglobalmotionransac" title="Permalink to this headline">¶</a></h2>
+<p>Estimates best global motion between two 2D point clouds robustly (using RANSAC method).</p>
+<dl class="function">
+<dt id="Mat videostab::estimateGlobalMotionRansac(InputArray points0, InputArray points1, int model , const RansacParams &amp;params , float *rmse , int *ninliers)">
+<strong>C++:</strong><tt class="descname"> </tt>Mat <tt class="descclassname">videostab::</tt><tt class="descname">estimateGlobalMotionRansac</tt><big>(</big>InputArray <strong>points0</strong>, InputArray <strong>points1</strong>, int <strong>model</strong>=MM_AFFINE, const RansacParams&amp; <strong>params</strong>=RansacParams::default2dMotion(MM_AFFINE), float* <strong>rmse</strong>=0, int* <strong>ninliers</strong>=0<big>)</big><a class="headerlink" href="#Mat videostab::estimateGlobalMotionRansac(InputArray points0, InputArray points1, int model , const RansacParams &params , float *rmse , int *ninliers)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>points0</strong> &#8211; Source set of 2D points (<tt class="docutils literal"><span class="pre">32F</span></tt>).</li>
+<li><strong>points1</strong> &#8211; Destination set of 2D points (<tt class="docutils literal"><span class="pre">32F</span></tt>).</li>
+<li><strong>model</strong> &#8211; Motion model. See <a class="reference internal" href="#videostab::MotionModel" title="videostab::MotionModel"><tt class="xref ocv ocv-enum docutils literal"><span class="pre">videostab::MotionModel</span></tt></a>.</li>
+<li><strong>params</strong> &#8211; RANSAC method parameters. See <a class="reference internal" href="#videostab::RansacParams" title="struct videostab::RansacParams"><tt class="xref ocv ocv-struct docutils literal"><span class="pre">videostab::RansacParams</span></tt></a>.</li>
+<li><strong>rmse</strong> &#8211; Final root-mean-square error.</li>
+<li><strong>ninliers</strong> &#8211; Final number of inliers.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="videostab-getmotion">
+<h2>videostab::getMotion<a class="headerlink" href="#videostab-getmotion" title="Permalink to this headline">¶</a></h2>
+<p>Computes motion between two frames assuming that all the intermediate motions are known.</p>
+<dl class="function">
+<dt id="Mat videostab::getMotion(int from, int to, const std::vector&lt;Mat&gt; &amp;motions)">
+<strong>C++:</strong><tt class="descname"> </tt>Mat <tt class="descclassname">videostab::</tt><tt class="descname">getMotion</tt><big>(</big>int <strong>from</strong>, int <strong>to</strong>, const std::vector&lt;Mat&gt;&amp; <strong>motions</strong><big>)</big><a class="headerlink" href="#Mat videostab::getMotion(int from, int to, const std::vector<Mat> &motions)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>from</strong> &#8211; Source frame index.</li>
+<li><strong>to</strong> &#8211; Destination frame index.</li>
+<li><strong>motions</strong> &#8211; Pair-wise motions. <tt class="docutils literal"><span class="pre">motions[i]</span></tt> denotes motion from the frame <tt class="docutils literal"><span class="pre">i</span></tt> to the frame <tt class="docutils literal"><span class="pre">i+1</span></tt></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Motion from the frame <tt class="docutils literal"><span class="pre">from</span></tt> to the frame <tt class="docutils literal"><span class="pre">to</span></tt>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="videostab-motionestimatorbase">
+<h2>videostab::MotionEstimatorBase<a class="headerlink" href="#videostab-motionestimatorbase" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="videostab::MotionEstimatorBase">
+<em class="property">class </em><tt class="descclassname">videostab::</tt><tt class="descname">MotionEstimatorBase</tt><a class="headerlink" href="#videostab::MotionEstimatorBase" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base class for all global motion estimation methods.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MotionEstimatorBase</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">MotionEstimatorBase</span><span class="p">();</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">setMotionModel</span><span class="p">(</span><span class="n">MotionModel</span> <span class="n">val</span><span class="p">);</span>
+    <span class="k">virtual</span> <span class="n">MotionModel</span> <span class="n">motionModel</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="n">Mat</span> <span class="n">estimate</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">points0</span><span class="p">,</span> <span class="n">InputArray</span> <span class="n">points1</span><span class="p">,</span> <span class="kt">bool</span> <span class="o">*</span><span class="n">ok</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="videostab-motionestimatorbase-setmotionmodel">
+<h2>videostab::MotionEstimatorBase::setMotionModel<a class="headerlink" href="#videostab-motionestimatorbase-setmotionmodel" title="Permalink to this headline">¶</a></h2>
+<p>Sets motion model.</p>
+<dl class="function">
+<dt id="void videostab::MotionEstimatorBase::setMotionModel(MotionModel val)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">videostab::MotionEstimatorBase::</tt><tt class="descname">setMotionModel</tt><big>(</big>MotionModel <strong>val</strong><big>)</big><a class="headerlink" href="#void videostab::MotionEstimatorBase::setMotionModel(MotionModel val)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>val</strong> &#8211; Motion model. See <a class="reference internal" href="#videostab::MotionModel" title="videostab::MotionModel"><tt class="xref ocv ocv-enum docutils literal"><span class="pre">videostab::MotionModel</span></tt></a>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="videostab-motionestimatorbase-motionmodel">
+<h2>videostab::MotionEstimatorBase::motionModel<a class="headerlink" href="#videostab-motionestimatorbase-motionmodel" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="MotionModel videostab::MotionEstimatorBase::motionModel() const">
+<strong>C++:</strong><tt class="descname"> </tt>MotionModel <tt class="descclassname">videostab::MotionEstimatorBase::</tt><tt class="descname">motionModel</tt><big>(</big><big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#MotionModel videostab::MotionEstimatorBase::motionModel() const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Motion model. See <a class="reference internal" href="#videostab::MotionModel" title="videostab::MotionModel"><tt class="xref ocv ocv-enum docutils literal"><span class="pre">videostab::MotionModel</span></tt></a>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="videostab-motionestimatorbase-estimate">
+<h2>videostab::MotionEstimatorBase::estimate<a class="headerlink" href="#videostab-motionestimatorbase-estimate" title="Permalink to this headline">¶</a></h2>
+<p>Estimates global motion between two 2D point clouds.</p>
+<dl class="function">
+<dt id="Mat videostab::MotionEstimatorBase::estimate(InputArray points0, InputArray points1, bool *ok)">
+<strong>C++:</strong><tt class="descname"> </tt>Mat <tt class="descclassname">videostab::MotionEstimatorBase::</tt><tt class="descname">estimate</tt><big>(</big>InputArray <strong>points0</strong>, InputArray <strong>points1</strong>, bool* <strong>ok</strong>=0<big>)</big><a class="headerlink" href="#Mat videostab::MotionEstimatorBase::estimate(InputArray points0, InputArray points1, bool *ok)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>points0</strong> &#8211; Source set of 2D points (<tt class="docutils literal"><span class="pre">32F</span></tt>).</li>
+<li><strong>points1</strong> &#8211; Destination set of 2D points (<tt class="docutils literal"><span class="pre">32F</span></tt>).</li>
+<li><strong>ok</strong> &#8211; Indicates whether motion was estimated successfully.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">3x3 2D transformation matrix (<tt class="docutils literal"><span class="pre">32F</span></tt>).</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="videostab-motionestimatorransacl2">
+<h2>videostab::MotionEstimatorRansacL2<a class="headerlink" href="#videostab-motionestimatorransacl2" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="videostab::MotionEstimatorRansacL2 : public videostab::MotionEstimatorBase">
+<em class="property">class </em><tt class="descclassname">videostab::</tt><tt class="descname">MotionEstimatorRansacL2</tt> : <em class="property">public</em> <tt class="descclassname">videostab::</tt><tt class="descname">MotionEstimatorBase</tt><a class="headerlink" href="#videostab::MotionEstimatorRansacL2 : public videostab::MotionEstimatorBase" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Describes a robust RANSAC-based global 2D motion estimation method which minimizes L2 error.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MotionEstimatorRansacL2</span> <span class="o">:</span> <span class="k">public</span> <span class="n">MotionEstimatorBase</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">MotionEstimatorRansacL2</span><span class="p">(</span><span class="n">MotionModel</span> <span class="n">model</span> <span class="o">=</span> <span class="n">MM_AFFINE</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">setRansacParams</span><span class="p">(</span><span class="k">const</span> <span class="n">RansacParams</span> <span class="o">&amp;</span><span class="n">val</span><span class="p">);</span>
+    <span class="n">RansacParams</span> <span class="n">ransacParams</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="kt">void</span> <span class="nf">setMinInlierRatio</span><span class="p">(</span><span class="kt">float</span> <span class="n">val</span><span class="p">);</span>
+    <span class="kt">float</span> <span class="n">minInlierRatio</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="n">Mat</span> <span class="nf">estimate</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">points0</span><span class="p">,</span> <span class="n">InputArray</span> <span class="n">points1</span><span class="p">,</span> <span class="kt">bool</span> <span class="o">*</span><span class="n">ok</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="videostab-motionestimatorl1">
+<h2>videostab::MotionEstimatorL1<a class="headerlink" href="#videostab-motionestimatorl1" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="videostab::MotionEstimatorL1 : public videostab::MotionEstimatorBase">
+<em class="property">class </em><tt class="descclassname">videostab::</tt><tt class="descname">MotionEstimatorL1</tt> : <em class="property">public</em> <tt class="descclassname">videostab::</tt><tt class="descname">MotionEstimatorBase</tt><a class="headerlink" href="#videostab::MotionEstimatorL1 : public videostab::MotionEstimatorBase" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Describes a global 2D motion estimation method which minimizes L1 error.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">To be able to use this method you must build OpenCV with CLP library support.</p>
+</div>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MotionEstimatorL1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">MotionEstimatorBase</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">MotionEstimatorL1</span><span class="p">(</span><span class="n">MotionModel</span> <span class="n">model</span> <span class="o">=</span> <span class="n">MM_AFFINE</span><span class="p">);</span>
+
+    <span class="k">virtual</span> <span class="n">Mat</span> <span class="nf">estimate</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">points0</span><span class="p">,</span> <span class="n">InputArray</span> <span class="n">points1</span><span class="p">,</span> <span class="kt">bool</span> <span class="o">*</span><span class="n">ok</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="videostab-imagemotionestimatorbase">
+<h2>videostab::ImageMotionEstimatorBase<a class="headerlink" href="#videostab-imagemotionestimatorbase" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="videostab::ImageMotionEstimatorBase">
+<em class="property">class </em><tt class="descclassname">videostab::</tt><tt class="descname">ImageMotionEstimatorBase</tt><a class="headerlink" href="#videostab::ImageMotionEstimatorBase" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base class for global 2D motion estimation methods which take frames as input.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">ImageMotionEstimatorBase</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">ImageMotionEstimatorBase</span><span class="p">();</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">setMotionModel</span><span class="p">(</span><span class="n">MotionModel</span> <span class="n">val</span><span class="p">);</span>
+    <span class="k">virtual</span> <span class="n">MotionModel</span> <span class="n">motionModel</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="n">Mat</span> <span class="n">estimate</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">frame0</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">frame1</span><span class="p">,</span> <span class="kt">bool</span> <span class="o">*</span><span class="n">ok</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="videostab-keypointbasedmotionestimator">
+<h2>videostab::KeypointBasedMotionEstimator<a class="headerlink" href="#videostab-keypointbasedmotionestimator" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="videostab::KeypointBasedMotionEstimator : public videostab::ImageMotionEstimatorBase">
+<em class="property">class </em><tt class="descclassname">videostab::</tt><tt class="descname">KeypointBasedMotionEstimator</tt> : <em class="property">public</em> <tt class="descclassname">videostab::</tt><tt class="descname">ImageMotionEstimatorBase</tt><a class="headerlink" href="#videostab::KeypointBasedMotionEstimator : public videostab::ImageMotionEstimatorBase" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Describes a global 2D motion estimation method which uses keypoints detection and optical flow for matching.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">KeypointBasedMotionEstimator</span> <span class="o">:</span> <span class="k">public</span> <span class="n">ImageMotionEstimatorBase</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">KeypointBasedMotionEstimator</span><span class="p">(</span><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">MotionEstimatorBase</span><span class="o">&gt;</span> <span class="n">estimator</span><span class="p">);</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">setMotionModel</span><span class="p">(</span><span class="n">MotionModel</span> <span class="n">val</span><span class="p">);</span>
+    <span class="k">virtual</span> <span class="n">MotionModel</span> <span class="n">motionModel</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="kt">void</span> <span class="nf">setDetector</span><span class="p">(</span><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">FeatureDetector</span><span class="o">&gt;</span> <span class="n">val</span><span class="p">);</span>
+    <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">FeatureDetector</span><span class="o">&gt;</span> <span class="n">detector</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="kt">void</span> <span class="nf">setOpticalFlowEstimator</span><span class="p">(</span><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">ISparseOptFlowEstimator</span><span class="o">&gt;</span> <span class="n">val</span><span class="p">);</span>
+    <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">ISparseOptFlowEstimator</span><span class="o">&gt;</span> <span class="n">opticalFlowEstimator</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="kt">void</span> <span class="nf">setOutlierRejector</span><span class="p">(</span><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">IOutlierRejector</span><span class="o">&gt;</span> <span class="n">val</span><span class="p">);</span>
+    <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">IOutlierRejector</span><span class="o">&gt;</span> <span class="n">outlierRejector</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="n">Mat</span> <span class="nf">estimate</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">frame0</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">frame1</span><span class="p">,</span> <span class="kt">bool</span> <span class="o">*</span><span class="n">ok</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="fast_marching.html" title="Fast Marching Method"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="introduction.html" title="Introduction"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="videostab.html" >videostab. Video Stabilization</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/videostab/doc/global_motion.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

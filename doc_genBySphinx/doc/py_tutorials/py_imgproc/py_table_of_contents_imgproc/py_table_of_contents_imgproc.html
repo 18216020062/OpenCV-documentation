@@ -1,0 +1,435 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Image Processing in OpenCV &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../../index.html" />
+    <link rel="up" title="OpenCV-Python Tutorials" href="../../py_tutorials.html" />
+    <link rel="next" title="Changing Colorspaces" href="../py_colorspaces/py_colorspaces.html" />
+    <link rel="prev" title="Mathematical Tools in OpenCV" href="../../py_core/py_maths_tools/py_maths_tools.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py_colorspaces/py_colorspaces.html" title="Changing Colorspaces"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../../py_core/py_maths_tools/py_maths_tools.html" title="Mathematical Tools in OpenCV"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" accesskey="U">OpenCV-Python Tutorials</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../../py_core/py_maths_tools/py_maths_tools.html"
+                        title="previous chapter">Mathematical Tools in OpenCV</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../py_colorspaces/py_colorspaces.html"
+                        title="next chapter">Changing Colorspaces</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="image-processing-in-opencv">
+<span id="py-table-of-content-imgproc"></span><h1>Image Processing in OpenCV<a class="headerlink" href="#image-processing-in-opencv" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="../py_colorspaces/py_colorspaces.html#converting-colorspaces"><em>Changing Colorspaces</em></a></li>
+</ul>
+<blockquote>
+<div><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="14%" />
+<col width="86%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/colorspace.jpg"><img alt="imgproc_1" src="../../../../_images/colorspace.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first">Learn to change images between different color spaces.</p>
+<p class="last">Plus learn to track a colored object in a video.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<ul class="simple">
+<li><a class="reference internal" href="../py_geometric_transformations/py_geometric_transformations.html#geometric-transformations"><em>Geometric Transformations of Images</em></a></li>
+</ul>
+<blockquote>
+<div><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="12%" />
+<col width="88%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/geometric.jpg"><img alt="imgproc_gt" src="../../../../_images/geometric.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td>Learn to apply different geometric transformations to images like rotation, translation etc.</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<ul class="simple">
+<li><a class="reference internal" href="../py_thresholding/py_thresholding.html#thresholding"><em>Image Thresholding</em></a></li>
+</ul>
+<blockquote>
+<div><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="14%" />
+<col width="86%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/thresh.jpg"><img alt="imgproc_2" src="../../../../_images/thresh.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td>Learn to convert images to binary images using global thresholding,
+Adaptive thresholding, Otsu&#8217;s binarization etc</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<ul class="simple">
+<li><a class="reference internal" href="../py_filtering/py_filtering.html#filtering"><em>Smoothing Images</em></a></li>
+</ul>
+<blockquote>
+<div><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="14%" />
+<col width="86%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/blurring.jpg"><img alt="imgproc_4" src="../../../../_images/blurring.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td>Learn to blur the images, filter the images with custom kernels etc.</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<ul class="simple">
+<li><a class="reference internal" href="../py_morphological_ops/py_morphological_ops.html#morphological-ops"><em>Morphological Transformations</em></a></li>
+</ul>
+<blockquote>
+<div><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="12%" />
+<col width="88%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/morphology.jpg"><img alt="imgproc_12" src="../../../../_images/morphology.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td>Learn about morphological transformations like Erosion, Dilation, Opening, Closing etc</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<ul class="simple">
+<li><a class="reference internal" href="../py_gradients/py_gradients.html#gradients"><em>Image Gradients</em></a></li>
+</ul>
+<blockquote>
+<div><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="14%" />
+<col width="86%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/gradient.jpg"><img alt="imgproc_5" src="../../../../_images/gradient.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td>Learn to find image gradients, edges etc.</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<ul class="simple">
+<li><a class="reference internal" href="../py_canny/py_canny.html#canny"><em>Canny Edge Detection</em></a></li>
+</ul>
+<blockquote>
+<div><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="14%" />
+<col width="86%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/canny.jpg"><img alt="imgproc_8" src="../../../../_images/canny.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td>Learn to find edges with Canny Edge Detection</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<ul class="simple">
+<li><a class="reference internal" href="../py_pyramids/py_pyramids.html#py-pyramids"><em>Image Pyramids</em></a></li>
+</ul>
+<blockquote>
+<div><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="15%" />
+<col width="85%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/pyramid.png"><img alt="imgproc_14" src="../../../../_images/pyramid.png" style="width: 90pt; height: 90pt;" /></a></td>
+<td>Learn about image pyramids and how to use them for image blending</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<ul class="simple">
+<li><a class="reference internal" href="../py_contours/py_table_of_contents_contours/py_table_of_contents_contours.html#table-of-content-contours"><em>Contours in OpenCV</em></a></li>
+</ul>
+<blockquote>
+<div><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="14%" />
+<col width="86%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/contours.jpg"><img alt="imgproc_3" src="../../../../_images/contours.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td>All about Contours in OpenCV</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<ul class="simple">
+<li><a class="reference internal" href="../py_histograms/py_table_of_contents_histograms/py_table_of_contents_histograms.html#table-of-content-histograms"><em>Histograms in OpenCV</em></a></li>
+</ul>
+<blockquote>
+<div><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="14%" />
+<col width="86%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/histogram.jpg"><img alt="imgproc_6" src="../../../../_images/histogram.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td>All about histograms in OpenCV</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<ul class="simple">
+<li><a class="reference internal" href="../py_transforms/py_table_of_contents_transforms/py_table_of_contents_transforms.html#table-of-content-transforms"><em>Image Transforms in OpenCV</em></a></li>
+</ul>
+<blockquote>
+<div><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="11%" />
+<col width="89%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/transforms.jpg"><img alt="imgproc_7" src="../../../../_images/transforms.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td>Meet different Image Transforms in OpenCV like Fourier Transform, Cosine Transform etc.</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<ul class="simple">
+<li><a class="reference internal" href="../py_template_matching/py_template_matching.html#py-template-matching"><em>Template Matching</em></a></li>
+</ul>
+<blockquote>
+<div><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="14%" />
+<col width="86%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/template.jpg"><img alt="imgproc_9" src="../../../../_images/template.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td>Learn to search for an object in an image using Template Matching</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<ul class="simple">
+<li><a class="reference internal" href="../py_houghlines/py_houghlines.html#py-hough-lines"><em>Hough Line Transform</em></a></li>
+</ul>
+<blockquote>
+<div><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="15%" />
+<col width="85%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/houghlines.jpg"><img alt="imgproc_10" src="../../../../_images/houghlines.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td>Learn to detect lines in an image</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<ul class="simple">
+<li><a class="reference internal" href="../py_houghcircles/py_houghcircles.html#hough-circles"><em>Hough Circle Transform</em></a></li>
+</ul>
+<blockquote>
+<div><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="15%" />
+<col width="85%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/houghcircles.jpg"><img alt="imgproc_11" src="../../../../_images/houghcircles.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td>Learn to detect circles in an image</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<ul class="simple">
+<li><a class="reference internal" href="../py_watershed/py_watershed.html#watershed"><em>Image Segmentation with Watershed Algorithm</em></a></li>
+</ul>
+<blockquote>
+<div><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="15%" />
+<col width="85%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/watershed.jpg"><img alt="imgproc_13" src="../../../../_images/watershed.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td>Learn to segment images with watershed segmentation</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<ul class="simple">
+<li><a class="reference internal" href="../py_grabcut/py_grabcut.html#grabcut"><em>Interactive Foreground Extraction using GrabCut Algorithm</em></a></li>
+</ul>
+<blockquote>
+<div><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="15%" />
+<col width="85%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/grabcut1.jpg"><img alt="imgproc_15" src="../../../../_images/grabcut1.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td>Learn to extract foreground with GrabCut algorithm</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py_colorspaces/py_colorspaces.html" title="Changing Colorspaces"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../../py_core/py_maths_tools/py_maths_tools.html" title="Mathematical Tools in OpenCV"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../../_sources/doc/py_tutorials/py_imgproc/py_table_of_contents_imgproc/py_table_of_contents_imgproc.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

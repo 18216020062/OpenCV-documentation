@@ -1,0 +1,351 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Feature Detection &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="cudaimgproc. CUDA-accelerated Image Processing" href="cudaimgproc.html" />
+    <link rel="next" title="Image Processing" href="imgproc.html" />
+    <link rel="prev" title="Hough Transform" href="hough.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="imgproc.html" title="Image Processing"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="hough.html" title="Hough Transform"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="cudaimgproc.html" accesskey="U">cudaimgproc. CUDA-accelerated Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Feature Detection</a><ul>
+<li><a class="reference internal" href="#cuda-cornernesscriteria">cuda::CornernessCriteria</a></li>
+<li><a class="reference internal" href="#cuda-cornernesscriteria-compute">cuda::CornernessCriteria::compute</a></li>
+<li><a class="reference internal" href="#cuda-createharriscorner">cuda::createHarrisCorner</a></li>
+<li><a class="reference internal" href="#cuda-createmineigenvalcorner">cuda::createMinEigenValCorner</a></li>
+<li><a class="reference internal" href="#cuda-cornersdetector">cuda::CornersDetector</a></li>
+<li><a class="reference internal" href="#cuda-cornersdetector-detect">cuda::CornersDetector::detect</a></li>
+<li><a class="reference internal" href="#cuda-creategoodfeaturestotrackdetector">cuda::createGoodFeaturesToTrackDetector</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="hough.html"
+                        title="previous chapter">Hough Transform</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="imgproc.html"
+                        title="next chapter">Image Processing</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="feature-detection">
+<h1>Feature Detection<a class="headerlink" href="#feature-detection" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="cuda-cornernesscriteria">
+<h2>cuda::CornernessCriteria<a class="headerlink" href="#cuda-cornernesscriteria" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cuda::CornernessCriteria : public Algorithm">
+<em class="property">class </em><tt class="descclassname">cuda::</tt><tt class="descname">CornernessCriteria</tt> : <em class="property">public</em> <tt class="descname">Algorithm</tt><a class="headerlink" href="#cuda::CornernessCriteria : public Algorithm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base class for Cornerness Criteria computation.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">CornernessCriteria</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Algorithm</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">compute</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">src</span><span class="p">,</span> <span class="n">OutputArray</span> <span class="n">dst</span><span class="p">,</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="o">::</span><span class="n">Null</span><span class="p">())</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cuda-cornernesscriteria-compute">
+<h2>cuda::CornernessCriteria::compute<a class="headerlink" href="#cuda-cornernesscriteria-compute" title="Permalink to this headline">¶</a></h2>
+<p>Computes the cornerness criteria at each image pixel.</p>
+<dl class="function">
+<dt id="void cuda::CornernessCriteria::compute(InputArray src, OutputArray dst, Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::CornernessCriteria::</tt><tt class="descname">compute</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::CornernessCriteria::compute(InputArray src, OutputArray dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image.</li>
+<li><strong>dst</strong> &#8211; Destination image containing cornerness values. It will have the same size as <tt class="docutils literal"><span class="pre">src</span></tt> and <tt class="docutils literal"><span class="pre">CV_32FC1</span></tt> type.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-createharriscorner">
+<h2>cuda::createHarrisCorner<a class="headerlink" href="#cuda-createharriscorner" title="Permalink to this headline">¶</a></h2>
+<p>Creates implementation for Harris cornerness criteria.</p>
+<dl class="function">
+<dt id="Ptr&lt;CornernessCriteria&gt; cuda::createHarrisCorner(int srcType, int blockSize, int ksize, double k, int borderType)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;CornernessCriteria&gt; <tt class="descclassname">cuda::</tt><tt class="descname">createHarrisCorner</tt><big>(</big>int <strong>srcType</strong>, int <strong>blockSize</strong>, int <strong>ksize</strong>, double <strong>k</strong>, int <strong>borderType</strong>=BORDER_REFLECT101<big>)</big><a class="headerlink" href="#Ptr<CornernessCriteria> cuda::createHarrisCorner(int srcType, int blockSize, int ksize, double k, int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>srcType</strong> &#8211; Input source type. Only  <tt class="docutils literal"><span class="pre">CV_8UC1</span></tt> and  <tt class="docutils literal"><span class="pre">CV_32FC1</span></tt> are supported for now.</li>
+<li><strong>blockSize</strong> &#8211; Neighborhood size.</li>
+<li><strong>ksize</strong> &#8211; Aperture parameter for the Sobel operator.</li>
+<li><strong>k</strong> &#8211; Harris detector free parameter.</li>
+<li><strong>borderType</strong> &#8211; Pixel extrapolation method. Only  <tt class="docutils literal"><span class="pre">BORDER_REFLECT101</span></tt> and  <tt class="docutils literal"><span class="pre">BORDER_REPLICATE</span></tt> are supported for now.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/feature_detection.html#void cornerHarris(InputArray src, OutputArray dst, int blockSize, int ksize, double k, int borderType)" title="void cornerHarris(InputArray src, OutputArray dst, int blockSize, int ksize, double k, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cornerHarris()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-createmineigenvalcorner">
+<h2>cuda::createMinEigenValCorner<a class="headerlink" href="#cuda-createmineigenvalcorner" title="Permalink to this headline">¶</a></h2>
+<p>Creates implementation for the minimum eigen value of a 2x2 derivative covariation matrix (the cornerness criteria).</p>
+<dl class="function">
+<dt id="Ptr&lt;CornernessCriteria&gt; cuda::createMinEigenValCorner(int srcType, int blockSize, int ksize, int borderType)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;CornernessCriteria&gt; <tt class="descclassname">cuda::</tt><tt class="descname">createMinEigenValCorner</tt><big>(</big>int <strong>srcType</strong>, int <strong>blockSize</strong>, int <strong>ksize</strong>, int <strong>borderType</strong>=BORDER_REFLECT101<big>)</big><a class="headerlink" href="#Ptr<CornernessCriteria> cuda::createMinEigenValCorner(int srcType, int blockSize, int ksize, int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>srcType</strong> &#8211; Input source type. Only  <tt class="docutils literal"><span class="pre">CV_8UC1</span></tt> and  <tt class="docutils literal"><span class="pre">CV_32FC1</span></tt> are supported for now.</li>
+<li><strong>blockSize</strong> &#8211; Neighborhood size.</li>
+<li><strong>ksize</strong> &#8211; Aperture parameter for the Sobel operator.</li>
+<li><strong>borderType</strong> &#8211; Pixel extrapolation method. Only  <tt class="docutils literal"><span class="pre">BORDER_REFLECT101</span></tt> and  <tt class="docutils literal"><span class="pre">BORDER_REPLICATE</span></tt> are supported for now.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/feature_detection.html#void cornerMinEigenVal(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)" title="void cornerMinEigenVal(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cornerMinEigenVal()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-cornersdetector">
+<h2>cuda::CornersDetector<a class="headerlink" href="#cuda-cornersdetector" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cuda::CornersDetector : public Algorithm">
+<em class="property">class </em><tt class="descclassname">cuda::</tt><tt class="descname">CornersDetector</tt> : <em class="property">public</em> <tt class="descname">Algorithm</tt><a class="headerlink" href="#cuda::CornersDetector : public Algorithm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base class for Corners Detector.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">CornersDetector</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Algorithm</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">detect</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">image</span><span class="p">,</span> <span class="n">OutputArray</span> <span class="n">corners</span><span class="p">,</span> <span class="n">InputArray</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">noArray</span><span class="p">())</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cuda-cornersdetector-detect">
+<h2>cuda::CornersDetector::detect<a class="headerlink" href="#cuda-cornersdetector-detect" title="Permalink to this headline">¶</a></h2>
+<p>Determines strong corners on an image.</p>
+<dl class="function">
+<dt id="void cuda::CornersDetector::detect(InputArray image, OutputArray corners, InputArray mask)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::CornersDetector::</tt><tt class="descname">detect</tt><big>(</big>InputArray <strong>image</strong>, OutputArray <strong>corners</strong>, InputArray <strong>mask</strong>=noArray()<big>)</big><a class="headerlink" href="#void cuda::CornersDetector::detect(InputArray image, OutputArray corners, InputArray mask)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; Input 8-bit or floating-point 32-bit, single-channel image.</li>
+<li><strong>corners</strong> &#8211; Output vector of detected corners (1-row matrix with CV_32FC2 type with corners positions).</li>
+<li><strong>mask</strong> &#8211; Optional region of interest. If the image is not empty (it needs to have the type  <tt class="docutils literal"><span class="pre">CV_8UC1</span></tt>  and the same size as  <tt class="docutils literal"><span class="pre">image</span></tt> ), it  specifies the region in which the corners are detected.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-creategoodfeaturestotrackdetector">
+<h2>cuda::createGoodFeaturesToTrackDetector<a class="headerlink" href="#cuda-creategoodfeaturestotrackdetector" title="Permalink to this headline">¶</a></h2>
+<p>Creates implementation for <a class="reference internal" href="#cuda::CornersDetector : public Algorithm" title="class cuda::CornersDetector : public Algorithm"><tt class="xref ocv ocv-class docutils literal"><span class="pre">cuda::CornersDetector</span></tt></a> .</p>
+<dl class="function">
+<dt id="Ptr&lt;CornersDetector&gt; cuda::createGoodFeaturesToTrackDetector(int srcType, int maxCorners , double qualityLevel , double minDistance , int blockSize , bool useHarrisDetector , double harrisK)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;CornersDetector&gt; <tt class="descclassname">cuda::</tt><tt class="descname">createGoodFeaturesToTrackDetector</tt><big>(</big>int <strong>srcType</strong>, int <strong>maxCorners</strong>=1000, double <strong>qualityLevel</strong>=0.01, double <strong>minDistance</strong>=0.0, int <strong>blockSize</strong>=3, bool <strong>useHarrisDetector</strong>=false, double <strong>harrisK</strong>=0.04<big>)</big><a class="headerlink" href="#Ptr<CornersDetector> cuda::createGoodFeaturesToTrackDetector(int srcType, int maxCorners , double qualityLevel , double minDistance , int blockSize , bool useHarrisDetector , double harrisK)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>srcType</strong> &#8211; Input source type. Only  <tt class="docutils literal"><span class="pre">CV_8UC1</span></tt> and  <tt class="docutils literal"><span class="pre">CV_32FC1</span></tt> are supported for now.</li>
+<li><strong>maxCorners</strong> &#8211; Maximum number of corners to return. If there are more corners than are found, the strongest of them is returned.</li>
+<li><strong>qualityLevel</strong> &#8211; Parameter characterizing the minimal accepted quality of image corners. The parameter value is multiplied by the best corner quality measure, which is the minimal eigenvalue (see  <a class="reference internal" href="../../imgproc/doc/feature_detection.html#void cornerMinEigenVal(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)" title="void cornerMinEigenVal(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cornerMinEigenVal()</span></tt></a> ) or the Harris function response (see  <a class="reference internal" href="../../imgproc/doc/feature_detection.html#void cornerHarris(InputArray src, OutputArray dst, int blockSize, int ksize, double k, int borderType)" title="void cornerHarris(InputArray src, OutputArray dst, int blockSize, int ksize, double k, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cornerHarris()</span></tt></a> ). The corners with the quality measure less than the product are rejected. For example, if the best corner has the quality measure = 1500, and the  <tt class="docutils literal"><span class="pre">qualityLevel=0.01</span></tt> , then all the corners with the quality measure less than 15 are rejected.</li>
+<li><strong>minDistance</strong> &#8211; Minimum possible Euclidean distance between the returned corners.</li>
+<li><strong>blockSize</strong> &#8211; Size of an average block for computing a derivative covariation matrix over each pixel neighborhood. See  <a class="reference internal" href="../../imgproc/doc/feature_detection.html#void cornerEigenValsAndVecs(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)" title="void cornerEigenValsAndVecs(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cornerEigenValsAndVecs()</span></tt></a> .</li>
+<li><strong>useHarrisDetector</strong> &#8211; Parameter indicating whether to use a Harris detector (see <a class="reference internal" href="../../imgproc/doc/feature_detection.html#void cornerHarris(InputArray src, OutputArray dst, int blockSize, int ksize, double k, int borderType)" title="void cornerHarris(InputArray src, OutputArray dst, int blockSize, int ksize, double k, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cornerHarris()</span></tt></a>) or <a class="reference internal" href="../../imgproc/doc/feature_detection.html#void cornerMinEigenVal(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)" title="void cornerMinEigenVal(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cornerMinEigenVal()</span></tt></a>.</li>
+<li><strong>harrisK</strong> &#8211; Free parameter of the Harris detector.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/feature_detection.html#void goodFeaturesToTrack(InputArray image, OutputArray corners, int maxCorners, double qualityLevel, double minDistance, InputArray mask, int blockSize, bool useHarrisDetector, double k)" title="void goodFeaturesToTrack(InputArray image, OutputArray corners, int maxCorners, double qualityLevel, double minDistance, InputArray mask, int blockSize, bool useHarrisDetector, double k)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">goodFeaturesToTrack()</span></tt></a></p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="imgproc.html" title="Image Processing"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="hough.html" title="Hough Transform"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="cudaimgproc.html" >cudaimgproc. CUDA-accelerated Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/cudaimgproc/doc/feature_detection.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

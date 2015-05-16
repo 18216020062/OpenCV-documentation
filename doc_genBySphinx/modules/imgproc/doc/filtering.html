@@ -1,0 +1,1284 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Image Filtering &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="imgproc. Image Processing" href="imgproc.html" />
+    <link rel="next" title="Geometric Image Transformations" href="geometric_transformations.html" />
+    <link rel="prev" title="imgproc. Image Processing" href="imgproc.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="geometric_transformations.html" title="Geometric Image Transformations"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="imgproc.html" title="imgproc. Image Processing"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="imgproc.html" accesskey="U">imgproc. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Image Filtering</a><ul>
+<li><a class="reference internal" href="#bilateralfilter">bilateralFilter</a></li>
+<li><a class="reference internal" href="#blur">blur</a></li>
+<li><a class="reference internal" href="#boxfilter">boxFilter</a></li>
+<li><a class="reference internal" href="#buildpyramid">buildPyramid</a></li>
+<li><a class="reference internal" href="#dilate">dilate</a></li>
+<li><a class="reference internal" href="#erode">erode</a></li>
+<li><a class="reference internal" href="#filter2d">filter2D</a></li>
+<li><a class="reference internal" href="#gaussianblur">GaussianBlur</a></li>
+<li><a class="reference internal" href="#getderivkernels">getDerivKernels</a></li>
+<li><a class="reference internal" href="#getgaussiankernel">getGaussianKernel</a></li>
+<li><a class="reference internal" href="#getgaborkernel">getGaborKernel</a></li>
+<li><a class="reference internal" href="#getstructuringelement">getStructuringElement</a></li>
+<li><a class="reference internal" href="#medianblur">medianBlur</a></li>
+<li><a class="reference internal" href="#morphologyex">morphologyEx</a></li>
+<li><a class="reference internal" href="#laplacian">Laplacian</a></li>
+<li><a class="reference internal" href="#pyrdown">pyrDown</a></li>
+<li><a class="reference internal" href="#pyrup">pyrUp</a></li>
+<li><a class="reference internal" href="#pyrmeanshiftfiltering">pyrMeanShiftFiltering</a></li>
+<li><a class="reference internal" href="#sepfilter2d">sepFilter2D</a></li>
+<li><a class="reference internal" href="#smooth">Smooth</a></li>
+<li><a class="reference internal" href="#sobel">Sobel</a></li>
+<li><a class="reference internal" href="#scharr">Scharr</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="imgproc.html"
+                        title="previous chapter">imgproc. Image Processing</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="geometric_transformations.html"
+                        title="next chapter">Geometric Image Transformations</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="image-filtering">
+<h1>Image Filtering<a class="headerlink" href="#image-filtering" title="Permalink to this headline">¶</a></h1>
+<p>Functions and classes described in this section are used to perform various linear or non-linear filtering operations on 2D images (represented as
+<tt class="xref ocv ocv-func docutils literal"><span class="pre">Mat()</span></tt>&#8216;s). It means that for each pixel location
+<span class="math">(x,y)</span> in the source image (normally, rectangular), its neighborhood is considered and used to compute the response. In case of a linear filter, it is a weighted sum of pixel values. In case of morphological operations, it is the minimum or maximum values, and so on. The computed response is stored in the destination image at the same location
+<span class="math">(x,y)</span> . It means that the output image will be of the same size as the input image. Normally, the functions support multi-channel arrays, in which case every channel is processed independently. Therefore, the output image will also have the same number of channels as the input one.</p>
+<p>Another common feature of the functions and classes described in this section is that, unlike simple arithmetic functions, they need to extrapolate values of some non-existing pixels. For example, if you want to smooth an image using a Gaussian
+<span class="math">3 \times 3</span> filter, then, when processing the left-most pixels in each row, you need pixels to the left of them, that is, outside of the image. You can let these pixels be the same as the left-most image pixels (&#8220;replicated border&#8221; extrapolation method), or assume that all the non-existing pixels are zeros (&#8220;constant border&#8221; extrapolation method), and so on.
+OpenCV enables you to specify the extrapolation method. For details, see the function  <tt class="docutils literal"><span class="pre">borderInterpolate</span></tt>  and discussion of the  <tt class="docutils literal"><span class="pre">borderType</span></tt>  parameter in the section and various functions below.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm"> Various border types, image boundaries are denoted with &#39;|&#39;</span>
+
+<span class="cm"> * BORDER_REPLICATE:     aaaaaa|abcdefgh|hhhhhhh</span>
+<span class="cm"> * BORDER_REFLECT:       fedcba|abcdefgh|hgfedcb</span>
+<span class="cm"> * BORDER_REFLECT_101:   gfedcb|abcdefgh|gfedcba</span>
+<span class="cm"> * BORDER_WRAP:          cdefgh|abcdefgh|abcdefg</span>
+<span class="cm"> * BORDER_CONSTANT:      iiiiii|abcdefgh|iiiiiii  with some specified &#39;i&#39;</span>
+<span class="cm"> */</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>(Python) A complete example illustrating different morphological operations like erode/dilate, open/close, blackhat/tophat ... can be found at opencv_source_code/samples/python2/morphology.py</li>
+</ul>
+</div>
+<div class="section" id="bilateralfilter">
+<h2>bilateralFilter<a class="headerlink" href="#bilateralfilter" title="Permalink to this headline">¶</a></h2>
+<p>Applies the bilateral filter to an image.</p>
+<dl class="function">
+<dt id="void bilateralFilter(InputArray src, OutputArray dst, int d, double sigmaColor, double sigmaSpace, int borderType)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">bilateralFilter</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, int <strong>d</strong>, double <strong>sigmaColor</strong>, double <strong>sigmaSpace</strong>, int <strong>borderType</strong>=BORDER_DEFAULT <big>)</big><a class="headerlink" href="#void bilateralFilter(InputArray src, OutputArray dst, int d, double sigmaColor, double sigmaSpace, int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.bilateralFilter">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.</tt><tt class="descname">bilateralFilter</tt><big>(</big>src, d, sigmaColor, sigmaSpace<span class="optional">[</span>, dst<span class="optional">[</span>, borderType<span class="optional">]</span><span class="optional">]</span><big>)</big> &rarr; dst<a class="headerlink" href="#cv2.bilateralFilter" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source 8-bit or floating-point, 1-channel or 3-channel image.</li>
+<li><strong>dst</strong> &#8211; Destination image of the same size and type as  <tt class="docutils literal"><span class="pre">src</span></tt> .</li>
+<li><strong>d</strong> &#8211; Diameter of each pixel neighborhood that is used during filtering. If it is non-positive, it is computed from  <tt class="docutils literal"><span class="pre">sigmaSpace</span></tt> .</li>
+<li><strong>sigmaColor</strong> &#8211; Filter sigma in the color space. A larger value of the parameter means that farther colors within the pixel neighborhood (see  <tt class="docutils literal"><span class="pre">sigmaSpace</span></tt> ) will be mixed together, resulting in larger areas of semi-equal color.</li>
+<li><strong>sigmaSpace</strong> &#8211; Filter sigma in the coordinate space. A larger value of the parameter means that farther pixels will influence each other as long as their colors are close enough (see  <tt class="docutils literal"><span class="pre">sigmaColor</span></tt> ). When  <tt class="docutils literal"><span class="pre">d&gt;0</span></tt> , it specifies the neighborhood size regardless of  <tt class="docutils literal"><span class="pre">sigmaSpace</span></tt> . Otherwise,  <tt class="docutils literal"><span class="pre">d</span></tt>  is proportional to  <tt class="docutils literal"><span class="pre">sigmaSpace</span></tt> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function applies bilateral filtering to the input image, as described in
+<a class="reference external" href="http://www.dai.ed.ac.uk/CVonline/LOCAL_COPIES/MANDUCHI1/Bilateral_Filtering.html">http://www.dai.ed.ac.uk/CVonline/LOCAL_COPIES/MANDUCHI1/Bilateral_Filtering.html</a>
+<tt class="docutils literal"><span class="pre">bilateralFilter</span></tt> can reduce unwanted noise very well while keeping edges fairly sharp. However, it is very slow compared to most filters.</p>
+<p><em>Sigma values</em>: For simplicity, you can set the 2 sigma values to be the same. If they are small (&lt; 10), the filter will not have much effect, whereas if they are large (&gt; 150), they will have a very strong effect, making the image look &#8220;cartoonish&#8221;.</p>
+<p><em>Filter size</em>: Large filters (d &gt; 5) are very slow, so it is recommended to use d=5 for real-time applications, and perhaps d=9 for offline applications that need heavy noise filtering.</p>
+<p>This filter does not work inplace.</p>
+</div>
+<div class="section" id="blur">
+<h2>blur<a class="headerlink" href="#blur" title="Permalink to this headline">¶</a></h2>
+<p>Blurs an image using the normalized box filter.</p>
+<dl class="function">
+<dt id="void blur(InputArray src, OutputArray dst, Size ksize, Point anchor, int borderType)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">blur</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, Size <strong>ksize</strong>, Point <strong>anchor</strong>=Point(-1,-1), int <strong>borderType</strong>=BORDER_DEFAULT <big>)</big><a class="headerlink" href="#void blur(InputArray src, OutputArray dst, Size ksize, Point anchor, int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.blur">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.</tt><tt class="descname">blur</tt><big>(</big>src, ksize<span class="optional">[</span>, dst<span class="optional">[</span>, anchor<span class="optional">[</span>, borderType<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big> &rarr; dst<a class="headerlink" href="#cv2.blur" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; input image; it can have any number of channels, which are processed independently, but the depth should be <tt class="docutils literal"><span class="pre">CV_8U</span></tt>, <tt class="docutils literal"><span class="pre">CV_16U</span></tt>, <tt class="docutils literal"><span class="pre">CV_16S</span></tt>, <tt class="docutils literal"><span class="pre">CV_32F</span></tt> or <tt class="docutils literal"><span class="pre">CV_64F</span></tt>.</li>
+<li><strong>dst</strong> &#8211; output image of the same size and type as <tt class="docutils literal"><span class="pre">src</span></tt>.</li>
+<li><strong>ksize</strong> &#8211; blurring kernel size.</li>
+<li><strong>anchor</strong> &#8211; anchor point; default value <tt class="docutils literal"><span class="pre">Point(-1,-1)</span></tt> means that the anchor is at the kernel center.</li>
+<li><strong>borderType</strong> &#8211; border mode used to extrapolate pixels outside of the image.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function smoothes an image using the kernel:</p>
+<div class="math">
+<p><span class="math">\texttt{K} =  \frac{1}{\texttt{ksize.width*ksize.height}} \begin{bmatrix} 1 &amp; 1 &amp; 1 &amp;  \cdots &amp; 1 &amp; 1  \\ 1 &amp; 1 &amp; 1 &amp;  \cdots &amp; 1 &amp; 1  \\ \hdotsfor{6} \\ 1 &amp; 1 &amp; 1 &amp;  \cdots &amp; 1 &amp; 1  \\ \end{bmatrix}</span></p>
+</div><p>The call <tt class="docutils literal"><span class="pre">blur(src,</span> <span class="pre">dst,</span> <span class="pre">ksize,</span> <span class="pre">anchor,</span> <span class="pre">borderType)</span></tt> is equivalent to <tt class="docutils literal"><span class="pre">boxFilter(src,</span> <span class="pre">dst,</span> <span class="pre">src.type(),</span> <span class="pre">anchor,</span> <span class="pre">true,</span> <span class="pre">borderType)</span></tt> .</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void boxFilter(InputArray src, OutputArray dst, int ddepth, Size ksize, Point anchor, bool normalize, int borderType)" title="void boxFilter(InputArray src, OutputArray dst, int ddepth, Size ksize, Point anchor, bool normalize, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">boxFilter()</span></tt></a>,
+<a class="reference internal" href="#void bilateralFilter(InputArray src, OutputArray dst, int d, double sigmaColor, double sigmaSpace, int borderType)" title="void bilateralFilter(InputArray src, OutputArray dst, int d, double sigmaColor, double sigmaSpace, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">bilateralFilter()</span></tt></a>,
+<a class="reference internal" href="#void GaussianBlur(InputArray src, OutputArray dst, Size ksize, double sigmaX, double sigmaY, int borderType)" title="void GaussianBlur(InputArray src, OutputArray dst, Size ksize, double sigmaX, double sigmaY, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">GaussianBlur()</span></tt></a>,
+<a class="reference internal" href="#void medianBlur(InputArray src, OutputArray dst, int ksize)" title="void medianBlur(InputArray src, OutputArray dst, int ksize)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">medianBlur()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="boxfilter">
+<h2>boxFilter<a class="headerlink" href="#boxfilter" title="Permalink to this headline">¶</a></h2>
+<p>Blurs an image using the box filter.</p>
+<dl class="function">
+<dt id="void boxFilter(InputArray src, OutputArray dst, int ddepth, Size ksize, Point anchor, bool normalize, int borderType)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">boxFilter</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, int <strong>ddepth</strong>, Size <strong>ksize</strong>, Point <strong>anchor</strong>=Point(-1,-1), bool <strong>normalize</strong>=true, int <strong>borderType</strong>=BORDER_DEFAULT <big>)</big><a class="headerlink" href="#void boxFilter(InputArray src, OutputArray dst, int ddepth, Size ksize, Point anchor, bool normalize, int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.boxFilter">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.</tt><tt class="descname">boxFilter</tt><big>(</big>src, ddepth, ksize<span class="optional">[</span>, dst<span class="optional">[</span>, anchor<span class="optional">[</span>, normalize<span class="optional">[</span>, borderType<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big> &rarr; dst<a class="headerlink" href="#cv2.boxFilter" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; input image.</li>
+<li><strong>dst</strong> &#8211; output image of the same size and type as <tt class="docutils literal"><span class="pre">src</span></tt>.</li>
+<li><strong>ddepth</strong> &#8211; the output image depth (-1 to use <tt class="docutils literal"><span class="pre">src.depth()</span></tt>).</li>
+<li><strong>ksize</strong> &#8211; blurring kernel size.</li>
+<li><strong>anchor</strong> &#8211; anchor point; default value <tt class="docutils literal"><span class="pre">Point(-1,-1)</span></tt> means that the anchor is at the kernel center.</li>
+<li><strong>normalize</strong> &#8211; flag, specifying whether the kernel is normalized by its area or not.</li>
+<li><strong>borderType</strong> &#8211; border mode used to extrapolate pixels outside of the image.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function smoothes an image using the kernel:</p>
+<div class="math">
+<p><span class="math">\texttt{K} =  \alpha \begin{bmatrix} 1 &amp; 1 &amp; 1 &amp;  \cdots &amp; 1 &amp; 1  \\ 1 &amp; 1 &amp; 1 &amp;  \cdots &amp; 1 &amp; 1  \\ \hdotsfor{6} \\ 1 &amp; 1 &amp; 1 &amp;  \cdots &amp; 1 &amp; 1 \end{bmatrix}</span></p>
+</div><p>where</p>
+<div class="math">
+<p><span class="math">\alpha = \fork{\frac{1}{\texttt{ksize.width*ksize.height}}}{when \texttt{normalize=true}}{1}{otherwise}</span></p>
+</div><p>Unnormalized box filter is useful for computing various integral characteristics over each pixel neighborhood, such as covariance matrices of image derivatives (used in dense optical flow algorithms, and so on). If you need to compute pixel sums over variable-size windows, use <a class="reference internal" href="miscellaneous_transformations.html#void integral(InputArray src, OutputArray sum, int sdepth)" title="void integral(InputArray src, OutputArray sum, int sdepth)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">integral()</span></tt></a> .</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void blur(InputArray src, OutputArray dst, Size ksize, Point anchor, int borderType)" title="void blur(InputArray src, OutputArray dst, Size ksize, Point anchor, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">blur()</span></tt></a>,
+<a class="reference internal" href="#void bilateralFilter(InputArray src, OutputArray dst, int d, double sigmaColor, double sigmaSpace, int borderType)" title="void bilateralFilter(InputArray src, OutputArray dst, int d, double sigmaColor, double sigmaSpace, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">bilateralFilter()</span></tt></a>,
+<a class="reference internal" href="#void GaussianBlur(InputArray src, OutputArray dst, Size ksize, double sigmaX, double sigmaY, int borderType)" title="void GaussianBlur(InputArray src, OutputArray dst, Size ksize, double sigmaX, double sigmaY, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">GaussianBlur()</span></tt></a>,
+<a class="reference internal" href="#void medianBlur(InputArray src, OutputArray dst, int ksize)" title="void medianBlur(InputArray src, OutputArray dst, int ksize)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">medianBlur()</span></tt></a>,
+<a class="reference internal" href="miscellaneous_transformations.html#void integral(InputArray src, OutputArray sum, int sdepth)" title="void integral(InputArray src, OutputArray sum, int sdepth)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">integral()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="buildpyramid">
+<h2>buildPyramid<a class="headerlink" href="#buildpyramid" title="Permalink to this headline">¶</a></h2>
+<p>Constructs the Gaussian pyramid for an image.</p>
+<dl class="function">
+<dt id="void buildPyramid(InputArray src, OutputArrayOfArrays dst, int maxlevel, int borderType)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">buildPyramid</tt><big>(</big>InputArray <strong>src</strong>, OutputArrayOfArrays <strong>dst</strong>, int <strong>maxlevel</strong>, int <strong>borderType</strong>=BORDER_DEFAULT <big>)</big><a class="headerlink" href="#void buildPyramid(InputArray src, OutputArrayOfArrays dst, int maxlevel, int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image. Check  <a class="reference internal" href="#void pyrDown(InputArray src, OutputArray dst, const Size&amp; dstsize, int borderType)" title="void pyrDown(InputArray src, OutputArray dst, const Size&amp; dstsize, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">pyrDown()</span></tt></a>  for the list of supported types.</li>
+<li><strong>dst</strong> &#8211; Destination vector of  <tt class="docutils literal"><span class="pre">maxlevel+1</span></tt>  images of the same type as  <tt class="docutils literal"><span class="pre">src</span></tt> . <tt class="docutils literal"><span class="pre">dst[0]</span></tt>  will be the same as  <tt class="docutils literal"><span class="pre">src</span></tt> .  <tt class="docutils literal"><span class="pre">dst[1]</span></tt>  is the next pyramid layer, a smoothed and down-sized  <tt class="docutils literal"><span class="pre">src</span></tt>  , and so on.</li>
+<li><strong>maxlevel</strong> &#8211; 0-based index of the last (the smallest) pyramid layer. It must be non-negative.</li>
+<li><strong>borderType</strong> &#8211; Pixel extrapolation method (BORDER_CONSTANT don&#8217;t supported). See  <tt class="docutils literal"><span class="pre">borderInterpolate</span></tt> for details.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function constructs a vector of images and builds the Gaussian pyramid by recursively applying
+<a class="reference internal" href="#void pyrDown(InputArray src, OutputArray dst, const Size&amp; dstsize, int borderType)" title="void pyrDown(InputArray src, OutputArray dst, const Size&amp; dstsize, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">pyrDown()</span></tt></a> to the previously built pyramid layers, starting from <tt class="docutils literal"><span class="pre">dst[0]==src</span></tt> .</p>
+</div>
+<div class="section" id="dilate">
+<h2>dilate<a class="headerlink" href="#dilate" title="Permalink to this headline">¶</a></h2>
+<p>Dilates an image by using a specific structuring element.</p>
+<dl class="function">
+<dt id="void dilate(InputArray src, OutputArray dst, InputArray kernel, Point anchor, int iterations, int borderType, const Scalar&amp; borderValue)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">dilate</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, InputArray <strong>kernel</strong>, Point <strong>anchor</strong>=Point(-1,-1), int <strong>iterations</strong>=1, int <strong>borderType</strong>=BORDER_CONSTANT, const Scalar&amp; <strong>borderValue</strong>=morphologyDefaultBorderValue() <big>)</big><a class="headerlink" href="#void dilate(InputArray src, OutputArray dst, InputArray kernel, Point anchor, int iterations, int borderType, const Scalar& borderValue)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.dilate">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.</tt><tt class="descname">dilate</tt><big>(</big>src, kernel<span class="optional">[</span>, dst<span class="optional">[</span>, anchor<span class="optional">[</span>, iterations<span class="optional">[</span>, borderType<span class="optional">[</span>, borderValue<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big> &rarr; dst<a class="headerlink" href="#cv2.dilate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvDilate(const CvArr* src, CvArr* dst, IplConvKernel* element, int iterations)">
+<strong>C:</strong><tt class="descname"> </tt>void <tt class="descname">cvDilate</tt><big>(</big>const CvArr* <strong>src</strong>, CvArr* <strong>dst</strong>, IplConvKernel* <strong>element</strong>=NULL, int <strong>iterations</strong>=1 <big>)</big><a class="headerlink" href="#void cvDilate(const CvArr* src, CvArr* dst, IplConvKernel* element, int iterations)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; input image; the number of channels can be arbitrary, but the depth should be one of <tt class="docutils literal"><span class="pre">CV_8U</span></tt>, <tt class="docutils literal"><span class="pre">CV_16U</span></tt>, <tt class="docutils literal"><span class="pre">CV_16S</span></tt>,  <tt class="docutils literal"><span class="pre">CV_32F`</span> <span class="pre">or</span> <span class="pre">``CV_64F</span></tt>.</li>
+<li><strong>dst</strong> &#8211; output image of the same size and type as <tt class="docutils literal"><span class="pre">src</span></tt>.</li>
+<li><strong>kernel</strong> &#8211; structuring element used for dilation; if  <tt class="docutils literal"><span class="pre">elemenat=Mat()</span></tt> , a  <tt class="docutils literal"><span class="pre">3</span> <span class="pre">x</span> <span class="pre">3</span></tt> rectangular structuring element is used. Kernel can be created using <a class="reference internal" href="#Mat getStructuringElement(int shape, Size ksize, Point anchor)" title="Mat getStructuringElement(int shape, Size ksize, Point anchor)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">getStructuringElement()</span></tt></a></li>
+<li><strong>anchor</strong> &#8211; position of the anchor within the element; default value <tt class="docutils literal"><span class="pre">(-1,</span> <span class="pre">-1)</span></tt> means that the anchor is at the element center.</li>
+<li><strong>iterations</strong> &#8211; number of times dilation is applied.</li>
+<li><strong>borderType</strong> &#8211; pixel extrapolation method (see  <tt class="docutils literal"><span class="pre">borderInterpolate</span></tt> for details).</li>
+<li><strong>borderValue</strong> &#8211; border value in case of a constant border</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function dilates the source image using the specified structuring element that determines the shape of a pixel neighborhood over which the maximum is taken:</p>
+<div class="math">
+<p><span class="math">\texttt{dst} (x,y) =  \max _{(x',y'):  \, \texttt{element} (x',y') \ne0 } \texttt{src} (x+x',y+y')</span></p>
+</div><p>The function supports the in-place mode. Dilation can be applied several ( <tt class="docutils literal"><span class="pre">iterations</span></tt> ) times. In case of multi-channel images, each channel is processed independently.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void erode(InputArray src, OutputArray dst, InputArray kernel, Point anchor, int iterations, int borderType, const Scalar&amp; borderValue)" title="void erode(InputArray src, OutputArray dst, InputArray kernel, Point anchor, int iterations, int borderType, const Scalar&amp; borderValue)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">erode()</span></tt></a>,
+<a class="reference internal" href="#void morphologyEx(InputArray src, OutputArray dst, int op, InputArray kernel, Point anchor, int iterations, int borderType, const Scalar&amp; borderValue)" title="void morphologyEx(InputArray src, OutputArray dst, int op, InputArray kernel, Point anchor, int iterations, int borderType, const Scalar&amp; borderValue)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">morphologyEx()</span></tt></a>,
+<a class="reference internal" href="#Mat getStructuringElement(int shape, Size ksize, Point anchor)" title="Mat getStructuringElement(int shape, Size ksize, Point anchor)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">getStructuringElement()</span></tt></a></p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example using the morphological dilate operation can be found at opencv_source_code/samples/cpp/morphology2.cpp</li>
+</ul>
+</div>
+</div>
+<div class="section" id="erode">
+<h2>erode<a class="headerlink" href="#erode" title="Permalink to this headline">¶</a></h2>
+<p>Erodes an image by using a specific structuring element.</p>
+<dl class="function">
+<dt id="void erode(InputArray src, OutputArray dst, InputArray kernel, Point anchor, int iterations, int borderType, const Scalar&amp; borderValue)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">erode</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, InputArray <strong>kernel</strong>, Point <strong>anchor</strong>=Point(-1,-1), int <strong>iterations</strong>=1, int <strong>borderType</strong>=BORDER_CONSTANT, const Scalar&amp; <strong>borderValue</strong>=morphologyDefaultBorderValue() <big>)</big><a class="headerlink" href="#void erode(InputArray src, OutputArray dst, InputArray kernel, Point anchor, int iterations, int borderType, const Scalar& borderValue)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.erode">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.</tt><tt class="descname">erode</tt><big>(</big>src, kernel<span class="optional">[</span>, dst<span class="optional">[</span>, anchor<span class="optional">[</span>, iterations<span class="optional">[</span>, borderType<span class="optional">[</span>, borderValue<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big> &rarr; dst<a class="headerlink" href="#cv2.erode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvErode(const CvArr* src, CvArr* dst, IplConvKernel* element, int iterations)">
+<strong>C:</strong><tt class="descname"> </tt>void <tt class="descname">cvErode</tt><big>(</big>const CvArr* <strong>src</strong>, CvArr* <strong>dst</strong>, IplConvKernel* <strong>element</strong>=NULL, int <strong>iterations</strong>=1<big>)</big><a class="headerlink" href="#void cvErode(const CvArr* src, CvArr* dst, IplConvKernel* element, int iterations)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; input image; the number of channels can be arbitrary, but the depth should be one of <tt class="docutils literal"><span class="pre">CV_8U</span></tt>, <tt class="docutils literal"><span class="pre">CV_16U</span></tt>, <tt class="docutils literal"><span class="pre">CV_16S</span></tt>,  <tt class="docutils literal"><span class="pre">CV_32F`</span> <span class="pre">or</span> <span class="pre">``CV_64F</span></tt>.</li>
+<li><strong>dst</strong> &#8211; output image of the same size and type as <tt class="docutils literal"><span class="pre">src</span></tt>.</li>
+<li><strong>kernel</strong> &#8211; structuring element used for erosion; if  <tt class="docutils literal"><span class="pre">element=Mat()</span></tt> , a  <tt class="docutils literal"><span class="pre">3</span> <span class="pre">x</span> <span class="pre">3</span></tt>  rectangular structuring element is used. Kernel can be created using <a class="reference internal" href="#Mat getStructuringElement(int shape, Size ksize, Point anchor)" title="Mat getStructuringElement(int shape, Size ksize, Point anchor)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">getStructuringElement()</span></tt></a>.</li>
+<li><strong>anchor</strong> &#8211; position of the anchor within the element; default value  <tt class="docutils literal"><span class="pre">(-1,</span> <span class="pre">-1)</span></tt>  means that the anchor is at the element center.</li>
+<li><strong>iterations</strong> &#8211; number of times erosion is applied.</li>
+<li><strong>borderType</strong> &#8211; pixel extrapolation method (see  <tt class="docutils literal"><span class="pre">borderInterpolate</span></tt> for details).</li>
+<li><strong>borderValue</strong> &#8211; border value in case of a constant border</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function erodes the source image using the specified structuring element that determines the shape of a pixel neighborhood over which the minimum is taken:</p>
+<div class="math">
+<p><span class="math">\texttt{dst} (x,y) =  \min _{(x',y'):  \, \texttt{element} (x',y') \ne0 } \texttt{src} (x+x',y+y')</span></p>
+</div><p>The function supports the in-place mode. Erosion can be applied several ( <tt class="docutils literal"><span class="pre">iterations</span></tt> ) times. In case of multi-channel images, each channel is processed independently.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void dilate(InputArray src, OutputArray dst, InputArray kernel, Point anchor, int iterations, int borderType, const Scalar&amp; borderValue)" title="void dilate(InputArray src, OutputArray dst, InputArray kernel, Point anchor, int iterations, int borderType, const Scalar&amp; borderValue)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">dilate()</span></tt></a>,
+<a class="reference internal" href="#void morphologyEx(InputArray src, OutputArray dst, int op, InputArray kernel, Point anchor, int iterations, int borderType, const Scalar&amp; borderValue)" title="void morphologyEx(InputArray src, OutputArray dst, int op, InputArray kernel, Point anchor, int iterations, int borderType, const Scalar&amp; borderValue)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">morphologyEx()</span></tt></a>,
+<a class="reference internal" href="#Mat getStructuringElement(int shape, Size ksize, Point anchor)" title="Mat getStructuringElement(int shape, Size ksize, Point anchor)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">getStructuringElement()</span></tt></a></p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example using the morphological erode operation can be found at opencv_source_code/samples/cpp/morphology2.cpp</li>
+</ul>
+</div>
+</div>
+<div class="section" id="filter2d">
+<h2>filter2D<a class="headerlink" href="#filter2d" title="Permalink to this headline">¶</a></h2>
+<p>Convolves an image with the kernel.</p>
+<dl class="function">
+<dt id="void filter2D(InputArray src, OutputArray dst, int ddepth, InputArray kernel, Point anchor, double delta, int borderType)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">filter2D</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, int <strong>ddepth</strong>, InputArray <strong>kernel</strong>, Point <strong>anchor</strong>=Point(-1,-1), double <strong>delta</strong>=0, int <strong>borderType</strong>=BORDER_DEFAULT <big>)</big><a class="headerlink" href="#void filter2D(InputArray src, OutputArray dst, int ddepth, InputArray kernel, Point anchor, double delta, int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.filter2D">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.</tt><tt class="descname">filter2D</tt><big>(</big>src, ddepth, kernel<span class="optional">[</span>, dst<span class="optional">[</span>, anchor<span class="optional">[</span>, delta<span class="optional">[</span>, borderType<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big> &rarr; dst<a class="headerlink" href="#cv2.filter2D" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvFilter2D(const CvArr* src, CvArr* dst, const CvMat* kernel, CvPoint anchor)">
+<strong>C:</strong><tt class="descname"> </tt>void <tt class="descname">cvFilter2D</tt><big>(</big>const CvArr* <strong>src</strong>, CvArr* <strong>dst</strong>, const CvMat* <strong>kernel</strong>, CvPoint <strong>anchor</strong>=cvPoint(-1,-1) <big>)</big><a class="headerlink" href="#void cvFilter2D(const CvArr* src, CvArr* dst, const CvMat* kernel, CvPoint anchor)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; input image.</li>
+<li><strong>dst</strong> &#8211; output image of the same size and the same number of channels as <tt class="docutils literal"><span class="pre">src</span></tt>.</li>
+<li><strong>ddepth</strong> &#8211; <dl class="docutils">
+<dt>desired depth of the destination image; if it is negative, it will be the same as <tt class="docutils literal"><span class="pre">src.depth()</span></tt>; the following combinations of <tt class="docutils literal"><span class="pre">src.depth()</span></tt> and <tt class="docutils literal"><span class="pre">ddepth</span></tt> are supported:</dt>
+<dd><ul class="first last">
+<li><tt class="docutils literal"><span class="pre">src.depth()</span></tt> = <tt class="docutils literal"><span class="pre">CV_8U</span></tt>, <tt class="docutils literal"><span class="pre">ddepth</span></tt> = -1/<tt class="docutils literal"><span class="pre">CV_16S</span></tt>/<tt class="docutils literal"><span class="pre">CV_32F</span></tt>/<tt class="docutils literal"><span class="pre">CV_64F</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">src.depth()</span></tt> = <tt class="docutils literal"><span class="pre">CV_16U</span></tt>/<tt class="docutils literal"><span class="pre">CV_16S</span></tt>, <tt class="docutils literal"><span class="pre">ddepth</span></tt> = -1/<tt class="docutils literal"><span class="pre">CV_32F</span></tt>/<tt class="docutils literal"><span class="pre">CV_64F</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">src.depth()</span></tt> = <tt class="docutils literal"><span class="pre">CV_32F</span></tt>, <tt class="docutils literal"><span class="pre">ddepth</span></tt> = -1/<tt class="docutils literal"><span class="pre">CV_32F</span></tt>/<tt class="docutils literal"><span class="pre">CV_64F</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">src.depth()</span></tt> = <tt class="docutils literal"><span class="pre">CV_64F</span></tt>, <tt class="docutils literal"><span class="pre">ddepth</span></tt> = -1/<tt class="docutils literal"><span class="pre">CV_64F</span></tt></li>
+</ul>
+</dd>
+</dl>
+<p>when <tt class="docutils literal"><span class="pre">ddepth=-1</span></tt>, the output image will have the same depth as the source.</p>
+</li>
+<li><strong>kernel</strong> &#8211; convolution kernel (or rather a correlation kernel), a single-channel floating point matrix; if you want to apply different kernels to different channels, split the image into separate color planes using  <a class="reference internal" href="../../core/doc/operations_on_arrays.html#void split(const Mat&amp; src, Mat* mvbegin)" title="void split(const Mat&amp; src, Mat* mvbegin)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">split()</span></tt></a>  and process them individually.</li>
+<li><strong>anchor</strong> &#8211; anchor of the kernel that indicates the relative position of a filtered point within the kernel; the anchor should lie within the kernel; default value (-1,-1) means that the anchor is at the kernel center.</li>
+<li><strong>delta</strong> &#8211; optional value added to the filtered pixels before storing them in <tt class="docutils literal"><span class="pre">dst</span></tt>.</li>
+<li><strong>borderType</strong> &#8211; pixel extrapolation method (see  <tt class="docutils literal"><span class="pre">borderInterpolate</span></tt> for details).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function applies an arbitrary linear filter to an image. In-place operation is supported. When the aperture is partially outside the image, the function interpolates outlier pixel values according to the specified border mode.</p>
+<p>The function does actually compute correlation, not the convolution:</p>
+<div class="math">
+<p><span class="math">\texttt{dst} (x,y) =  \sum _{ \stackrel{0\leq x' &lt; \texttt{kernel.cols},}{0\leq y' &lt; \texttt{kernel.rows}} }  \texttt{kernel} (x',y')* \texttt{src} (x+x'- \texttt{anchor.x} ,y+y'- \texttt{anchor.y} )</span></p>
+</div><p>That is, the kernel is not mirrored around the anchor point. If you need a real convolution, flip the kernel using
+<a class="reference internal" href="../../core/doc/operations_on_arrays.html#void flip(InputArray src, OutputArray dst, int flipCode)" title="void flip(InputArray src, OutputArray dst, int flipCode)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">flip()</span></tt></a> and set the new anchor to <tt class="docutils literal"><span class="pre">(kernel.cols</span> <span class="pre">-</span> <span class="pre">anchor.x</span> <span class="pre">-</span> <span class="pre">1,</span> <span class="pre">kernel.rows</span> <span class="pre">-</span> <span class="pre">anchor.y</span> <span class="pre">-</span> <span class="pre">1)</span></tt> .</p>
+<p>The function uses the DFT-based algorithm in case of sufficiently large kernels (~``11 x 11`` or larger) and the direct algorithm for small kernels.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void sepFilter2D(InputArray src, OutputArray dst, int ddepth, InputArray kernelX, InputArray kernelY, Point anchor, double delta, int borderType)" title="void sepFilter2D(InputArray src, OutputArray dst, int ddepth, InputArray kernelX, InputArray kernelY, Point anchor, double delta, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">sepFilter2D()</span></tt></a>,
+<a class="reference internal" href="../../core/doc/operations_on_arrays.html#void dft(InputArray src, OutputArray dst, int flags, int nonzeroRows)" title="void dft(InputArray src, OutputArray dst, int flags, int nonzeroRows)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">dft()</span></tt></a>,
+<a class="reference internal" href="object_detection.html#void matchTemplate(InputArray image, InputArray templ, OutputArray result, int method)" title="void matchTemplate(InputArray image, InputArray templ, OutputArray result, int method)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">matchTemplate()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="gaussianblur">
+<h2>GaussianBlur<a class="headerlink" href="#gaussianblur" title="Permalink to this headline">¶</a></h2>
+<p>Blurs an image using a Gaussian filter.</p>
+<dl class="function">
+<dt id="void GaussianBlur(InputArray src, OutputArray dst, Size ksize, double sigmaX, double sigmaY, int borderType)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">GaussianBlur</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, Size <strong>ksize</strong>, double <strong>sigmaX</strong>, double <strong>sigmaY</strong>=0, int <strong>borderType</strong>=BORDER_DEFAULT <big>)</big><a class="headerlink" href="#void GaussianBlur(InputArray src, OutputArray dst, Size ksize, double sigmaX, double sigmaY, int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.GaussianBlur">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.</tt><tt class="descname">GaussianBlur</tt><big>(</big>src, ksize, sigmaX<span class="optional">[</span>, dst<span class="optional">[</span>, sigmaY<span class="optional">[</span>, borderType<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big> &rarr; dst<a class="headerlink" href="#cv2.GaussianBlur" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; input image; the image can have any number of channels, which are processed independently, but the depth should be <tt class="docutils literal"><span class="pre">CV_8U</span></tt>, <tt class="docutils literal"><span class="pre">CV_16U</span></tt>, <tt class="docutils literal"><span class="pre">CV_16S</span></tt>, <tt class="docutils literal"><span class="pre">CV_32F</span></tt> or <tt class="docutils literal"><span class="pre">CV_64F</span></tt>.</li>
+<li><strong>dst</strong> &#8211; output image of the same size and type as <tt class="docutils literal"><span class="pre">src</span></tt>.</li>
+<li><strong>ksize</strong> &#8211; Gaussian kernel size.  <tt class="docutils literal"><span class="pre">ksize.width</span></tt>  and  <tt class="docutils literal"><span class="pre">ksize.height</span></tt>  can differ but they both must be positive and odd. Or, they can be zero&#8217;s and then they are computed from  <tt class="docutils literal"><span class="pre">sigma*</span></tt> .</li>
+<li><strong>sigmaX</strong> &#8211; Gaussian kernel standard deviation in X direction.</li>
+<li><strong>sigmaY</strong> &#8211; Gaussian kernel standard deviation in Y direction; if  <tt class="docutils literal"><span class="pre">sigmaY</span></tt>  is zero, it is set to be equal to  <tt class="docutils literal"><span class="pre">sigmaX</span></tt>, if both sigmas are zeros, they are computed from  <tt class="docutils literal"><span class="pre">ksize.width</span></tt>  and  <tt class="docutils literal"><span class="pre">ksize.height</span></tt> , respectively (see  <a class="reference internal" href="#Mat getGaussianKernel(int ksize, double sigma, int ktype)" title="Mat getGaussianKernel(int ksize, double sigma, int ktype)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">getGaussianKernel()</span></tt></a> for details); to fully control the result regardless of possible future modifications of all this semantics, it is recommended to specify all of <tt class="docutils literal"><span class="pre">ksize</span></tt>, <tt class="docutils literal"><span class="pre">sigmaX</span></tt>, and <tt class="docutils literal"><span class="pre">sigmaY</span></tt>.</li>
+<li><strong>borderType</strong> &#8211; pixel extrapolation method (see  <tt class="docutils literal"><span class="pre">borderInterpolate</span></tt> for details).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function convolves the source image with the specified Gaussian kernel. In-place filtering is supported.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void sepFilter2D(InputArray src, OutputArray dst, int ddepth, InputArray kernelX, InputArray kernelY, Point anchor, double delta, int borderType)" title="void sepFilter2D(InputArray src, OutputArray dst, int ddepth, InputArray kernelX, InputArray kernelY, Point anchor, double delta, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">sepFilter2D()</span></tt></a>,
+<a class="reference internal" href="#void filter2D(InputArray src, OutputArray dst, int ddepth, InputArray kernel, Point anchor, double delta, int borderType)" title="void filter2D(InputArray src, OutputArray dst, int ddepth, InputArray kernel, Point anchor, double delta, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">filter2D()</span></tt></a>,
+<a class="reference internal" href="#void blur(InputArray src, OutputArray dst, Size ksize, Point anchor, int borderType)" title="void blur(InputArray src, OutputArray dst, Size ksize, Point anchor, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">blur()</span></tt></a>,
+<a class="reference internal" href="#void boxFilter(InputArray src, OutputArray dst, int ddepth, Size ksize, Point anchor, bool normalize, int borderType)" title="void boxFilter(InputArray src, OutputArray dst, int ddepth, Size ksize, Point anchor, bool normalize, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">boxFilter()</span></tt></a>,
+<a class="reference internal" href="#void bilateralFilter(InputArray src, OutputArray dst, int d, double sigmaColor, double sigmaSpace, int borderType)" title="void bilateralFilter(InputArray src, OutputArray dst, int d, double sigmaColor, double sigmaSpace, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">bilateralFilter()</span></tt></a>,
+<a class="reference internal" href="#void medianBlur(InputArray src, OutputArray dst, int ksize)" title="void medianBlur(InputArray src, OutputArray dst, int ksize)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">medianBlur()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="getderivkernels">
+<h2>getDerivKernels<a class="headerlink" href="#getderivkernels" title="Permalink to this headline">¶</a></h2>
+<p>Returns filter coefficients for computing spatial image derivatives.</p>
+<dl class="function">
+<dt id="void getDerivKernels(OutputArray kx, OutputArray ky, int dx, int dy, int ksize, bool normalize, int ktype)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">getDerivKernels</tt><big>(</big>OutputArray <strong>kx</strong>, OutputArray <strong>ky</strong>, int <strong>dx</strong>, int <strong>dy</strong>, int <strong>ksize</strong>, bool <strong>normalize</strong>=false, int <strong>ktype</strong>=CV_32F <big>)</big><a class="headerlink" href="#void getDerivKernels(OutputArray kx, OutputArray ky, int dx, int dy, int ksize, bool normalize, int ktype)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.getDerivKernels">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.</tt><tt class="descname">getDerivKernels</tt><big>(</big>dx, dy, ksize<span class="optional">[</span>, kx<span class="optional">[</span>, ky<span class="optional">[</span>, normalize<span class="optional">[</span>, ktype<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big> &rarr; kx, ky<a class="headerlink" href="#cv2.getDerivKernels" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>kx</strong> &#8211; Output matrix of row filter coefficients. It has the type  <tt class="docutils literal"><span class="pre">ktype</span></tt> .</li>
+<li><strong>ky</strong> &#8211; Output matrix of column filter coefficients. It has the type  <tt class="docutils literal"><span class="pre">ktype</span></tt> .</li>
+<li><strong>dx</strong> &#8211; Derivative order in respect of x.</li>
+<li><strong>dy</strong> &#8211; Derivative order in respect of y.</li>
+<li><strong>ksize</strong> &#8211; Aperture size. It can be  <tt class="docutils literal"><span class="pre">CV_SCHARR</span></tt> , 1, 3, 5, or 7.</li>
+<li><strong>normalize</strong> &#8211; Flag indicating whether to normalize (scale down) the filter coefficients or not. Theoretically, the coefficients should have the denominator  <span class="math">=2^{ksize*2-dx-dy-2}</span> . If you are going to filter floating-point images, you are likely to use the normalized kernels. But if you compute derivatives of an 8-bit image, store the results in a 16-bit image, and wish to preserve all the fractional bits, you may want to set  <tt class="docutils literal"><span class="pre">normalize=false</span></tt> .</li>
+<li><strong>ktype</strong> &#8211; Type of filter coefficients. It can be  <tt class="docutils literal"><span class="pre">CV_32f</span></tt>  or  <tt class="docutils literal"><span class="pre">CV_64F</span></tt> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function computes and returns the filter coefficients for spatial image derivatives. When <tt class="docutils literal"><span class="pre">ksize=CV_SCHARR</span></tt> , the Scharr
+<span class="math">3 \times 3</span> kernels are generated (see
+<a class="reference internal" href="#void Scharr(InputArray src, OutputArray dst, int ddepth, int dx, int dy, double scale, double delta, int borderType)" title="void Scharr(InputArray src, OutputArray dst, int ddepth, int dx, int dy, double scale, double delta, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">Scharr()</span></tt></a> ). Otherwise, Sobel kernels are generated (see
+<a class="reference internal" href="#void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)" title="void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">Sobel()</span></tt></a> ). The filters are normally passed to
+<a class="reference internal" href="#void sepFilter2D(InputArray src, OutputArray dst, int ddepth, InputArray kernelX, InputArray kernelY, Point anchor, double delta, int borderType)" title="void sepFilter2D(InputArray src, OutputArray dst, int ddepth, InputArray kernelX, InputArray kernelY, Point anchor, double delta, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">sepFilter2D()</span></tt></a> or to</p>
+</div>
+<div class="section" id="getgaussiankernel">
+<h2>getGaussianKernel<a class="headerlink" href="#getgaussiankernel" title="Permalink to this headline">¶</a></h2>
+<p>Returns Gaussian filter coefficients.</p>
+<dl class="function">
+<dt id="Mat getGaussianKernel(int ksize, double sigma, int ktype)">
+<strong>C++:</strong><tt class="descname"> </tt>Mat <tt class="descname">getGaussianKernel</tt><big>(</big>int <strong>ksize</strong>, double <strong>sigma</strong>, int <strong>ktype</strong>=CV_64F <big>)</big><a class="headerlink" href="#Mat getGaussianKernel(int ksize, double sigma, int ktype)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.getGaussianKernel">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.</tt><tt class="descname">getGaussianKernel</tt><big>(</big>ksize, sigma<span class="optional">[</span>, ktype<span class="optional">]</span><big>)</big> &rarr; retval<a class="headerlink" href="#cv2.getGaussianKernel" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ksize</strong> &#8211; Aperture size. It should be odd ( <span class="math">\texttt{ksize} \mod 2 = 1</span> ) and positive.</li>
+<li><strong>sigma</strong> &#8211; Gaussian standard deviation. If it is non-positive, it is computed from  <tt class="docutils literal"><span class="pre">ksize</span></tt>  as  <tt class="docutils literal"><span class="pre">sigma</span> <span class="pre">=</span> <span class="pre">0.3*((ksize-1)*0.5</span> <span class="pre">-</span> <span class="pre">1)</span> <span class="pre">+</span> <span class="pre">0.8</span></tt> .</li>
+<li><strong>ktype</strong> &#8211; Type of filter coefficients. It can be  <tt class="docutils literal"><span class="pre">CV_32F</span></tt>  or  <tt class="docutils literal"><span class="pre">CV_64F</span></tt> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function computes and returns the
+<span class="math">\texttt{ksize} \times 1</span> matrix of Gaussian filter coefficients:</p>
+<div class="math">
+<p><span class="math">G_i= \alpha *e^{-(i-( \texttt{ksize} -1)/2)^2/(2* \texttt{sigma} )^2},</span></p>
+</div><p>where
+<span class="math">i=0..\texttt{ksize}-1</span> and
+<span class="math">\alpha</span> is the scale factor chosen so that
+<span class="math">\sum_i G_i=1</span>.</p>
+<p>Two of such generated kernels can be passed to
+<a class="reference internal" href="#void sepFilter2D(InputArray src, OutputArray dst, int ddepth, InputArray kernelX, InputArray kernelY, Point anchor, double delta, int borderType)" title="void sepFilter2D(InputArray src, OutputArray dst, int ddepth, InputArray kernelX, InputArray kernelY, Point anchor, double delta, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">sepFilter2D()</span></tt></a>. Those functions automatically recognize smoothing kernels (a symmetrical kernel with sum of weights equal to 1) and handle them accordingly. You may also use the higher-level
+<a class="reference internal" href="#void GaussianBlur(InputArray src, OutputArray dst, Size ksize, double sigmaX, double sigmaY, int borderType)" title="void GaussianBlur(InputArray src, OutputArray dst, Size ksize, double sigmaX, double sigmaY, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">GaussianBlur()</span></tt></a>.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void sepFilter2D(InputArray src, OutputArray dst, int ddepth, InputArray kernelX, InputArray kernelY, Point anchor, double delta, int borderType)" title="void sepFilter2D(InputArray src, OutputArray dst, int ddepth, InputArray kernelX, InputArray kernelY, Point anchor, double delta, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">sepFilter2D()</span></tt></a>,
+<a class="reference internal" href="#void getDerivKernels(OutputArray kx, OutputArray ky, int dx, int dy, int ksize, bool normalize, int ktype)" title="void getDerivKernels(OutputArray kx, OutputArray ky, int dx, int dy, int ksize, bool normalize, int ktype)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">getDerivKernels()</span></tt></a>,
+<a class="reference internal" href="#Mat getStructuringElement(int shape, Size ksize, Point anchor)" title="Mat getStructuringElement(int shape, Size ksize, Point anchor)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">getStructuringElement()</span></tt></a>,
+<a class="reference internal" href="#void GaussianBlur(InputArray src, OutputArray dst, Size ksize, double sigmaX, double sigmaY, int borderType)" title="void GaussianBlur(InputArray src, OutputArray dst, Size ksize, double sigmaX, double sigmaY, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">GaussianBlur()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="getgaborkernel">
+<h2>getGaborKernel<a class="headerlink" href="#getgaborkernel" title="Permalink to this headline">¶</a></h2>
+<p>Returns Gabor filter coefficients.</p>
+<dl class="function">
+<dt id="Mat getGaborKernel(Size ksize, double sigma, double theta, double lambd, double gamma, double psi , int ktype)">
+<strong>C++:</strong><tt class="descname"> </tt>Mat <tt class="descname">getGaborKernel</tt><big>(</big>Size <strong>ksize</strong>, double <strong>sigma</strong>, double <strong>theta</strong>, double <strong>lambd</strong>, double <strong>gamma</strong>, double <strong>psi</strong>=CV_PI*0.5, int <strong>ktype</strong>=CV_64F <big>)</big><a class="headerlink" href="#Mat getGaborKernel(Size ksize, double sigma, double theta, double lambd, double gamma, double psi , int ktype)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.getGaborKernel">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.</tt><tt class="descname">getGaborKernel</tt><big>(</big>ksize, sigma, theta, lambd, gamma<span class="optional">[</span>, psi<span class="optional">[</span>, ktype<span class="optional">]</span><span class="optional">]</span><big>)</big> &rarr; retval<a class="headerlink" href="#cv2.getGaborKernel" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ksize</strong> &#8211; Size of the filter returned.</li>
+<li><strong>sigma</strong> &#8211; Standard deviation of the gaussian envelope.</li>
+<li><strong>theta</strong> &#8211; Orientation of the normal to the parallel stripes of a Gabor function.</li>
+<li><strong>lambd</strong> &#8211; Wavelength of the sinusoidal factor.</li>
+<li><strong>gamma</strong> &#8211; Spatial aspect ratio.</li>
+<li><strong>psi</strong> &#8211; Phase offset.</li>
+<li><strong>ktype</strong> &#8211; Type of filter coefficients. It can be  <tt class="docutils literal"><span class="pre">CV_32F</span></tt>  or  <tt class="docutils literal"><span class="pre">CV_64F</span></tt> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>For more details about gabor filter equations and parameters, see: <a class="reference external" href="http://en.wikipedia.org/wiki/Gabor_filter">Gabor Filter</a>.</p>
+</div>
+<div class="section" id="getstructuringelement">
+<h2>getStructuringElement<a class="headerlink" href="#getstructuringelement" title="Permalink to this headline">¶</a></h2>
+<p>Returns a structuring element of the specified size and shape for morphological operations.</p>
+<dl class="function">
+<dt id="Mat getStructuringElement(int shape, Size ksize, Point anchor)">
+<strong>C++:</strong><tt class="descname"> </tt>Mat <tt class="descname">getStructuringElement</tt><big>(</big>int <strong>shape</strong>, Size <strong>ksize</strong>, Point <strong>anchor</strong>=Point(-1,-1)<big>)</big><a class="headerlink" href="#Mat getStructuringElement(int shape, Size ksize, Point anchor)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.getStructuringElement">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.</tt><tt class="descname">getStructuringElement</tt><big>(</big>shape, ksize<span class="optional">[</span>, anchor<span class="optional">]</span><big>)</big> &rarr; retval<a class="headerlink" href="#cv2.getStructuringElement" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="IplConvKernel* cvCreateStructuringElementEx(int cols, int rows, int anchor_x, int anchor_y, int shape, int* values)">
+<strong>C:</strong><tt class="descname"> </tt>IplConvKernel* <tt class="descname">cvCreateStructuringElementEx</tt><big>(</big>int <strong>cols</strong>, int <strong>rows</strong>, int <strong>anchor_x</strong>, int <strong>anchor_y</strong>, int <strong>shape</strong>, int* <strong>values</strong>=NULL <big>)</big><a class="headerlink" href="#IplConvKernel* cvCreateStructuringElementEx(int cols, int rows, int anchor_x, int anchor_y, int shape, int* values)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>shape</strong> &#8211; <p>Element shape that could be one of the following:</p>
+<ul>
+<li><strong>MORPH_RECT</strong>         - a rectangular structuring element:<div class="math">
+<p><span class="math">E_{ij}=1</span></p>
+</div></li>
+<li><strong>MORPH_ELLIPSE</strong>         - an elliptic structuring element, that is, a filled ellipse inscribed into the rectangle <tt class="docutils literal"><span class="pre">Rect(0,</span> <span class="pre">0,</span> <span class="pre">esize.width,</span> <span class="pre">0.esize.height)</span></tt></li>
+<li><strong>MORPH_CROSS</strong>         - a cross-shaped structuring element:<div class="math">
+<p><span class="math">E_{ij} =  \fork{1}{if i=\texttt{anchor.y} or j=\texttt{anchor.x}}{0}{otherwise}</span></p>
+</div></li>
+<li><strong>CV_SHAPE_CUSTOM</strong>     - custom structuring element (OpenCV 1.x API)</li>
+</ul>
+</li>
+<li><strong>ksize</strong> &#8211; Size of the structuring element.</li>
+<li><strong>cols</strong> &#8211; Width of the structuring element</li>
+<li><strong>rows</strong> &#8211; Height of the structuring element</li>
+<li><strong>anchor</strong> &#8211; Anchor position within the element. The default value  <span class="math">(-1, -1)</span>  means that the anchor is at the center. Note that only the shape of a cross-shaped element depends on the anchor position. In other cases the anchor just regulates how much the result of the morphological operation is shifted.</li>
+<li><strong>anchor_x</strong> &#8211; x-coordinate of the anchor</li>
+<li><strong>anchor_y</strong> &#8211; y-coordinate of the anchor</li>
+<li><strong>values</strong> &#8211; integer array of <tt class="docutils literal"><span class="pre">cols``*``rows</span></tt> elements that specifies the custom shape of the structuring element, when <tt class="docutils literal"><span class="pre">shape=CV_SHAPE_CUSTOM</span></tt>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function constructs and returns the structuring element that can be further passed to
+<a class="reference internal" href="#void erode(InputArray src, OutputArray dst, InputArray kernel, Point anchor, int iterations, int borderType, const Scalar&amp; borderValue)" title="void erode(InputArray src, OutputArray dst, InputArray kernel, Point anchor, int iterations, int borderType, const Scalar&amp; borderValue)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">erode()</span></tt></a>,
+<a class="reference internal" href="#void dilate(InputArray src, OutputArray dst, InputArray kernel, Point anchor, int iterations, int borderType, const Scalar&amp; borderValue)" title="void dilate(InputArray src, OutputArray dst, InputArray kernel, Point anchor, int iterations, int borderType, const Scalar&amp; borderValue)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">dilate()</span></tt></a> or
+<a class="reference internal" href="#void morphologyEx(InputArray src, OutputArray dst, int op, InputArray kernel, Point anchor, int iterations, int borderType, const Scalar&amp; borderValue)" title="void morphologyEx(InputArray src, OutputArray dst, int op, InputArray kernel, Point anchor, int iterations, int borderType, const Scalar&amp; borderValue)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">morphologyEx()</span></tt></a> . But you can also construct an arbitrary binary mask yourself and use it as the structuring element.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">When using OpenCV 1.x C API, the created structuring element <tt class="docutils literal"><span class="pre">IplConvKernel*</span> <span class="pre">element</span></tt> must be released in the end using <tt class="docutils literal"><span class="pre">cvReleaseStructuringElement(&amp;element)</span></tt>.</p>
+</div>
+</div>
+<div class="section" id="medianblur">
+<h2>medianBlur<a class="headerlink" href="#medianblur" title="Permalink to this headline">¶</a></h2>
+<p>Blurs an image using the median filter.</p>
+<dl class="function">
+<dt id="void medianBlur(InputArray src, OutputArray dst, int ksize)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">medianBlur</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, int <strong>ksize</strong><big>)</big><a class="headerlink" href="#void medianBlur(InputArray src, OutputArray dst, int ksize)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.medianBlur">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.</tt><tt class="descname">medianBlur</tt><big>(</big>src, ksize<span class="optional">[</span>, dst<span class="optional">]</span><big>)</big> &rarr; dst<a class="headerlink" href="#cv2.medianBlur" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; input 1-, 3-, or 4-channel image; when  <tt class="docutils literal"><span class="pre">ksize</span></tt>  is 3 or 5, the image depth should be <tt class="docutils literal"><span class="pre">CV_8U</span></tt>, <tt class="docutils literal"><span class="pre">CV_16U</span></tt>, or <tt class="docutils literal"><span class="pre">CV_32F</span></tt>, for larger aperture sizes, it can only be <tt class="docutils literal"><span class="pre">CV_8U</span></tt>.</li>
+<li><strong>dst</strong> &#8211; destination array of the same size and type as <tt class="docutils literal"><span class="pre">src</span></tt>.</li>
+<li><strong>ksize</strong> &#8211; aperture linear size; it must be odd and greater than 1, for example: 3, 5, 7 ...</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function smoothes an image using the median filter with the
+<span class="math">\texttt{ksize} \times \texttt{ksize}</span> aperture. Each channel of a multi-channel image is processed independently. In-place operation is supported.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void bilateralFilter(InputArray src, OutputArray dst, int d, double sigmaColor, double sigmaSpace, int borderType)" title="void bilateralFilter(InputArray src, OutputArray dst, int d, double sigmaColor, double sigmaSpace, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">bilateralFilter()</span></tt></a>,
+<a class="reference internal" href="#void blur(InputArray src, OutputArray dst, Size ksize, Point anchor, int borderType)" title="void blur(InputArray src, OutputArray dst, Size ksize, Point anchor, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">blur()</span></tt></a>,
+<a class="reference internal" href="#void boxFilter(InputArray src, OutputArray dst, int ddepth, Size ksize, Point anchor, bool normalize, int borderType)" title="void boxFilter(InputArray src, OutputArray dst, int ddepth, Size ksize, Point anchor, bool normalize, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">boxFilter()</span></tt></a>,
+<a class="reference internal" href="#void GaussianBlur(InputArray src, OutputArray dst, Size ksize, double sigmaX, double sigmaY, int borderType)" title="void GaussianBlur(InputArray src, OutputArray dst, Size ksize, double sigmaX, double sigmaY, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">GaussianBlur()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="morphologyex">
+<h2>morphologyEx<a class="headerlink" href="#morphologyex" title="Permalink to this headline">¶</a></h2>
+<p>Performs advanced morphological transformations.</p>
+<dl class="function">
+<dt id="void morphologyEx(InputArray src, OutputArray dst, int op, InputArray kernel, Point anchor, int iterations, int borderType, const Scalar&amp; borderValue)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">morphologyEx</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, int <strong>op</strong>, InputArray <strong>kernel</strong>, Point <strong>anchor</strong>=Point(-1,-1), int <strong>iterations</strong>=1, int <strong>borderType</strong>=BORDER_CONSTANT, const Scalar&amp; <strong>borderValue</strong>=morphologyDefaultBorderValue() <big>)</big><a class="headerlink" href="#void morphologyEx(InputArray src, OutputArray dst, int op, InputArray kernel, Point anchor, int iterations, int borderType, const Scalar& borderValue)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.morphologyEx">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.</tt><tt class="descname">morphologyEx</tt><big>(</big>src, op, kernel<span class="optional">[</span>, dst<span class="optional">[</span>, anchor<span class="optional">[</span>, iterations<span class="optional">[</span>, borderType<span class="optional">[</span>, borderValue<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big> &rarr; dst<a class="headerlink" href="#cv2.morphologyEx" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvMorphologyEx(const CvArr* src, CvArr* dst, CvArr* temp, IplConvKernel* element, int operation, int iterations)">
+<strong>C:</strong><tt class="descname"> </tt>void <tt class="descname">cvMorphologyEx</tt><big>(</big>const CvArr* <strong>src</strong>, CvArr* <strong>dst</strong>, CvArr* <strong>temp</strong>, IplConvKernel* <strong>element</strong>, int <strong>operation</strong>, int <strong>iterations</strong>=1 <big>)</big><a class="headerlink" href="#void cvMorphologyEx(const CvArr* src, CvArr* dst, CvArr* temp, IplConvKernel* element, int operation, int iterations)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image. The number of channels can be arbitrary. The depth should be one of <tt class="docutils literal"><span class="pre">CV_8U</span></tt>, <tt class="docutils literal"><span class="pre">CV_16U</span></tt>, <tt class="docutils literal"><span class="pre">CV_16S</span></tt>,  <tt class="docutils literal"><span class="pre">CV_32F`</span> <span class="pre">or</span> <span class="pre">``CV_64F</span></tt>.</li>
+<li><strong>dst</strong> &#8211; Destination image of the same size and type as  <tt class="docutils literal"><span class="pre">src</span></tt> .</li>
+<li><strong>kernel</strong> &#8211; Structuring element. It can be created using <a class="reference internal" href="#Mat getStructuringElement(int shape, Size ksize, Point anchor)" title="Mat getStructuringElement(int shape, Size ksize, Point anchor)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">getStructuringElement()</span></tt></a>.</li>
+<li><strong>anchor</strong> &#8211; Anchor position with the kernel. Negative values mean that the anchor is at the kernel center.</li>
+<li><strong>op</strong> &#8211; <p>Type of a morphological operation that can be one of the following:</p>
+<ul>
+<li><strong>MORPH_OPEN</strong> - an opening operation</li>
+<li><strong>MORPH_CLOSE</strong> - a closing operation</li>
+<li><strong>MORPH_GRADIENT</strong> - a morphological gradient</li>
+<li><strong>MORPH_TOPHAT</strong> - &#8220;top hat&#8221;</li>
+<li><strong>MORPH_BLACKHAT</strong> - &#8220;black hat&#8221;</li>
+</ul>
+</li>
+<li><strong>iterations</strong> &#8211; Number of times erosion and dilation are applied.</li>
+<li><strong>borderType</strong> &#8211; Pixel extrapolation method. See  <tt class="docutils literal"><span class="pre">borderInterpolate</span></tt> for details.</li>
+<li><strong>borderValue</strong> &#8211; Border value in case of a constant border. The default value has a special meaning.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function can perform advanced morphological transformations using an erosion and dilation as basic operations.</p>
+<p>Opening operation:</p>
+<div class="math">
+<p><span class="math">\texttt{dst} = \mathrm{open} ( \texttt{src} , \texttt{element} )= \mathrm{dilate} ( \mathrm{erode} ( \texttt{src} , \texttt{element} ))</span></p>
+</div><p>Closing operation:</p>
+<div class="math">
+<p><span class="math">\texttt{dst} = \mathrm{close} ( \texttt{src} , \texttt{element} )= \mathrm{erode} ( \mathrm{dilate} ( \texttt{src} , \texttt{element} ))</span></p>
+</div><p>Morphological gradient:</p>
+<div class="math">
+<p><span class="math">\texttt{dst} = \mathrm{morph\_grad} ( \texttt{src} , \texttt{element} )= \mathrm{dilate} ( \texttt{src} , \texttt{element} )- \mathrm{erode} ( \texttt{src} , \texttt{element} )</span></p>
+</div><p>&#8220;Top hat&#8221;:</p>
+<div class="math">
+<p><span class="math">\texttt{dst} = \mathrm{tophat} ( \texttt{src} , \texttt{element} )= \texttt{src} - \mathrm{open} ( \texttt{src} , \texttt{element} )</span></p>
+</div><p>&#8220;Black hat&#8221;:</p>
+<div class="math">
+<p><span class="math">\texttt{dst} = \mathrm{blackhat} ( \texttt{src} , \texttt{element} )= \mathrm{close} ( \texttt{src} , \texttt{element} )- \texttt{src}</span></p>
+</div><p>Any of the operations can be done in-place. In case of multi-channel images, each channel is processed independently.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void dilate(InputArray src, OutputArray dst, InputArray kernel, Point anchor, int iterations, int borderType, const Scalar&amp; borderValue)" title="void dilate(InputArray src, OutputArray dst, InputArray kernel, Point anchor, int iterations, int borderType, const Scalar&amp; borderValue)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">dilate()</span></tt></a>,
+<a class="reference internal" href="#void erode(InputArray src, OutputArray dst, InputArray kernel, Point anchor, int iterations, int borderType, const Scalar&amp; borderValue)" title="void erode(InputArray src, OutputArray dst, InputArray kernel, Point anchor, int iterations, int borderType, const Scalar&amp; borderValue)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">erode()</span></tt></a>,
+<a class="reference internal" href="#Mat getStructuringElement(int shape, Size ksize, Point anchor)" title="Mat getStructuringElement(int shape, Size ksize, Point anchor)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">getStructuringElement()</span></tt></a></p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example using the morphologyEx function for the morphological opening and closing operations can be found at opencv_source_code/samples/cpp/morphology2.cpp</li>
+</ul>
+</div>
+</div>
+<div class="section" id="laplacian">
+<h2>Laplacian<a class="headerlink" href="#laplacian" title="Permalink to this headline">¶</a></h2>
+<p>Calculates the Laplacian of an image.</p>
+<dl class="function">
+<dt id="void Laplacian(InputArray src, OutputArray dst, int ddepth, int ksize, double scale, double delta, int borderType)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">Laplacian</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, int <strong>ddepth</strong>, int <strong>ksize</strong>=1, double <strong>scale</strong>=1, double <strong>delta</strong>=0, int <strong>borderType</strong>=BORDER_DEFAULT <big>)</big><a class="headerlink" href="#void Laplacian(InputArray src, OutputArray dst, int ddepth, int ksize, double scale, double delta, int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.Laplacian">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.</tt><tt class="descname">Laplacian</tt><big>(</big>src, ddepth<span class="optional">[</span>, dst<span class="optional">[</span>, ksize<span class="optional">[</span>, scale<span class="optional">[</span>, delta<span class="optional">[</span>, borderType<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big> &rarr; dst<a class="headerlink" href="#cv2.Laplacian" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvLaplace(const CvArr* src, CvArr* dst, int aperture_size)">
+<strong>C:</strong><tt class="descname"> </tt>void <tt class="descname">cvLaplace</tt><big>(</big>const CvArr* <strong>src</strong>, CvArr* <strong>dst</strong>, int <strong>aperture_size</strong>=3 <big>)</big><a class="headerlink" href="#void cvLaplace(const CvArr* src, CvArr* dst, int aperture_size)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image.</li>
+<li><strong>dst</strong> &#8211; Destination image of the same size and the same number of channels as  <tt class="docutils literal"><span class="pre">src</span></tt> .</li>
+<li><strong>ddepth</strong> &#8211; Desired depth of the destination image.</li>
+<li><strong>ksize</strong> &#8211; Aperture size used to compute the second-derivative filters. See  <a class="reference internal" href="#void getDerivKernels(OutputArray kx, OutputArray ky, int dx, int dy, int ksize, bool normalize, int ktype)" title="void getDerivKernels(OutputArray kx, OutputArray ky, int dx, int dy, int ksize, bool normalize, int ktype)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">getDerivKernels()</span></tt></a> for details. The size must be positive and odd.</li>
+<li><strong>scale</strong> &#8211; Optional scale factor for the computed Laplacian values. By default, no scaling is applied. See  <a class="reference internal" href="#void getDerivKernels(OutputArray kx, OutputArray ky, int dx, int dy, int ksize, bool normalize, int ktype)" title="void getDerivKernels(OutputArray kx, OutputArray ky, int dx, int dy, int ksize, bool normalize, int ktype)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">getDerivKernels()</span></tt></a> for details.</li>
+<li><strong>delta</strong> &#8211; Optional delta value that is added to the results prior to storing them in  <tt class="docutils literal"><span class="pre">dst</span></tt> .</li>
+<li><strong>borderType</strong> &#8211; Pixel extrapolation method. See  <tt class="docutils literal"><span class="pre">borderInterpolate</span></tt> for details.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function calculates the Laplacian of the source image by adding up the second x and y derivatives calculated using the Sobel operator:</p>
+<div class="math">
+<p><span class="math">\texttt{dst} =  \Delta \texttt{src} =  \frac{\partial^2 \texttt{src}}{\partial x^2} +  \frac{\partial^2 \texttt{src}}{\partial y^2}</span></p>
+</div><p>This is done when <tt class="docutils literal"><span class="pre">ksize</span> <span class="pre">&gt;</span> <span class="pre">1</span></tt> . When <tt class="docutils literal"><span class="pre">ksize</span> <span class="pre">==</span> <span class="pre">1</span></tt> , the Laplacian is computed by filtering the image with the following
+<span class="math">3 \times 3</span> aperture:</p>
+<div class="math">
+<p><span class="math">\vecthreethree {0}{1}{0}{1}{-4}{1}{0}{1}{0}</span></p>
+</div><div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)" title="void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">Sobel()</span></tt></a>,
+<a class="reference internal" href="#void Scharr(InputArray src, OutputArray dst, int ddepth, int dx, int dy, double scale, double delta, int borderType)" title="void Scharr(InputArray src, OutputArray dst, int ddepth, int dx, int dy, double scale, double delta, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">Scharr()</span></tt></a></p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example using the Laplace transformation for edge detection can be found at opencv_source_code/samples/cpp/laplace.cpp</li>
+</ul>
+</div>
+</div>
+<div class="section" id="pyrdown">
+<h2>pyrDown<a class="headerlink" href="#pyrdown" title="Permalink to this headline">¶</a></h2>
+<p>Blurs an image and downsamples it.</p>
+<dl class="function">
+<dt id="void pyrDown(InputArray src, OutputArray dst, const Size&amp; dstsize, int borderType)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">pyrDown</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, const Size&amp; <strong>dstsize</strong>=Size(), int <strong>borderType</strong>=BORDER_DEFAULT <big>)</big><a class="headerlink" href="#void pyrDown(InputArray src, OutputArray dst, const Size& dstsize, int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.pyrDown">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.</tt><tt class="descname">pyrDown</tt><big>(</big>src<span class="optional">[</span>, dst<span class="optional">[</span>, dstsize<span class="optional">[</span>, borderType<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big> &rarr; dst<a class="headerlink" href="#cv2.pyrDown" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvPyrDown(const CvArr* src, CvArr* dst, int filter)">
+<strong>C:</strong><tt class="descname"> </tt>void <tt class="descname">cvPyrDown</tt><big>(</big>const CvArr* <strong>src</strong>, CvArr* <strong>dst</strong>, int <strong>filter</strong>=CV_GAUSSIAN_5x5 <big>)</big><a class="headerlink" href="#void cvPyrDown(const CvArr* src, CvArr* dst, int filter)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; input image.</li>
+<li><strong>dst</strong> &#8211; output image; it has the specified size and the same type as <tt class="docutils literal"><span class="pre">src</span></tt>.</li>
+<li><strong>dstsize</strong> &#8211; size of the output image.</li>
+<li><strong>borderType</strong> &#8211; Pixel extrapolation method (BORDER_CONSTANT don&#8217;t supported). See  <tt class="docutils literal"><span class="pre">borderInterpolate</span></tt> for details.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>By default, size of the output image is computed as <tt class="docutils literal"><span class="pre">Size((src.cols+1)/2,</span> <span class="pre">(src.rows+1)/2)</span></tt>, but in any case, the following conditions should be satisfied:</p>
+<div class="math">
+<p><span class="math">\begin{array}{l}
+| \texttt{dstsize.width} *2-src.cols| \leq  2  \\ | \texttt{dstsize.height} *2-src.rows| \leq  2 \end{array}</span></p>
+</div><p>The function performs the downsampling step of the Gaussian pyramid construction. First, it convolves the source image with the kernel:</p>
+<div class="math">
+<p><span class="math">\frac{1}{256} \begin{bmatrix} 1 &amp; 4 &amp; 6 &amp; 4 &amp; 1  \\ 4 &amp; 16 &amp; 24 &amp; 16 &amp; 4  \\ 6 &amp; 24 &amp; 36 &amp; 24 &amp; 6  \\ 4 &amp; 16 &amp; 24 &amp; 16 &amp; 4  \\ 1 &amp; 4 &amp; 6 &amp; 4 &amp; 1 \end{bmatrix}</span></p>
+</div><p>Then, it downsamples the image by rejecting even rows and columns.</p>
+</div>
+<div class="section" id="pyrup">
+<h2>pyrUp<a class="headerlink" href="#pyrup" title="Permalink to this headline">¶</a></h2>
+<p>Upsamples an image and then blurs it.</p>
+<dl class="function">
+<dt id="void pyrUp(InputArray src, OutputArray dst, const Size&amp; dstsize, int borderType)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">pyrUp</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, const Size&amp; <strong>dstsize</strong>=Size(), int <strong>borderType</strong>=BORDER_DEFAULT <big>)</big><a class="headerlink" href="#void pyrUp(InputArray src, OutputArray dst, const Size& dstsize, int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.pyrUp">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.</tt><tt class="descname">pyrUp</tt><big>(</big>src<span class="optional">[</span>, dst<span class="optional">[</span>, dstsize<span class="optional">[</span>, borderType<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big> &rarr; dst<a class="headerlink" href="#cv2.pyrUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="cvPyrUp(const CvArr* src, CvArr* dst, int filter)">
+<strong>C:</strong><tt class="descname"> </tt> <tt class="descname">cvPyrUp</tt><big>(</big>const CvArr* <strong>src</strong>, CvArr* <strong>dst</strong>, int <strong>filter</strong>=CV_GAUSSIAN_5x5 <big>)</big><a class="headerlink" href="#cvPyrUp(const CvArr* src, CvArr* dst, int filter)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; input image.</li>
+<li><strong>dst</strong> &#8211; output image. It has the specified size and the same type as  <tt class="docutils literal"><span class="pre">src</span></tt> .</li>
+<li><strong>dstsize</strong> &#8211; size of the output image.</li>
+<li><strong>borderType</strong> &#8211; Pixel extrapolation method (only BORDER_DEFAULT supported). See  <tt class="docutils literal"><span class="pre">borderInterpolate</span></tt> for details.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>By default, size of the output image is computed as <tt class="docutils literal"><span class="pre">Size(src.cols*2,</span> <span class="pre">(src.rows*2)</span></tt>, but in any case, the following conditions should be satisfied:</p>
+<div class="math">
+<p><span class="math">\begin{array}{l}
+| \texttt{dstsize.width} -src.cols*2| \leq  ( \texttt{dstsize.width}   \mod  2)  \\ | \texttt{dstsize.height} -src.rows*2| \leq  ( \texttt{dstsize.height}   \mod  2) \end{array}</span></p>
+</div><p>The function performs the upsampling step of the Gaussian pyramid construction, though it can actually be used to construct the Laplacian pyramid. First, it upsamples the source image by injecting even zero rows and columns and then convolves the result with the same kernel as in
+<a class="reference internal" href="#void pyrDown(InputArray src, OutputArray dst, const Size&amp; dstsize, int borderType)" title="void pyrDown(InputArray src, OutputArray dst, const Size&amp; dstsize, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">pyrDown()</span></tt></a>  multiplied by 4.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>(Python) An example of Laplacian Pyramid construction and merging can be found at opencv_source_code/samples/python2/lappyr.py</li>
+</ul>
+</div>
+</div>
+<div class="section" id="pyrmeanshiftfiltering">
+<h2>pyrMeanShiftFiltering<a class="headerlink" href="#pyrmeanshiftfiltering" title="Permalink to this headline">¶</a></h2>
+<p>Performs initial step of meanshift segmentation of an image.</p>
+<dl class="function">
+<dt id="void pyrMeanShiftFiltering(InputArray src, OutputArray dst, double sp, double sr, int maxLevel, TermCriteria termcrit)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">pyrMeanShiftFiltering</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, double <strong>sp</strong>, double <strong>sr</strong>, int <strong>maxLevel</strong>=1, TermCriteria <strong>termcrit</strong>=TermCriteria(TermCriteria::MAX_ITER+TermCriteria::EPS,5,1) <big>)</big><a class="headerlink" href="#void pyrMeanShiftFiltering(InputArray src, OutputArray dst, double sp, double sr, int maxLevel, TermCriteria termcrit)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.pyrMeanShiftFiltering">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.</tt><tt class="descname">pyrMeanShiftFiltering</tt><big>(</big>src, sp, sr<span class="optional">[</span>, dst<span class="optional">[</span>, maxLevel<span class="optional">[</span>, termcrit<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big> &rarr; dst<a class="headerlink" href="#cv2.pyrMeanShiftFiltering" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvPyrMeanShiftFiltering(const CvArr* src, CvArr* dst, double sp, double sr, int max_level, CvTermCriteria termcrit)">
+<strong>C:</strong><tt class="descname"> </tt>void <tt class="descname">cvPyrMeanShiftFiltering</tt><big>(</big>const CvArr* <strong>src</strong>, CvArr* <strong>dst</strong>, double <strong>sp</strong>, double <strong>sr</strong>, int <strong>max_level</strong>=1, CvTermCriteria <strong>termcrit</strong>=cvTermCriteria(CV_TERMCRIT_ITER+CV_TERMCRIT_EPS,5,1)<big>)</big><a class="headerlink" href="#void cvPyrMeanShiftFiltering(const CvArr* src, CvArr* dst, double sp, double sr, int max_level, CvTermCriteria termcrit)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; The source 8-bit, 3-channel image.</li>
+<li><strong>dst</strong> &#8211; The destination image of the same format and the same size as the source.</li>
+<li><strong>sp</strong> &#8211; The spatial window radius.</li>
+<li><strong>sr</strong> &#8211; The color window radius.</li>
+<li><strong>maxLevel</strong> &#8211; Maximum level of the pyramid for the segmentation.</li>
+<li><strong>termcrit</strong> &#8211; Termination criteria: when to stop meanshift iterations.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function implements the filtering stage of meanshift segmentation, that is, the output of the function is the filtered &#8220;posterized&#8221; image with color gradients and fine-grain texture flattened. At every pixel
+<tt class="docutils literal"><span class="pre">(X,Y)</span></tt> of the input image (or down-sized input image, see below) the function executes meanshift
+iterations, that is, the pixel <tt class="docutils literal"><span class="pre">(X,Y)</span></tt> neighborhood in the joint space-color hyperspace is considered:</p>
+<blockquote>
+<div><div class="math">
+<p><span class="math">(x,y): X- \texttt{sp} \le x  \le X+ \texttt{sp} , Y- \texttt{sp} \le y  \le Y+ \texttt{sp} , ||(R,G,B)-(r,g,b)||   \le \texttt{sr}</span></p>
+</div></div></blockquote>
+<p>where  <tt class="docutils literal"><span class="pre">(R,G,B)</span></tt> and  <tt class="docutils literal"><span class="pre">(r,g,b)</span></tt> are the vectors of color components at <tt class="docutils literal"><span class="pre">(X,Y)</span></tt> and  <tt class="docutils literal"><span class="pre">(x,y)</span></tt>, respectively (though, the algorithm does not depend on the color space used, so any 3-component color space can be used instead). Over the neighborhood the average spatial value  <tt class="docutils literal"><span class="pre">(X',Y')</span></tt> and average color vector  <tt class="docutils literal"><span class="pre">(R',G',B')</span></tt> are found and they act as the neighborhood center on the next iteration:</p>
+<blockquote>
+<div><div class="math">
+<p><span class="math">(X,Y)~(X',Y'), (R,G,B)~(R',G',B').</span></p>
+</div></div></blockquote>
+<p>After the iterations over, the color components of the initial pixel (that is, the pixel from where the iterations started) are set to the final value (average color at the last iteration):</p>
+<blockquote>
+<div><div class="math">
+<p><span class="math">I(X,Y) &lt;- (R*,G*,B*)</span></p>
+</div></div></blockquote>
+<p>When <tt class="docutils literal"><span class="pre">maxLevel</span> <span class="pre">&gt;</span> <span class="pre">0</span></tt>, the gaussian pyramid of <tt class="docutils literal"><span class="pre">maxLevel+1</span></tt> levels is built, and the above procedure is run on the smallest layer first. After that, the results are propagated to the larger layer and the iterations are run again only on those pixels where the layer colors differ by more than <tt class="docutils literal"><span class="pre">sr</span></tt> from the lower-resolution layer of the pyramid. That makes boundaries of color regions sharper. Note that the results will be actually different from the ones obtained by running the meanshift procedure on the whole original image (i.e. when <tt class="docutils literal"><span class="pre">maxLevel==0</span></tt>).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example using mean-shift image segmentation can be found at opencv_source_code/samples/cpp/meanshift_segmentation.cpp</li>
+</ul>
+</div>
+</div>
+<div class="section" id="sepfilter2d">
+<h2>sepFilter2D<a class="headerlink" href="#sepfilter2d" title="Permalink to this headline">¶</a></h2>
+<p>Applies a separable linear filter to an image.</p>
+<dl class="function">
+<dt id="void sepFilter2D(InputArray src, OutputArray dst, int ddepth, InputArray kernelX, InputArray kernelY, Point anchor, double delta, int borderType)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">sepFilter2D</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, int <strong>ddepth</strong>, InputArray <strong>kernelX</strong>, InputArray <strong>kernelY</strong>, Point <strong>anchor</strong>=Point(-1,-1), double <strong>delta</strong>=0, int <strong>borderType</strong>=BORDER_DEFAULT <big>)</big><a class="headerlink" href="#void sepFilter2D(InputArray src, OutputArray dst, int ddepth, InputArray kernelX, InputArray kernelY, Point anchor, double delta, int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.sepFilter2D">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.</tt><tt class="descname">sepFilter2D</tt><big>(</big>src, ddepth, kernelX, kernelY<span class="optional">[</span>, dst<span class="optional">[</span>, anchor<span class="optional">[</span>, delta<span class="optional">[</span>, borderType<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big> &rarr; dst<a class="headerlink" href="#cv2.sepFilter2D" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image.</li>
+<li><strong>dst</strong> &#8211; Destination image of the same size and the same number of channels as  <tt class="docutils literal"><span class="pre">src</span></tt> .</li>
+<li><strong>ddepth</strong> &#8211; <dl class="docutils">
+<dt>Destination image depth. The following combination of <tt class="docutils literal"><span class="pre">src.depth()</span></tt> and <tt class="docutils literal"><span class="pre">ddepth</span></tt> are supported:</dt>
+<dd><ul class="first last">
+<li><tt class="docutils literal"><span class="pre">src.depth()</span></tt> = <tt class="docutils literal"><span class="pre">CV_8U</span></tt>, <tt class="docutils literal"><span class="pre">ddepth</span></tt> = -1/<tt class="docutils literal"><span class="pre">CV_16S</span></tt>/<tt class="docutils literal"><span class="pre">CV_32F</span></tt>/<tt class="docutils literal"><span class="pre">CV_64F</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">src.depth()</span></tt> = <tt class="docutils literal"><span class="pre">CV_16U</span></tt>/<tt class="docutils literal"><span class="pre">CV_16S</span></tt>, <tt class="docutils literal"><span class="pre">ddepth</span></tt> = -1/<tt class="docutils literal"><span class="pre">CV_32F</span></tt>/<tt class="docutils literal"><span class="pre">CV_64F</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">src.depth()</span></tt> = <tt class="docutils literal"><span class="pre">CV_32F</span></tt>, <tt class="docutils literal"><span class="pre">ddepth</span></tt> = -1/<tt class="docutils literal"><span class="pre">CV_32F</span></tt>/<tt class="docutils literal"><span class="pre">CV_64F</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">src.depth()</span></tt> = <tt class="docutils literal"><span class="pre">CV_64F</span></tt>, <tt class="docutils literal"><span class="pre">ddepth</span></tt> = -1/<tt class="docutils literal"><span class="pre">CV_64F</span></tt></li>
+</ul>
+</dd>
+</dl>
+<p>when <tt class="docutils literal"><span class="pre">ddepth=-1</span></tt>, the destination image will have the same depth as the source.</p>
+</li>
+<li><strong>kernelX</strong> &#8211; Coefficients for filtering each row.</li>
+<li><strong>kernelY</strong> &#8211; Coefficients for filtering each column.</li>
+<li><strong>anchor</strong> &#8211; Anchor position within the kernel. The default value  <span class="math">(-1,-1)</span>  means that the anchor is at the kernel center.</li>
+<li><strong>delta</strong> &#8211; Value added to the filtered results before storing them.</li>
+<li><strong>borderType</strong> &#8211; Pixel extrapolation method. See  <tt class="docutils literal"><span class="pre">borderInterpolate</span></tt> for details.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function applies a separable linear filter to the image. That is, first, every row of <tt class="docutils literal"><span class="pre">src</span></tt> is filtered with the 1D kernel <tt class="docutils literal"><span class="pre">kernelX</span></tt> . Then, every column of the result is filtered with the 1D kernel <tt class="docutils literal"><span class="pre">kernelY</span></tt> . The final result shifted by <tt class="docutils literal"><span class="pre">delta</span></tt> is stored in <tt class="docutils literal"><span class="pre">dst</span></tt> .</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void filter2D(InputArray src, OutputArray dst, int ddepth, InputArray kernel, Point anchor, double delta, int borderType)" title="void filter2D(InputArray src, OutputArray dst, int ddepth, InputArray kernel, Point anchor, double delta, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">filter2D()</span></tt></a>,
+<a class="reference internal" href="#void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)" title="void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">Sobel()</span></tt></a>,
+<a class="reference internal" href="#void GaussianBlur(InputArray src, OutputArray dst, Size ksize, double sigmaX, double sigmaY, int borderType)" title="void GaussianBlur(InputArray src, OutputArray dst, Size ksize, double sigmaX, double sigmaY, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">GaussianBlur()</span></tt></a>,
+<a class="reference internal" href="#void boxFilter(InputArray src, OutputArray dst, int ddepth, Size ksize, Point anchor, bool normalize, int borderType)" title="void boxFilter(InputArray src, OutputArray dst, int ddepth, Size ksize, Point anchor, bool normalize, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">boxFilter()</span></tt></a>,
+<a class="reference internal" href="#void blur(InputArray src, OutputArray dst, Size ksize, Point anchor, int borderType)" title="void blur(InputArray src, OutputArray dst, Size ksize, Point anchor, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">blur()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="smooth">
+<h2>Smooth<a class="headerlink" href="#smooth" title="Permalink to this headline">¶</a></h2>
+<p>Smooths the image in one of several ways.</p>
+<dl class="cfunction">
+<dt id="void cvSmooth(const CvArr* src, CvArr* dst, int smoothtype, int size1, int size2, double sigma1, double sigma2)">
+<strong>C:</strong><tt class="descname"> </tt>void <tt class="descname">cvSmooth</tt><big>(</big>const CvArr* <strong>src</strong>, CvArr* <strong>dst</strong>, int <strong>smoothtype</strong>=CV_GAUSSIAN, int <strong>size1</strong>=3, int <strong>size2</strong>=0, double <strong>sigma1</strong>=0, double <strong>sigma2</strong>=0 <big>)</big><a class="headerlink" href="#void cvSmooth(const CvArr* src, CvArr* dst, int smoothtype, int size1, int size2, double sigma1, double sigma2)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; The source image</li>
+<li><strong>dst</strong> &#8211; The destination image</li>
+<li><strong>smoothtype</strong> &#8211; <p>Type of the smoothing:</p>
+<ul>
+<li><strong>CV_BLUR_NO_SCALE</strong> linear convolution with  <span class="math">\texttt{size1}\times\texttt{size2}</span>  box kernel (all 1&#8217;s). If you want to smooth different pixels with different-size box kernels, you can use the integral image that is computed using  <a class="reference internal" href="miscellaneous_transformations.html#void integral(InputArray src, OutputArray sum, int sdepth)" title="void integral(InputArray src, OutputArray sum, int sdepth)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">integral()</span></tt></a></li>
+<li><strong>CV_BLUR</strong> linear convolution with  <span class="math">\texttt{size1}\times\texttt{size2}</span>  box kernel (all 1&#8217;s) with subsequent scaling by  <span class="math">1/(\texttt{size1}\cdot\texttt{size2})</span></li>
+<li><strong>CV_GAUSSIAN</strong> linear convolution with a  <span class="math">\texttt{size1}\times\texttt{size2}</span>  Gaussian kernel</li>
+<li><strong>CV_MEDIAN</strong> median filter with a  <span class="math">\texttt{size1}\times\texttt{size1}</span>  square aperture</li>
+<li><strong>CV_BILATERAL</strong> bilateral filter with a  <span class="math">\texttt{size1}\times\texttt{size1}</span>  square aperture, color sigma= <tt class="docutils literal"><span class="pre">sigma1</span></tt>  and spatial sigma= <tt class="docutils literal"><span class="pre">sigma2</span></tt> . If  <tt class="docutils literal"><span class="pre">size1=0</span></tt> , the aperture square side is set to  <tt class="docutils literal"><span class="pre">cvRound(sigma2*1.5)*2+1</span></tt> . Information about bilateral filtering can be found at  <a class="reference external" href="http://www.dai.ed.ac.uk/CVonline/LOCAL_COPIES/MANDUCHI1/Bilateral_Filtering.html">http://www.dai.ed.ac.uk/CVonline/LOCAL_COPIES/MANDUCHI1/Bilateral_Filtering.html</a></li>
+</ul>
+</li>
+<li><strong>size1</strong> &#8211; The first parameter of the smoothing operation, the aperture width. Must be a positive odd number (1, 3, 5, ...)</li>
+<li><strong>size2</strong> &#8211; The second parameter of the smoothing operation, the aperture height. Ignored by  <tt class="docutils literal"><span class="pre">CV_MEDIAN</span></tt>  and  <tt class="docutils literal"><span class="pre">CV_BILATERAL</span></tt>  methods. In the case of simple scaled/non-scaled and Gaussian blur if  <tt class="docutils literal"><span class="pre">size2</span></tt>  is zero, it is set to  <tt class="docutils literal"><span class="pre">size1</span></tt> . Otherwise it must be a positive odd number.</li>
+<li><strong>sigma1</strong> &#8211; <p>In the case of a Gaussian parameter this parameter may specify Gaussian  <span class="math">\sigma</span>  (standard deviation). If it is zero, it is calculated from the kernel size:</p>
+<div class="math">
+<p><span class="math">\sigma  = 0.3 (n/2 - 1) + 0.8  \quad   \text{where}   \quad  n= \begin{array}{l l} \mbox{\texttt{size1} for horizontal kernel} \\ \mbox{\texttt{size2} for vertical kernel} \end{array}</span></p>
+</div><p>Using standard sigma for small kernels ( <span class="math">3\times 3</span>  to  <span class="math">7\times 7</span> ) gives better speed. If  <tt class="docutils literal"><span class="pre">sigma1</span></tt>  is not zero, while  <tt class="docutils literal"><span class="pre">size1</span></tt>  and  <tt class="docutils literal"><span class="pre">size2</span></tt>  are zeros, the kernel size is calculated from the sigma (to provide accurate enough operation).</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function smooths an image using one of several methods. Every of the methods has some features and restrictions listed below:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Blur with no scaling works with single-channel images only and supports accumulation of 8-bit to 16-bit format (similar to <a class="reference internal" href="#void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)" title="void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">Sobel()</span></tt></a> and <a class="reference internal" href="#void Laplacian(InputArray src, OutputArray dst, int ddepth, int ksize, double scale, double delta, int borderType)" title="void Laplacian(InputArray src, OutputArray dst, int ddepth, int ksize, double scale, double delta, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">Laplacian()</span></tt></a>) and 32-bit floating point to 32-bit floating-point format.</li>
+<li>Simple blur and Gaussian blur support 1- or 3-channel, 8-bit and 32-bit floating point images. These two methods can process images in-place.</li>
+<li>Median and bilateral filters work with 1- or 3-channel 8-bit images and can not process images in-place.</li>
+</ul>
+</div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The function is now obsolete. Use <a class="reference internal" href="#void GaussianBlur(InputArray src, OutputArray dst, Size ksize, double sigmaX, double sigmaY, int borderType)" title="void GaussianBlur(InputArray src, OutputArray dst, Size ksize, double sigmaX, double sigmaY, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">GaussianBlur()</span></tt></a>, <a class="reference internal" href="#void blur(InputArray src, OutputArray dst, Size ksize, Point anchor, int borderType)" title="void blur(InputArray src, OutputArray dst, Size ksize, Point anchor, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">blur()</span></tt></a>, <a class="reference internal" href="#void medianBlur(InputArray src, OutputArray dst, int ksize)" title="void medianBlur(InputArray src, OutputArray dst, int ksize)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">medianBlur()</span></tt></a> or <a class="reference internal" href="#void bilateralFilter(InputArray src, OutputArray dst, int d, double sigmaColor, double sigmaSpace, int borderType)" title="void bilateralFilter(InputArray src, OutputArray dst, int d, double sigmaColor, double sigmaSpace, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">bilateralFilter()</span></tt></a>.</p>
+</div>
+</div>
+<div class="section" id="sobel">
+<h2>Sobel<a class="headerlink" href="#sobel" title="Permalink to this headline">¶</a></h2>
+<p>Calculates the first, second, third, or mixed image derivatives using an extended Sobel operator.</p>
+<dl class="function">
+<dt id="void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">Sobel</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, int <strong>ddepth</strong>, int <strong>dx</strong>, int <strong>dy</strong>, int <strong>ksize</strong>=3, double <strong>scale</strong>=1, double <strong>delta</strong>=0, int <strong>borderType</strong>=BORDER_DEFAULT <big>)</big><a class="headerlink" href="#void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.Sobel">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.</tt><tt class="descname">Sobel</tt><big>(</big>src, ddepth, dx, dy<span class="optional">[</span>, dst<span class="optional">[</span>, ksize<span class="optional">[</span>, scale<span class="optional">[</span>, delta<span class="optional">[</span>, borderType<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big> &rarr; dst<a class="headerlink" href="#cv2.Sobel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvSobel(const CvArr* src, CvArr* dst, int xorder, int yorder, int aperture_size)">
+<strong>C:</strong><tt class="descname"> </tt>void <tt class="descname">cvSobel</tt><big>(</big>const CvArr* <strong>src</strong>, CvArr* <strong>dst</strong>, int <strong>xorder</strong>, int <strong>yorder</strong>, int <strong>aperture_size</strong>=3 <big>)</big><a class="headerlink" href="#void cvSobel(const CvArr* src, CvArr* dst, int xorder, int yorder, int aperture_size)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; input image.</li>
+<li><strong>dst</strong> &#8211; output image of the same size and the same number of channels as  <tt class="docutils literal"><span class="pre">src</span></tt> .</li>
+<li><strong>ddepth</strong> &#8211; <dl class="docutils">
+<dt>output image depth; the following combinations of <tt class="docutils literal"><span class="pre">src.depth()</span></tt> and <tt class="docutils literal"><span class="pre">ddepth</span></tt> are supported:</dt>
+<dd><ul class="first last">
+<li><tt class="docutils literal"><span class="pre">src.depth()</span></tt> = <tt class="docutils literal"><span class="pre">CV_8U</span></tt>, <tt class="docutils literal"><span class="pre">ddepth</span></tt> = -1/<tt class="docutils literal"><span class="pre">CV_16S</span></tt>/<tt class="docutils literal"><span class="pre">CV_32F</span></tt>/<tt class="docutils literal"><span class="pre">CV_64F</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">src.depth()</span></tt> = <tt class="docutils literal"><span class="pre">CV_16U</span></tt>/<tt class="docutils literal"><span class="pre">CV_16S</span></tt>, <tt class="docutils literal"><span class="pre">ddepth</span></tt> = -1/<tt class="docutils literal"><span class="pre">CV_32F</span></tt>/<tt class="docutils literal"><span class="pre">CV_64F</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">src.depth()</span></tt> = <tt class="docutils literal"><span class="pre">CV_32F</span></tt>, <tt class="docutils literal"><span class="pre">ddepth</span></tt> = -1/<tt class="docutils literal"><span class="pre">CV_32F</span></tt>/<tt class="docutils literal"><span class="pre">CV_64F</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">src.depth()</span></tt> = <tt class="docutils literal"><span class="pre">CV_64F</span></tt>, <tt class="docutils literal"><span class="pre">ddepth</span></tt> = -1/<tt class="docutils literal"><span class="pre">CV_64F</span></tt></li>
+</ul>
+</dd>
+</dl>
+<p>when <tt class="docutils literal"><span class="pre">ddepth=-1</span></tt>, the destination image will have the same depth as the source; in the case of 8-bit input images it will result in truncated derivatives.</p>
+</li>
+<li><strong>xorder</strong> &#8211; order of the derivative x.</li>
+<li><strong>yorder</strong> &#8211; order of the derivative y.</li>
+<li><strong>ksize</strong> &#8211; size of the extended Sobel kernel; it must be 1, 3, 5, or 7.</li>
+<li><strong>scale</strong> &#8211; optional scale factor for the computed derivative values; by default, no scaling is applied (see  <a class="reference internal" href="#void getDerivKernels(OutputArray kx, OutputArray ky, int dx, int dy, int ksize, bool normalize, int ktype)" title="void getDerivKernels(OutputArray kx, OutputArray ky, int dx, int dy, int ksize, bool normalize, int ktype)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">getDerivKernels()</span></tt></a> for details).</li>
+<li><strong>delta</strong> &#8211; optional delta value that is added to the results prior to storing them in <tt class="docutils literal"><span class="pre">dst</span></tt>.</li>
+<li><strong>borderType</strong> &#8211; pixel extrapolation method (see  <tt class="docutils literal"><span class="pre">borderInterpolate</span></tt> for details).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>In all cases except one, the
+<span class="math">\texttt{ksize} \times
+\texttt{ksize}</span> separable kernel is used to calculate the
+derivative. When
+<span class="math">\texttt{ksize = 1}</span> , the
+<span class="math">3 \times 1</span> or
+<span class="math">1 \times 3</span> kernel is used (that is, no Gaussian smoothing is done). <tt class="docutils literal"><span class="pre">ksize</span> <span class="pre">=</span> <span class="pre">1</span></tt> can only be used for the first or the second x- or y- derivatives.</p>
+<p>There is also the special value <tt class="docutils literal"><span class="pre">ksize</span> <span class="pre">=</span> <span class="pre">CV_SCHARR</span></tt> (-1) that corresponds to the
+<span class="math">3\times3</span> Scharr
+filter that may give more accurate results than the
+<span class="math">3\times3</span> Sobel. The Scharr aperture is</p>
+<div class="math">
+<p><span class="math">\vecthreethree{-3}{0}{3}{-10}{0}{10}{-3}{0}{3}</span></p>
+</div><p>for the x-derivative, or transposed for the y-derivative.</p>
+<p>The function calculates an image derivative by convolving the image with the appropriate kernel:</p>
+<div class="math">
+<p><span class="math">\texttt{dst} =  \frac{\partial^{xorder+yorder} \texttt{src}}{\partial x^{xorder} \partial y^{yorder}}</span></p>
+</div><p>The Sobel operators combine Gaussian smoothing and differentiation,
+so the result is more or less resistant to the noise. Most often,
+the function is called with ( <tt class="docutils literal"><span class="pre">xorder</span></tt> = 1, <tt class="docutils literal"><span class="pre">yorder</span></tt> = 0, <tt class="docutils literal"><span class="pre">ksize</span></tt> = 3) or ( <tt class="docutils literal"><span class="pre">xorder</span></tt> = 0, <tt class="docutils literal"><span class="pre">yorder</span></tt> = 1, <tt class="docutils literal"><span class="pre">ksize</span></tt> = 3) to calculate the first x- or y- image
+derivative. The first case corresponds to a kernel of:</p>
+<div class="math">
+<p><span class="math">\vecthreethree{-1}{0}{1}{-2}{0}{2}{-1}{0}{1}</span></p>
+</div><p>The second case corresponds to a kernel of:</p>
+<div class="math">
+<p><span class="math">\vecthreethree{-1}{-2}{-1}{0}{0}{0}{1}{2}{1}</span></p>
+</div><div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void Scharr(InputArray src, OutputArray dst, int ddepth, int dx, int dy, double scale, double delta, int borderType)" title="void Scharr(InputArray src, OutputArray dst, int ddepth, int dx, int dy, double scale, double delta, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">Scharr()</span></tt></a>,
+<a class="reference internal" href="#void Laplacian(InputArray src, OutputArray dst, int ddepth, int ksize, double scale, double delta, int borderType)" title="void Laplacian(InputArray src, OutputArray dst, int ddepth, int ksize, double scale, double delta, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">Laplacian()</span></tt></a>,
+<a class="reference internal" href="#void sepFilter2D(InputArray src, OutputArray dst, int ddepth, InputArray kernelX, InputArray kernelY, Point anchor, double delta, int borderType)" title="void sepFilter2D(InputArray src, OutputArray dst, int ddepth, InputArray kernelX, InputArray kernelY, Point anchor, double delta, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">sepFilter2D()</span></tt></a>,
+<a class="reference internal" href="#void filter2D(InputArray src, OutputArray dst, int ddepth, InputArray kernel, Point anchor, double delta, int borderType)" title="void filter2D(InputArray src, OutputArray dst, int ddepth, InputArray kernel, Point anchor, double delta, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">filter2D()</span></tt></a>,
+<a class="reference internal" href="#void GaussianBlur(InputArray src, OutputArray dst, Size ksize, double sigmaX, double sigmaY, int borderType)" title="void GaussianBlur(InputArray src, OutputArray dst, Size ksize, double sigmaX, double sigmaY, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">GaussianBlur()</span></tt></a>,
+<a class="reference internal" href="../../core/doc/operations_on_arrays.html#void cartToPolar(InputArray x, InputArray y, OutputArray magnitude, OutputArray angle, bool angleInDegrees)" title="void cartToPolar(InputArray x, InputArray y, OutputArray magnitude, OutputArray angle, bool angleInDegrees)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cartToPolar()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="scharr">
+<h2>Scharr<a class="headerlink" href="#scharr" title="Permalink to this headline">¶</a></h2>
+<p>Calculates the first x- or y- image derivative using Scharr operator.</p>
+<dl class="function">
+<dt id="void Scharr(InputArray src, OutputArray dst, int ddepth, int dx, int dy, double scale, double delta, int borderType)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">Scharr</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, int <strong>ddepth</strong>, int <strong>dx</strong>, int <strong>dy</strong>, double <strong>scale</strong>=1, double <strong>delta</strong>=0, int <strong>borderType</strong>=BORDER_DEFAULT <big>)</big><a class="headerlink" href="#void Scharr(InputArray src, OutputArray dst, int ddepth, int dx, int dy, double scale, double delta, int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.Scharr">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.</tt><tt class="descname">Scharr</tt><big>(</big>src, ddepth, dx, dy<span class="optional">[</span>, dst<span class="optional">[</span>, scale<span class="optional">[</span>, delta<span class="optional">[</span>, borderType<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big> &rarr; dst<a class="headerlink" href="#cv2.Scharr" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; input image.</li>
+<li><strong>dst</strong> &#8211; output image of the same size and the same number of channels as <tt class="docutils literal"><span class="pre">src</span></tt>.</li>
+<li><strong>ddepth</strong> &#8211; output image depth (see <a class="reference internal" href="#void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)" title="void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">Sobel()</span></tt></a> for the list of supported combination of <tt class="docutils literal"><span class="pre">src.depth()</span></tt> and <tt class="docutils literal"><span class="pre">ddepth</span></tt>).</li>
+<li><strong>dx</strong> &#8211; order of the derivative x.</li>
+<li><strong>dy</strong> &#8211; order of the derivative y.</li>
+<li><strong>scale</strong> &#8211; optional scale factor for the computed derivative values; by default, no scaling is applied (see  <a class="reference internal" href="#void getDerivKernels(OutputArray kx, OutputArray ky, int dx, int dy, int ksize, bool normalize, int ktype)" title="void getDerivKernels(OutputArray kx, OutputArray ky, int dx, int dy, int ksize, bool normalize, int ktype)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">getDerivKernels()</span></tt></a> for details).</li>
+<li><strong>delta</strong> &#8211; optional delta value that is added to the results prior to storing them in <tt class="docutils literal"><span class="pre">dst</span></tt>.</li>
+<li><strong>borderType</strong> &#8211; pixel extrapolation method (see  <tt class="docutils literal"><span class="pre">borderInterpolate</span></tt> for details).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function computes the first x- or y- spatial image derivative using the Scharr operator. The call</p>
+<div class="math">
+<p><span class="math">\texttt{Scharr(src, dst, ddepth, dx, dy, scale, delta, borderType)}</span></p>
+</div><p>is equivalent to</p>
+<div class="math">
+<p><span class="math">\texttt{Sobel(src, dst, ddepth, dx, dy, CV\_SCHARR, scale, delta, borderType)} .</span></p>
+</div><div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void cartToPolar(InputArray x, InputArray y, OutputArray magnitude, OutputArray angle, bool angleInDegrees)" title="void cartToPolar(InputArray x, InputArray y, OutputArray magnitude, OutputArray angle, bool angleInDegrees)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cartToPolar()</span></tt></a></p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="geometric_transformations.html" title="Geometric Image Transformations"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="imgproc.html" title="imgproc. Image Processing"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="imgproc.html" >imgproc. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/imgproc/doc/filtering.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,316 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Template Matching &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../../index.html" />
+    <link rel="up" title="Image Processing in OpenCV" href="../py_table_of_contents_imgproc/py_table_of_contents_imgproc.html" />
+    <link rel="next" title="Hough Line Transform" href="../py_houghlines/py_houghlines.html" />
+    <link rel="prev" title="Fourier Transform" href="../py_transforms/py_fourier_transform/py_fourier_transform.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py_houghlines/py_houghlines.html" title="Hough Line Transform"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../py_transforms/py_fourier_transform/py_fourier_transform.html" title="Fourier Transform"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_imgproc/py_table_of_contents_imgproc.html" accesskey="U">Image Processing in OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Template Matching</a><ul>
+<li><a class="reference internal" href="#goals">Goals</a></li>
+<li><a class="reference internal" href="#theory">Theory</a></li>
+<li><a class="reference internal" href="#template-matching-in-opencv">Template Matching in OpenCV</a></li>
+<li><a class="reference internal" href="#template-matching-with-multiple-objects">Template Matching with Multiple Objects</a></li>
+<li><a class="reference internal" href="#additional-resources">Additional Resources</a></li>
+<li><a class="reference internal" href="#exercises">Exercises</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../py_transforms/py_fourier_transform/py_fourier_transform.html"
+                        title="previous chapter">Fourier Transform</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../py_houghlines/py_houghlines.html"
+                        title="next chapter">Hough Line Transform</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="template-matching">
+<span id="py-template-matching"></span><h1>Template Matching<a class="headerlink" href="#template-matching" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goals">
+<h2>Goals<a class="headerlink" href="#goals" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>In this chapter, you will learn</dt>
+<dd><ul class="first last simple">
+<li>To find objects in an image using Template Matching</li>
+<li>You will see these functions : <strong>cv2.matchTemplate()</strong>, <strong>cv2.minMaxLoc()</strong></li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<p>Template Matching is a method for searching and finding the location of a template image in a larger image. OpenCV comes with a function <strong>cv2.matchTemplate()</strong> for this purpose. It simply slides the template image over the input image (as in 2D convolution) and compares the template and patch of input image under the template image. Several comparison methods are implemented in OpenCV. (You can check docs for more details). It returns a grayscale image, where each pixel denotes how much does the neighbourhood of that pixel match with template.</p>
+<p>If input image is of size <cite>(WxH)</cite> and template image is of size <cite>(wxh)</cite>, output image will have a size of <cite>(W-w+1, H-h+1)</cite>. Once you got the result, you can use <strong>cv2.minMaxLoc()</strong> function to find where is the maximum/minimum value. Take it as the top-left corner of rectangle and take <cite>(w,h)</cite> as width and height of the rectangle. That rectangle is your region of template.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you are using <tt class="docutils literal"><span class="pre">cv2.TM_SQDIFF</span></tt> as comparison method, minimum value gives the best match.</p>
+</div>
+</div>
+<div class="section" id="template-matching-in-opencv">
+<h2>Template Matching in OpenCV<a class="headerlink" href="#template-matching-in-opencv" title="Permalink to this headline">¶</a></h2>
+<p>Here, as an example, we will search for Messi&#8217;s face in his photo. So I created a template as below:</p>
+<blockquote>
+<div><img alt="Template Image" class="align-center" src="../../../../_images/messi_face.jpg" />
+</div></blockquote>
+<p>We will try all the comparison methods so that we can see how their results look like:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;messi5.jpg&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">img2</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">template</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;template.jpg&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">shape</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="c"># All the 6 methods for comparison in a list</span>
+<span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;cv2.TM_CCOEFF&#39;</span><span class="p">,</span> <span class="s">&#39;cv2.TM_CCOEFF_NORMED&#39;</span><span class="p">,</span> <span class="s">&#39;cv2.TM_CCORR&#39;</span><span class="p">,</span>
+            <span class="s">&#39;cv2.TM_CCORR_NORMED&#39;</span><span class="p">,</span> <span class="s">&#39;cv2.TM_SQDIFF&#39;</span><span class="p">,</span> <span class="s">&#39;cv2.TM_SQDIFF_NORMED&#39;</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">meth</span> <span class="ow">in</span> <span class="n">methods</span><span class="p">:</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">img2</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">method</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">meth</span><span class="p">)</span>
+
+    <span class="c"># Apply template Matching</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">matchTemplate</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">template</span><span class="p">,</span><span class="n">method</span><span class="p">)</span>
+    <span class="n">min_val</span><span class="p">,</span> <span class="n">max_val</span><span class="p">,</span> <span class="n">min_loc</span><span class="p">,</span> <span class="n">max_loc</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">minMaxLoc</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+
+    <span class="c"># If the method is TM_SQDIFF or TM_SQDIFF_NORMED, take minimum</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">[</span><span class="n">cv2</span><span class="o">.</span><span class="n">TM_SQDIFF</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">TM_SQDIFF_NORMED</span><span class="p">]:</span>
+        <span class="n">top_left</span> <span class="o">=</span> <span class="n">min_loc</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">top_left</span> <span class="o">=</span> <span class="n">max_loc</span>
+    <span class="n">bottom_right</span> <span class="o">=</span> <span class="p">(</span><span class="n">top_left</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">w</span><span class="p">,</span> <span class="n">top_left</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">h</span><span class="p">)</span>
+
+    <span class="n">cv2</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">top_left</span><span class="p">,</span> <span class="n">bottom_right</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">),</span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">res</span><span class="p">,</span><span class="n">cmap</span> <span class="o">=</span> <span class="s">&#39;gray&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Matching Result&#39;</span><span class="p">),</span> <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([]),</span> <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">([])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">),</span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">cmap</span> <span class="o">=</span> <span class="s">&#39;gray&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Detected Point&#39;</span><span class="p">),</span> <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([]),</span> <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">([])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">meth</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>See the results below:</p>
+<blockquote>
+<div><ul class="simple">
+<li>cv2.TM_CCOEFF</li>
+</ul>
+<img alt="Template Image" class="align-center" src="../../../../_images/template_ccoeff_1.jpg" />
+<ul class="simple">
+<li>cv2.TM_CCOEFF_NORMED</li>
+</ul>
+<img alt="Template Image" class="align-center" src="../../../../_images/template_ccoeffn_2.jpg" />
+<ul class="simple">
+<li>cv2.TM_CCORR</li>
+</ul>
+<img alt="Template Image" class="align-center" src="../../../../_images/template_ccorr_3.jpg" />
+<ul class="simple">
+<li>cv2.TM_CCORR_NORMED</li>
+</ul>
+<img alt="Template Image" class="align-center" src="../../../../_images/template_ccorrn_4.jpg" />
+<ul class="simple">
+<li>cv2.TM_SQDIFF</li>
+</ul>
+<img alt="Template Image" class="align-center" src="../../../../_images/template_sqdiff_5.jpg" />
+<ul class="simple">
+<li>cv2.TM_SQDIFF_NORMED</li>
+</ul>
+<img alt="Template Image" class="align-center" src="../../../../_images/template_sqdiffn_6.jpg" />
+</div></blockquote>
+<p>You can see that the result using <strong>cv2.TM_CCORR</strong> is not good as we expected.</p>
+</div>
+<div class="section" id="template-matching-with-multiple-objects">
+<h2>Template Matching with Multiple Objects<a class="headerlink" href="#template-matching-with-multiple-objects" title="Permalink to this headline">¶</a></h2>
+<p>In the previous section, we searched image for Messi&#8217;s face, which occurs only once in the image. Suppose you are searching for an object which has multiple occurances, <strong>cv2.minMaxLoc()</strong> won&#8217;t give you all the locations. In that case, we will use thresholding. So in this example, we will use a screenshot of the famous game <strong>Mario</strong> and we will find the coins in it.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">img_rgb</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;mario.png&#39;</span><span class="p">)</span>
+<span class="n">img_gray</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">img_rgb</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
+<span class="n">template</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;mario_coin.png&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">shape</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">matchTemplate</span><span class="p">(</span><span class="n">img_gray</span><span class="p">,</span><span class="n">template</span><span class="p">,</span><span class="n">cv2</span><span class="o">.</span><span class="n">TM_CCOEFF_NORMED</span><span class="p">)</span>
+<span class="n">threshold</span> <span class="o">=</span> <span class="mf">0.8</span>
+<span class="n">loc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span> <span class="n">res</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">loc</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+    <span class="n">cv2</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="n">img_rgb</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="p">(</span><span class="n">pt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">w</span><span class="p">,</span> <span class="n">pt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">h</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="s">&#39;res.png&#39;</span><span class="p">,</span><span class="n">img_rgb</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Result:</p>
+<blockquote>
+<div><img alt="Template Matching" class="align-center" src="../../../../_images/res_mario.jpg" />
+</div></blockquote>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py_houghlines/py_houghlines.html" title="Hough Line Transform"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../py_transforms/py_fourier_transform/py_fourier_transform.html" title="Fourier Transform"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_imgproc/py_table_of_contents_imgproc.html" >Image Processing in OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../../_sources/doc/py_tutorials/py_imgproc/py_template_matching/py_template_matching.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,603 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Shape Distance and Common Interfaces &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="shape. Shape Distance and Matching" href="shape.html" />
+    <link rel="next" title="Shape Transformers and Interfaces" href="shape_transformers.html" />
+    <link rel="prev" title="shape. Shape Distance and Matching" href="shape.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="shape_transformers.html" title="Shape Transformers and Interfaces"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="shape.html" title="shape. Shape Distance and Matching"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="shape.html" accesskey="U">shape. Shape Distance and Matching</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Shape Distance and Common Interfaces</a><ul>
+<li><a class="reference internal" href="#shapedistanceextractor">ShapeDistanceExtractor</a></li>
+<li><a class="reference internal" href="#shapedistanceextractor-computedistance">ShapeDistanceExtractor::computeDistance</a></li>
+<li><a class="reference internal" href="#shapecontextdistanceextractor">ShapeContextDistanceExtractor</a></li>
+<li><a class="reference internal" href="#shapecontextdistanceextractor-setangularbins">ShapeContextDistanceExtractor::setAngularBins</a></li>
+<li><a class="reference internal" href="#shapecontextdistanceextractor-setradialbins">ShapeContextDistanceExtractor::setRadialBins</a></li>
+<li><a class="reference internal" href="#shapecontextdistanceextractor-setinnerradius">ShapeContextDistanceExtractor::setInnerRadius</a></li>
+<li><a class="reference internal" href="#shapecontextdistanceextractor-setouterradius">ShapeContextDistanceExtractor::setOuterRadius</a></li>
+<li><a class="reference internal" href="#shapecontextdistanceextractor-setshapecontextweight">ShapeContextDistanceExtractor::setShapeContextWeight</a></li>
+<li><a class="reference internal" href="#shapecontextdistanceextractor-setimageappearanceweight">ShapeContextDistanceExtractor::setImageAppearanceWeight</a></li>
+<li><a class="reference internal" href="#shapecontextdistanceextractor-setbendingenergyweight">ShapeContextDistanceExtractor::setBendingEnergyWeight</a></li>
+<li><a class="reference internal" href="#shapecontextdistanceextractor-setimages">ShapeContextDistanceExtractor::setImages</a></li>
+<li><a class="reference internal" href="#shapecontextdistanceextractor-setcostextractor">ShapeContextDistanceExtractor::setCostExtractor</a></li>
+<li><a class="reference internal" href="#shapecontextdistanceextractor-setstddev">ShapeContextDistanceExtractor::setStdDev</a></li>
+<li><a class="reference internal" href="#shapecontextdistanceextractor-settransformalgorithm">ShapeContextDistanceExtractor::setTransformAlgorithm</a></li>
+<li><a class="reference internal" href="#hausdorffdistanceextractor">HausdorffDistanceExtractor</a></li>
+<li><a class="reference internal" href="#hausdorffdistanceextractor-setdistanceflag">HausdorffDistanceExtractor::setDistanceFlag</a></li>
+<li><a class="reference internal" href="#hausdorffdistanceextractor-setrankproportion">HausdorffDistanceExtractor::setRankProportion</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="shape.html"
+                        title="previous chapter">shape. Shape Distance and Matching</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="shape_transformers.html"
+                        title="next chapter">Shape Transformers and Interfaces</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="shape-distance-and-common-interfaces">
+<h1>Shape Distance and Common Interfaces<a class="headerlink" href="#shape-distance-and-common-interfaces" title="Permalink to this headline">¶</a></h1>
+<p>Shape Distance algorithms in OpenCV are derivated from a common interface that allows you to
+switch between them in a practical way for solving the same problem with different methods.
+Thus, all objects that implement shape distance measures inherit the
+<a class="reference internal" href="#ShapeDistanceExtractor : public Algorithm" title="class ShapeDistanceExtractor : public Algorithm"><tt class="xref ocv ocv-class docutils literal"><span class="pre">ShapeDistanceExtractor</span></tt></a> interface.</p>
+<div class="section" id="shapedistanceextractor">
+<h2>ShapeDistanceExtractor<a class="headerlink" href="#shapedistanceextractor" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ShapeDistanceExtractor : public Algorithm">
+<em class="property">class </em><tt class="descname">ShapeDistanceExtractor</tt> : <em class="property">public</em> <tt class="descname">Algorithm</tt><a class="headerlink" href="#ShapeDistanceExtractor : public Algorithm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Abstract base class for shape distance algorithms.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS_W</span> <span class="nl">ShapeDistanceExtractor</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Algorithm</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">float</span> <span class="n">computeDistance</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">contour1</span><span class="p">,</span> <span class="n">InputArray</span> <span class="n">contour2</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="shapedistanceextractor-computedistance">
+<h2>ShapeDistanceExtractor::computeDistance<a class="headerlink" href="#shapedistanceextractor-computedistance" title="Permalink to this headline">¶</a></h2>
+<p>Compute the shape distance between two shapes defined by its contours.</p>
+<dl class="function">
+<dt id="float ShapeDistanceExtractor::computeDistance(InputArray contour1, InputArray contour2)">
+<strong>C++:</strong><tt class="descname"> </tt>float <tt class="descclassname">ShapeDistanceExtractor::</tt><tt class="descname">computeDistance</tt><big>(</big>InputArray <strong>contour1</strong>, InputArray <strong>contour2</strong><big>)</big><a class="headerlink" href="#float ShapeDistanceExtractor::computeDistance(InputArray contour1, InputArray contour2)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>contour1</strong> &#8211; Contour defining first shape.</li>
+<li><strong>contour2</strong> &#8211; Contour defining second shape.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="shapecontextdistanceextractor">
+<h2>ShapeContextDistanceExtractor<a class="headerlink" href="#shapecontextdistanceextractor" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ShapeContextDistanceExtractor : public ShapeDistanceExtractor">
+<em class="property">class </em><tt class="descname">ShapeContextDistanceExtractor</tt> : <em class="property">public</em> <tt class="descname">ShapeDistanceExtractor</tt><a class="headerlink" href="#ShapeContextDistanceExtractor : public ShapeDistanceExtractor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Implementation of the Shape Context descriptor and matching algorithm proposed by Belongie et al. in
+&#8220;Shape Matching and Object Recognition Using Shape Contexts&#8221; (PAMI 2002).
+This implementation is packaged in a generic scheme, in order to allow you the implementation of the
+common variations of the original pipeline.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS_W</span> <span class="nl">ShapeContextDistanceExtractor</span> <span class="p">:</span> <span class="k">public</span> <span class="n">ShapeDistanceExtractor</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setAngularBins</span><span class="p">(</span><span class="kt">int</span> <span class="n">nAngularBins</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">int</span> <span class="n">getAngularBins</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setRadialBins</span><span class="p">(</span><span class="kt">int</span> <span class="n">nRadialBins</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">int</span> <span class="n">getRadialBins</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setInnerRadius</span><span class="p">(</span><span class="kt">float</span> <span class="n">innerRadius</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">float</span> <span class="n">getInnerRadius</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setOuterRadius</span><span class="p">(</span><span class="kt">float</span> <span class="n">outerRadius</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">float</span> <span class="n">getOuterRadius</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setRotationInvariant</span><span class="p">(</span><span class="kt">bool</span> <span class="n">rotationInvariant</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">bool</span> <span class="n">getRotationInvariant</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setShapeContextWeight</span><span class="p">(</span><span class="kt">float</span> <span class="n">shapeContextWeight</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">float</span> <span class="n">getShapeContextWeight</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setImageAppearanceWeight</span><span class="p">(</span><span class="kt">float</span> <span class="n">imageAppearanceWeight</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">float</span> <span class="n">getImageAppearanceWeight</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setBendingEnergyWeight</span><span class="p">(</span><span class="kt">float</span> <span class="n">bendingEnergyWeight</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">float</span> <span class="n">getBendingEnergyWeight</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setImages</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">image1</span><span class="p">,</span> <span class="n">InputArray</span> <span class="n">image2</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">void</span> <span class="n">getImages</span><span class="p">(</span><span class="n">OutputArray</span> <span class="n">image1</span><span class="p">,</span> <span class="n">OutputArray</span> <span class="n">image2</span><span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setIterations</span><span class="p">(</span><span class="kt">int</span> <span class="n">iterations</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">int</span> <span class="n">getIterations</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setCostExtractor</span><span class="p">(</span><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">HistogramCostExtractor</span><span class="o">&gt;</span> <span class="n">comparer</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">HistogramCostExtractor</span><span class="o">&gt;</span> <span class="n">getCostExtractor</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setTransformAlgorithm</span><span class="p">(</span><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">ShapeTransformer</span><span class="o">&gt;</span> <span class="n">transformer</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">ShapeTransformer</span><span class="o">&gt;</span> <span class="n">getTransformAlgorithm</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="cm">/* Complete constructor */</span>
+<span class="n">CV_EXPORTS_W</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">ShapeContextDistanceExtractor</span><span class="o">&gt;</span>
+    <span class="n">createShapeContextDistanceExtractor</span><span class="p">(</span><span class="kt">int</span> <span class="n">nAngularBins</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nRadialBins</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                                        <span class="kt">float</span> <span class="n">innerRadius</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="kt">float</span> <span class="n">outerRadius</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="kt">int</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                                        <span class="k">const</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">HistogramCostExtractor</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">comparer</span> <span class="o">=</span> <span class="n">createChiHistogramCostExtractor</span><span class="p">(),</span>
+                                        <span class="k">const</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">ShapeTransformer</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">createThinPlateSplineShapeTransformer</span><span class="p">());</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="shapecontextdistanceextractor-setangularbins">
+<h2>ShapeContextDistanceExtractor::setAngularBins<a class="headerlink" href="#shapecontextdistanceextractor-setangularbins" title="Permalink to this headline">¶</a></h2>
+<p>Establish the number of angular bins for the Shape Context Descriptor used in the shape matching pipeline.</p>
+<dl class="function">
+<dt id="void setAngularBins(int nAngularBins)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">setAngularBins</tt><big>(</big>int <strong>nAngularBins</strong><big>)</big><a class="headerlink" href="#void setAngularBins(int nAngularBins)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>nAngularBins</strong> &#8211; The number of angular bins in the shape context descriptor.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="shapecontextdistanceextractor-setradialbins">
+<h2>ShapeContextDistanceExtractor::setRadialBins<a class="headerlink" href="#shapecontextdistanceextractor-setradialbins" title="Permalink to this headline">¶</a></h2>
+<p>Establish the number of radial bins for the Shape Context Descriptor used in the shape matching pipeline.</p>
+<dl class="function">
+<dt id="void setRadialBins(int nRadialBins)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">setRadialBins</tt><big>(</big>int <strong>nRadialBins</strong><big>)</big><a class="headerlink" href="#void setRadialBins(int nRadialBins)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>nRadialBins</strong> &#8211; The number of radial bins in the shape context descriptor.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="shapecontextdistanceextractor-setinnerradius">
+<h2>ShapeContextDistanceExtractor::setInnerRadius<a class="headerlink" href="#shapecontextdistanceextractor-setinnerradius" title="Permalink to this headline">¶</a></h2>
+<p>Set the inner radius of the shape context descriptor.</p>
+<dl class="function">
+<dt id="void setInnerRadius(float innerRadius)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">setInnerRadius</tt><big>(</big>float <strong>innerRadius</strong><big>)</big><a class="headerlink" href="#void setInnerRadius(float innerRadius)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>innerRadius</strong> &#8211; The value of the inner radius.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="shapecontextdistanceextractor-setouterradius">
+<h2>ShapeContextDistanceExtractor::setOuterRadius<a class="headerlink" href="#shapecontextdistanceextractor-setouterradius" title="Permalink to this headline">¶</a></h2>
+<p>Set the outer radius of the shape context descriptor.</p>
+<dl class="function">
+<dt id="void setOuterRadius(float outerRadius)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">setOuterRadius</tt><big>(</big>float <strong>outerRadius</strong><big>)</big><a class="headerlink" href="#void setOuterRadius(float outerRadius)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>outerRadius</strong> &#8211; The value of the outer radius.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="shapecontextdistanceextractor-setshapecontextweight">
+<h2>ShapeContextDistanceExtractor::setShapeContextWeight<a class="headerlink" href="#shapecontextdistanceextractor-setshapecontextweight" title="Permalink to this headline">¶</a></h2>
+<p>Set the weight of the shape context distance in the final value of the shape distance.
+The shape context distance between two shapes is defined as the symmetric sum of shape
+context matching costs over best matching points.
+The final value of the shape distance is a user-defined linear combination of the shape
+context distance, an image appearance distance, and a bending energy.</p>
+<dl class="function">
+<dt id="void setShapeContextWeight(float shapeContextWeight)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">setShapeContextWeight</tt><big>(</big>float <strong>shapeContextWeight</strong><big>)</big><a class="headerlink" href="#void setShapeContextWeight(float shapeContextWeight)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>shapeContextWeight</strong> &#8211; The weight of the shape context distance in the final distance value.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="shapecontextdistanceextractor-setimageappearanceweight">
+<h2>ShapeContextDistanceExtractor::setImageAppearanceWeight<a class="headerlink" href="#shapecontextdistanceextractor-setimageappearanceweight" title="Permalink to this headline">¶</a></h2>
+<p>Set the weight of the Image Appearance cost in the final value of the shape distance.
+The image appearance cost is defined as the sum of squared brightness differences in
+Gaussian windows around corresponding image points.
+The final value of the shape distance is a user-defined linear combination of the shape
+context distance, an image appearance distance, and a bending energy.
+If this value is set to a number different from 0, is mandatory to set the images that
+correspond to each shape.</p>
+<dl class="function">
+<dt id="void setImageAppearanceWeight(float imageAppearanceWeight)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">setImageAppearanceWeight</tt><big>(</big>float <strong>imageAppearanceWeight</strong><big>)</big><a class="headerlink" href="#void setImageAppearanceWeight(float imageAppearanceWeight)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>imageAppearanceWeight</strong> &#8211; The weight of the appearance cost in the final distance value.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="shapecontextdistanceextractor-setbendingenergyweight">
+<h2>ShapeContextDistanceExtractor::setBendingEnergyWeight<a class="headerlink" href="#shapecontextdistanceextractor-setbendingenergyweight" title="Permalink to this headline">¶</a></h2>
+<p>Set the weight of the Bending Energy in the final value of the shape distance.
+The bending energy definition depends on what transformation is being used to align the
+shapes.
+The final value of the shape distance is a user-defined linear combination of the shape
+context distance, an image appearance distance, and a bending energy.</p>
+<dl class="function">
+<dt id="void setBendingEnergyWeight(float bendingEnergyWeight)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">setBendingEnergyWeight</tt><big>(</big>float <strong>bendingEnergyWeight</strong><big>)</big><a class="headerlink" href="#void setBendingEnergyWeight(float bendingEnergyWeight)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>bendingEnergyWeight</strong> &#8211; The weight of the Bending Energy in the final distance value.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="shapecontextdistanceextractor-setimages">
+<h2>ShapeContextDistanceExtractor::setImages<a class="headerlink" href="#shapecontextdistanceextractor-setimages" title="Permalink to this headline">¶</a></h2>
+<p>Set the images that correspond to each shape. This images are used in the calculation of the
+Image Appearance cost.</p>
+<dl class="function">
+<dt id="void setImages(InputArray image1, InputArray image2)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">setImages</tt><big>(</big>InputArray <strong>image1</strong>, InputArray <strong>image2</strong><big>)</big><a class="headerlink" href="#void setImages(InputArray image1, InputArray image2)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image1</strong> &#8211; Image corresponding to the shape defined by <tt class="docutils literal"><span class="pre">contours1</span></tt>.</li>
+<li><strong>image2</strong> &#8211; Image corresponding to the shape defined by <tt class="docutils literal"><span class="pre">contours2</span></tt>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="shapecontextdistanceextractor-setcostextractor">
+<h2>ShapeContextDistanceExtractor::setCostExtractor<a class="headerlink" href="#shapecontextdistanceextractor-setcostextractor" title="Permalink to this headline">¶</a></h2>
+<p>Set the algorithm used for building the shape context descriptor cost matrix.</p>
+<dl class="function">
+<dt id="void setCostExtractor(Ptr&lt;HistogramCostExtractor&gt; comparer)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">setCostExtractor</tt><big>(</big>Ptr&lt;HistogramCostExtractor&gt; <strong>comparer</strong><big>)</big><a class="headerlink" href="#void setCostExtractor(Ptr<HistogramCostExtractor> comparer)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>comparer</strong> &#8211; Smart pointer to a HistogramCostExtractor, an algorithm that defines the cost matrix between descriptors.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="shapecontextdistanceextractor-setstddev">
+<h2>ShapeContextDistanceExtractor::setStdDev<a class="headerlink" href="#shapecontextdistanceextractor-setstddev" title="Permalink to this headline">¶</a></h2>
+<p>Set the value of the standard deviation for the Gaussian window for the image appearance cost.</p>
+<dl class="function">
+<dt id="void setStdDev(float sigma)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">setStdDev</tt><big>(</big>float <strong>sigma</strong><big>)</big><a class="headerlink" href="#void setStdDev(float sigma)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sigma</strong> &#8211; Standard Deviation.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="shapecontextdistanceextractor-settransformalgorithm">
+<h2>ShapeContextDistanceExtractor::setTransformAlgorithm<a class="headerlink" href="#shapecontextdistanceextractor-settransformalgorithm" title="Permalink to this headline">¶</a></h2>
+<p>Set the algorithm used for aligning the shapes.</p>
+<dl class="function">
+<dt id="void setTransformAlgorithm(Ptr&lt;ShapeTransformer&gt; transformer)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">setTransformAlgorithm</tt><big>(</big>Ptr&lt;ShapeTransformer&gt; <strong>transformer</strong><big>)</big><a class="headerlink" href="#void setTransformAlgorithm(Ptr<ShapeTransformer> transformer)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>comparer</strong> &#8211; Smart pointer to a ShapeTransformer, an algorithm that defines the aligning transformation.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="hausdorffdistanceextractor">
+<h2>HausdorffDistanceExtractor<a class="headerlink" href="#hausdorffdistanceextractor" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="HausdorffDistanceExtractor : public ShapeDistanceExtractor">
+<em class="property">class </em><tt class="descname">HausdorffDistanceExtractor</tt> : <em class="property">public</em> <tt class="descname">ShapeDistanceExtractor</tt><a class="headerlink" href="#HausdorffDistanceExtractor : public ShapeDistanceExtractor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>A simple Hausdorff distance measure between shapes defined by contours,
+according to the paper &#8220;Comparing Images using the Hausdorff distance.&#8221; by
+D.P. Huttenlocher, G.A. Klanderman, and W.J. Rucklidge. (PAMI 1993).</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS_W</span> <span class="nl">HausdorffDistanceExtractor</span> <span class="p">:</span> <span class="k">public</span> <span class="n">ShapeDistanceExtractor</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setDistanceFlag</span><span class="p">(</span><span class="kt">int</span> <span class="n">distanceFlag</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">int</span> <span class="n">getDistanceFlag</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setRankProportion</span><span class="p">(</span><span class="kt">float</span> <span class="n">rankProportion</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">float</span> <span class="n">getRankProportion</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="cm">/* Constructor */</span>
+<span class="n">CV_EXPORTS_W</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">HausdorffDistanceExtractor</span><span class="o">&gt;</span> <span class="n">createHausdorffDistanceExtractor</span><span class="p">(</span><span class="kt">int</span> <span class="n">distanceFlag</span><span class="o">=</span><span class="n">cv</span><span class="o">::</span><span class="n">NORM_L2</span><span class="p">,</span> <span class="kt">float</span> <span class="n">rankProp</span><span class="o">=</span><span class="mf">0.6</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="hausdorffdistanceextractor-setdistanceflag">
+<h2>HausdorffDistanceExtractor::setDistanceFlag<a class="headerlink" href="#hausdorffdistanceextractor-setdistanceflag" title="Permalink to this headline">¶</a></h2>
+<p>Set the norm used to compute the Hausdorff value between two shapes. It can be L1 or L2 norm.</p>
+<dl class="function">
+<dt id="void setDistanceFlag(int distanceFlag)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">setDistanceFlag</tt><big>(</big>int <strong>distanceFlag</strong><big>)</big><a class="headerlink" href="#void setDistanceFlag(int distanceFlag)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>distanceFlag</strong> &#8211; Flag indicating which norm is used to compute the Hausdorff distance (NORM_L1, NORM_L2).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="hausdorffdistanceextractor-setrankproportion">
+<h2>HausdorffDistanceExtractor::setRankProportion<a class="headerlink" href="#hausdorffdistanceextractor-setrankproportion" title="Permalink to this headline">¶</a></h2>
+<p>This method sets the rank proportion (or fractional value) that establish the Kth ranked value of the
+partial Hausdorff distance. Experimentally had been shown that 0.6 is a good value to compare shapes.</p>
+<dl class="function">
+<dt id="void setRankProportion(float rankProportion)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">setRankProportion</tt><big>(</big>float <strong>rankProportion</strong><big>)</big><a class="headerlink" href="#void setRankProportion(float rankProportion)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>rankProportion</strong> &#8211; fractional value (between 0 and 1).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="shape_transformers.html" title="Shape Transformers and Interfaces"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="shape.html" title="shape. Shape Distance and Matching"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="shape.html" >shape. Shape Distance and Matching</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/shape/doc/shape_distances.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

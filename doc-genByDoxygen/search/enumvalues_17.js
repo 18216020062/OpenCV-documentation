@@ -1,0 +1,22 @@
+var searchData=
+[
+  ['warp_5ffill_5foutliers',['WARP_FILL_OUTLIERS',['../da/d54/group__imgproc__transform.html#gga5bb5a1fea74ea38e1a5445ca803ff121a94cc44aa86159abcff4683ec6841b097',1,'cv']]],
+  ['warp_5finverse_5fmap',['WARP_INVERSE_MAP',['../da/d54/group__imgproc__transform.html#gga5bb5a1fea74ea38e1a5445ca803ff121aa48be1c433186c4eae1ea86aa0ca75ba',1,'cv']]],
+  ['warp_5fshuffle_5ffunctions',['WARP_SHUFFLE_FUNCTIONS',['../d8/d40/group__cudacore__init.html#gga776cf8e0301b18e19be4782754274fe0a22dd302fe5c91cbb63078b4676f58cae',1,'cv::cuda']]],
+  ['warp_5fsize',['WARP_SIZE',['../df/dfc/group__cudev.html#ggab90d6c78bb1d56b7d91305dd18215b59a9e7909cabd2fc84e1e7092a2f348eaf1',1,'cv::cudev']]],
+  ['wave_5fcorrect_5fhoriz',['WAVE_CORRECT_HORIZ',['../d7/d74/group__stitching__rotation.html#gga83b24d4c3e93584986a56d9e43b9cf7faa9e3a58207a58e3245aab95af18b68a9',1,'cv::detail']]],
+  ['wave_5fcorrect_5fvert',['WAVE_CORRECT_VERT',['../d7/d74/group__stitching__rotation.html#gga83b24d4c3e93584986a56d9e43b9cf7fa3d3661394e07da0c7c51ddeb84851212',1,'cv::detail']]],
+  ['window_5fautosize',['WINDOW_AUTOSIZE',['../d7/dfc/group__highgui.html#gga7956af2ace3d3acb9dae27cc96353a42acf621ace7a54954cbac01df27e47228f',1,'cv']]],
+  ['window_5ffreeratio',['WINDOW_FREERATIO',['../d7/dfc/group__highgui.html#gga7956af2ace3d3acb9dae27cc96353a42a221aaba6c23c127325e4df9eb42dab97',1,'cv']]],
+  ['window_5ffullscreen',['WINDOW_FULLSCREEN',['../d7/dfc/group__highgui.html#gga7956af2ace3d3acb9dae27cc96353a42a78bc64121f612562bbb2fa23d316e84e',1,'cv']]],
+  ['window_5fkeepratio',['WINDOW_KEEPRATIO',['../d7/dfc/group__highgui.html#gga7956af2ace3d3acb9dae27cc96353a42aa6bbb962c222cdf8b8539594a2d0d035',1,'cv']]],
+  ['window_5fnormal',['WINDOW_NORMAL',['../d7/dfc/group__highgui.html#gga7956af2ace3d3acb9dae27cc96353a42a29e45c5af696f73ce5e153601e5ca0f1',1,'cv']]],
+  ['window_5fopengl',['WINDOW_OPENGL',['../d7/dfc/group__highgui.html#gga7956af2ace3d3acb9dae27cc96353a42a2ae8fc6bde96d84068eb9b9957458e6f',1,'cv']]],
+  ['wnd_5fprop_5faspect_5fratio',['WND_PROP_ASPECT_RATIO',['../d7/dfc/group__highgui.html#gga99628fb8d431bc6ef37ee0c34d22d70aa635a6ff3b81e4019be4a43b64e7b2bbb',1,'cv']]],
+  ['wnd_5fprop_5fautosize',['WND_PROP_AUTOSIZE',['../d7/dfc/group__highgui.html#gga99628fb8d431bc6ef37ee0c34d22d70aa40b8385d11a44871776eed13da7808a2',1,'cv']]],
+  ['wnd_5fprop_5ffullscreen',['WND_PROP_FULLSCREEN',['../d7/dfc/group__highgui.html#gga99628fb8d431bc6ef37ee0c34d22d70aa3b6a89b0daf2149dab93f9c6ab99fcc8',1,'cv']]],
+  ['wnd_5fprop_5fopengl',['WND_PROP_OPENGL',['../d7/dfc/group__highgui.html#gga99628fb8d431bc6ef37ee0c34d22d70aa360f30201f153e192919289d7c002e04',1,'cv']]],
+  ['write',['WRITE',['../d4/da4/group__core__xml.html#gga973e41cb75ef6230412a567723b7482da747a241cefee7b8af34c3d804c864ad6',1,'cv::FileStorage']]],
+  ['write_5fcombined',['WRITE_COMBINED',['../d9/d41/group__cudacore__struct.html#ggaa0d69b2aa95680a6b2af6dc4dda44e16aef6b60397f05650d972d2cf55e3523eb',1,'cv::cuda::HostMem']]],
+  ['write_5fonly',['WRITE_ONLY',['../dc/d83/group__core__opencl.html#ggade583bd114c69c541035b657074160e7a7e7f7fcb59366af118874fb12865b52f',1,'cv::ocl::KernelArg::WRITE_ONLY()'],['../d2/d3c/group__core__opengl.html#gga6b2a295dc840db8b6728db2f3a439d6eadca1f60cf44ecc42163b5f03318abb77',1,'cv::ogl::Buffer::WRITE_ONLY()']]]
+];

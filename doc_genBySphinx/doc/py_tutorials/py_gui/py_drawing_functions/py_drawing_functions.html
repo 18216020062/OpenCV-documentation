@@ -1,0 +1,307 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Drawing Functions in OpenCV &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../../index.html" />
+    <link rel="up" title="Gui Features in OpenCV" href="../py_table_of_contents_gui/py_table_of_contents_gui.html" />
+    <link rel="next" title="Mouse as a Paint-Brush" href="../py_mouse_handling/py_mouse_handling.html" />
+    <link rel="prev" title="Getting Started with Videos" href="../py_video_display/py_video_display.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py_mouse_handling/py_mouse_handling.html" title="Mouse as a Paint-Brush"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../py_video_display/py_video_display.html" title="Getting Started with Videos"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_gui/py_table_of_contents_gui.html" accesskey="U">Gui Features in OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Drawing Functions in OpenCV</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#code">Code</a><ul>
+<li><a class="reference internal" href="#drawing-line">Drawing Line</a></li>
+<li><a class="reference internal" href="#drawing-rectangle">Drawing Rectangle</a></li>
+<li><a class="reference internal" href="#drawing-circle">Drawing Circle</a></li>
+<li><a class="reference internal" href="#drawing-ellipse">Drawing Ellipse</a></li>
+<li><a class="reference internal" href="#drawing-polygon">Drawing Polygon</a></li>
+<li><a class="reference internal" href="#adding-text-to-images">Adding Text to Images:</a></li>
+<li><a class="reference internal" href="#result">Result</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#additional-resources">Additional Resources</a></li>
+<li><a class="reference internal" href="#exercises">Exercises</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../py_video_display/py_video_display.html"
+                        title="previous chapter">Getting Started with Videos</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../py_mouse_handling/py_mouse_handling.html"
+                        title="next chapter">Mouse as a Paint-Brush</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="drawing-functions-in-opencv">
+<span id="drawing-functions"></span><h1>Drawing Functions in OpenCV<a class="headerlink" href="#drawing-functions-in-opencv" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Learn to draw different geometric shapes with OpenCV</li>
+<li>You will learn these functions : <strong>cv2.line()</strong>, <strong>cv2.circle()</strong> , <strong>cv2.rectangle()</strong>, <strong>cv2.ellipse()</strong>, <strong>cv2.putText()</strong> etc.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<p>In all the above functions, you will see some common arguments as given below:</p>
+<blockquote>
+<div><ul class="simple">
+<li>img : The image where you want to draw the shapes</li>
+<li>color : Color of the shape. for BGR, pass it as a tuple, eg: <tt class="docutils literal"><span class="pre">(255,0,0)</span></tt> for blue. For grayscale, just pass the scalar value.</li>
+<li>thickness : Thickness of the line or circle etc. If <strong>-1</strong> is passed for closed figures like circles, it will fill the shape. <em>default thickness = 1</em></li>
+<li>lineType : Type of line, whether 8-connected, anti-aliased line etc. <em>By default, it is 8-connected.</em> <tt class="docutils literal"><span class="pre">cv2.LINE_AA</span></tt> gives anti-aliased line which looks great for curves.</li>
+</ul>
+</div></blockquote>
+<div class="section" id="drawing-line">
+<h3>Drawing Line<a class="headerlink" href="#drawing-line" title="Permalink to this headline">¶</a></h3>
+<p>To draw a line, you need to pass starting and ending coordinates of line. We will create a black image and draw a blue line on it from top-left to bottom-right corners.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+
+<span class="c"># Create a black image</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">512</span><span class="p">,</span><span class="mi">512</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+
+<span class="c"># Draw a diagonal blue line with thickness of 5 px</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">img</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),(</span><span class="mi">511</span><span class="p">,</span><span class="mi">511</span><span class="p">),(</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="drawing-rectangle">
+<h3>Drawing Rectangle<a class="headerlink" href="#drawing-rectangle" title="Permalink to this headline">¶</a></h3>
+<p>To draw a rectangle, you need top-left corner and bottom-right corner of rectangle. This time we will draw a green rectangle at the top-right corner of image.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">cv2</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="n">img</span><span class="p">,(</span><span class="mi">384</span><span class="p">,</span><span class="mi">0</span><span class="p">),(</span><span class="mi">510</span><span class="p">,</span><span class="mi">128</span><span class="p">),(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="drawing-circle">
+<h3>Drawing Circle<a class="headerlink" href="#drawing-circle" title="Permalink to this headline">¶</a></h3>
+<p>To draw a circle, you need its center coordinates and radius. We will draw a circle inside the rectangle drawn above.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">cv2</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">img</span><span class="p">,(</span><span class="mi">447</span><span class="p">,</span><span class="mi">63</span><span class="p">),</span> <span class="mi">63</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="drawing-ellipse">
+<h3>Drawing Ellipse<a class="headerlink" href="#drawing-ellipse" title="Permalink to this headline">¶</a></h3>
+<p>To draw the ellipse, we need to pass several arguments. One argument is the center location (x,y). Next argument is axes lengths (major axis length, minor axis length). <tt class="docutils literal"><span class="pre">angle</span></tt> is the angle of rotation of ellipse in anti-clockwise direction. <tt class="docutils literal"><span class="pre">startAngle</span></tt> and <tt class="docutils literal"><span class="pre">endAngle</span></tt> denotes the starting and ending of ellipse arc measured in clockwise direction from major axis. i.e. giving values 0 and 360 gives the full ellipse. For more details, check the documentation of <strong>cv2.ellipse()</strong>. Below example draws a half ellipse at the center of the image.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">cv2</span><span class="o">.</span><span class="n">ellipse</span><span class="p">(</span><span class="n">img</span><span class="p">,(</span><span class="mi">256</span><span class="p">,</span><span class="mi">256</span><span class="p">),(</span><span class="mi">100</span><span class="p">,</span><span class="mi">50</span><span class="p">),</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">180</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="drawing-polygon">
+<h3>Drawing Polygon<a class="headerlink" href="#drawing-polygon" title="Permalink to this headline">¶</a></h3>
+<p>To draw a polygon, first you need coordinates of vertices. Make those points into an array of shape <tt class="docutils literal"><span class="pre">ROWSx1x2</span></tt> where ROWS are number of vertices and it should be of type <tt class="docutils literal"><span class="pre">int32</span></tt>. Here we draw a small polygon of with four vertices in yellow color.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">pts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">],[</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">],[</span><span class="mi">70</span><span class="p">,</span><span class="mi">20</span><span class="p">],[</span><span class="mi">50</span><span class="p">,</span><span class="mi">10</span><span class="p">]],</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+<span class="n">pts</span> <span class="o">=</span> <span class="n">pts</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">polylines</span><span class="p">(</span><span class="n">img</span><span class="p">,[</span><span class="n">pts</span><span class="p">],</span><span class="bp">True</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If third argument is <tt class="docutils literal"><span class="pre">False</span></tt>, you will get a polylines joining all the points, not a closed shape.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><tt class="docutils literal"><span class="pre">cv2.polylines()</span></tt> can be used to draw multiple lines. Just create a list of all the lines you want to draw and pass it to the function. All lines will be drawn individually. It is a much better and faster way to draw a group of lines than calling <tt class="docutils literal"><span class="pre">cv2.line()</span></tt> for each line.</p>
+</div>
+</div>
+<div class="section" id="adding-text-to-images">
+<h3>Adding Text to Images:<a class="headerlink" href="#adding-text-to-images" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>To put texts in images, you need specify following things.</dt>
+<dd><ul class="first last simple">
+<li>Text data that you want to write</li>
+<li>Position coordinates of where you want put it (i.e. bottom-left corner where data starts).</li>
+<li>Font type (Check <strong>cv2.putText()</strong> docs for supported fonts)</li>
+<li>Font Scale (specifies the size of font)</li>
+<li>regular things like color, thickness, lineType etc. For better look, <tt class="docutils literal"><span class="pre">lineType</span> <span class="pre">=</span> <span class="pre">cv2.LINE_AA</span></tt> is recommended.</li>
+</ul>
+</dd>
+</dl>
+<p>We will write <strong>OpenCV</strong> on our image in white color.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">font</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">FONT_HERSHEY_SIMPLEX</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">putText</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="s">&#39;OpenCV&#39;</span><span class="p">,(</span><span class="mi">10</span><span class="p">,</span><span class="mi">500</span><span class="p">),</span> <span class="n">font</span><span class="p">,</span> <span class="mi">4</span><span class="p">,(</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">),</span><span class="mi">2</span><span class="p">,</span><span class="n">cv2</span><span class="o">.</span><span class="n">LINE_AA</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="result">
+<h3>Result<a class="headerlink" href="#result" title="Permalink to this headline">¶</a></h3>
+<p>So it is time to see the final result of our drawing. As you studied in previous articles, display the image to see it.</p>
+<blockquote>
+<div><img alt="Drawing Functions in OpenCV" class="align-center" src="../../../../_images/drawing.jpg" />
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>The angles used in ellipse function is not our circular angles. For more details, visit <a class="reference external" href="http://answers.opencv.org/question/14541/angles-in-ellipse-function/">this discussion</a>.</li>
+</ol>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Try to create the logo of OpenCV using drawing functions available in OpenCV.</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py_mouse_handling/py_mouse_handling.html" title="Mouse as a Paint-Brush"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../py_video_display/py_video_display.html" title="Getting Started with Videos"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_gui/py_table_of_contents_gui.html" >Gui Features in OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../../_sources/doc/py_tutorials/py_gui/py_drawing_functions/py_drawing_functions.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

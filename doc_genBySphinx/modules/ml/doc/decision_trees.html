@@ -1,0 +1,493 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Decision Trees &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="ml. Machine Learning" href="ml.html" />
+    <link rel="next" title="Boosting" href="boosting.html" />
+    <link rel="prev" title="Support Vector Machines" href="support_vector_machines.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="boosting.html" title="Boosting"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="support_vector_machines.html" title="Support Vector Machines"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" accesskey="U">ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Decision Trees</a><ul>
+<li><a class="reference internal" href="#predicting-with-decision-trees">Predicting with Decision Trees</a></li>
+<li><a class="reference internal" href="#training-decision-trees">Training Decision Trees</a></li>
+<li><a class="reference internal" href="#variable-importance">Variable Importance</a></li>
+<li><a class="reference internal" href="#dtrees-split">DTrees::Split</a></li>
+<li><a class="reference internal" href="#dtrees-node">DTrees::Node</a></li>
+<li><a class="reference internal" href="#dtrees-params">DTrees::Params</a></li>
+<li><a class="reference internal" href="#dtrees-params-params">DTrees::Params::Params</a></li>
+<li><a class="reference internal" href="#dtrees">DTrees</a></li>
+<li><a class="reference internal" href="#dtrees-create">DTrees::create</a></li>
+<li><a class="reference internal" href="#dtrees-getdparams">DTrees::getDParams</a></li>
+<li><a class="reference internal" href="#dtrees-setdparams">DTrees::setDParams</a></li>
+<li><a class="reference internal" href="#dtrees-getroots">DTrees::getRoots</a></li>
+<li><a class="reference internal" href="#dtrees-getnodes">DTrees::getNodes</a></li>
+<li><a class="reference internal" href="#dtrees-getsplits">DTrees::getSplits</a></li>
+<li><a class="reference internal" href="#dtrees-getsubsets">DTrees::getSubsets</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="support_vector_machines.html"
+                        title="previous chapter">Support Vector Machines</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="boosting.html"
+                        title="next chapter">Boosting</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="decision-trees">
+<h1>Decision Trees<a class="headerlink" href="#decision-trees" title="Permalink to this headline">¶</a></h1>
+<p>The ML classes discussed in this section implement Classification and Regression Tree algorithms described in <a class="reference internal" href="#breiman84" id="id1">[Breiman84]</a>.</p>
+<p>The class <tt class="docutils literal"><span class="pre">cv::ml::DTrees</span></tt> represents a single decision tree or a collection of decision trees. It&#8217;s also a base class for <tt class="docutils literal"><span class="pre">RTrees</span></tt> and <tt class="docutils literal"><span class="pre">Boost</span></tt>.</p>
+<p>A decision tree is a binary tree (tree where each non-leaf node has two child nodes). It can be used either for classification or for regression. For classification, each tree leaf is marked with a class label; multiple leaves may have the same label. For regression, a constant is also assigned to each tree leaf, so the approximation function is piecewise constant.</p>
+<div class="section" id="predicting-with-decision-trees">
+<h2>Predicting with Decision Trees<a class="headerlink" href="#predicting-with-decision-trees" title="Permalink to this headline">¶</a></h2>
+<p>To reach a leaf node and to obtain a response for the input feature
+vector, the prediction procedure starts with the root node. From each
+non-leaf node the procedure goes to the left (selects the left
+child node as the next observed node) or to the right based on the
+value of a certain variable whose index is stored in the observed
+node. The following variables are possible:</p>
+<ul class="simple">
+<li><strong>Ordered variables.</strong> The variable value is compared with a threshold that is also stored in the node. If the value is less than the threshold, the procedure goes to the left. Otherwise, it goes to the right. For example, if the weight is less than 1 kilogram, the procedure goes to the left, else to the right.</li>
+<li><strong>Categorical variables.</strong>  A discrete variable value is tested to see whether it belongs to a certain subset of values (also stored in the node) from a limited set of values the variable could take. If it does, the procedure goes to the left. Otherwise, it goes to the right. For example, if the color is green or red, go to the left, else to the right.</li>
+</ul>
+<p>So, in each node, a pair of entities (<tt class="docutils literal"><span class="pre">variable_index</span></tt> , <tt class="docutils literal"><span class="pre">decision_rule</span>
+<span class="pre">(threshold/subset)</span></tt> ) is used. This pair is called a <em>split</em> (split on
+the variable <tt class="docutils literal"><span class="pre">variable_index</span></tt> ). Once a leaf node is reached, the value
+assigned to this node is used as the output of the prediction procedure.</p>
+<p>Sometimes, certain features of the input vector are missed (for example, in the darkness it is difficult to determine the object color), and the prediction procedure may get stuck in the certain node (in the mentioned example, if the node is split by color). To avoid such situations, decision trees use so-called <em>surrogate splits</em>. That is, in addition to the best &#8220;primary&#8221; split, every tree node may also be split to one or more other variables with nearly the same results.</p>
+</div>
+<div class="section" id="training-decision-trees">
+<h2>Training Decision Trees<a class="headerlink" href="#training-decision-trees" title="Permalink to this headline">¶</a></h2>
+<p>The tree is built recursively, starting from the root node. All training data (feature vectors and responses) is used to split the root node. In each node the optimum decision rule (the best &#8220;primary&#8221; split) is found based on some criteria. In machine learning, <tt class="docutils literal"><span class="pre">gini</span></tt> &#8220;purity&#8221; criteria are used for classification, and sum of squared errors is used for regression. Then, if necessary, the surrogate splits are found. They resemble the results of the primary split on the training data. All the data is divided using the primary and the surrogate splits (like it is done in the prediction procedure) between the left and the right child node. Then, the procedure recursively splits both left and right nodes. At each node the recursive procedure may stop (that is, stop splitting the node further) in one of the following cases:</p>
+<ul class="simple">
+<li>Depth of the constructed tree branch has reached the specified maximum value.</li>
+<li>Number of training samples in the node is less than the specified threshold when it is not statistically representative to split the node further.</li>
+<li>All the samples in the node belong to the same class or, in case of regression, the variation is too small.</li>
+<li>The best found split does not give any noticeable improvement compared to a random choice.</li>
+</ul>
+<p>When the tree is built, it may be pruned using a cross-validation procedure, if necessary. That is, some branches of the tree that may lead to the model overfitting are cut off. Normally, this procedure is only applied to standalone decision trees. Usually tree ensembles build trees that are small enough and use their own protection schemes against overfitting.</p>
+</div>
+<div class="section" id="variable-importance">
+<h2>Variable Importance<a class="headerlink" href="#variable-importance" title="Permalink to this headline">¶</a></h2>
+<p>Besides the prediction that is an obvious use of decision trees, the tree can be also used for various data analyses. One of the key properties of the constructed decision tree algorithms is an ability to compute the importance (relative decisive power) of each variable. For example, in a spam filter that uses a set of words occurred in the message as a feature vector, the variable importance rating can be used to determine the most &#8220;spam-indicating&#8221; words and thus help keep the dictionary size reasonable.</p>
+<p>Importance of each variable is computed over all the splits on this variable in the tree, primary and surrogate ones. Thus, to compute variable importance correctly, the surrogate splits must be enabled in the training parameters, even if there is no missing data.</p>
+</div>
+<div class="section" id="dtrees-split">
+<h2>DTrees::Split<a class="headerlink" href="#dtrees-split" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="DTrees::Split">
+<em class="property">class </em><tt class="descclassname">DTrees::</tt><tt class="descname">Split</tt><a class="headerlink" href="#DTrees::Split" title="Permalink to this definition">¶</a></dt>
+<dd><p>The class represents split in a decision tree. It has public members:</p>
+<dl class="member">
+<dt id="int varIdx">
+int <tt class="descname">varIdx</tt><a class="headerlink" href="#int varIdx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Index of variable on which the split is created.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="bool inversed">
+bool <tt class="descname">inversed</tt><a class="headerlink" href="#bool inversed" title="Permalink to this definition">¶</a></dt>
+<dd><p>If true, then the inverse split rule is used (i.e. left and right branches are exchanged in the rule expressions below).</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="float quality">
+float <tt class="descname">quality</tt><a class="headerlink" href="#float quality" title="Permalink to this definition">¶</a></dt>
+<dd><p>The split quality, a positive number. It is used to choose the best split.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int next">
+int <tt class="descname">next</tt><a class="headerlink" href="#int next" title="Permalink to this definition">¶</a></dt>
+<dd><p>Index of the next split in the list of splits for the node</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="float c">
+float <tt class="descname">c</tt><a class="headerlink" href="#float c" title="Permalink to this definition">¶</a></dt>
+<dd><p>The threshold value in case of split on an ordered variable. The rule is:</p>
+<div class="highlight-python"><div class="highlight"><pre>if var_value &lt; c
+  then next_node&lt;-left
+  else next_node&lt;-right
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="member">
+<dt id="int subsetOfs">
+int <tt class="descname">subsetOfs</tt><a class="headerlink" href="#int subsetOfs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Offset of the bitset used by the split on a categorical variable. The rule is:</p>
+<div class="highlight-python"><div class="highlight"><pre>if bitset[var_value] == 1
+  then next_node &lt;- left
+  else next_node &lt;- right
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="dtrees-node">
+<h2>DTrees::Node<a class="headerlink" href="#dtrees-node" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="DTrees::Node">
+<em class="property">class </em><tt class="descclassname">DTrees::</tt><tt class="descname">Node</tt><a class="headerlink" href="#DTrees::Node" title="Permalink to this definition">¶</a></dt>
+<dd><p>The class represents a decision tree node. It has public members:</p>
+<dl class="member">
+<dt id="double value">
+double <tt class="descname">value</tt><a class="headerlink" href="#double value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Value at the node: a class label in case of classification or estimated function value in case of regression.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int classIdx">
+int <tt class="descname">classIdx</tt><a class="headerlink" href="#int classIdx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class index normalized to 0..class_count-1 range and assigned to the node. It is used internally in classification trees and tree ensembles.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int parent">
+int <tt class="descname">parent</tt><a class="headerlink" href="#int parent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Index of the parent node</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int left">
+int <tt class="descname">left</tt><a class="headerlink" href="#int left" title="Permalink to this definition">¶</a></dt>
+<dd><p>Index of the left child node</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int right">
+int <tt class="descname">right</tt><a class="headerlink" href="#int right" title="Permalink to this definition">¶</a></dt>
+<dd><p>Index of right child node.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int defaultDir">
+int <tt class="descname">defaultDir</tt><a class="headerlink" href="#int defaultDir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default direction where to go (-1: left or +1: right). It helps in the case of missing values.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int split">
+int <tt class="descname">split</tt><a class="headerlink" href="#int split" title="Permalink to this definition">¶</a></dt>
+<dd><p>Index of the first split</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="dtrees-params">
+<h2>DTrees::Params<a class="headerlink" href="#dtrees-params" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="DTrees::Params">
+<em class="property">class </em><tt class="descclassname">DTrees::</tt><tt class="descname">Params</tt><a class="headerlink" href="#DTrees::Params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The structure contains all the decision tree training parameters. You can initialize it by default constructor and then override any parameters directly before training, or the structure may be fully initialized using the advanced variant of the constructor.</p>
+</div>
+<div class="section" id="dtrees-params-params">
+<h2>DTrees::Params::Params<a class="headerlink" href="#dtrees-params-params" title="Permalink to this headline">¶</a></h2>
+<p>The constructors</p>
+<dl class="function">
+<dt id="DTrees::Params::Params()">
+<strong>C++:</strong><tt class="descname"> </tt> <tt class="descclassname">DTrees::Params::</tt><tt class="descname">Params</tt><big>(</big><big>)</big><a class="headerlink" href="#DTrees::Params::Params()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DTrees::Params::Params(int maxDepth, int minSampleCount, double regressionAccuracy, bool useSurrogates, int maxCategories, int CVFolds, bool use1SERule, bool truncatePrunedTree, const Mat&amp; priors)">
+<strong>C++:</strong><tt class="descname"> </tt> <tt class="descclassname">DTrees::Params::</tt><tt class="descname">Params</tt><big>(</big>int <strong>maxDepth</strong>, int <strong>minSampleCount</strong>, double <strong>regressionAccuracy</strong>, bool <strong>useSurrogates</strong>, int <strong>maxCategories</strong>, int <strong>CVFolds</strong>, bool <strong>use1SERule</strong>, bool <strong>truncatePrunedTree</strong>, const Mat&amp; <strong>priors</strong><big>)</big><a class="headerlink" href="#DTrees::Params::Params(int maxDepth, int minSampleCount, double regressionAccuracy, bool useSurrogates, int maxCategories, int CVFolds, bool use1SERule, bool truncatePrunedTree, const Mat& priors)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>maxDepth</strong> &#8211; The maximum possible depth of the tree. That is the training algorithms attempts to split a node while its depth is less than <tt class="docutils literal"><span class="pre">maxDepth</span></tt>. The root node has zero depth. The actual depth may be smaller if the other termination criteria are met (see the outline of the training procedure in the beginning of the section), and/or if the tree is pruned.</li>
+<li><strong>minSampleCount</strong> &#8211; If the number of samples in a node is less than this parameter then the node will not be split.</li>
+<li><strong>regressionAccuracy</strong> &#8211; Termination criteria for regression trees. If all absolute differences between an estimated value in a node and values of train samples in this node are less than this parameter then the node will not be split further.</li>
+<li><strong>useSurrogates</strong> &#8211; If true then surrogate splits will be built. These splits allow to work with missing data and compute variable importance correctly. .. note:: currently it&#8217;s not implemented.</li>
+<li><strong>maxCategories</strong> &#8211; Cluster possible values of a categorical variable into <tt class="docutils literal"><span class="pre">K&lt;=maxCategories</span></tt> clusters to find a suboptimal split. If a discrete variable, on which the training procedure tries to make a split, takes more than <tt class="docutils literal"><span class="pre">maxCategories</span></tt> values, the precise best subset estimation may take a very long time because the algorithm is exponential. Instead, many decision trees engines (including our implementation) try to find sub-optimal split in this case by clustering all the samples into <tt class="docutils literal"><span class="pre">maxCategories</span></tt> clusters that is some categories are merged together. The clustering is applied only in <tt class="docutils literal"><span class="pre">n</span> <span class="pre">&gt;</span> <span class="pre">2</span></tt>-class classification problems for categorical variables with <tt class="docutils literal"><span class="pre">N</span> <span class="pre">&gt;</span> <span class="pre">max_categories</span></tt> possible values. In case of regression and 2-class classification the optimal split can be found efficiently without employing clustering, thus the parameter is not used in these cases.</li>
+<li><strong>CVFolds</strong> &#8211; If <tt class="docutils literal"><span class="pre">CVFolds</span> <span class="pre">&gt;</span> <span class="pre">1</span></tt> then algorithms prunes the built decision tree using <tt class="docutils literal"><span class="pre">K</span></tt>-fold cross-validation procedure where <tt class="docutils literal"><span class="pre">K</span></tt> is equal to <tt class="docutils literal"><span class="pre">CVFolds</span></tt>.</li>
+<li><strong>use1SERule</strong> &#8211; If true then a pruning will be harsher. This will make a tree more compact and more resistant to the training data noise but a bit less accurate.</li>
+<li><strong>truncatePrunedTree</strong> &#8211; If true then pruned branches are physically removed from the tree. Otherwise they are retained and it is possible to get results from the original unpruned (or pruned less aggressively) tree.</li>
+<li><strong>priors</strong> &#8211; The array of a priori class probabilities, sorted by the class label value. The parameter can be used to tune the decision tree preferences toward a certain class. For example, if you want to detect some rare anomaly occurrence, the training base will likely contain much more normal cases than anomalies, so a very good classification performance will be achieved just by considering every case as normal. To avoid this, the priors can be specified, where the anomaly probability is artificially increased (up to 0.5 or even greater), so the weight of the misclassified anomalies becomes much bigger, and the tree is adjusted properly. You can also think about this parameter as weights of prediction categories which determine relative weights that you give to misclassification. That is, if the weight of the first category is 1 and the weight of the second category is 10, then each mistake in predicting the second category is equivalent to making 10 mistakes in predicting the first category.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The default constructor initializes all the parameters with the default values tuned for the standalone classification tree:</p>
+<div class="highlight-python"><div class="highlight"><pre>DTrees::Params::Params()
+{
+    maxDepth = INT_MAX;
+    minSampleCount = 10;
+    regressionAccuracy = 0.01f;
+    useSurrogates = false;
+    maxCategories = 10;
+    CVFolds = 10;
+    use1SERule = true;
+    truncatePrunedTree = true;
+    priors = Mat();
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="dtrees">
+<h2>DTrees<a class="headerlink" href="#dtrees" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="DTrees : public StatModel">
+<em class="property">class </em><tt class="descname">DTrees</tt> : <em class="property">public</em> <tt class="descname">StatModel</tt><a class="headerlink" href="#DTrees : public StatModel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The class represents a single decision tree or a collection of decision trees. The current public interface of the class allows user to train only a single decision tree, however the class is capable of storing multiple decision trees and using them for prediction (by summing responses or using a voting schemes), and the derived from DTrees classes (such as <tt class="docutils literal"><span class="pre">RTrees</span></tt> and <tt class="docutils literal"><span class="pre">Boost</span></tt>) use this capability to implement decision tree ensembles.</p>
+</div>
+<div class="section" id="dtrees-create">
+<h2>DTrees::create<a class="headerlink" href="#dtrees-create" title="Permalink to this headline">¶</a></h2>
+<p>Creates the empty model</p>
+<dl class="function">
+<dt id="Ptr&lt;DTrees&gt; DTrees::create(const Params&amp; params)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;DTrees&gt; <tt class="descclassname">DTrees::</tt><tt class="descname">create</tt><big>(</big>const Params&amp; <strong>params</strong>=Params()<big>)</big><a class="headerlink" href="#Ptr<DTrees> DTrees::create(const Params& params)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The static method creates empty decision tree with the specified parameters. It should be then trained using <tt class="docutils literal"><span class="pre">train</span></tt> method (see <tt class="docutils literal"><span class="pre">StatModel::train</span></tt>). Alternatively, you can load the model from file using <tt class="docutils literal"><span class="pre">StatModel::load&lt;DTrees&gt;(filename)</span></tt>.</p>
+</div>
+<div class="section" id="dtrees-getdparams">
+<h2>DTrees::getDParams<a class="headerlink" href="#dtrees-getdparams" title="Permalink to this headline">¶</a></h2>
+<p>Returns the training parameters</p>
+<dl class="function">
+<dt id="Params DTrees::getDParams() const">
+<strong>C++:</strong><tt class="descname"> </tt>Params <tt class="descclassname">DTrees::</tt><tt class="descname">getDParams</tt><big>(</big><big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#Params DTrees::getDParams() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The method returns the training parameters.</p>
+</div>
+<div class="section" id="dtrees-setdparams">
+<h2>DTrees::setDParams<a class="headerlink" href="#dtrees-setdparams" title="Permalink to this headline">¶</a></h2>
+<p>Sets the training parameters</p>
+<dl class="function">
+<dt id="void DTrees::setDParams(const Params&amp; p)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">DTrees::</tt><tt class="descname">setDParams</tt><big>(</big>const Params&amp; <strong>p</strong><big>)</big><a class="headerlink" href="#void DTrees::setDParams(const Params& p)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>p</strong> &#8211; Training parameters of type DTrees::Params.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The method sets the training parameters.</p>
+</div>
+<div class="section" id="dtrees-getroots">
+<h2>DTrees::getRoots<a class="headerlink" href="#dtrees-getroots" title="Permalink to this headline">¶</a></h2>
+<p>Returns indices of root nodes</p>
+<dl class="function">
+<dt id="std::vector&lt;int&gt;&amp; DTrees::getRoots() const">
+<strong>C++:</strong><tt class="descname"> </tt>std::vector&lt;int&gt;&amp; <tt class="descclassname">DTrees::</tt><tt class="descname">getRoots</tt><big>(</big><big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#std::vector<int>& DTrees::getRoots() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="dtrees-getnodes">
+<h2>DTrees::getNodes<a class="headerlink" href="#dtrees-getnodes" title="Permalink to this headline">¶</a></h2>
+<p>Returns all the nodes</p>
+<dl class="function">
+<dt id="std::vector&lt;Node&gt;&amp; DTrees::getNodes() const">
+<strong>C++:</strong><tt class="descname"> </tt>std::vector&lt;Node&gt;&amp; <tt class="descclassname">DTrees::</tt><tt class="descname">getNodes</tt><big>(</big><big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#std::vector<Node>& DTrees::getNodes() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>all the node indices, mentioned above (left, right, parent, root indices) are indices in the returned vector</p>
+</div>
+<div class="section" id="dtrees-getsplits">
+<h2>DTrees::getSplits<a class="headerlink" href="#dtrees-getsplits" title="Permalink to this headline">¶</a></h2>
+<p>Returns all the splits</p>
+<dl class="function">
+<dt id="std::vector&lt;Split&gt;&amp; DTrees::getSplits() const">
+<strong>C++:</strong><tt class="descname"> </tt>std::vector&lt;Split&gt;&amp; <tt class="descclassname">DTrees::</tt><tt class="descname">getSplits</tt><big>(</big><big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#std::vector<Split>& DTrees::getSplits() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>all the split indices, mentioned above (split, next etc.) are indices in the returned vector</p>
+</div>
+<div class="section" id="dtrees-getsubsets">
+<h2>DTrees::getSubsets<a class="headerlink" href="#dtrees-getsubsets" title="Permalink to this headline">¶</a></h2>
+<p>Returns all the bitsets for categorical splits</p>
+<dl class="function">
+<dt id="std::vector&lt;int&gt;&amp; DTrees::getSubsets() const">
+<strong>C++:</strong><tt class="descname"> </tt>std::vector&lt;int&gt;&amp; <tt class="descclassname">DTrees::</tt><tt class="descname">getSubsets</tt><big>(</big><big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#std::vector<int>& DTrees::getSubsets() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">Split::subsetOfs</span></tt> is an offset in the returned vector</p>
+<table class="docutils citation" frame="void" id="breiman84" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[Breiman84]</a></td><td>Breiman, L., Friedman, J. Olshen, R. and Stone, C. (1984), <em>Classification and Regression Trees</em>, Wadsworth.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="boosting.html" title="Boosting"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="support_vector_machines.html" title="Support Vector Machines"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" >ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/ml/doc/decision_trees.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

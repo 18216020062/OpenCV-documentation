@@ -1,0 +1,443 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Reading and Writing Images &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="imgcodecs. Image file reading and writing" href="imgcodecs.html" />
+    <link rel="next" title="videoio. Media I/O" href="../../videoio/doc/videoio.html" />
+    <link rel="prev" title="imgcodecs. Image file reading and writing" href="imgcodecs.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../videoio/doc/videoio.html" title="videoio. Media I/O"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="imgcodecs.html" title="imgcodecs. Image file reading and writing"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="imgcodecs.html" accesskey="U">imgcodecs. Image file reading and writing</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Reading and Writing Images</a><ul>
+<li><a class="reference internal" href="#imdecode">imdecode</a></li>
+<li><a class="reference internal" href="#imencode">imencode</a></li>
+<li><a class="reference internal" href="#imread">imread</a></li>
+<li><a class="reference internal" href="#imwrite">imwrite</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="imgcodecs.html"
+                        title="previous chapter">imgcodecs. Image file reading and writing</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../videoio/doc/videoio.html"
+                        title="next chapter">videoio. Media I/O</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="reading-and-writing-images">
+<h1>Reading and Writing Images<a class="headerlink" href="#reading-and-writing-images" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="imdecode">
+<h2>imdecode<a class="headerlink" href="#imdecode" title="Permalink to this headline">¶</a></h2>
+<p>Reads an image from a buffer in memory.</p>
+<dl class="function">
+<dt id="Mat imdecode(InputArray buf, int flags)">
+<strong>C++:</strong><tt class="descname"> </tt>Mat <tt class="descname">imdecode</tt><big>(</big>InputArray <strong>buf</strong>, int <strong>flags</strong><big>)</big><a class="headerlink" href="#Mat imdecode(InputArray buf, int flags)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Mat imdecode(InputArray buf, int flags, Mat* dst)">
+<strong>C++:</strong><tt class="descname"> </tt>Mat <tt class="descname">imdecode</tt><big>(</big>InputArray <strong>buf</strong>, int <strong>flags</strong>, Mat* <strong>dst</strong><big>)</big><a class="headerlink" href="#Mat imdecode(InputArray buf, int flags, Mat* dst)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="IplImage* cvDecodeImage(const CvMat* buf, int iscolor)">
+<strong>C:</strong><tt class="descname"> </tt>IplImage* <tt class="descname">cvDecodeImage</tt><big>(</big>const CvMat* <strong>buf</strong>, int <strong>iscolor</strong>=CV_LOAD_IMAGE_COLOR<big>)</big><a class="headerlink" href="#IplImage* cvDecodeImage(const CvMat* buf, int iscolor)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="CvMat* cvDecodeImageM(const CvMat* buf, int iscolor)">
+<strong>C:</strong><tt class="descname"> </tt>CvMat* <tt class="descname">cvDecodeImageM</tt><big>(</big>const CvMat* <strong>buf</strong>, int <strong>iscolor</strong>=CV_LOAD_IMAGE_COLOR<big>)</big><a class="headerlink" href="#CvMat* cvDecodeImageM(const CvMat* buf, int iscolor)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.imdecode">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.</tt><tt class="descname">imdecode</tt><big>(</big>buf, flags<big>)</big> &rarr; retval<a class="headerlink" href="#cv2.imdecode" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>buf</strong> &#8211; Input array or vector of bytes.</li>
+<li><strong>flags</strong> &#8211; The same flags as in <a class="reference internal" href="#Mat imread(const String&amp; filename, int flags)" title="Mat imread(const String&amp; filename, int flags)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">imread()</span></tt></a> .</li>
+<li><strong>dst</strong> &#8211; The optional output placeholder for the decoded matrix. It can save the image reallocations when the function is called repeatedly for images of the same size.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function reads an image from the specified buffer in the memory.
+If the buffer is too short or contains invalid data, the empty matrix/image is returned.</p>
+<p>See
+<a class="reference internal" href="#Mat imread(const String&amp; filename, int flags)" title="Mat imread(const String&amp; filename, int flags)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">imread()</span></tt></a> for the list of supported formats and flags description.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In the case of color images, the decoded images will have the channels stored in <tt class="docutils literal"><span class="pre">B</span> <span class="pre">G</span> <span class="pre">R</span></tt> order.</p>
+</div>
+</div>
+<div class="section" id="imencode">
+<h2>imencode<a class="headerlink" href="#imencode" title="Permalink to this headline">¶</a></h2>
+<p>Encodes an image into a memory buffer.</p>
+<dl class="function">
+<dt id="bool imencode(const String&amp; ext, InputArray img, vector&lt;uchar&gt;&amp; buf, const vector&lt;int&gt;&amp; params)">
+<strong>C++:</strong><tt class="descname"> </tt>bool <tt class="descname">imencode</tt><big>(</big>const String&amp; <strong>ext</strong>, InputArray <strong>img</strong>, vector&lt;uchar&gt;&amp; <strong>buf</strong>, const vector&lt;int&gt;&amp; <strong>params</strong>=vector&lt;int&gt;()<big>)</big><a class="headerlink" href="#bool imencode(const String& ext, InputArray img, vector<uchar>& buf, const vector<int>& params)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="CvMat* cvEncodeImage(const char* ext, const CvArr* image, const int* params)">
+<strong>C:</strong><tt class="descname"> </tt>CvMat* <tt class="descname">cvEncodeImage</tt><big>(</big>const char* <strong>ext</strong>, const CvArr* <strong>image</strong>, const int* <strong>params</strong>=0 <big>)</big><a class="headerlink" href="#CvMat* cvEncodeImage(const char* ext, const CvArr* image, const int* params)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.imencode">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.</tt><tt class="descname">imencode</tt><big>(</big>ext, img<span class="optional">[</span>, params<span class="optional">]</span><big>)</big> &rarr; retval, buf<a class="headerlink" href="#cv2.imencode" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ext</strong> &#8211; File extension that defines the output format.</li>
+<li><strong>img</strong> &#8211; Image to be written.</li>
+<li><strong>buf</strong> &#8211; Output buffer resized to fit the compressed image.</li>
+<li><strong>params</strong> &#8211; Format-specific parameters. See  <a class="reference internal" href="#bool imwrite(const String&amp; filename, InputArray img, const vector&lt;int&gt;&amp; params)" title="bool imwrite(const String&amp; filename, InputArray img, const vector&lt;int&gt;&amp; params)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">imwrite()</span></tt></a> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function compresses the image and stores it in the memory buffer that is resized to fit the result.
+See
+<a class="reference internal" href="#bool imwrite(const String&amp; filename, InputArray img, const vector&lt;int&gt;&amp; params)" title="bool imwrite(const String&amp; filename, InputArray img, const vector&lt;int&gt;&amp; params)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">imwrite()</span></tt></a> for the list of supported formats and flags description.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><tt class="docutils literal"><span class="pre">cvEncodeImage</span></tt> returns single-row matrix of type <tt class="docutils literal"><span class="pre">CV_8UC1</span></tt> that contains encoded image as array of bytes.</p>
+</div>
+</div>
+<div class="section" id="imread">
+<h2>imread<a class="headerlink" href="#imread" title="Permalink to this headline">¶</a></h2>
+<p>Loads an image from a file.</p>
+<dl class="function">
+<dt id="Mat imread(const String&amp; filename, int flags)">
+<strong>C++:</strong><tt class="descname"> </tt>Mat <tt class="descname">imread</tt><big>(</big>const String&amp; <strong>filename</strong>, int <strong>flags</strong>=IMREAD_COLOR <big>)</big><a class="headerlink" href="#Mat imread(const String& filename, int flags)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.imread">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.</tt><tt class="descname">imread</tt><big>(</big>filename<span class="optional">[</span>, flags<span class="optional">]</span><big>)</big> &rarr; retval<a class="headerlink" href="#cv2.imread" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="IplImage* cvLoadImage(const char* filename, int iscolor)">
+<strong>C:</strong><tt class="descname"> </tt>IplImage* <tt class="descname">cvLoadImage</tt><big>(</big>const char* <strong>filename</strong>, int <strong>iscolor</strong>=CV_LOAD_IMAGE_COLOR <big>)</big><a class="headerlink" href="#IplImage* cvLoadImage(const char* filename, int iscolor)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="CvMat* cvLoadImageM(const char* filename, int iscolor)">
+<strong>C:</strong><tt class="descname"> </tt>CvMat* <tt class="descname">cvLoadImageM</tt><big>(</big>const char* <strong>filename</strong>, int <strong>iscolor</strong>=CV_LOAD_IMAGE_COLOR <big>)</big><a class="headerlink" href="#CvMat* cvLoadImageM(const char* filename, int iscolor)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> &#8211; Name of file to be loaded.</li>
+<li><strong>flags</strong> &#8211; <p>Flags specifying the color type of a loaded image:</p>
+<ul>
+<li>CV_LOAD_IMAGE_ANYDEPTH - If set, return 16-bit/32-bit image when the input has the corresponding depth, otherwise convert it to 8-bit.</li>
+<li>CV_LOAD_IMAGE_COLOR - If set, always convert image to the color one</li>
+<li>CV_LOAD_IMAGE_GRAYSCALE - If set, always convert image to the grayscale one</li>
+<li><dl class="first docutils">
+<dt><strong>&gt;0</strong>  Return a 3-channel color image.</dt>
+<dd><div class="first last admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In the current implementation the alpha channel, if any, is stripped from the output image. Use negative value if you need the alpha channel.</p>
+</div>
+</dd>
+</dl>
+</li>
+<li><strong>=0</strong>  Return a grayscale image.</li>
+<li><strong>&lt;0</strong>  Return the loaded image as is (with alpha channel).</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <tt class="docutils literal"><span class="pre">imread</span></tt> loads an image from the specified file and returns it. If the image cannot be read (because of missing file, improper permissions, unsupported or invalid format), the function returns an empty matrix ( <tt class="docutils literal"><span class="pre">Mat::data==NULL</span></tt> ). Currently, the following file formats are supported:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Windows bitmaps - <tt class="docutils literal"><span class="pre">*.bmp,</span> <span class="pre">*.dib</span></tt> (always supported)</li>
+<li>JPEG files - <tt class="docutils literal"><span class="pre">*.jpeg,</span> <span class="pre">*.jpg,</span> <span class="pre">*.jpe</span></tt> (see the <em>Notes</em> section)</li>
+<li>JPEG 2000 files - <tt class="docutils literal"><span class="pre">*.jp2</span></tt> (see the <em>Notes</em> section)</li>
+<li>Portable Network Graphics - <tt class="docutils literal"><span class="pre">*.png</span></tt> (see the <em>Notes</em> section)</li>
+<li>WebP - <tt class="docutils literal"><span class="pre">*.webp</span></tt> (see the <em>Notes</em> section)</li>
+<li>Portable image format - <tt class="docutils literal"><span class="pre">*.pbm,</span> <span class="pre">*.pgm,</span> <span class="pre">*.ppm</span></tt>     (always supported)</li>
+<li>Sun rasters - <tt class="docutils literal"><span class="pre">*.sr,</span> <span class="pre">*.ras</span></tt>     (always supported)</li>
+<li>TIFF files - <tt class="docutils literal"><span class="pre">*.tiff,</span> <span class="pre">*.tif</span></tt> (see the <em>Notes</em> section)</li>
+</ul>
+</div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>The function determines the type of an image by the content, not by the file extension.</li>
+<li>On Microsoft Windows* OS and MacOSX*, the codecs shipped with an OpenCV image (libjpeg, libpng, libtiff, and libjasper) are used by default. So, OpenCV can always read JPEGs, PNGs, and TIFFs. On MacOSX, there is also an option to use native MacOSX image readers. But beware that currently these native image loaders give images with different pixel values because of the color management embedded into MacOSX.</li>
+<li>On Linux*, BSD flavors and other Unix-like open-source operating systems, OpenCV looks for codecs supplied with an OS image. Install the relevant packages (do not forget the development files, for example, &#8220;libjpeg-dev&#8221;, in Debian* and Ubuntu*) to get the codec support or turn on the <tt class="docutils literal"><span class="pre">OPENCV_BUILD_3RDPARTY_LIBS</span></tt> flag in CMake.</li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In the case of color images, the decoded images will have the channels stored in <tt class="docutils literal"><span class="pre">B</span> <span class="pre">G</span> <span class="pre">R</span></tt> order.</p>
+</div>
+</div>
+<div class="section" id="imwrite">
+<h2>imwrite<a class="headerlink" href="#imwrite" title="Permalink to this headline">¶</a></h2>
+<p>Saves an image to a specified file.</p>
+<dl class="function">
+<dt id="bool imwrite(const String&amp; filename, InputArray img, const vector&lt;int&gt;&amp; params)">
+<strong>C++:</strong><tt class="descname"> </tt>bool <tt class="descname">imwrite</tt><big>(</big>const String&amp; <strong>filename</strong>, InputArray <strong>img</strong>, const vector&lt;int&gt;&amp; <strong>params</strong>=vector&lt;int&gt;() <big>)</big><a class="headerlink" href="#bool imwrite(const String& filename, InputArray img, const vector<int>& params)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.imwrite">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.</tt><tt class="descname">imwrite</tt><big>(</big>filename, img<span class="optional">[</span>, params<span class="optional">]</span><big>)</big> &rarr; retval<a class="headerlink" href="#cv2.imwrite" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="int cvSaveImage(const char* filename, const CvArr* image, const int* params)">
+<strong>C:</strong><tt class="descname"> </tt>int <tt class="descname">cvSaveImage</tt><big>(</big>const char* <strong>filename</strong>, const CvArr* <strong>image</strong>, const int* <strong>params</strong>=0 <big>)</big><a class="headerlink" href="#int cvSaveImage(const char* filename, const CvArr* image, const int* params)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> &#8211; Name of the file.</li>
+<li><strong>image</strong> &#8211; Image to be saved.</li>
+<li><strong>params</strong> &#8211; <p>Format-specific save parameters encoded as pairs  <tt class="docutils literal"><span class="pre">paramId_1,</span> <span class="pre">paramValue_1,</span> <span class="pre">paramId_2,</span> <span class="pre">paramValue_2,</span> <span class="pre">...</span></tt> . The following parameters are currently supported:</p>
+<ul>
+<li>For JPEG, it can be a quality ( <tt class="docutils literal"><span class="pre">CV_IMWRITE_JPEG_QUALITY</span></tt> ) from 0 to 100 (the higher is the better). Default value is 95.</li>
+<li>For WEBP, it can be a quality ( CV_IMWRITE_WEBP_QUALITY ) from 1 to 100 (the higher is the better).
+By default (without any parameter) and for quality above 100 the lossless compression is used.</li>
+<li>For PNG, it can be the compression level ( <tt class="docutils literal"><span class="pre">CV_IMWRITE_PNG_COMPRESSION</span></tt> ) from 0 to 9. A higher value means a smaller size and longer compression time. Default value is 3.</li>
+<li>For PPM, PGM, or PBM, it can be a binary format flag ( <tt class="docutils literal"><span class="pre">CV_IMWRITE_PXM_BINARY</span></tt> ), 0 or 1. Default value is 1.</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <tt class="docutils literal"><span class="pre">imwrite</span></tt> saves the image to the specified file. The image format is chosen based on the <tt class="docutils literal"><span class="pre">filename</span></tt> extension (see
+<a class="reference internal" href="#Mat imread(const String&amp; filename, int flags)" title="Mat imread(const String&amp; filename, int flags)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">imread()</span></tt></a> for the list of extensions). Only 8-bit (or 16-bit unsigned (<tt class="docutils literal"><span class="pre">CV_16U</span></tt>) in case of PNG, JPEG 2000, and TIFF) single-channel or 3-channel (with &#8216;BGR&#8217; channel order) images can be saved using this function. If the format, depth or channel order is different, use
+<a class="reference internal" href="../../core/doc/basic_structures.html#void Mat::convertTo(OutputArray m, int rtype, double alpha, double beta) const" title="void Mat::convertTo(OutputArray m, int rtype, double alpha, double beta) const"><tt class="xref ocv ocv-func docutils literal"><span class="pre">Mat::convertTo()</span></tt></a> , and
+<a class="reference internal" href="../../imgproc/doc/miscellaneous_transformations.html#void cvtColor(InputArray src, OutputArray dst, int code, int dstCn)" title="void cvtColor(InputArray src, OutputArray dst, int code, int dstCn)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cvtColor()</span></tt></a> to convert it before saving. Or, use the universal <a class="reference internal" href="../../core/doc/xml_yaml_persistence.html#FileStorage" title="class FileStorage"><tt class="xref ocv ocv-class docutils literal"><span class="pre">FileStorage</span></tt></a> I/O functions to save the image to XML or YAML format.</p>
+<p>It is possible to store PNG images with an alpha channel using this function. To do this, create 8-bit (or 16-bit) 4-channel image BGRA, where the alpha channel goes last. Fully transparent pixels should have alpha set to 0, fully opaque pixels should have alpha set to 255/65535. The sample below shows how to create such a BGRA image and store to PNG file. It also demonstrates how to set custom compression parameters</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include &lt;vector&gt;</span>
+<span class="cp">#include &lt;stdio.h&gt;</span>
+<span class="cp">#include &lt;opencv2/opencv.hpp&gt;</span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">createAlphaMat</span><span class="p">(</span><span class="n">Mat</span> <span class="o">&amp;</span><span class="n">mat</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">mat</span><span class="p">.</span><span class="n">rows</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">mat</span><span class="p">.</span><span class="n">cols</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">Vec4b</span><span class="o">&amp;</span> <span class="n">rgba</span> <span class="o">=</span> <span class="n">mat</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="n">Vec4b</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">);</span>
+            <span class="n">rgba</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">UCHAR_MAX</span><span class="p">;</span>
+            <span class="n">rgba</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">saturate_cast</span><span class="o">&lt;</span><span class="n">uchar</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">float</span> <span class="p">(</span><span class="n">mat</span><span class="p">.</span><span class="n">cols</span> <span class="o">-</span> <span class="n">j</span><span class="p">))</span> <span class="o">/</span> <span class="p">((</span><span class="kt">float</span><span class="p">)</span><span class="n">mat</span><span class="p">.</span><span class="n">cols</span><span class="p">)</span> <span class="o">*</span> <span class="n">UCHAR_MAX</span><span class="p">);</span>
+            <span class="n">rgba</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">saturate_cast</span><span class="o">&lt;</span><span class="n">uchar</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">float</span> <span class="p">(</span><span class="n">mat</span><span class="p">.</span><span class="n">rows</span> <span class="o">-</span> <span class="n">i</span><span class="p">))</span> <span class="o">/</span> <span class="p">((</span><span class="kt">float</span><span class="p">)</span><span class="n">mat</span><span class="p">.</span><span class="n">rows</span><span class="p">)</span> <span class="o">*</span> <span class="n">UCHAR_MAX</span><span class="p">);</span>
+            <span class="n">rgba</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">saturate_cast</span><span class="o">&lt;</span><span class="n">uchar</span><span class="o">&gt;</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">rgba</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">rgba</span><span class="p">[</span><span class="mi">2</span><span class="p">]));</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argv</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argc</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// Create mat with alpha channel</span>
+    <span class="n">Mat</span> <span class="n">mat</span><span class="p">(</span><span class="mi">480</span><span class="p">,</span> <span class="mi">640</span><span class="p">,</span> <span class="n">CV_8UC4</span><span class="p">);</span>
+    <span class="n">createAlphaMat</span><span class="p">(</span><span class="n">mat</span><span class="p">);</span>
+
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">compression_params</span><span class="p">;</span>
+    <span class="n">compression_params</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">CV_IMWRITE_PNG_COMPRESSION</span><span class="p">);</span>
+    <span class="n">compression_params</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">9</span><span class="p">);</span>
+
+    <span class="n">try</span> <span class="p">{</span>
+        <span class="n">imwrite</span><span class="p">(</span><span class="s">&quot;alpha.png&quot;</span><span class="p">,</span> <span class="n">mat</span><span class="p">,</span> <span class="n">compression_params</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">catch</span> <span class="p">(</span><span class="n">runtime_error</span><span class="o">&amp;</span> <span class="n">ex</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&quot;Exception converting image to PNG format: %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ex</span><span class="p">.</span><span class="n">what</span><span class="p">());</span>
+        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">fprintf</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="s">&quot;Saved PNG file with alpha data.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../videoio/doc/videoio.html" title="videoio. Media I/O"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="imgcodecs.html" title="imgcodecs. Image file reading and writing"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="imgcodecs.html" >imgcodecs. Image file reading and writing</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/imgcodecs/doc/reading_and_writing_images.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>shape. Shape Distance and Matching &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="OpenCV API Reference" href="../../refman.html" />
+    <link rel="next" title="Shape Distance and Common Interfaces" href="shape_distances.html" />
+    <link rel="prev" title="Image Warping" href="../../cudawarping/doc/warping.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="shape_distances.html" title="Shape Distance and Common Interfaces"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../../cudawarping/doc/warping.html" title="Image Warping"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" accesskey="U">OpenCV API Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../../cudawarping/doc/warping.html"
+                        title="previous chapter">Image Warping</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="shape_distances.html"
+                        title="next chapter">Shape Distance and Common Interfaces</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="shape-shape-distance-and-matching">
+<h1>shape. Shape Distance and Matching<a class="headerlink" href="#shape-shape-distance-and-matching" title="Permalink to this headline">¶</a></h1>
+<p>The module contains algorithms that embed a notion of shape distance.
+These algorithms may be used for shape matching and retrieval, or shape
+comparison.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="shape_distances.html">Shape Distance and Common Interfaces</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="shape_distances.html#shapedistanceextractor">ShapeDistanceExtractor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shape_distances.html#shapedistanceextractor-computedistance">ShapeDistanceExtractor::computeDistance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shape_distances.html#shapecontextdistanceextractor">ShapeContextDistanceExtractor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shape_distances.html#shapecontextdistanceextractor-setangularbins">ShapeContextDistanceExtractor::setAngularBins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shape_distances.html#shapecontextdistanceextractor-setradialbins">ShapeContextDistanceExtractor::setRadialBins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shape_distances.html#shapecontextdistanceextractor-setinnerradius">ShapeContextDistanceExtractor::setInnerRadius</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shape_distances.html#shapecontextdistanceextractor-setouterradius">ShapeContextDistanceExtractor::setOuterRadius</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shape_distances.html#shapecontextdistanceextractor-setshapecontextweight">ShapeContextDistanceExtractor::setShapeContextWeight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shape_distances.html#shapecontextdistanceextractor-setimageappearanceweight">ShapeContextDistanceExtractor::setImageAppearanceWeight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shape_distances.html#shapecontextdistanceextractor-setbendingenergyweight">ShapeContextDistanceExtractor::setBendingEnergyWeight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shape_distances.html#shapecontextdistanceextractor-setimages">ShapeContextDistanceExtractor::setImages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shape_distances.html#shapecontextdistanceextractor-setcostextractor">ShapeContextDistanceExtractor::setCostExtractor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shape_distances.html#shapecontextdistanceextractor-setstddev">ShapeContextDistanceExtractor::setStdDev</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shape_distances.html#shapecontextdistanceextractor-settransformalgorithm">ShapeContextDistanceExtractor::setTransformAlgorithm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shape_distances.html#hausdorffdistanceextractor">HausdorffDistanceExtractor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shape_distances.html#hausdorffdistanceextractor-setdistanceflag">HausdorffDistanceExtractor::setDistanceFlag</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shape_distances.html#hausdorffdistanceextractor-setrankproportion">HausdorffDistanceExtractor::setRankProportion</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="shape_transformers.html">Shape Transformers and Interfaces</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="shape_transformers.html#shapetransformer">ShapeTransformer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shape_transformers.html#shapetransformer-estimatetransformation">ShapeTransformer::estimateTransformation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shape_transformers.html#shapetransformer-applytransformation">ShapeTransformer::applyTransformation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shape_transformers.html#shapetransformer-warpimage">ShapeTransformer::warpImage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shape_transformers.html#thinplatesplineshapetransformer">ThinPlateSplineShapeTransformer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shape_transformers.html#thinplatesplineshapetransformer-setregularizationparameter">ThinPlateSplineShapeTransformer::setRegularizationParameter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shape_transformers.html#affinetransformer">AffineTransformer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="histogram_cost_matrix.html">Cost Matrix for Histograms Common Interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="histogram_cost_matrix.html#histogramcostextractor">HistogramCostExtractor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="histogram_cost_matrix.html#normhistogramcostextractor">NormHistogramCostExtractor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="histogram_cost_matrix.html#emdhistogramcostextractor">EMDHistogramCostExtractor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="histogram_cost_matrix.html#chihistogramcostextractor">ChiHistogramCostExtractor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="histogram_cost_matrix.html#emdl1histogramcostextractor">EMDL1HistogramCostExtractor</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="emdL1.html">EMD-L1</a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="shape_distances.html" title="Shape Distance and Common Interfaces"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../../cudawarping/doc/warping.html" title="Image Warping"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/shape/doc/shape.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

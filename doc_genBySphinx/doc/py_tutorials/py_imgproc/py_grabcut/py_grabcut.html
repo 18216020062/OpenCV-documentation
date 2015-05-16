@@ -1,0 +1,295 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Interactive Foreground Extraction using GrabCut Algorithm &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../../index.html" />
+    <link rel="up" title="Image Processing in OpenCV" href="../py_table_of_contents_imgproc/py_table_of_contents_imgproc.html" />
+    <link rel="next" title="Feature Detection and Description" href="../../py_feature2d/py_table_of_contents_feature2d/py_table_of_contents_feature2d.html" />
+    <link rel="prev" title="Image Segmentation with Watershed Algorithm" href="../py_watershed/py_watershed.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py_feature2d/py_table_of_contents_feature2d/py_table_of_contents_feature2d.html" title="Feature Detection and Description"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../py_watershed/py_watershed.html" title="Image Segmentation with Watershed Algorithm"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_imgproc/py_table_of_contents_imgproc.html" accesskey="U">Image Processing in OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Interactive Foreground Extraction using GrabCut Algorithm</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#theory">Theory</a></li>
+<li><a class="reference internal" href="#demo">Demo</a></li>
+<li><a class="reference internal" href="#additional-resources">Additional Resources</a></li>
+<li><a class="reference internal" href="#exercises">Exercises</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../py_watershed/py_watershed.html"
+                        title="previous chapter">Image Segmentation with Watershed Algorithm</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../py_feature2d/py_table_of_contents_feature2d/py_table_of_contents_feature2d.html"
+                        title="next chapter">Feature Detection and Description</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="interactive-foreground-extraction-using-grabcut-algorithm">
+<span id="grabcut"></span><h1>Interactive Foreground Extraction using GrabCut Algorithm<a class="headerlink" href="#interactive-foreground-extraction-using-grabcut-algorithm" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>In this chapter</dt>
+<dd><ul class="first last simple">
+<li>We will see GrabCut algorithm to extract foreground in images</li>
+<li>We will create an interactive application for this.</li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<p>GrabCut algorithm was designed by Carsten Rother, Vladimir Kolmogorov &amp; Andrew Blake from Microsoft Research Cambridge, UK. in their paper, <a class="reference external" href="http://dl.acm.org/citation.cfm?id=1015720">&#8220;GrabCut&#8221;: interactive foreground extraction using iterated graph cuts</a> . An algorithm was needed for foreground extraction with minimal user interaction, and the result was GrabCut.</p>
+<p>How it works from user point of view ? Initially user draws a rectangle around the foreground region (foreground region shoule be completely inside the rectangle). Then algorithm segments it iteratively to get the best result. Done. But in some cases, the segmentation won&#8217;t be fine, like, it may have marked some foreground region as background and vice versa. In that case, user need to do fine touch-ups. Just give some strokes on the images where some faulty results are there. Strokes basically says <em>&#8220;Hey, this region should be foreground, you marked it background, correct it in next iteration&#8221;</em> or its opposite for background. Then in the next iteration, you get better results.</p>
+<p>See the image below. First player and football is enclosed in a blue rectangle. Then some final touchups with white strokes (denoting foreground) and black strokes (denoting background) is made. And we get a nice result.</p>
+<blockquote>
+<div><img alt="GrabCut in Action" class="align-center" src="../../../../_images/grabcut_output1.jpg" />
+</div></blockquote>
+<p>So what happens in background ?</p>
+<blockquote>
+<div><ul class="simple">
+<li>User inputs the rectangle. Everything outside this rectangle will be taken as sure background (That is the reason it is mentioned before that your rectangle should include all the objects). Everything inside rectangle is unknown. Similarly any user input specifying foreground and background are considered as hard-labelling which means they won&#8217;t change in the process.</li>
+<li>Computer does an initial labelling depeding on the data we gave. It labels the foreground and background pixels (or it hard-labels)</li>
+<li>Now a Gaussian Mixture Model(GMM) is used to model the foreground and background.</li>
+<li>Depending on the data we gave, GMM learns and create new pixel distribution. That is, the unknown pixels are labelled either probable foreground or probable background depending on its relation with the other hard-labelled pixels in terms of color statistics (It is just like clustering).</li>
+<li>A graph is built from this pixel distribution. Nodes in the graphs are pixels. Additional two nodes are added, <strong>Source node</strong> and <strong>Sink node</strong>. Every foreground pixel is connected to Source node and every background pixel is connected to Sink node.</li>
+<li>The weights of edges connecting pixels to source node/end node are defined by the probability of a pixel being foreground/background. The weights between the pixels are defined by the edge information or pixel similarity. If there is a large difference in pixel color, the edge between them will get a low weight.</li>
+<li>Then a mincut algorithm is used to segment the graph. It cuts the graph into two separating source node and sink node with minimum cost function. The cost function is the sum of all weights of the edges that are cut. After the cut, all the pixels connected to Source node become foreground and those connected to Sink node become background.</li>
+<li>The process is continued until the classification converges.</li>
+</ul>
+</div></blockquote>
+<p>It is illustrated in below image (Image Courtesy: <a class="reference external" href="http://www.cs.ru.ac.za/research/g02m1682/">http://www.cs.ru.ac.za/research/g02m1682/</a>)</p>
+<blockquote>
+<div><img alt="Simplified Diagram of GrabCut Algorithm" class="align-center" src="../../../../_images/grabcut.jpg" />
+</div></blockquote>
+</div>
+<div class="section" id="demo">
+<h2>Demo<a class="headerlink" href="#demo" title="Permalink to this headline">¶</a></h2>
+<p>Now we go for grabcut algorithm with OpenCV. OpenCV has the function, <strong>cv2.grabCut()</strong> for this. We will see its arguments first:</p>
+<blockquote>
+<div><ul class="simple">
+<li><em>img</em> - Input image</li>
+<li><em>mask</em> - It is a mask image where we specify which areas are background, foreground or probable background/foreground etc. It is done by the following flags, <strong>cv2.GC_BGD, cv2.GC_FGD, cv2.GC_PR_BGD, cv2.GC_PR_FGD</strong>, or simply pass 0,1,2,3 to image.</li>
+<li><em>rect</em> - It is the coordinates of a rectangle which includes the foreground object in the format (x,y,w,h)</li>
+<li><em>bdgModel</em>, <em>fgdModel</em> - These are arrays used by the algorithm internally. You just create two np.float64 type zero arrays of size (1,65).</li>
+<li><em>iterCount</em> - Number of iterations the algorithm should run.</li>
+<li><em>mode</em> - It should be <strong>cv2.GC_INIT_WITH_RECT</strong> or <strong>cv2.GC_INIT_WITH_MASK</strong> or combined which decides whether we are drawing rectangle or final touchup strokes.</li>
+</ul>
+</div></blockquote>
+<p>First let&#8217;s see with rectangular mode. We load the image, create a similar mask image. We create <em>fgdModel</em> and <em>bgdModel</em>. We give the rectangle parameters. It&#8217;s all straight-forward. Let the algorithm run for 5 iterations. Mode should be <em>cv2.GC_INIT_WITH_RECT</em> since we are using rectangle. Then run the grabcut. It modifies the mask image. In the new mask image, pixels will be marked with four flags denoting background/foreground as specified above. So we modify the mask such that all 0-pixels and 2-pixels are put to 0 (ie background) and all 1-pixels and 3-pixels are put to 1(ie foreground pixels). Now our final mask is ready. Just multiply it with input image to get the segmented image.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;messi5.jpg&#39;</span><span class="p">)</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">],</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+
+<span class="n">bgdModel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">65</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">fgdModel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">65</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+<span class="n">rect</span> <span class="o">=</span> <span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">450</span><span class="p">,</span><span class="mi">290</span><span class="p">)</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">grabCut</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">mask</span><span class="p">,</span><span class="n">rect</span><span class="p">,</span><span class="n">bgdModel</span><span class="p">,</span><span class="n">fgdModel</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="n">cv2</span><span class="o">.</span><span class="n">GC_INIT_WITH_RECT</span><span class="p">)</span>
+
+<span class="n">mask2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">mask</span><span class="o">==</span><span class="mi">2</span><span class="p">)</span><span class="o">|</span><span class="p">(</span><span class="n">mask</span><span class="o">==</span><span class="mi">0</span><span class="p">),</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;uint8&#39;</span><span class="p">)</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">*</span><span class="n">mask2</span><span class="p">[:,:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">),</span><span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(),</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>See the results below:</p>
+<blockquote>
+<div><img alt="Segmentation in rect mode" class="align-center" src="../../../../_images/grabcut_rect.jpg" />
+</div></blockquote>
+<p>Oops, Messi&#8217;s hair is gone. <em>Who likes Messi without his hair?</em> We need to bring it back. So we will give there a fine touchup with 1-pixel (sure foreground). At the same time, Some part of ground has come to picture which we don&#8217;t want, and also some logo. We need to remove them. There we give some 0-pixel touchup (sure background). So we modify our resulting mask in previous case as we told now.</p>
+<p><em>What I actually did is that, I opened input image in paint application and added another layer to the image. Using brush tool in the paint, I marked missed foreground (hair, shoes, ball etc) with white and unwanted background (like logo, ground etc) with black on this new layer. Then filled remaining background with gray. Then loaded that mask image in OpenCV, edited original mask image we got with corresponding values in newly added mask image. Check the code below:</em></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># newmask is the mask image I manually labelled</span>
+<span class="n">newmask</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;newmask.png&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c"># whereever it is marked white (sure foreground), change mask=1</span>
+<span class="c"># whereever it is marked black (sure background), change mask=0</span>
+<span class="n">mask</span><span class="p">[</span><span class="n">newmask</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">mask</span><span class="p">[</span><span class="n">newmask</span> <span class="o">==</span> <span class="mi">255</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">mask</span><span class="p">,</span> <span class="n">bgdModel</span><span class="p">,</span> <span class="n">fgdModel</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">grabCut</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">mask</span><span class="p">,</span><span class="bp">None</span><span class="p">,</span><span class="n">bgdModel</span><span class="p">,</span><span class="n">fgdModel</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="n">cv2</span><span class="o">.</span><span class="n">GC_INIT_WITH_MASK</span><span class="p">)</span>
+
+<span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">mask</span><span class="o">==</span><span class="mi">2</span><span class="p">)</span><span class="o">|</span><span class="p">(</span><span class="n">mask</span><span class="o">==</span><span class="mi">0</span><span class="p">),</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;uint8&#39;</span><span class="p">)</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">*</span><span class="n">mask</span><span class="p">[:,:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">),</span><span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(),</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>See the result below:</p>
+<blockquote>
+<div><img alt="Segmentation in mask mode" class="align-center" src="../../../../_images/grabcut_mask.jpg" />
+</div></blockquote>
+<p>So that&#8217;s it. Here instead of initializing in rect mode, you can directly go into mask mode. Just mark the rectangle area in mask image with 2-pixel or 3-pixel (probable background/foreground). Then mark our sure_foreground with 1-pixel as we did in second example. Then directly apply the grabCut function with mask mode.</p>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>OpenCV samples contain a sample <tt class="docutils literal"><span class="pre">grabcut.py</span></tt> which is an interactive tool using grabcut. Check it. Also watch this <a class="reference external" href="http://www.youtube.com/watch?v=kAwxLTDDAwU">youtube video</a> on how to use it.</li>
+<li>Here, you can make this into a interactive sample with drawing rectangle and strokes with mouse, create trackbar to adjust stroke width etc.</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py_feature2d/py_table_of_contents_feature2d/py_table_of_contents_feature2d.html" title="Feature Detection and Description"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../py_watershed/py_watershed.html" title="Image Segmentation with Watershed Algorithm"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_imgproc/py_table_of_contents_imgproc.html" >Image Processing in OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../../_sources/doc/py_tutorials/py_imgproc/py_grabcut/py_grabcut.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

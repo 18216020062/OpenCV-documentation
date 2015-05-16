@@ -1,0 +1,432 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Video Decoding &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="cudacodec. CUDA-accelerated Video Encoding/Decoding" href="cudacodec.html" />
+    <link rel="next" title="Video Encoding" href="videoenc.html" />
+    <link rel="prev" title="cudacodec. CUDA-accelerated Video Encoding/Decoding" href="cudacodec.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="videoenc.html" title="Video Encoding"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="cudacodec.html" title="cudacodec. CUDA-accelerated Video Encoding/Decoding"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="cudacodec.html" accesskey="U">cudacodec. CUDA-accelerated Video Encoding/Decoding</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Video Decoding</a><ul>
+<li><a class="reference internal" href="#cudacodec-videoreader">cudacodec::VideoReader</a></li>
+<li><a class="reference internal" href="#cudacodec-videoreader-nextframe">cudacodec::VideoReader::nextFrame</a></li>
+<li><a class="reference internal" href="#cudacodec-videoreader-format">cudacodec::VideoReader::format</a></li>
+<li><a class="reference internal" href="#cudacodec-codec">cudacodec::Codec</a></li>
+<li><a class="reference internal" href="#cudacodec-chromaformat">cudacodec::ChromaFormat</a></li>
+<li><a class="reference internal" href="#cudacodec-formatinfo">cudacodec::FormatInfo</a></li>
+<li><a class="reference internal" href="#cudacodec-createvideoreader">cudacodec::createVideoReader</a></li>
+<li><a class="reference internal" href="#cudacodec-rawvideosource">cudacodec::RawVideoSource</a></li>
+<li><a class="reference internal" href="#cudacodec-rawvideosource-getnextpacket">cudacodec::RawVideoSource::getNextPacket</a></li>
+<li><a class="reference internal" href="#cudacodec-rawvideosource-format">cudacodec::RawVideoSource::format</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="cudacodec.html"
+                        title="previous chapter">cudacodec. CUDA-accelerated Video Encoding/Decoding</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="videoenc.html"
+                        title="next chapter">Video Encoding</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="video-decoding">
+<h1>Video Decoding<a class="headerlink" href="#video-decoding" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="cudacodec-videoreader">
+<h2>cudacodec::VideoReader<a class="headerlink" href="#cudacodec-videoreader" title="Permalink to this headline">¶</a></h2>
+<p>Video reader interface.</p>
+<dl class="class">
+<dt id="cudacodec::VideoReader">
+<em class="property">class </em><tt class="descclassname">cudacodec::</tt><tt class="descname">VideoReader</tt><a class="headerlink" href="#cudacodec::VideoReader" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example on how to use the videoReader class can be found at opencv_source_code/samples/gpu/video_reader.cpp</li>
+</ul>
+</div>
+</div>
+<div class="section" id="cudacodec-videoreader-nextframe">
+<h2>cudacodec::VideoReader::nextFrame<a class="headerlink" href="#cudacodec-videoreader-nextframe" title="Permalink to this headline">¶</a></h2>
+<p>Grabs, decodes and returns the next video frame.</p>
+<dl class="function">
+<dt id="bool cudacodec::VideoReader::nextFrame(OutputArray frame)">
+<strong>C++:</strong><tt class="descname"> </tt>bool <tt class="descclassname">cudacodec::VideoReader::</tt><tt class="descname">nextFrame</tt><big>(</big>OutputArray <strong>frame</strong><big>)</big><a class="headerlink" href="#bool cudacodec::VideoReader::nextFrame(OutputArray frame)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>If no frames has been grabbed (there are no more frames in video file), the methods return <tt class="docutils literal"><span class="pre">false</span></tt> . The method throws <a class="reference internal" href="../../core/doc/utility_and_system_functions_and_macros.html#Exception : public std::exception" title="class Exception : public std::exception"><tt class="xref ocv ocv-class docutils literal"><span class="pre">Exception</span></tt></a> if error occurs.</p>
+</div>
+<div class="section" id="cudacodec-videoreader-format">
+<h2>cudacodec::VideoReader::format<a class="headerlink" href="#cudacodec-videoreader-format" title="Permalink to this headline">¶</a></h2>
+<p>Returns information about video file format.</p>
+<dl class="function">
+<dt id="FormatInfo cudacodec::VideoReader::format() const">
+<strong>C++:</strong><tt class="descname"> </tt>FormatInfo <tt class="descclassname">cudacodec::VideoReader::</tt><tt class="descname">format</tt><big>(</big><big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#FormatInfo cudacodec::VideoReader::format() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="cudacodec-codec">
+<h2>cudacodec::Codec<a class="headerlink" href="#cudacodec-codec" title="Permalink to this headline">¶</a></h2>
+<p>Video codecs supported by <a class="reference internal" href="#cudacodec::VideoReader" title="class cudacodec::VideoReader"><tt class="xref ocv ocv-class docutils literal"><span class="pre">cudacodec::VideoReader</span></tt></a> .</p>
+<dl class="enum">
+<dt id="cudacodec::Codec">
+<strong>C++:</strong><tt class="descname"> </tt><em class="property">enum </em><tt class="descclassname">cudacodec::</tt><tt class="descname">Codec</tt><a class="headerlink" href="#cudacodec::Codec" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="emember">
+<dt id="MPEG1">
+<tt class="descname">MPEG1</tt> = 0<a class="headerlink" href="#MPEG1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="MPEG2">
+<tt class="descname">MPEG2</tt><a class="headerlink" href="#MPEG2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="MPEG4">
+<tt class="descname">MPEG4</tt><a class="headerlink" href="#MPEG4" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="VC1">
+<tt class="descname">VC1</tt><a class="headerlink" href="#VC1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="H264">
+<tt class="descname">H264</tt><a class="headerlink" href="#H264" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="JPEG">
+<tt class="descname">JPEG</tt><a class="headerlink" href="#JPEG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="H264_SVC">
+<tt class="descname">H264_SVC</tt><a class="headerlink" href="#H264_SVC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="H264_MVC">
+<tt class="descname">H264_MVC</tt><a class="headerlink" href="#H264_MVC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="Uncompressed_YUV420">
+<tt class="descname">Uncompressed_YUV420</tt> = (('I'&lt;&lt;24)|('Y'&lt;&lt;16)|('U'&lt;&lt;8)|('V'))<a class="headerlink" href="#Uncompressed_YUV420" title="Permalink to this definition">¶</a></dt>
+<dd><p>Y,U,V (4:2:0)</p>
+</dd></dl>
+
+<dl class="emember">
+<dt id="Uncompressed_YV12">
+<tt class="descname">Uncompressed_YV12</tt> = (('Y'&lt;&lt;24)|('V'&lt;&lt;16)|('1'&lt;&lt;8)|('2'))<a class="headerlink" href="#Uncompressed_YV12" title="Permalink to this definition">¶</a></dt>
+<dd><p>Y,V,U (4:2:0)</p>
+</dd></dl>
+
+<dl class="emember">
+<dt id="Uncompressed_NV12">
+<tt class="descname">Uncompressed_NV12</tt> = (('N'&lt;&lt;24)|('V'&lt;&lt;16)|('1'&lt;&lt;8)|('2'))<a class="headerlink" href="#Uncompressed_NV12" title="Permalink to this definition">¶</a></dt>
+<dd><p>Y,UV  (4:2:0)</p>
+</dd></dl>
+
+<dl class="emember">
+<dt id="Uncompressed_YUYV">
+<tt class="descname">Uncompressed_YUYV</tt> = (('Y'&lt;&lt;24)|('U'&lt;&lt;16)|('Y'&lt;&lt;8)|('V'))<a class="headerlink" href="#Uncompressed_YUYV" title="Permalink to this definition">¶</a></dt>
+<dd><p>YUYV/YUY2 (4:2:2)</p>
+</dd></dl>
+
+<dl class="emember">
+<dt id="Uncompressed_UYVY">
+<tt class="descname">Uncompressed_UYVY</tt> = (('U'&lt;&lt;24)|('Y'&lt;&lt;16)|('V'&lt;&lt;8)|('Y'))<a class="headerlink" href="#Uncompressed_UYVY" title="Permalink to this definition">¶</a></dt>
+<dd><p>UYVY (4:2:2)</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="cudacodec-chromaformat">
+<h2>cudacodec::ChromaFormat<a class="headerlink" href="#cudacodec-chromaformat" title="Permalink to this headline">¶</a></h2>
+<p>Chroma formats supported by <a class="reference internal" href="#cudacodec::VideoReader" title="class cudacodec::VideoReader"><tt class="xref ocv ocv-class docutils literal"><span class="pre">cudacodec::VideoReader</span></tt></a> .</p>
+<dl class="enum">
+<dt id="cudacodec::ChromaFormat">
+<strong>C++:</strong><tt class="descname"> </tt><em class="property">enum </em><tt class="descclassname">cudacodec::</tt><tt class="descname">ChromaFormat</tt><a class="headerlink" href="#cudacodec::ChromaFormat" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="emember">
+<dt id="Monochrome">
+<tt class="descname">Monochrome</tt> = 0<a class="headerlink" href="#Monochrome" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="YUV420">
+<tt class="descname">YUV420</tt><a class="headerlink" href="#YUV420" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="YUV422">
+<tt class="descname">YUV422</tt><a class="headerlink" href="#YUV422" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="YUV444">
+<tt class="descname">YUV444</tt><a class="headerlink" href="#YUV444" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="cudacodec-formatinfo">
+<h2>cudacodec::FormatInfo<a class="headerlink" href="#cudacodec-formatinfo" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="cudacodec::FormatInfo">
+<em class="property">struct </em><tt class="descclassname">cudacodec::</tt><tt class="descname">FormatInfo</tt><a class="headerlink" href="#cudacodec::FormatInfo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Struct providing information about video file format.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">struct</span> <span class="n">FormatInfo</span>
+<span class="p">{</span>
+    <span class="n">Codec</span> <span class="n">codec</span><span class="p">;</span>
+    <span class="n">ChromaFormat</span> <span class="n">chromaFormat</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">width</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">height</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cudacodec-createvideoreader">
+<h2>cudacodec::createVideoReader<a class="headerlink" href="#cudacodec-createvideoreader" title="Permalink to this headline">¶</a></h2>
+<p>Creates video reader.</p>
+<dl class="function">
+<dt id="Ptr&lt;VideoReader&gt; cudacodec::createVideoReader(const String&amp; filename)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;VideoReader&gt; <tt class="descclassname">cudacodec::</tt><tt class="descname">createVideoReader</tt><big>(</big>const String&amp; <strong>filename</strong><big>)</big><a class="headerlink" href="#Ptr<VideoReader> cudacodec::createVideoReader(const String& filename)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Ptr&lt;VideoReader&gt; cudacodec::createVideoReader(const Ptr&lt;RawVideoSource&gt;&amp; source)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;VideoReader&gt; <tt class="descclassname">cudacodec::</tt><tt class="descname">createVideoReader</tt><big>(</big>const Ptr&lt;RawVideoSource&gt;&amp; <strong>source</strong><big>)</big><a class="headerlink" href="#Ptr<VideoReader> cudacodec::createVideoReader(const Ptr<RawVideoSource>& source)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> &#8211; Name of the input video file.</li>
+<li><strong>source</strong> &#8211; RAW video source implemented by user.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>FFMPEG is used to read videos. User can implement own demultiplexing with <a class="reference internal" href="#cudacodec::RawVideoSource" title="class cudacodec::RawVideoSource"><tt class="xref ocv ocv-class docutils literal"><span class="pre">cudacodec::RawVideoSource</span></tt></a> .</p>
+</div>
+<div class="section" id="cudacodec-rawvideosource">
+<h2>cudacodec::RawVideoSource<a class="headerlink" href="#cudacodec-rawvideosource" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cudacodec::RawVideoSource">
+<em class="property">class </em><tt class="descclassname">cudacodec::</tt><tt class="descname">RawVideoSource</tt><a class="headerlink" href="#cudacodec::RawVideoSource" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Interface for video demultiplexing.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">RawVideoSource</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">RawVideoSource</span><span class="p">()</span> <span class="p">{}</span>
+
+    <span class="k">virtual</span> <span class="kt">bool</span> <span class="n">getNextPacket</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">**</span> <span class="n">data</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">size</span><span class="p">,</span> <span class="kt">bool</span><span class="o">*</span> <span class="n">endOfFile</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="n">FormatInfo</span> <span class="n">format</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>User can implement own demultiplexing by implementing this interface.</p>
+</div>
+<div class="section" id="cudacodec-rawvideosource-getnextpacket">
+<h2>cudacodec::RawVideoSource::getNextPacket<a class="headerlink" href="#cudacodec-rawvideosource-getnextpacket" title="Permalink to this headline">¶</a></h2>
+<p>Returns next packet with RAW video frame.</p>
+<dl class="function">
+<dt id="bool cudacodec::VideoSource::getNextPacket(unsigned char** data, int* size, bool* endOfFile) = 0">
+<strong>C++:</strong><tt class="descname"> </tt>bool <tt class="descclassname">cudacodec::VideoSource::</tt><tt class="descname">getNextPacket</tt><big>(</big>unsigned char** <strong>data</strong>, int* <strong>size</strong>, bool* <strong>endOfFile</strong><big>)</big><tt class="descclassname"> = 0</tt><a class="headerlink" href="#bool cudacodec::VideoSource::getNextPacket(unsigned char** data, int* size, bool* endOfFile) = 0" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>data</strong> &#8211; Pointer to frame data.</li>
+<li><strong>size</strong> &#8211; Size in bytes of current frame.</li>
+<li><strong>endOfStream</strong> &#8211; Indicates that it is end of stream.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cudacodec-rawvideosource-format">
+<h2>cudacodec::RawVideoSource::format<a class="headerlink" href="#cudacodec-rawvideosource-format" title="Permalink to this headline">¶</a></h2>
+<p>Returns information about video file format.</p>
+<dl class="function">
+<dt id="virtual FormatInfo cudacodec::RawVideoSource::format() const = 0">
+<strong>C++:</strong><tt class="descname"> </tt><em class="property">virtual</em> FormatInfo <tt class="descclassname">cudacodec::RawVideoSource::</tt><tt class="descname">format</tt><big>(</big><big>)</big><tt class="descclassname"> const</tt><tt class="descclassname"> = 0</tt><a class="headerlink" href="#virtual FormatInfo cudacodec::RawVideoSource::format() const = 0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="videoenc.html" title="Video Encoding"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="cudacodec.html" title="cudacodec. CUDA-accelerated Video Encoding/Decoding"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="cudacodec.html" >cudacodec. CUDA-accelerated Video Encoding/Decoding</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/cudacodec/doc/videodec.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

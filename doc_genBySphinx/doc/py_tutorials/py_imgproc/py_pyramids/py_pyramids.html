@@ -1,0 +1,307 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Image Pyramids &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../../index.html" />
+    <link rel="up" title="Image Processing in OpenCV" href="../py_table_of_contents_imgproc/py_table_of_contents_imgproc.html" />
+    <link rel="next" title="Contours in OpenCV" href="../py_contours/py_table_of_contents_contours/py_table_of_contents_contours.html" />
+    <link rel="prev" title="Canny Edge Detection" href="../py_canny/py_canny.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py_contours/py_table_of_contents_contours/py_table_of_contents_contours.html" title="Contours in OpenCV"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../py_canny/py_canny.html" title="Canny Edge Detection"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_imgproc/py_table_of_contents_imgproc.html" accesskey="U">Image Processing in OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Image Pyramids</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#theory">Theory</a></li>
+<li><a class="reference internal" href="#image-blending-using-pyramids">Image Blending using Pyramids</a></li>
+<li><a class="reference internal" href="#additional-resources">Additional Resources</a></li>
+<li><a class="reference internal" href="#exercises">Exercises</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../py_canny/py_canny.html"
+                        title="previous chapter">Canny Edge Detection</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../py_contours/py_table_of_contents_contours/py_table_of_contents_contours.html"
+                        title="next chapter">Contours in OpenCV</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="image-pyramids">
+<span id="py-pyramids"></span><h1>Image Pyramids<a class="headerlink" href="#image-pyramids" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>In this chapter,</dt>
+<dd><ul class="first last simple">
+<li>We will learn about Image Pyramids</li>
+<li>We will use Image pyramids to create a new fruit, &#8220;Orapple&#8221;</li>
+<li>We will see these functions: <strong>cv2.pyrUp()</strong>, <strong>cv2.pyrDown()</strong></li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<p>Normally, we used to work with an image of constant size. But in some occassions, we need to work with images of different resolution of the same image. For example, while searching for something in an image, like face, we are not sure at what size the object will be present in the image. In that case, we will need to create a set of images with different resolution and search for object in all the images. These set of images with different resolution are called Image Pyramids (because when they are kept in a stack with biggest image at bottom and smallest image at top look like a pyramid).</p>
+<p>There are two kinds of Image Pyramids. 1) Gaussian Pyramid and 2) Laplacian Pyramids</p>
+<p>Higher level (Low resolution) in a Gaussian Pyramid is formed by removing consecutive rows and columns in Lower level (higher resolution) image. Then each pixel in higher level is formed by the contribution from 5 pixels in underlying level with gaussian weights. By doing so, a <span class="math">M \times N</span> image becomes <span class="math">M/2 \times N/2</span> image. So area reduces to one-fourth of original area. It is called an Octave. The same pattern continues as we go upper in pyramid (ie, resolution decreases). Similarly while expanding, area becomes 4 times in each level. We can find Gaussian pyramids using <strong>cv2.pyrDown()</strong> and <strong>cv2.pyrUp()</strong> functions.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;messi5.jpg&#39;</span><span class="p">)</span>
+<span class="n">lower_reso</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">pyrDown</span><span class="p">(</span><span class="n">higher_reso</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Below is the 4 levels in an image pyramid.</p>
+<blockquote>
+<div><img alt="Gaussian Pyramid" class="align-center" src="../../../../_images/messipyr.jpg" />
+</div></blockquote>
+<p>Now you can go down the image pyramid with <strong>cv2.pyrUp()</strong> function.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">higher_reso2</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">pyrUp</span><span class="p">(</span><span class="n">lower_reso</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Remember, <cite>higher_reso2</cite> is not equal to <cite>higher_reso</cite>, because once you decrease the resolution, you loose the information. Below image is 3 level down the pyramid created from smallest image in previous case. Compare it with original image:</p>
+<blockquote>
+<div><img alt="Gaussian Pyramid" class="align-center" src="../../../../_images/messiup.jpg" />
+</div></blockquote>
+<p>Laplacian Pyramids are formed from the Gaussian Pyramids. There is no exclusive function for that. Laplacian pyramid images are like edge images only. Most of its elements are zeros. They are used in image compression. A level in Laplacian Pyramid is formed by the difference between that level in Gaussian Pyramid and expanded version of its upper level in Gaussian Pyramid. The three levels of a Laplacian level will look like below (contrast is adjusted to enhance the contents):</p>
+<blockquote>
+<div><img alt="Laplacian Pyramid" class="align-center" src="../../../../_images/lap.jpg" />
+</div></blockquote>
+</div>
+<div class="section" id="image-blending-using-pyramids">
+<h2>Image Blending using Pyramids<a class="headerlink" href="#image-blending-using-pyramids" title="Permalink to this headline">¶</a></h2>
+<p>One application of Pyramids is Image Blending. For example, in image stitching, you will need to stack two images together, but it may not look good due to discontinuities between images. In that case, image blending with Pyramids gives you seamless blending without leaving much data in the images. One classical example of this is the blending of two fruits, Orange and Apple. See the result now itself to understand what I am saying:</p>
+<blockquote>
+<div><img alt="Pyramid Blending" class="align-center" src="../../../../_images/orapple.jpg" />
+</div></blockquote>
+<p>Please check first reference in additional resources, it has full diagramatic details on image blending, Laplacian Pyramids etc. Simply it is done as follows:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Load the two images of apple and orange</li>
+<li>Find the Gaussian Pyramids for apple and orange (in this particular example, number of levels is 6)</li>
+<li>From Gaussian Pyramids, find their Laplacian Pyramids</li>
+<li>Now join the left half of apple and right half of orange in each levels of Laplacian Pyramids</li>
+<li>Finally from this joint image pyramids, reconstruct the original image.</li>
+</ol>
+</div></blockquote>
+<p>Below is the full code. (For sake of simplicity, each step is done separately which may take more memory. You can optimize it if you want so).</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span><span class="o">,</span><span class="nn">sys</span>
+
+<span class="n">A</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;apple.jpg&#39;</span><span class="p">)</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;orange.jpg&#39;</span><span class="p">)</span>
+
+<span class="c"># generate Gaussian pyramid for A</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">gpA</span> <span class="o">=</span> <span class="p">[</span><span class="n">G</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">6</span><span class="p">):</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">pyrDown</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+    <span class="n">gpA</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+
+<span class="c"># generate Gaussian pyramid for B</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">gpB</span> <span class="o">=</span> <span class="p">[</span><span class="n">G</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">6</span><span class="p">):</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">pyrDown</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+    <span class="n">gpB</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+
+<span class="c"># generate Laplacian Pyramid for A</span>
+<span class="n">lpA</span> <span class="o">=</span> <span class="p">[</span><span class="n">gpA</span><span class="p">[</span><span class="mi">5</span><span class="p">]]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">GE</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">pyrUp</span><span class="p">(</span><span class="n">gpA</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">gpA</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">GE</span><span class="p">)</span>
+    <span class="n">lpA</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
+
+<span class="c"># generate Laplacian Pyramid for B</span>
+<span class="n">lpB</span> <span class="o">=</span> <span class="p">[</span><span class="n">gpB</span><span class="p">[</span><span class="mi">5</span><span class="p">]]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">GE</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">pyrUp</span><span class="p">(</span><span class="n">gpB</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">gpB</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">GE</span><span class="p">)</span>
+    <span class="n">lpB</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
+
+<span class="c"># Now add left and right halves of images in each level</span>
+<span class="n">LS</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">la</span><span class="p">,</span><span class="n">lb</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">lpA</span><span class="p">,</span><span class="n">lpB</span><span class="p">):</span>
+    <span class="n">rows</span><span class="p">,</span><span class="n">cols</span><span class="p">,</span><span class="n">dpt</span> <span class="o">=</span> <span class="n">la</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">ls</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">la</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="n">cols</span><span class="o">/</span><span class="mi">2</span><span class="p">],</span> <span class="n">lb</span><span class="p">[:,</span><span class="n">cols</span><span class="o">/</span><span class="mi">2</span><span class="p">:]))</span>
+    <span class="n">LS</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ls</span><span class="p">)</span>
+
+<span class="c"># now reconstruct</span>
+<span class="n">ls_</span> <span class="o">=</span> <span class="n">LS</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">):</span>
+    <span class="n">ls_</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">pyrUp</span><span class="p">(</span><span class="n">ls_</span><span class="p">)</span>
+    <span class="n">ls_</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ls_</span><span class="p">,</span> <span class="n">LS</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+<span class="c"># image with direct connecting each half</span>
+<span class="n">real</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">A</span><span class="p">[:,:</span><span class="n">cols</span><span class="o">/</span><span class="mi">2</span><span class="p">],</span><span class="n">B</span><span class="p">[:,</span><span class="n">cols</span><span class="o">/</span><span class="mi">2</span><span class="p">:]))</span>
+
+<span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="s">&#39;Pyramid_blending2.jpg&#39;</span><span class="p">,</span><span class="n">ls_</span><span class="p">)</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="s">&#39;Direct_blending.jpg&#39;</span><span class="p">,</span><span class="n">real</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><a class="reference external" href="http://pages.cs.wisc.edu/~csverma/CS766_09/ImageMosaic/imagemosaic.html">Image Blending</a></li>
+</ol>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py_contours/py_table_of_contents_contours/py_table_of_contents_contours.html" title="Contours in OpenCV"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../py_canny/py_canny.html" title="Canny Edge Detection"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_imgproc/py_table_of_contents_imgproc.html" >Image Processing in OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../../_sources/doc/py_tutorials/py_imgproc/py_pyramids/py_pyramids.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

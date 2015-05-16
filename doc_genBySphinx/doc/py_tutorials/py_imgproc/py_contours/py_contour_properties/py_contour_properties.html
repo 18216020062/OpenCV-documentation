@@ -1,0 +1,297 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Contour Properties &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../../../index.html" />
+    <link rel="up" title="Contours in OpenCV" href="../py_table_of_contents_contours/py_table_of_contents_contours.html" />
+    <link rel="next" title="Contours : More Functions" href="../py_contours_more_functions/py_contours_more_functions.html" />
+    <link rel="prev" title="Contour Features" href="../py_contour_features/py_contour_features.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py_contours_more_functions/py_contours_more_functions.html" title="Contours : More Functions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../py_contour_features/py_contour_features.html" title="Contour Features"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../../py_table_of_contents_imgproc/py_table_of_contents_imgproc.html" >Image Processing in OpenCV</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_contours/py_table_of_contents_contours.html" accesskey="U">Contours in OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../../index.html">
+              <img class="logo" src="../../../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Contour Properties</a><ul>
+<li><a class="reference internal" href="#aspect-ratio">1. Aspect Ratio</a></li>
+<li><a class="reference internal" href="#extent">2. Extent</a></li>
+<li><a class="reference internal" href="#solidity">3. Solidity</a></li>
+<li><a class="reference internal" href="#equivalent-diameter">4. Equivalent Diameter</a></li>
+<li><a class="reference internal" href="#orientation">5. Orientation</a></li>
+<li><a class="reference internal" href="#mask-and-pixel-points">6. Mask and Pixel Points</a></li>
+<li><a class="reference internal" href="#maximum-value-minimum-value-and-their-locations">7. Maximum Value, Minimum Value and their locations</a></li>
+<li><a class="reference internal" href="#mean-color-or-mean-intensity">8. Mean Color or Mean Intensity</a></li>
+<li><a class="reference internal" href="#extreme-points">9. Extreme Points</a></li>
+<li><a class="reference internal" href="#additional-resources">Additional Resources</a></li>
+<li><a class="reference internal" href="#exercises">Exercises</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../py_contour_features/py_contour_features.html"
+                        title="previous chapter">Contour Features</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../py_contours_more_functions/py_contours_more_functions.html"
+                        title="next chapter">Contours : More Functions</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="contour-properties">
+<span id="id1"></span><h1>Contour Properties<a class="headerlink" href="#contour-properties" title="Permalink to this headline">¶</a></h1>
+<p>Here we will learn to extract some frequently used properties of objects like Solidity, Equivalent Diameter, Mask image, Mean Intensity etc. More features can be found at <a class="reference external" href="http://www.mathworks.in/help/images/ref/regionprops.html">Matlab regionprops documentation</a>.</p>
+<p><em>(NB : Centroid, Area, Perimeter etc also belong to this category, but we have seen it in last chapter)</em></p>
+<div class="section" id="aspect-ratio">
+<h2>1. Aspect Ratio<a class="headerlink" href="#aspect-ratio" title="Permalink to this headline">¶</a></h2>
+<p>It is the ratio of width to height of bounding rect of the object.</p>
+<div class="math">
+<p><span class="math">Aspect \; Ratio = \frac{Width}{Height}</span></p>
+</div><div class="highlight-python"><div class="highlight"><pre><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">h</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">boundingRect</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span>
+<span class="n">aspect_ratio</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">w</span><span class="p">)</span><span class="o">/</span><span class="n">h</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="extent">
+<h2>2. Extent<a class="headerlink" href="#extent" title="Permalink to this headline">¶</a></h2>
+<p>Extent is the ratio of contour area to bounding rectangle area.</p>
+<div class="math">
+<p><span class="math">Extent = \frac{Object \; Area}{Bounding \; Rectangle \; Area}</span></p>
+</div><div class="highlight-python"><div class="highlight"><pre><span class="n">area</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">contourArea</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span>
+<span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">h</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">boundingRect</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span>
+<span class="n">rect_area</span> <span class="o">=</span> <span class="n">w</span><span class="o">*</span><span class="n">h</span>
+<span class="n">extent</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">area</span><span class="p">)</span><span class="o">/</span><span class="n">rect_area</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="solidity">
+<h2>3. Solidity<a class="headerlink" href="#solidity" title="Permalink to this headline">¶</a></h2>
+<p>Solidity is the ratio of contour area to its convex hull area.</p>
+<div class="math">
+<p><span class="math">Solidity = \frac{Contour \; Area}{Convex \; Hull \; Area}</span></p>
+</div><div class="highlight-python"><div class="highlight"><pre><span class="n">area</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">contourArea</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span>
+<span class="n">hull</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">convexHull</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span>
+<span class="n">hull_area</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">contourArea</span><span class="p">(</span><span class="n">hull</span><span class="p">)</span>
+<span class="n">solidity</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">area</span><span class="p">)</span><span class="o">/</span><span class="n">hull_area</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="equivalent-diameter">
+<h2>4. Equivalent Diameter<a class="headerlink" href="#equivalent-diameter" title="Permalink to this headline">¶</a></h2>
+<p>Equivalent Diameter is the diameter of the circle whose area is same as the contour area.</p>
+<div class="math">
+<p><span class="math">Equivalent \; Diameter = \sqrt{\frac{4 \times Contour \; Area}{\pi}}</span></p>
+</div><div class="highlight-python"><div class="highlight"><pre><span class="n">area</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">contourArea</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span>
+<span class="n">equi_diameter</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">area</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="orientation">
+<h2>5. Orientation<a class="headerlink" href="#orientation" title="Permalink to this headline">¶</a></h2>
+<p>Orientation is the angle at which object is directed. Following method also gives the Major Axis and Minor Axis lengths.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">),(</span><span class="n">MA</span><span class="p">,</span><span class="n">ma</span><span class="p">),</span><span class="n">angle</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">fitEllipse</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="mask-and-pixel-points">
+<h2>6. Mask and Pixel Points<a class="headerlink" href="#mask-and-pixel-points" title="Permalink to this headline">¶</a></h2>
+<p>In some cases, we may need all the points which comprises that object. It can be done as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">imgray</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">drawContours</span><span class="p">(</span><span class="n">mask</span><span class="p">,[</span><span class="n">cnt</span><span class="p">],</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">pixelpoints</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">mask</span><span class="p">))</span>
+<span class="c">#pixelpoints = cv2.findNonZero(mask)</span>
+</pre></div>
+</div>
+<p>Here, two methods, one using Numpy functions, next one using OpenCV function (last commented line) are given to do the same. Results are also same, but with a slight difference. Numpy gives coordinates in <strong>(row, column)</strong> format, while OpenCV gives coordinates in <strong>(x,y)</strong> format. So basically the answers will be interchanged. Note that, <strong>row = x</strong> and <strong>column = y</strong>.</p>
+</div>
+<div class="section" id="maximum-value-minimum-value-and-their-locations">
+<h2>7. Maximum Value, Minimum Value and their locations<a class="headerlink" href="#maximum-value-minimum-value-and-their-locations" title="Permalink to this headline">¶</a></h2>
+<p>We can find these parameters using a mask image.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">min_val</span><span class="p">,</span> <span class="n">max_val</span><span class="p">,</span> <span class="n">min_loc</span><span class="p">,</span> <span class="n">max_loc</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">minMaxLoc</span><span class="p">(</span><span class="n">imgray</span><span class="p">,</span><span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="mean-color-or-mean-intensity">
+<h2>8. Mean Color or Mean Intensity<a class="headerlink" href="#mean-color-or-mean-intensity" title="Permalink to this headline">¶</a></h2>
+<p>Here, we can find the average color of an object. Or it can be average intensity of the object in grayscale mode. We again use the same mask to do it.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">mean_val</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">im</span><span class="p">,</span><span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="extreme-points">
+<h2>9. Extreme Points<a class="headerlink" href="#extreme-points" title="Permalink to this headline">¶</a></h2>
+<p>Extreme Points means topmost, bottommost, rightmost and leftmost points of the object.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">leftmost</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">cnt</span><span class="p">[</span><span class="n">cnt</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">argmin</span><span class="p">()][</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">rightmost</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">cnt</span><span class="p">[</span><span class="n">cnt</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">argmax</span><span class="p">()][</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">topmost</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">cnt</span><span class="p">[</span><span class="n">cnt</span><span class="p">[:,:,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">argmin</span><span class="p">()][</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">bottommost</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">cnt</span><span class="p">[</span><span class="n">cnt</span><span class="p">[:,:,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">argmax</span><span class="p">()][</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>For eg, if I apply it to an Indian map, I get the following result :</p>
+<blockquote>
+<div><img alt="Extreme Points" class="align-center" src="../../../../../_images/extremepoints.jpg" />
+</div></blockquote>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>There are still some features left in matlab regionprops doc. Try to implement them.</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py_contours_more_functions/py_contours_more_functions.html" title="Contours : More Functions"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../py_contour_features/py_contour_features.html" title="Contour Features"
+             >previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../../py_table_of_contents_imgproc/py_table_of_contents_imgproc.html" >Image Processing in OpenCV</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_contours/py_table_of_contents_contours.html" >Contours in OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../../../_sources/doc/py_tutorials/py_imgproc/py_contours/py_contour_properties/py_contour_properties.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

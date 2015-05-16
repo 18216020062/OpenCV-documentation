@@ -1,0 +1,438 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Logistic Regression &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="ml. Machine Learning" href="ml.html" />
+    <link rel="next" title="Training Data" href="mldata.html" />
+    <link rel="prev" title="Neural Networks" href="neural_networks.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="mldata.html" title="Training Data"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="neural_networks.html" title="Neural Networks"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" accesskey="U">ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Logistic Regression</a><ul>
+<li><a class="reference internal" href="#logisticregression-params">LogisticRegression::Params</a></li>
+<li><a class="reference internal" href="#logisticregression-params-params">LogisticRegression::Params::Params</a></li>
+<li><a class="reference internal" href="#logisticregression">LogisticRegression</a></li>
+<li><a class="reference internal" href="#logisticregression-create">LogisticRegression::create</a></li>
+<li><a class="reference internal" href="#logisticregression-train">LogisticRegression::train</a></li>
+<li><a class="reference internal" href="#logisticregression-predict">LogisticRegression::predict</a></li>
+<li><a class="reference internal" href="#logisticregression-get-learnt-thetas">LogisticRegression::get_learnt_thetas</a></li>
+<li><a class="reference internal" href="#logisticregression-read">LogisticRegression::read</a></li>
+<li><a class="reference internal" href="#logisticregression-write">LogisticRegression::write</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="neural_networks.html"
+                        title="previous chapter">Neural Networks</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="mldata.html"
+                        title="next chapter">Training Data</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="logistic-regression">
+<h1>Logistic Regression<a class="headerlink" href="#logistic-regression" title="Permalink to this headline">¶</a></h1>
+<p>ML implements logistic regression, which is a probabilistic classification technique. Logistic Regression is a binary classification algorithm which is closely related to Support Vector Machines (SVM).
+Like SVM, Logistic Regression can be extended to work on multi-class classification problems like digit recognition (i.e. recognizing digitis like 0,1 2, 3,... from the given images).
+This version of Logistic Regression supports both binary and multi-class classifications (for multi-class it creates a multiple 2-class classifiers).
+In order to train the logistic regression classifier, Batch Gradient Descent and Mini-Batch Gradient Descent algorithms are used (see <a class="reference internal" href="#batchdeswiki" id="id1">[BatchDesWiki]</a>).
+Logistic Regression is a discriminative classifier (see <a class="reference internal" href="#logregtommitch" id="id2">[LogRegTomMitch]</a> for more details). Logistic Regression is implemented as a C++ class in <tt class="docutils literal"><span class="pre">LogisticRegression</span></tt>.</p>
+<p>In Logistic Regression, we try to optimize the training paramater
+<span class="math">\theta</span>
+such that the hypothesis
+<span class="math">0 \leq h_\theta(x) \leq 1</span> is acheived.
+We have
+<span class="math">h_\theta(x) = g(h_\theta(x))</span>
+and
+<span class="math">g(z) = \frac{1}{1+e^{-z}}</span>
+as the logistic or sigmoid function.
+The term &#8220;Logistic&#8221; in Logistic Regression refers to this function.
+For given data of a binary classification problem of classes 0 and 1,
+one can determine that the given data instance belongs to class 1 if
+<span class="math">h_\theta(x) \geq 0.5</span>
+or class 0 if
+<span class="math">h_\theta(x) &lt; 0.5</span>
+.</p>
+<p>In Logistic Regression, choosing the right parameters is of utmost importance for reducing the training error and ensuring high training accuracy.
+<tt class="docutils literal"><span class="pre">LogisticRegression::Params</span></tt> is the structure that defines parameters that are required to train a Logistic Regression classifier.
+The learning rate is determined by <tt class="docutils literal"><span class="pre">LogisticRegression::Params.alpha</span></tt>. It determines how faster we approach the solution.
+It is a positive real number. Optimization algorithms like Batch Gradient Descent and Mini-Batch Gradient Descent are supported in <tt class="docutils literal"><span class="pre">LogisticRegression</span></tt>.
+It is important that we mention the number of iterations these optimization algorithms have to run.
+The number of iterations are mentioned by <tt class="docutils literal"><span class="pre">LogisticRegression::Params.num_iters</span></tt>.
+The number of iterations can be thought as number of steps taken and learning rate specifies if it is a long step or a short step. These two parameters define how fast we arrive at a possible solution.
+In order to compensate for overfitting regularization is performed, which can be enabled by setting <tt class="docutils literal"><span class="pre">LogisticRegression::Params.regularized</span></tt> to a positive integer (greater than zero).
+One can specify what kind of regularization has to be performed by setting <tt class="docutils literal"><span class="pre">LogisticRegression::Params.norm</span></tt> to <tt class="docutils literal"><span class="pre">LogisticRegression::REG_L1</span></tt> or <tt class="docutils literal"><span class="pre">LogisticRegression::REG_L2</span></tt> values.
+<tt class="docutils literal"><span class="pre">LogisticRegression</span></tt> provides a choice of 2 training methods with Batch Gradient Descent or the Mini-Batch Gradient Descent. To specify this, set <tt class="docutils literal"><span class="pre">LogisticRegression::Params.train_method</span></tt> to either <tt class="docutils literal"><span class="pre">LogisticRegression::BATCH</span></tt> or <tt class="docutils literal"><span class="pre">LogisticRegression::MINI_BATCH</span></tt>.
+If <tt class="docutils literal"><span class="pre">LogisticRegression::Params</span></tt> is set to <tt class="docutils literal"><span class="pre">LogisticRegression::MINI_BATCH</span></tt>, the size of the mini batch has to be to a postive integer using <tt class="docutils literal"><span class="pre">LogisticRegression::Params.mini_batch_size</span></tt>.</p>
+<p>A sample set of training parameters for the Logistic Regression classifier can be initialized as follows:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">LogisticRegression</span><span class="o">::</span><span class="n">Params</span> <span class="n">params</span><span class="p">;</span>
+<span class="n">params</span><span class="p">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">;</span>
+<span class="n">params</span><span class="p">.</span><span class="n">num_iters</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">;</span>
+<span class="n">params</span><span class="p">.</span><span class="n">norm</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="o">::</span><span class="n">REG_L2</span><span class="p">;</span>
+<span class="n">params</span><span class="p">.</span><span class="n">regularized</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">params</span><span class="p">.</span><span class="n">train_method</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="o">::</span><span class="n">MINI_BATCH</span><span class="p">;</span>
+<span class="n">params</span><span class="p">.</span><span class="n">mini_batch_size</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+</pre></div>
+</div>
+<p><strong>References:</strong></p>
+<table class="docutils citation" frame="void" id="logregwiki" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[LogRegWiki]</td><td><a class="reference external" href="http://en.wikipedia.org/wiki/Logistic_regression">http://en.wikipedia.org/wiki/Logistic_regression</a>. Wikipedia article about the Logistic Regression algorithm.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="renmalik2003" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[RenMalik2003]</td><td>Learning a Classification Model for Segmentation. Proc. CVPR, Nice, France (2003).</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="logregtommitch" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[LogRegTomMitch]</a></td><td><a class="reference external" href="http://www.cs.cmu.edu/~tom/NewChapters.html">http://www.cs.cmu.edu/~tom/NewChapters.html</a>. &#8220;Generative and Discriminative Classifiers: Naive Bayes and Logistic Regression&#8221; in Machine Learning, Tom Mitchell.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="batchdeswiki" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[BatchDesWiki]</a></td><td><a class="reference external" href="http://en.wikipedia.org/wiki/Gradient_descent_optimization">http://en.wikipedia.org/wiki/Gradient_descent_optimization</a>. Wikipedia article about Gradient Descent based optimization.</td></tr>
+</tbody>
+</table>
+<div class="section" id="logisticregression-params">
+<h2>LogisticRegression::Params<a class="headerlink" href="#logisticregression-params" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="LogisticRegression::Params">
+<em class="property">struct </em><tt class="descclassname">LogisticRegression::</tt><tt class="descname">Params</tt><a class="headerlink" href="#LogisticRegression::Params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parameters of the Logistic Regression training algorithm. You can initialize the structure using a constructor or declaring the variable and initializing the the individual parameters.</p>
+<p>The training parameters for Logistic Regression:</p>
+<dl class="member">
+<dt id="double alpha">
+double <tt class="descname">alpha</tt><a class="headerlink" href="#double alpha" title="Permalink to this definition">¶</a></dt>
+<dd><p>The learning rate of the optimization algorithm. The higher the value, faster the rate and vice versa. If the value is too high, the learning algorithm may overshoot the optimal parameters and result in lower training accuracy. If the value is too low, the learning algorithm converges towards the optimal parameters very slowly. The value must a be a positive real number. You can experiment with different values with small increments as in 0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, ... and select the learning rate with less training error.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int num_iters">
+int <tt class="descname">num_iters</tt><a class="headerlink" href="#int num_iters" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of iterations required for the learing algorithm (Gradient Descent or Mini Batch Gradient Descent). It has to be a positive integer. You can try different number of iterations like in 100, 1000, 2000, 3000, 5000, 10000, .. so on.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int norm">
+int <tt class="descname">norm</tt><a class="headerlink" href="#int norm" title="Permalink to this definition">¶</a></dt>
+<dd><p>The type of normalization applied. It takes value <tt class="docutils literal"><span class="pre">LogisticRegression::L1</span></tt> or <tt class="docutils literal"><span class="pre">LogisticRegression::L2</span></tt>.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int regularized">
+int <tt class="descname">regularized</tt><a class="headerlink" href="#int regularized" title="Permalink to this definition">¶</a></dt>
+<dd><p>It should be set to postive integer (greater than zero) in order to enable regularization.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int train_method">
+int <tt class="descname">train_method</tt><a class="headerlink" href="#int train_method" title="Permalink to this definition">¶</a></dt>
+<dd><p>The kind of training method used to train the classifier. It should be set to either <tt class="docutils literal"><span class="pre">LogisticRegression::BATCH</span></tt> or <tt class="docutils literal"><span class="pre">LogisticRegression::MINI_BATCH</span></tt>.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int mini_batch_size">
+int <tt class="descname">mini_batch_size</tt><a class="headerlink" href="#int mini_batch_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>If the training method is set to LogisticRegression::MINI_BATCH, it has to be set to positive integer. It can range from 1 to number of training samples.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="cv::TermCriteria term_crit">
+cv::TermCriteria <tt class="descname">term_crit</tt><a class="headerlink" href="#cv::TermCriteria term_crit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets termination criteria for training algorithm.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="logisticregression-params-params">
+<h2>LogisticRegression::Params::Params<a class="headerlink" href="#logisticregression-params-params" title="Permalink to this headline">¶</a></h2>
+<p>The constructors</p>
+<dl class="function">
+<dt id="LogisticRegression::Params::Params(double learning_rate , int iters , int method , int normlization , int reg , int batch_size)">
+<strong>C++:</strong><tt class="descname"> </tt> <tt class="descclassname">LogisticRegression::Params::</tt><tt class="descname">Params</tt><big>(</big>double <strong>learning_rate</strong>=0.001, int <strong>iters</strong>=1000, int <strong>method</strong>=LogisticRegression::BATCH, int <strong>normlization</strong>=LogisticRegression::REG_L2, int <strong>reg</strong>=1, int <strong>batch_size</strong>=1<big>)</big><a class="headerlink" href="#LogisticRegression::Params::Params(double learning_rate , int iters , int method , int normlization , int reg , int batch_size)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>learning_rate</strong> &#8211; Specifies the learning rate.</li>
+<li><strong>iters</strong> &#8211; Specifies the number of iterations.</li>
+<li><strong>train_method</strong> &#8211; Specifies the kind of training method used. It should be set to either <tt class="docutils literal"><span class="pre">LogisticRegression::BATCH</span></tt> or <tt class="docutils literal"><span class="pre">LogisticRegression::MINI_BATCH</span></tt>. If using <tt class="docutils literal"><span class="pre">LogisticRegression::MINI_BATCH</span></tt>, set <tt class="docutils literal"><span class="pre">LogisticRegression::Params.mini_batch_size</span></tt> to a positive integer.</li>
+<li><strong>normalization</strong> &#8211; Specifies the kind of regularization to be applied. <tt class="docutils literal"><span class="pre">LogisticRegression::REG_L1</span></tt> or <tt class="docutils literal"><span class="pre">LogisticRegression::REG_L2</span></tt> (L1 norm or L2 norm). To use this, set <tt class="docutils literal"><span class="pre">LogisticRegression::Params.regularized</span></tt> to a integer greater than zero.</li>
+<li><strong>reg</strong> &#8211; To enable or disable regularization. Set to positive integer (greater than zero) to enable and to 0 to disable.</li>
+<li><strong>mini_batch_size</strong> &#8211; Specifies the number of training samples taken in each step of Mini-Batch Gradient Descent. Will only be used if using <tt class="docutils literal"><span class="pre">LogisticRegression::MINI_BATCH</span></tt> training algorithm. It has to take values less than the total number of training samples.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>By initializing this structure, one can set all the parameters required for Logistic Regression classifier.</p>
+</div>
+<div class="section" id="logisticregression">
+<h2>LogisticRegression<a class="headerlink" href="#logisticregression" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="LogisticRegression : public StatModel">
+<em class="property">class </em><tt class="descname">LogisticRegression</tt> : <em class="property">public</em> <tt class="descname">StatModel</tt><a class="headerlink" href="#LogisticRegression : public StatModel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Implements Logistic Regression classifier.</p>
+</div>
+<div class="section" id="logisticregression-create">
+<h2>LogisticRegression::create<a class="headerlink" href="#logisticregression-create" title="Permalink to this headline">¶</a></h2>
+<p>Creates empty model.</p>
+<dl class="function">
+<dt id="Ptr&lt;LogisticRegression&gt; LogisticRegression::create(const Params&amp; params)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;LogisticRegression&gt; <tt class="descclassname">LogisticRegression::</tt><tt class="descname">create</tt><big>(</big>const Params&amp; <strong>params</strong>=Params() <big>)</big><a class="headerlink" href="#Ptr<LogisticRegression> LogisticRegression::create(const Params& params)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>params</strong> &#8211; The training parameters for the classifier of type <tt class="docutils literal"><span class="pre">LogisticRegression::Params</span></tt>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Creates Logistic Regression model with parameters given.</p>
+</div>
+<div class="section" id="logisticregression-train">
+<h2>LogisticRegression::train<a class="headerlink" href="#logisticregression-train" title="Permalink to this headline">¶</a></h2>
+<p>Trains the Logistic Regression classifier and returns true if successful.</p>
+<dl class="function">
+<dt id="bool LogisticRegression::train(const Ptr&lt;TrainData&gt;&amp; trainData, int flags)">
+<strong>C++:</strong><tt class="descname"> </tt>bool <tt class="descclassname">LogisticRegression::</tt><tt class="descname">train</tt><big>(</big>const Ptr&lt;TrainData&gt;&amp; <strong>trainData</strong>, int <strong>flags</strong>=0 <big>)</big><a class="headerlink" href="#bool LogisticRegression::train(const Ptr<TrainData>& trainData, int flags)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>trainData</strong> &#8211; Instance of ml::TrainData class holding learning data.</li>
+<li><strong>flags</strong> &#8211; Not used.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="logisticregression-predict">
+<h2>LogisticRegression::predict<a class="headerlink" href="#logisticregression-predict" title="Permalink to this headline">¶</a></h2>
+<p>Predicts responses for input samples and returns a float type.</p>
+<dl class="function">
+<dt id="void LogisticRegression::predict(InputArray samples, OutputArray results, int flags) const">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">LogisticRegression::</tt><tt class="descname">predict</tt><big>(</big>InputArray <strong>samples</strong>, OutputArray <strong>results</strong>=noArray(), int <strong>flags</strong>=0 <big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#void LogisticRegression::predict(InputArray samples, OutputArray results, int flags) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>samples</strong> &#8211; The input data for the prediction algorithm. Matrix [m x n], where each row contains variables (features) of one object being classified. Should have data type <tt class="docutils literal"><span class="pre">CV_32F</span></tt>.</li>
+<li><strong>results</strong> &#8211; Predicted labels as a column matrix of type <tt class="docutils literal"><span class="pre">CV_32S</span></tt>.</li>
+<li><strong>flags</strong> &#8211; Not used.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="logisticregression-get-learnt-thetas">
+<h2>LogisticRegression::get_learnt_thetas<a class="headerlink" href="#logisticregression-get-learnt-thetas" title="Permalink to this headline">¶</a></h2>
+<p>This function returns the trained paramters arranged across rows. For a two class classifcation problem, it returns a row matrix.</p>
+<dl class="function">
+<dt id="Mat LogisticRegression::get_learnt_thetas() const">
+<strong>C++:</strong><tt class="descname"> </tt>Mat <tt class="descclassname">LogisticRegression::</tt><tt class="descname">get_learnt_thetas</tt><big>(</big><big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#Mat LogisticRegression::get_learnt_thetas() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>It returns learnt paramters of the Logistic Regression as a matrix of type <tt class="docutils literal"><span class="pre">CV_32F</span></tt>.</p>
+</div>
+<div class="section" id="logisticregression-read">
+<h2>LogisticRegression::read<a class="headerlink" href="#logisticregression-read" title="Permalink to this headline">¶</a></h2>
+<p>This function reads the trained LogisticRegression clasifier from disk.</p>
+<dl class="function">
+<dt id="void LogisticRegression::read(const FileNode&amp; fn)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">LogisticRegression::</tt><tt class="descname">read</tt><big>(</big>const FileNode&amp; <strong>fn</strong><big>)</big><a class="headerlink" href="#void LogisticRegression::read(const FileNode& fn)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="logisticregression-write">
+<h2>LogisticRegression::write<a class="headerlink" href="#logisticregression-write" title="Permalink to this headline">¶</a></h2>
+<p>This function writes the trained LogisticRegression clasifier to disk.</p>
+<dl class="function">
+<dt id="void LogisticRegression::write(FileStorage&amp; fs) const">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">LogisticRegression::</tt><tt class="descname">write</tt><big>(</big>FileStorage&amp; <strong>fs</strong><big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#void LogisticRegression::write(FileStorage& fs) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="mldata.html" title="Training Data"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="neural_networks.html" title="Neural Networks"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" >ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/ml/doc/logistic_regression.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

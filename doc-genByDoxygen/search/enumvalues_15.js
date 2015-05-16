@@ -1,0 +1,25 @@
+var searchData=
+[
+  ['uchar',['UCHAR',['../dc/d84/group__core__basic.html#ggafc16cdd95c1836f161f3808100df4105a5f98b75949870a34d27378ab26db7876',1,'cv::Param']]],
+  ['uint64',['UINT64',['../dc/d84/group__core__basic.html#ggafc16cdd95c1836f161f3808100df4105a53dfef9aa9c17d7e3cdbceb49fc3eac8',1,'cv::Param']]],
+  ['umat',['UMAT',['../dc/d84/group__core__basic.html#ggabedee61c7763d8d659f733ccddca6ad2a3f0f082586ac549b0d2dc49dffc8b901',1,'cv::_InputArray']]],
+  ['uncompressed_5fnv12',['Uncompressed_NV12',['../d0/d61/group__cudacodec.html#gga71943a1181287609b5d649f53ce6c146a04762d1afb3ad853c2fc756536077a71',1,'cv::cudacodec']]],
+  ['uncompressed_5fuyvy',['Uncompressed_UYVY',['../d0/d61/group__cudacodec.html#gga71943a1181287609b5d649f53ce6c146abc93d99ea6b24b56429284a08eeb0a9e',1,'cv::cudacodec']]],
+  ['uncompressed_5fyuv420',['Uncompressed_YUV420',['../d0/d61/group__cudacodec.html#gga71943a1181287609b5d649f53ce6c146a28de2c0b8a0ac2b9683872e14a6efdd3',1,'cv::cudacodec']]],
+  ['uncompressed_5fyuyv',['Uncompressed_YUYV',['../d0/d61/group__cudacodec.html#gga71943a1181287609b5d649f53ce6c146afd802da9f0a8d7c7f9ca65728e748862',1,'cv::cudacodec']]],
+  ['uncompressed_5fyv12',['Uncompressed_YV12',['../d0/d61/group__cudacodec.html#gga71943a1181287609b5d649f53ce6c146a327aee17f35526bae54ead472c85e329',1,'cv::cudacodec']]],
+  ['undefined',['UNDEFINED',['../d4/da4/group__core__xml.html#ggaf499c2ad2f8d7f5e1c2b5b6bccb4c072a3e7f9ab4d3076f3fd61612e8b171930c',1,'cv::FileStorage']]],
+  ['uniform',['UNIFORM',['../d2/de8/group__core__array.html#ggaf25905f7e5db288b4b78752e34a49c95af6797281458bec27565ee730ea228d4a',1,'cv::RNG']]],
+  ['unknown',['Unknown',['../d7/d59/namespacecv_1_1hal_1_1Error.html#ac75c6295bbc0fe72b5811638d3fc7e9fa0be1d6d303e2f16908ffc6c52301b63b',1,'cv::hal::Error']]],
+  ['unknown_5fvendor',['UNKNOWN_VENDOR',['../dc/d83/group__core__opencl.html#ggae9d8715d0ba8d2a5011143d33741ea82a07b78e0f94127c1d35f5d69e03be32e3',1,'cv::ocl::Device']]],
+  ['unsigned_5fint',['UNSIGNED_INT',['../dc/d84/group__core__basic.html#ggafc16cdd95c1836f161f3808100df4105a05683bfb850d99c5ea003c27e94ca3b7',1,'cv::Param']]],
+  ['update_5fmodel',['UPDATE_MODEL',['../dd/ded/group__ml.html#ggaf1ea864e1c19796e6264ebb3950c0b9aa397fde9eaadd4efb07af6a7fbacea6cd',1,'cv::ml::StatModel']]],
+  ['update_5fweights',['UPDATE_WEIGHTS',['../dd/ded/group__ml.html#ggafb51e414f22dd69f281a569145ccfad7a5c9cae15b89d51980f6a972d4b622822',1,'cv::ml::ANN_MLP']]],
+  ['usage_5fallocate_5fdevice_5fmemory',['USAGE_ALLOCATE_DEVICE_MEMORY',['../dc/d84/group__core__basic.html#gga5681439dda418431eb0a672697135ed2aeeff47f93f4e35ffed58e1b7de649dab',1,'cv']]],
+  ['usage_5fallocate_5fhost_5fmemory',['USAGE_ALLOCATE_HOST_MEMORY',['../dc/d84/group__core__basic.html#gga5681439dda418431eb0a672697135ed2a37b195428a7ac50f293765907fa43ad9',1,'cv']]],
+  ['usage_5fallocate_5fshared_5fmemory',['USAGE_ALLOCATE_SHARED_MEMORY',['../dc/d84/group__core__basic.html#gga5681439dda418431eb0a672697135ed2a0c30cfff62017d086c6ec4052589b569',1,'cv']]],
+  ['usage_5fdefault',['USAGE_DEFAULT',['../dc/d84/group__core__basic.html#gga5681439dda418431eb0a672697135ed2ae383b08ee18b73d8c1588d968f953893',1,'cv']]],
+  ['use_5favg',['USE_AVG',['../d2/de8/group__core__array.html#ggae8a94a2add0555b0414e85c08ff67f50a3449339c21160478c308f64a6a941030',1,'cv::PCA']]],
+  ['user',['USER',['../d4/da4/group__core__xml.html#gga8fe1d2aa050e6909b978f4df3529066ea3470720f2f7275b4c6dbf876e81638b5',1,'cv::FileNode']]],
+  ['user_5fallocated',['USER_ALLOCATED',['../dc/d84/group__core__basic.html#gga1c33edc9b09e07331e74ed057385a54ca418bf779152a73ed41c8657baf911d82',1,'cv::UMatData']]]
+];

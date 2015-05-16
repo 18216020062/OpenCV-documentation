@@ -1,0 +1,293 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Non-Photorealistic Rendering &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="photo. Computational Photography" href="photo.html" />
+    <link rel="next" title="stitching. Images stitching" href="../../stitching/doc/stitching.html" />
+    <link rel="prev" title="Seamless Cloning" href="cloning.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../stitching/doc/stitching.html" title="stitching. Images stitching"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="cloning.html" title="Seamless Cloning"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="photo.html" accesskey="U">photo. Computational Photography</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Non-Photorealistic Rendering</a><ul>
+<li><a class="reference internal" href="#edgepreservingfilter">edgePreservingFilter</a></li>
+<li><a class="reference internal" href="#detailenhance">detailEnhance</a></li>
+<li><a class="reference internal" href="#pencilsketch">pencilSketch</a></li>
+<li><a class="reference internal" href="#stylization">stylization</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="cloning.html"
+                        title="previous chapter">Seamless Cloning</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../stitching/doc/stitching.html"
+                        title="next chapter">stitching. Images stitching</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="non-photorealistic-rendering">
+<h1>Non-Photorealistic Rendering<a class="headerlink" href="#non-photorealistic-rendering" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="edgepreservingfilter">
+<h2>edgePreservingFilter<a class="headerlink" href="#edgepreservingfilter" title="Permalink to this headline">¶</a></h2>
+<p>Filtering is the fundamental operation in image and video processing. Edge-preserving smoothing filters are used in many different applications <a class="reference internal" href="#em11" id="id1">[EM11]</a>.</p>
+<dl class="function">
+<dt id="void edgePreservingFilter(InputArray src, OutputArray dst, int flags , float sigma_s , float sigma_r)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">edgePreservingFilter</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, int <strong>flags</strong>=1, float <strong>sigma_s</strong>=60, float <strong>sigma_r</strong>=0.4f<big>)</big><a class="headerlink" href="#void edgePreservingFilter(InputArray src, OutputArray dst, int flags , float sigma_s , float sigma_r)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Input 8-bit 3-channel image.</li>
+<li><strong>dst</strong> &#8211; Output 8-bit 3-channel image.</li>
+<li><strong>flags</strong> &#8211; <p>Edge preserving filters:</p>
+<ul>
+<li><strong>RECURS_FILTER</strong> = 1</li>
+<li><strong>NORMCONV_FILTER</strong> = 2</li>
+</ul>
+</li>
+<li><strong>sigma_s</strong> &#8211; Range between 0 to 200.</li>
+<li><strong>sigma_r</strong> &#8211; Range between 0 to 1.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="detailenhance">
+<h2>detailEnhance<a class="headerlink" href="#detailenhance" title="Permalink to this headline">¶</a></h2>
+<p>This filter enhances the details of a particular image.</p>
+<dl class="function">
+<dt id="void detailEnhance(InputArray src, OutputArray dst, float sigma_s , float sigma_r)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">detailEnhance</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, float <strong>sigma_s</strong>=10, float <strong>sigma_r</strong>=0.15f<big>)</big><a class="headerlink" href="#void detailEnhance(InputArray src, OutputArray dst, float sigma_s , float sigma_r)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Input 8-bit 3-channel image.</li>
+<li><strong>dst</strong> &#8211; Output image with the same size and type as  <tt class="docutils literal"><span class="pre">src</span></tt>.</li>
+<li><strong>sigma_s</strong> &#8211; Range between 0 to 200.</li>
+<li><strong>sigma_r</strong> &#8211; Range between 0 to 1.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="pencilsketch">
+<h2>pencilSketch<a class="headerlink" href="#pencilsketch" title="Permalink to this headline">¶</a></h2>
+<p>Pencil-like non-photorealistic line drawing</p>
+<dl class="function">
+<dt id="void pencilSketch(InputArray src, OutputArray dst1, OutputArray dst2, float sigma_s , float sigma_r , float shade_factor)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">pencilSketch</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst1</strong>, OutputArray <strong>dst2</strong>, float <strong>sigma_s</strong>=60, float <strong>sigma_r</strong>=0.07f, float <strong>shade_factor</strong>=0.02f<big>)</big><a class="headerlink" href="#void pencilSketch(InputArray src, OutputArray dst1, OutputArray dst2, float sigma_s , float sigma_r , float shade_factor)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Input 8-bit 3-channel image.</li>
+<li><strong>dst1</strong> &#8211; Output 8-bit 1-channel image.</li>
+<li><strong>dst2</strong> &#8211; Output image with the same size and type as  <tt class="docutils literal"><span class="pre">src</span></tt>.</li>
+<li><strong>sigma_s</strong> &#8211; Range between 0 to 200.</li>
+<li><strong>sigma_r</strong> &#8211; Range between 0 to 1.</li>
+<li><strong>shade_factor</strong> &#8211; Range between 0 to 0.1.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="stylization">
+<h2>stylization<a class="headerlink" href="#stylization" title="Permalink to this headline">¶</a></h2>
+<p>Stylization aims to produce digital imagery with a wide variety of effects not focused on photorealism. Edge-aware filters are ideal for stylization, as they can abstract regions of low contrast while preserving, or enhancing, high-contrast features.</p>
+<dl class="function">
+<dt id="void stylization(InputArray src, OutputArray dst, float sigma_s , float sigma_r)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">stylization</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, float <strong>sigma_s</strong>=60, float <strong>sigma_r</strong>=0.45f<big>)</big><a class="headerlink" href="#void stylization(InputArray src, OutputArray dst, float sigma_s , float sigma_r)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Input 8-bit 3-channel image.</li>
+<li><strong>dst</strong> &#8211; Output image with the same size and type as  <tt class="docutils literal"><span class="pre">src</span></tt>.</li>
+<li><strong>sigma_s</strong> &#8211; Range between 0 to 200.</li>
+<li><strong>sigma_r</strong> &#8211; Range between 0 to 1.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<table class="docutils citation" frame="void" id="em11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[EM11]</a></td><td>Eduardo S. L. Gastal, Manuel M. Oliveira, &#8220;Domain transform for edge-aware image and video processing&#8221;, ACM Trans. Graph. 30(4): 69, 2011.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../stitching/doc/stitching.html" title="stitching. Images stitching"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="cloning.html" title="Seamless Cloning"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="photo.html" >photo. Computational Photography</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/photo/doc/npr.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

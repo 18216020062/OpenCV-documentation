@@ -1,0 +1,372 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Optical Flow &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../../index.html" />
+    <link rel="up" title="Video Analysis" href="../py_table_of_contents_video/py_table_of_contents_video.html" />
+    <link rel="next" title="Background Subtraction" href="../py_bg_subtraction/py_bg_subtraction.html" />
+    <link rel="prev" title="Meanshift and Camshift" href="../py_meanshift/py_meanshift.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py_bg_subtraction/py_bg_subtraction.html" title="Background Subtraction"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../py_meanshift/py_meanshift.html" title="Meanshift and Camshift"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_video/py_table_of_contents_video.html" accesskey="U">Video Analysis</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Optical Flow</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#id1">Optical Flow</a><ul>
+<li><a class="reference internal" href="#lucas-kanade-method">Lucas-Kanade method</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#lucas-kanade-optical-flow-in-opencv">Lucas-Kanade Optical Flow in OpenCV</a></li>
+<li><a class="reference internal" href="#dense-optical-flow-in-opencv">Dense Optical Flow in OpenCV</a></li>
+<li><a class="reference internal" href="#additional-resources">Additional Resources</a></li>
+<li><a class="reference internal" href="#exercises">Exercises</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../py_meanshift/py_meanshift.html"
+                        title="previous chapter">Meanshift and Camshift</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../py_bg_subtraction/py_bg_subtraction.html"
+                        title="next chapter">Background Subtraction</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="optical-flow">
+<span id="lucas-kanade"></span><h1>Optical Flow<a class="headerlink" href="#optical-flow" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>In this chapter,</dt>
+<dd><ul class="first last simple">
+<li>We will understand the concepts of optical flow and its estimation using Lucas-Kanade method.</li>
+<li>We will use functions like <strong>cv2.calcOpticalFlowPyrLK()</strong> to track feature points in a video.</li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="id1">
+<h2>Optical Flow<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>Optical flow is the pattern of apparent motion of image objects between two consecutive frames caused by the movemement of object or camera. It is 2D vector field where each vector is a displacement vector showing the movement of points from first frame to second. Consider the image below (Image Courtesy: <a class="reference external" href="http://en.wikipedia.org/wiki/Optical_flow">Wikipedia article on Optical Flow</a>).</p>
+<blockquote>
+<div><img alt="Optical Flow" class="align-center" src="../../../../_images/optical_flow_basic1.jpg" />
+</div></blockquote>
+<p>It shows a ball moving in 5 consecutive frames. The arrow shows its displacement vector. Optical flow has many applications in areas like :</p>
+<blockquote>
+<div><ul class="simple">
+<li>Structure from Motion</li>
+<li>Video Compression</li>
+<li>Video Stabilization ...</li>
+</ul>
+</div></blockquote>
+<p>Optical flow works on several assumptions:</p>
+<ol class="arabic simple">
+<li>The pixel intensities of an object do not change between consecutive frames.</li>
+<li>Neighbouring pixels have similar motion.</li>
+</ol>
+<p>Consider a pixel <span class="math">I(x,y,t)</span> in first frame (Check a new dimension, time, is added here. Earlier we were working with images only, so no need of time). It moves by distance <span class="math">(dx,dy)</span> in next frame taken after <span class="math">dt</span> time. So since those pixels are the same and intensity does not change, we can say,</p>
+<div class="math">
+<p><span class="math">I(x,y,t) = I(x+dx, y+dy, t+dt)</span></p>
+</div><p>Then take taylor series approximation of right-hand side, remove common terms and divide by <span class="math">dt</span> to get the following equation:</p>
+<div class="math">
+<p><span class="math">f_x u + f_y v + f_t = 0 \;</span></p>
+</div><p>where:</p>
+<div class="math">
+<p><span class="math">f_x = \frac{\partial f}{\partial x} \; ; \; f_y = \frac{\partial f}{\partial x}
+
+u = \frac{dx}{dt} \; ; \; v = \frac{dy}{dt}</span></p>
+</div><p>Above equation is called Optical Flow equation. In it, we can find <span class="math">f_x</span> and <span class="math">f_y</span>, they are image gradients. Similarly <span class="math">f_t</span> is the gradient along time. But <span class="math">(u,v)</span> is unknown. We cannot solve this one equation with two unknown variables. So several methods are provided to solve this problem and one of them is Lucas-Kanade.</p>
+<div class="section" id="lucas-kanade-method">
+<h3>Lucas-Kanade method<a class="headerlink" href="#lucas-kanade-method" title="Permalink to this headline">¶</a></h3>
+<p>We have seen an assumption before, that all the neighbouring pixels will have similar motion. Lucas-Kanade method takes a 3x3 patch around the point. So all the 9 points have the same motion. We can find <span class="math">(f_x, f_y, f_t)</span> for these 9 points. So now our problem becomes solving 9 equations with two unknown variables which is over-determined. A better solution is obtained with least square fit method. Below is the final solution which is two equation-two unknown problem and solve to get the solution.</p>
+<div class="math">
+<p><span class="math">\begin{bmatrix} u \\ v \end{bmatrix} =
+\begin{bmatrix}
+    \sum_{i}{f_{x_i}}^2  &amp;  \sum_{i}{f_{x_i} f_{y_i} } \\
+    \sum_{i}{f_{x_i} f_{y_i}} &amp; \sum_{i}{f_{y_i}}^2
+\end{bmatrix}^{-1}
+\begin{bmatrix}
+    - \sum_{i}{f_{x_i} f_{t_i}} \\
+    - \sum_{i}{f_{y_i} f_{t_i}}
+\end{bmatrix}</span></p>
+</div><p>( Check similarity of inverse matrix with Harris corner detector. It denotes that corners are better points to be tracked.)</p>
+<p>So from user point of view, idea is simple, we give some points to track, we receive the optical flow vectors of those points. But again there are some problems. Until now, we were dealing with small motions. So it fails when there is large motion. So again we go for pyramids. When we go up in the pyramid, small motions are removed and large motions becomes small motions. So applying Lucas-Kanade there, we get optical flow along with the scale.</p>
+</div>
+</div>
+<div class="section" id="lucas-kanade-optical-flow-in-opencv">
+<h2>Lucas-Kanade Optical Flow in OpenCV<a class="headerlink" href="#lucas-kanade-optical-flow-in-opencv" title="Permalink to this headline">¶</a></h2>
+<p>OpenCV provides all these in a single function, <strong>cv2.calcOpticalFlowPyrLK()</strong>. Here, we create a simple application which tracks some points in a video. To decide the points, we use <strong>cv2.goodFeaturesToTrack()</strong>. We take the first frame, detect some Shi-Tomasi corner points in it, then we iteratively track those points using Lucas-Kanade optical flow. For the function <strong>cv2.calcOpticalFlowPyrLK()</strong> we pass the previous frame, previous points and next frame. It returns next points along with some status numbers which has a value of 1 if next point is found, else zero. We  iteratively pass these next points as previous points in next step. See the code below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+
+<span class="n">cap</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="s">&#39;slow.flv&#39;</span><span class="p">)</span>
+
+<span class="c"># params for ShiTomasi corner detection</span>
+<span class="n">feature_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span> <span class="n">maxCorners</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+                       <span class="n">qualityLevel</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span>
+                       <span class="n">minDistance</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
+                       <span class="n">blockSize</span> <span class="o">=</span> <span class="mi">7</span> <span class="p">)</span>
+
+<span class="c"># Parameters for lucas kanade optical flow</span>
+<span class="n">lk_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span> <span class="n">winSize</span>  <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">),</span>
+                  <span class="n">maxLevel</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+                  <span class="n">criteria</span> <span class="o">=</span> <span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">TERM_CRITERIA_EPS</span> <span class="o">|</span> <span class="n">cv2</span><span class="o">.</span><span class="n">TERM_CRITERIA_COUNT</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">))</span>
+
+<span class="c"># Create some random colors</span>
+<span class="n">color</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">,(</span><span class="mi">100</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+
+<span class="c"># Take first frame and find corners in it</span>
+<span class="n">ret</span><span class="p">,</span> <span class="n">old_frame</span> <span class="o">=</span> <span class="n">cap</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">old_gray</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">old_frame</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
+<span class="n">p0</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">goodFeaturesToTrack</span><span class="p">(</span><span class="n">old_gray</span><span class="p">,</span> <span class="n">mask</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">feature_params</span><span class="p">)</span>
+
+<span class="c"># Create a mask image for drawing purposes</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">old_frame</span><span class="p">)</span>
+
+<span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">ret</span><span class="p">,</span><span class="n">frame</span> <span class="o">=</span> <span class="n">cap</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">frame_gray</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
+
+    <span class="c"># calculate optical flow</span>
+    <span class="n">p1</span><span class="p">,</span> <span class="n">st</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">calcOpticalFlowPyrLK</span><span class="p">(</span><span class="n">old_gray</span><span class="p">,</span> <span class="n">frame_gray</span><span class="p">,</span> <span class="n">p0</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">lk_params</span><span class="p">)</span>
+
+    <span class="c"># Select good points</span>
+    <span class="n">good_new</span> <span class="o">=</span> <span class="n">p1</span><span class="p">[</span><span class="n">st</span><span class="o">==</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">good_old</span> <span class="o">=</span> <span class="n">p0</span><span class="p">[</span><span class="n">st</span><span class="o">==</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c"># draw the tracks</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,(</span><span class="n">new</span><span class="p">,</span><span class="n">old</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">good_new</span><span class="p">,</span><span class="n">good_old</span><span class="p">)):</span>
+        <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="o">=</span> <span class="n">new</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+        <span class="n">c</span><span class="p">,</span><span class="n">d</span> <span class="o">=</span> <span class="n">old</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">),(</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">),</span> <span class="n">color</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">frame</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">frame</span><span class="p">,(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">),</span><span class="mi">5</span><span class="p">,</span><span class="n">color</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span><span class="n">mask</span><span class="p">)</span>
+
+    <span class="n">cv2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="s">&#39;frame&#39;</span><span class="p">,</span><span class="n">img</span><span class="p">)</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span>
+    <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">27</span><span class="p">:</span>
+        <span class="k">break</span>
+
+    <span class="c"># Now update the previous frame and previous points</span>
+    <span class="n">old_gray</span> <span class="o">=</span> <span class="n">frame_gray</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">p0</span> <span class="o">=</span> <span class="n">good_new</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">cv2</span><span class="o">.</span><span class="n">destroyAllWindows</span><span class="p">()</span>
+<span class="n">cap</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>(This code doesn&#8217;t check how correct are the next keypoints. So even if any feature point disappears in image, there is a chance that optical flow finds the next point which may look close to it. So actually for a robust tracking, corner points should be detected in particular intervals. OpenCV samples comes up with such a sample which finds the feature points at every 5 frames. It also run a backward-check of the optical flow points got to select only good ones. Check <tt class="docutils literal"><span class="pre">samples/python2/lk_track.py</span></tt>).</p>
+<p>See the results we got:</p>
+<blockquote>
+<div><img alt="Lucas-Kanade method for optical flow" class="align-center" src="../../../../_images/opticalflow_lk.jpg" />
+</div></blockquote>
+</div>
+<div class="section" id="dense-optical-flow-in-opencv">
+<h2>Dense Optical Flow in OpenCV<a class="headerlink" href="#dense-optical-flow-in-opencv" title="Permalink to this headline">¶</a></h2>
+<p>Lucas-Kanade method computes optical flow for a sparse feature set (in our example, corners detected using Shi-Tomasi algorithm). OpenCV provides another algorithm to find the dense optical flow. It computes the optical flow for all the points in the frame. It is based on Gunner Farneback&#8217;s algorithm which is explained in &#8220;Two-Frame Motion Estimation Based on Polynomial Expansion&#8221; by Gunner Farneback in 2003.</p>
+<p>Below sample shows how to find the dense optical flow using above algorithm. We get a 2-channel array with optical flow vectors, <span class="math">(u,v)</span>. We find their magnitude and direction. We color code the result for better visualization. Direction corresponds to Hue value of the image. Magnitude corresponds to Value plane. See the code below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="n">cap</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="s">&quot;vtest.avi&quot;</span><span class="p">)</span>
+
+<span class="n">ret</span><span class="p">,</span> <span class="n">frame1</span> <span class="o">=</span> <span class="n">cap</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">prvs</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">frame1</span><span class="p">,</span><span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
+<span class="n">hsv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">frame1</span><span class="p">)</span>
+<span class="n">hsv</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">255</span>
+
+<span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">ret</span><span class="p">,</span> <span class="n">frame2</span> <span class="o">=</span> <span class="n">cap</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="nb">next</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">frame2</span><span class="p">,</span><span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
+
+    <span class="n">flow</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">calcOpticalFlowFarneback</span><span class="p">(</span><span class="n">prvs</span><span class="p">,</span><span class="nb">next</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">mag</span><span class="p">,</span> <span class="n">ang</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cartToPolar</span><span class="p">(</span><span class="n">flow</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">flow</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">hsv</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">ang</span><span class="o">*</span><span class="mi">180</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span>
+    <span class="n">hsv</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">mag</span><span class="p">,</span><span class="bp">None</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="n">cv2</span><span class="o">.</span><span class="n">NORM_MINMAX</span><span class="p">)</span>
+    <span class="n">rgb</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">hsv</span><span class="p">,</span><span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_HSV2BGR</span><span class="p">)</span>
+
+    <span class="n">cv2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="s">&#39;frame2&#39;</span><span class="p">,</span><span class="n">rgb</span><span class="p">)</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span>
+    <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">27</span><span class="p">:</span>
+        <span class="k">break</span>
+    <span class="k">elif</span> <span class="n">k</span> <span class="o">==</span> <span class="nb">ord</span><span class="p">(</span><span class="s">&#39;s&#39;</span><span class="p">):</span>
+        <span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="s">&#39;opticalfb.png&#39;</span><span class="p">,</span><span class="n">frame2</span><span class="p">)</span>
+        <span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="s">&#39;opticalhsv.png&#39;</span><span class="p">,</span><span class="n">rgb</span><span class="p">)</span>
+    <span class="n">prvs</span> <span class="o">=</span> <span class="nb">next</span>
+
+<span class="n">cap</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">destroyAllWindows</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>See the result below:</p>
+<blockquote>
+<div><img alt="Dense Optical Flow" class="align-center" src="../../../../_images/opticalfb.jpg" />
+</div></blockquote>
+<p>OpenCV comes with a more advanced sample on dense optical flow, please see <tt class="docutils literal"><span class="pre">samples/python2/opt_flow.py</span></tt>.</p>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Check the code in <tt class="docutils literal"><span class="pre">samples/python2/lk_track.py</span></tt>. Try to understand the code.</li>
+<li>Check the code in <tt class="docutils literal"><span class="pre">samples/python2/opt_flow.py</span></tt>. Try to understand the code.</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py_bg_subtraction/py_bg_subtraction.html" title="Background Subtraction"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../py_meanshift/py_meanshift.html" title="Meanshift and Camshift"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_video/py_table_of_contents_video.html" >Video Analysis</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../../_sources/doc/py_tutorials/py_video/py_lucas_kanade/py_lucas_kanade.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

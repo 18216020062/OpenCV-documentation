@@ -1,0 +1,261 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>video. Video Analysis &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="OpenCV API Reference" href="../../refman.html" />
+    <link rel="next" title="Motion Analysis and Object Tracking" href="motion_analysis_and_object_tracking.html" />
+    <link rel="prev" title="Qt New Functions" href="../../highgui/doc/qt_new_functions.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="motion_analysis_and_object_tracking.html" title="Motion Analysis and Object Tracking"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../../highgui/doc/qt_new_functions.html" title="Qt New Functions"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" accesskey="U">OpenCV API Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../../highgui/doc/qt_new_functions.html"
+                        title="previous chapter">Qt New Functions</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="motion_analysis_and_object_tracking.html"
+                        title="next chapter">Motion Analysis and Object Tracking</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="video-video-analysis">
+<h1>video. Video Analysis<a class="headerlink" href="#video-video-analysis" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="motion_analysis_and_object_tracking.html">Motion Analysis and Object Tracking</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#calcopticalflowpyrlk">calcOpticalFlowPyrLK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#buildopticalflowpyramid">buildOpticalFlowPyramid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#calcopticalflowfarneback">calcOpticalFlowFarneback</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#estimaterigidtransform">estimateRigidTransform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#findtransformecc">findTransformECC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#camshift">CamShift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#meanshift">meanShift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#kalmanfilter">KalmanFilter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#kalmanfilter-kalmanfilter">KalmanFilter::KalmanFilter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#kalmanfilter-init">KalmanFilter::init</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#kalmanfilter-predict">KalmanFilter::predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#kalmanfilter-correct">KalmanFilter::correct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractor">BackgroundSubtractor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractor-apply">BackgroundSubtractor::apply</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractor-getbackgroundimage">BackgroundSubtractor::getBackgroundImage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractormog">BackgroundSubtractorMOG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#createbackgroundsubtractormog">createBackgroundSubtractorMOG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractormog2">BackgroundSubtractorMOG2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#createbackgroundsubtractormog2">createBackgroundSubtractorMOG2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractormog2-gethistory">BackgroundSubtractorMOG2::getHistory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractormog2-sethistory">BackgroundSubtractorMOG2::setHistory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractormog2-getnmixtures">BackgroundSubtractorMOG2::getNMixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractormog2-setnmixtures">BackgroundSubtractorMOG2::setNMixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractormog2-getbackgroundratio">BackgroundSubtractorMOG2::getBackgroundRatio</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractormog2-setbackgroundratio">BackgroundSubtractorMOG2::setBackgroundRatio</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractormog2-getvarthreshold">BackgroundSubtractorMOG2::getVarThreshold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractormog2-setvarthreshold">BackgroundSubtractorMOG2::setVarThreshold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractormog2-getvarthresholdgen">BackgroundSubtractorMOG2::getVarThresholdGen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractormog2-setvarthresholdgen">BackgroundSubtractorMOG2::setVarThresholdGen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractormog2-getvarinit">BackgroundSubtractorMOG2::getVarInit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractormog2-setvarinit">BackgroundSubtractorMOG2::setVarInit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractormog2-getcomplexityreductionthreshold">BackgroundSubtractorMOG2::getComplexityReductionThreshold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractormog2-setcomplexityreductionthreshold">BackgroundSubtractorMOG2::setComplexityReductionThreshold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractormog2-getdetectshadows">BackgroundSubtractorMOG2::getDetectShadows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractormog2-setdetectshadows">BackgroundSubtractorMOG2::setDetectShadows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractormog2-getshadowvalue">BackgroundSubtractorMOG2::getShadowValue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractormog2-setshadowvalue">BackgroundSubtractorMOG2::setShadowValue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractormog2-getshadowthreshold">BackgroundSubtractorMOG2::getShadowThreshold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractormog2-setshadowthreshold">BackgroundSubtractorMOG2::setShadowThreshold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorknn">BackgroundSubtractorKNN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#createbackgroundsubtractorknn">createBackgroundSubtractorKNN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorknn-gethistory">BackgroundSubtractorKNN::getHistory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorknn-sethistory">BackgroundSubtractorKNN::setHistory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorknn-getnsamples">BackgroundSubtractorKNN::getNSamples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorknn-setnsamples">BackgroundSubtractorKNN::setNSamples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorknn-getdist2threshold">BackgroundSubtractorKNN::getDist2Threshold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorknn-setdist2threshold">BackgroundSubtractorKNN::setDist2Threshold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorknn-getknnsamples">BackgroundSubtractorKNN::getkNNSamples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorknn-setknnsamples">BackgroundSubtractorKNN::setkNNSamples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorknn-getdetectshadows">BackgroundSubtractorKNN::getDetectShadows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorknn-setdetectshadows">BackgroundSubtractorKNN::setDetectShadows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorknn-getshadowvalue">BackgroundSubtractorKNN::getShadowValue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorknn-setshadowvalue">BackgroundSubtractorKNN::setShadowValue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorknn-getshadowthreshold">BackgroundSubtractorKNN::getShadowThreshold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorknn-setshadowthreshold">BackgroundSubtractorKNN::setShadowThreshold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorgmg">BackgroundSubtractorGMG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#createbackgroundsubtractorgmg">createBackgroundSubtractorGMG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorgmg-getnumframes">BackgroundSubtractorGMG::getNumFrames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorgmg-setnumframes">BackgroundSubtractorGMG::setNumFrames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorgmg-getdefaultlearningrate">BackgroundSubtractorGMG::getDefaultLearningRate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorgmg-setdefaultlearningrate">BackgroundSubtractorGMG::setDefaultLearningRate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorgmg-getdecisionthreshold">BackgroundSubtractorGMG::getDecisionThreshold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorgmg-setdecisionthreshold">BackgroundSubtractorGMG::setDecisionThreshold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorgmg-getmaxfeatures">BackgroundSubtractorGMG::getMaxFeatures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorgmg-setmaxfeatures">BackgroundSubtractorGMG::setMaxFeatures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorgmg-getquantizationlevels">BackgroundSubtractorGMG::getQuantizationLevels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorgmg-setquantizationlevels">BackgroundSubtractorGMG::setQuantizationLevels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorgmg-getsmoothingradius">BackgroundSubtractorGMG::getSmoothingRadius</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorgmg-setsmoothingradius">BackgroundSubtractorGMG::setSmoothingRadius</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorgmg-getupdatebackgroundmodel">BackgroundSubtractorGMG::getUpdateBackgroundModel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorgmg-setupdatebackgroundmodel">BackgroundSubtractorGMG::setUpdateBackgroundModel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorgmg-getminval">BackgroundSubtractorGMG::getMinVal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorgmg-setminval">BackgroundSubtractorGMG::setMinVal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorgmg-getmaxval">BackgroundSubtractorGMG::getMaxVal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorgmg-setmaxval">BackgroundSubtractorGMG::setMaxVal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorgmg-getbackgroundprior">BackgroundSubtractorGMG::getBackgroundPrior</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#backgroundsubtractorgmg-setbackgroundprior">BackgroundSubtractorGMG::setBackgroundPrior</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#createoptflow-dualtvl1">createOptFlow_DualTVL1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#denseopticalflow-calc">DenseOpticalFlow::calc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#denseopticalflow-collectgarbage">DenseOpticalFlow::collectGarbage</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="motion_analysis_and_object_tracking.html" title="Motion Analysis and Object Tracking"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../../highgui/doc/qt_new_functions.html" title="Qt New Functions"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/video/doc/video.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,332 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Getting Started with Images &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../../index.html" />
+    <link rel="up" title="Gui Features in OpenCV" href="../py_table_of_contents_gui/py_table_of_contents_gui.html" />
+    <link rel="next" title="Getting Started with Videos" href="../py_video_display/py_video_display.html" />
+    <link rel="prev" title="Gui Features in OpenCV" href="../py_table_of_contents_gui/py_table_of_contents_gui.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py_video_display/py_video_display.html" title="Getting Started with Videos"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../py_table_of_contents_gui/py_table_of_contents_gui.html" title="Gui Features in OpenCV"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_gui/py_table_of_contents_gui.html" accesskey="U">Gui Features in OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Getting Started with Images</a><ul>
+<li><a class="reference internal" href="#goals">Goals</a></li>
+<li><a class="reference internal" href="#using-opencv">Using OpenCV</a><ul>
+<li><a class="reference internal" href="#read-an-image">Read an image</a></li>
+<li><a class="reference internal" href="#display-an-image">Display an image</a></li>
+<li><a class="reference internal" href="#write-an-image">Write an image</a></li>
+<li><a class="reference internal" href="#sum-it-up">Sum it up</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#using-matplotlib">Using Matplotlib</a></li>
+<li><a class="reference internal" href="#additional-resources">Additional Resources</a></li>
+<li><a class="reference internal" href="#exercises">Exercises</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../py_table_of_contents_gui/py_table_of_contents_gui.html"
+                        title="previous chapter">Gui Features in OpenCV</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../py_video_display/py_video_display.html"
+                        title="next chapter">Getting Started with Videos</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="getting-started-with-images">
+<span id="py-display-image"></span><h1>Getting Started with Images<a class="headerlink" href="#getting-started-with-images" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goals">
+<h2>Goals<a class="headerlink" href="#goals" title="Permalink to this headline">¶</a></h2>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Here, you will learn how to read an image, how to display it and how to save it back</li>
+<li>You will learn these functions : <strong>cv2.imread()</strong>, <strong>cv2.imshow()</strong> , <strong>cv2.imwrite()</strong></li>
+<li>Optionally, you will learn how to display images with Matplotlib</li>
+</ul>
+</div>
+</div>
+<div class="section" id="using-opencv">
+<h2>Using OpenCV<a class="headerlink" href="#using-opencv" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="read-an-image">
+<h3>Read an image<a class="headerlink" href="#read-an-image" title="Permalink to this headline">¶</a></h3>
+<p>Use the function <strong>cv2.imread()</strong> to read an image. The image should be in the working directory or a full path of image should be given.</p>
+<p>Second argument is a flag which specifies the way image should be read.</p>
+<ul class="simple">
+<li>cv2.IMREAD_COLOR : Loads a color image. Any transparency of image will be neglected. It is the default flag.</li>
+<li>cv2.IMREAD_GRAYSCALE : Loads image in grayscale mode</li>
+<li>cv2.IMREAD_UNCHANGED : Loads image as such including alpha channel</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Instead of these three flags, you can simply pass integers 1, 0 or -1 respectively.</p>
+</div>
+<p>See the code below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+
+<span class="c"># Load an color image in grayscale</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;messi5.jpg&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Even if the image path is wrong, it won&#8217;t throw any error, but <tt class="docutils literal"><span class="pre">print</span> <span class="pre">img</span></tt> will give you <tt class="docutils literal"><span class="pre">None</span></tt></p>
+</div>
+</div>
+<div class="section" id="display-an-image">
+<h3>Display an image<a class="headerlink" href="#display-an-image" title="Permalink to this headline">¶</a></h3>
+<p>Use the function <strong>cv2.imshow()</strong> to display an image in a window. The window automatically fits to the image size.</p>
+<p>First argument is a window name which is a string. second argument is our image. You can create as many windows as you wish, but with different window names.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">cv2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="s">&#39;image&#39;</span><span class="p">,</span><span class="n">img</span><span class="p">)</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">destroyAllWindows</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>A screenshot of the window will look like this (in Fedora-Gnome machine):</p>
+<blockquote>
+<div><img alt="Screenshot of Image Window in OpenCV" class="align-center" src="../../../../_images/opencv_screenshot.jpg" />
+</div></blockquote>
+<p><strong>cv2.waitKey()</strong> is a keyboard binding function. Its argument is the time in milliseconds. The function waits for specified milliseconds for any keyboard event. If you press any key in that time, the program continues. If <strong>0</strong> is passed, it waits indefinitely for a key stroke. It can also be set to detect specific key strokes like, if key <cite>a</cite> is pressed etc which we will discuss below.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Besides binding keyboard events this function also processes many other GUI events, so you MUST use it to actually display the image.</p>
+</div>
+<p><strong>cv2.destroyAllWindows()</strong> simply destroys all the windows we created. If you want to destroy any specific window, use the function <strong>cv2.destroyWindow()</strong> where you pass the exact window name as the argument.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">There is a special case where you can already create a window and load image to it later. In that case, you can specify whether window is resizable or not. It is done with the function <strong>cv2.namedWindow()</strong>. By default, the flag is <tt class="docutils literal"><span class="pre">cv2.WINDOW_AUTOSIZE</span></tt>. But if you specify flag to be <tt class="docutils literal"><span class="pre">cv2.WINDOW_NORMAL</span></tt>, you can resize window. It will be helpful when image is too large in dimension and adding track bar to windows.</p>
+</div>
+<p>See the code below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">cv2</span><span class="o">.</span><span class="n">namedWindow</span><span class="p">(</span><span class="s">&#39;image&#39;</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">WINDOW_NORMAL</span><span class="p">)</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="s">&#39;image&#39;</span><span class="p">,</span><span class="n">img</span><span class="p">)</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">destroyAllWindows</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="write-an-image">
+<h3>Write an image<a class="headerlink" href="#write-an-image" title="Permalink to this headline">¶</a></h3>
+<p>Use the function <strong>cv2.imwrite()</strong> to save an image.</p>
+<p>First argument is the file name, second argument is the image you want to save.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="s">&#39;messigray.png&#39;</span><span class="p">,</span><span class="n">img</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will save the image in PNG format in the working directory.</p>
+</div>
+<div class="section" id="sum-it-up">
+<h3>Sum it up<a class="headerlink" href="#sum-it-up" title="Permalink to this headline">¶</a></h3>
+<p>Below program loads an image in grayscale, displays it, save the image if you press &#8216;s&#8217; and exit, or simply exit without saving if you press <cite>ESC</cite> key.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+
+<span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;messi5.jpg&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="s">&#39;image&#39;</span><span class="p">,</span><span class="n">img</span><span class="p">)</span>
+<span class="n">k</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">27</span><span class="p">:</span>         <span class="c"># wait for ESC key to exit</span>
+    <span class="n">cv2</span><span class="o">.</span><span class="n">destroyAllWindows</span><span class="p">()</span>
+<span class="k">elif</span> <span class="n">k</span> <span class="o">==</span> <span class="nb">ord</span><span class="p">(</span><span class="s">&#39;s&#39;</span><span class="p">):</span> <span class="c"># wait for &#39;s&#39; key to save and exit</span>
+    <span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="s">&#39;messigray.png&#39;</span><span class="p">,</span><span class="n">img</span><span class="p">)</span>
+    <span class="n">cv2</span><span class="o">.</span><span class="n">destroyAllWindows</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">If you are using a 64-bit machine, you will have to modify <tt class="docutils literal"><span class="pre">k</span> <span class="pre">=</span> <span class="pre">cv2.waitKey(0)</span></tt> line as follows : <tt class="docutils literal"><span class="pre">k</span> <span class="pre">=</span> <span class="pre">cv2.waitKey(0)</span> <span class="pre">&amp;</span> <span class="pre">0xFF</span></tt></p>
+</div>
+</div>
+</div>
+<div class="section" id="using-matplotlib">
+<h2>Using Matplotlib<a class="headerlink" href="#using-matplotlib" title="Permalink to this headline">¶</a></h2>
+<p>Matplotlib is a plotting library for Python which gives you wide variety of plotting methods. You will see them in coming articles. Here, you will learn how to display image with Matplotlib. You can zoom images, save it etc using Matplotlib.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;messi5.jpg&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s">&#39;gray&#39;</span><span class="p">,</span> <span class="n">interpolation</span> <span class="o">=</span> <span class="s">&#39;bicubic&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([]),</span> <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">([])</span>  <span class="c"># to hide tick values on X and Y axis</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>A screen-shot of the window will look like this :</p>
+<blockquote>
+<div><img alt="Screenshot of Image Window in Matplotlib" class="align-center" src="../../../../_images/matplotlib_screenshot.jpg" />
+</div></blockquote>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">Plenty of plotting options are available in Matplotlib. Please refer to Matplotlib docs for more details. Some, we will see on the way.</p>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Color image loaded by OpenCV is in BGR mode. But Matplotlib displays in RGB mode. So color images will not be displayed correctly in Matplotlib if image is read with OpenCV. Please see the exercises for more details.</p>
+</div>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><a class="reference external" href="http://matplotlib.org/api/pyplot_api.html">Matplotlib Plotting Styles and Features</a></li>
+</ol>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>There is some problem when you try to load color image in OpenCV and display it in Matplotlib. Read <a class="reference external" href="http://stackoverflow.com/a/15074748/1134940">this discussion</a> and understand it.</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py_video_display/py_video_display.html" title="Getting Started with Videos"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../py_table_of_contents_gui/py_table_of_contents_gui.html" title="Gui Features in OpenCV"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_gui/py_table_of_contents_gui.html" >Gui Features in OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../../_sources/doc/py_tutorials/py_gui/py_image_display/py_image_display.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

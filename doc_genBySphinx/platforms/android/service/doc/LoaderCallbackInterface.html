@@ -1,0 +1,259 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Loader Callback Interface &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../../index.html" />
+    <link rel="up" title="Android OpenCV Manager" href="index.html" />
+    <link rel="next" title="Install Callback Interface" href="InstallCallbackInterface.html" />
+    <link rel="prev" title="Base Loader Callback Interface Implementation" href="BaseLoaderCallback.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="InstallCallbackInterface.html" title="Install Callback Interface"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="BaseLoaderCallback.html" title="Base Loader Callback Interface Implementation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV4Android Reference</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Android OpenCV Manager</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Loader Callback Interface</a><ul>
+<li><a class="reference internal" href="#void-onmanagerconnected">void onManagerConnected()</a></li>
+<li><a class="reference internal" href="#void-onpackageinstall">void onPackageInstall()</a></li>
+<li><a class="reference internal" href="#initialization-status-constants">Initialization status constants</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="BaseLoaderCallback.html"
+                        title="previous chapter">Base Loader Callback Interface Implementation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="InstallCallbackInterface.html"
+                        title="next chapter">Install Callback Interface</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="loader-callback-interface">
+<h1>Loader Callback Interface<a class="headerlink" href="#loader-callback-interface" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="LoaderCallbackInterface">
+<em class="property">class </em><tt class="descname">LoaderCallbackInterface</tt><a class="headerlink" href="#LoaderCallbackInterface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interface for a callback object in case of asynchronous initialization of OpenCV.</p>
+</dd></dl>
+
+<div class="section" id="void-onmanagerconnected">
+<h2>void onManagerConnected()<a class="headerlink" href="#void-onmanagerconnected" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt>
+<tt class="descname">void onManagerConnected(int status)</tt></dt>
+<dd><p>Callback method that is called after OpenCV library initialization.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> &#8211; status of initialization (see &#8220;Initialization Status Constants&#8221; section below).</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="void-onpackageinstall">
+<h2>void onPackageInstall()<a class="headerlink" href="#void-onpackageinstall" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt>
+<tt class="descname">void onPackageInstall(InstallCallbackInterface Callback)</tt></dt>
+<dd><p>Callback method that is called in case when package installation is needed.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>callback</strong> &#8211; answer object with <tt class="docutils literal"><span class="pre">install</span></tt> and <tt class="docutils literal"><span class="pre">cancel</span></tt> methods and package description.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="initialization-status-constants">
+<h2>Initialization status constants<a class="headerlink" href="#initialization-status-constants" title="Permalink to this headline">¶</a></h2>
+<dl class="data">
+<dt id="SUCCESS">
+<tt class="descname">SUCCESS</tt><a class="headerlink" href="#SUCCESS" title="Permalink to this definition">¶</a></dt>
+<dd><p>OpenCV initialization finished successfully</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="MARKET_ERROR">
+<tt class="descname">MARKET_ERROR</tt><a class="headerlink" href="#MARKET_ERROR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Google Play (Android Market) application cannot be invoked</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="INSTALL_CANCELED">
+<tt class="descname">INSTALL_CANCELED</tt><a class="headerlink" href="#INSTALL_CANCELED" title="Permalink to this definition">¶</a></dt>
+<dd><p>OpenCV library installation was cancelled by user</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="INCOMPATIBLE_MANAGER_VERSION">
+<tt class="descname">INCOMPATIBLE_MANAGER_VERSION</tt><a class="headerlink" href="#INCOMPATIBLE_MANAGER_VERSION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Version of OpenCV Manager is incompatible with this app. Manager update is needed.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="INIT_FAILED">
+<tt class="descname">INIT_FAILED</tt><a class="headerlink" href="#INIT_FAILED" title="Permalink to this definition">¶</a></dt>
+<dd><p>OpenCV library initialization failed</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="InstallCallbackInterface.html" title="Install Callback Interface"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="BaseLoaderCallback.html" title="Base Loader Callback Interface Implementation"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV4Android Reference</a> &raquo;</li>
+          <li><a href="index.html" >Android OpenCV Manager</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../../_sources/platforms/android/service/doc/LoaderCallbackInterface.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

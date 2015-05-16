@@ -1,0 +1,299 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Common Interfaces of Descriptor Extractors &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="features2d. 2D Features Framework" href="features2d.html" />
+    <link rel="next" title="Common Interfaces of Descriptor Matchers" href="common_interfaces_of_descriptor_matchers.html" />
+    <link rel="prev" title="Common Interfaces of Feature Detectors" href="common_interfaces_of_feature_detectors.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="common_interfaces_of_descriptor_matchers.html" title="Common Interfaces of Descriptor Matchers"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="common_interfaces_of_feature_detectors.html" title="Common Interfaces of Feature Detectors"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="features2d.html" accesskey="U">features2d. 2D Features Framework</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Common Interfaces of Descriptor Extractors</a><ul>
+<li><a class="reference internal" href="#descriptorextractor">DescriptorExtractor</a></li>
+<li><a class="reference internal" href="#descriptorextractor-compute">DescriptorExtractor::compute</a></li>
+<li><a class="reference internal" href="#descriptorextractor-create">DescriptorExtractor::create</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="common_interfaces_of_feature_detectors.html"
+                        title="previous chapter">Common Interfaces of Feature Detectors</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="common_interfaces_of_descriptor_matchers.html"
+                        title="next chapter">Common Interfaces of Descriptor Matchers</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="common-interfaces-of-descriptor-extractors">
+<h1>Common Interfaces of Descriptor Extractors<a class="headerlink" href="#common-interfaces-of-descriptor-extractors" title="Permalink to this headline">¶</a></h1>
+<p>Extractors of keypoint descriptors in OpenCV have wrappers with a common interface that enables you to easily switch
+between different algorithms solving the same problem. This section is devoted to computing descriptors
+represented as vectors in a multidimensional space. All objects that implement the <tt class="docutils literal"><span class="pre">vector</span></tt>
+descriptor extractors inherit the
+<a class="reference internal" href="#DescriptorExtractor : public Algorithm" title="class DescriptorExtractor : public Algorithm"><tt class="xref ocv ocv-class docutils literal"><span class="pre">DescriptorExtractor</span></tt></a> interface.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example explaining keypoint extraction can be found at opencv_source_code/samples/cpp/descriptor_extractor_matcher.cpp</li>
+<li>An example on descriptor evaluation can be found at opencv_source_code/samples/cpp/detector_descriptor_evaluation.cpp</li>
+</ul>
+</div>
+<div class="section" id="descriptorextractor">
+<h2>DescriptorExtractor<a class="headerlink" href="#descriptorextractor" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="DescriptorExtractor : public Algorithm">
+<em class="property">class </em><tt class="descname">DescriptorExtractor</tt> : <em class="property">public</em> <tt class="descname">Algorithm</tt><a class="headerlink" href="#DescriptorExtractor : public Algorithm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Abstract base class for computing descriptors for image keypoints.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">DescriptorExtractor</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">DescriptorExtractor</span><span class="p">();</span>
+
+    <span class="kt">void</span> <span class="n">compute</span><span class="p">(</span> <span class="n">InputArray</span> <span class="n">image</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;&amp;</span> <span class="n">keypoints</span><span class="p">,</span>
+                  <span class="n">OutputArray</span> <span class="n">descriptors</span> <span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kt">void</span> <span class="n">compute</span><span class="p">(</span> <span class="n">InputArrayOfArrays</span> <span class="n">images</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">keypoints</span><span class="p">,</span>
+                  <span class="n">OutputArrayOfArrays</span> <span class="n">descriptors</span> <span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">read</span><span class="p">(</span> <span class="k">const</span> <span class="n">FileNode</span><span class="o">&amp;</span> <span class="p">);</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">write</span><span class="p">(</span> <span class="n">FileStorage</span><span class="o">&amp;</span> <span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">descriptorSize</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">descriptorType</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">defaultNorm</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">static</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">DescriptorExtractor</span><span class="o">&gt;</span> <span class="n">create</span><span class="p">(</span> <span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">descriptorExtractorType</span> <span class="p">);</span>
+
+<span class="k">protected</span><span class="o">:</span>
+    <span class="p">...</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>In this interface, a keypoint descriptor can be represented as a
+dense, fixed-dimension vector of a basic type. Most descriptors
+follow this pattern as it simplifies computing
+distances between descriptors. Therefore, a collection of
+descriptors is represented as
+<a class="reference internal" href="../../core/doc/basic_structures.html#Mat" title="class Mat"><tt class="xref ocv ocv-class docutils literal"><span class="pre">Mat</span></tt></a> , where each row is a keypoint descriptor.</p>
+</div>
+<div class="section" id="descriptorextractor-compute">
+<h2>DescriptorExtractor::compute<a class="headerlink" href="#descriptorextractor-compute" title="Permalink to this headline">¶</a></h2>
+<p>Computes the descriptors for a set of keypoints detected in an image (first variant) or image set (second variant).</p>
+<dl class="function">
+<dt id="void DescriptorExtractor::compute(InputArray image, vector&lt;KeyPoint&gt;&amp; keypoints, OutputArray descriptors) const">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">DescriptorExtractor::</tt><tt class="descname">compute</tt><big>(</big>InputArray <strong>image</strong>, vector&lt;KeyPoint&gt;&amp; <strong>keypoints</strong>, OutputArray <strong>descriptors</strong><big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#void DescriptorExtractor::compute(InputArray image, vector<KeyPoint>& keypoints, OutputArray descriptors) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void DescriptorExtractor::compute(InputArrayOfArrays images, vector&lt;vector&lt;KeyPoint&gt; &gt;&amp; keypoints, OutputArrayOfArrays descriptors) const">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">DescriptorExtractor::</tt><tt class="descname">compute</tt><big>(</big>InputArrayOfArrays <strong>images</strong>, vector&lt;vector&lt;KeyPoint&gt;&gt;&amp; <strong>keypoints</strong>, OutputArrayOfArrays <strong>descriptors</strong><big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#void DescriptorExtractor::compute(InputArrayOfArrays images, vector<vector<KeyPoint> >& keypoints, OutputArrayOfArrays descriptors) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.DescriptorExtractor_create.compute">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.DescriptorExtractor_create.</tt><tt class="descname">compute</tt><big>(</big>image, keypoints<span class="optional">[</span>, descriptors<span class="optional">]</span><big>)</big> &rarr; keypoints, descriptors<a class="headerlink" href="#cv2.DescriptorExtractor_create.compute" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; Image.</li>
+<li><strong>images</strong> &#8211; Image set.</li>
+<li><strong>keypoints</strong> &#8211; Input collection of keypoints. Keypoints for which a descriptor cannot be computed are removed. Sometimes new keypoints can be added, for example: <tt class="docutils literal"><span class="pre">SIFT</span></tt> duplicates keypoint with several dominant orientations (for each orientation).</li>
+<li><strong>descriptors</strong> &#8211; Computed descriptors. In the second variant of the method <tt class="docutils literal"><span class="pre">descriptors[i]</span></tt> are descriptors computed for a <tt class="docutils literal"><span class="pre">keypoints[i]</span></tt>. Row <tt class="docutils literal"><span class="pre">j</span></tt> is the <tt class="docutils literal"><span class="pre">keypoints</span></tt> (or <tt class="docutils literal"><span class="pre">keypoints[i]</span></tt>) is the descriptor for keypoint <tt class="docutils literal"><span class="pre">j</span></tt>-th keypoint.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="descriptorextractor-create">
+<h2>DescriptorExtractor::create<a class="headerlink" href="#descriptorextractor-create" title="Permalink to this headline">¶</a></h2>
+<p>Creates a descriptor extractor by name.</p>
+<dl class="function">
+<dt id="Ptr&lt;DescriptorExtractor&gt; DescriptorExtractor::create(const String&amp; descriptorExtractorType)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;DescriptorExtractor&gt; <tt class="descclassname">DescriptorExtractor::</tt><tt class="descname">create</tt><big>(</big>const String&amp; <strong>descriptorExtractorType</strong><big>)</big><a class="headerlink" href="#Ptr<DescriptorExtractor> DescriptorExtractor::create(const String& descriptorExtractorType)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.DescriptorExtractor_create">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.</tt><tt class="descname">DescriptorExtractor_create</tt><big>(</big>descriptorExtractorType<big>)</big> &rarr; retval<a class="headerlink" href="#cv2.DescriptorExtractor_create" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>descriptorExtractorType</strong> &#8211; Descriptor extractor type.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The current implementation supports the following types of a descriptor extractor:</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">&quot;BRISK&quot;</span></tt> &#8211; <a class="reference internal" href="feature_detection_and_description.html#BRISK : public Feature2D" title="class BRISK : public Feature2D"><tt class="xref ocv ocv-class docutils literal"><span class="pre">BRISK</span></tt></a></li>
+<li><tt class="docutils literal"><span class="pre">&quot;ORB&quot;</span></tt> &#8211; <a class="reference internal" href="feature_detection_and_description.html#ORB : public Feature2D" title="class ORB : public Feature2D"><tt class="xref ocv ocv-class docutils literal"><span class="pre">ORB</span></tt></a></li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="common_interfaces_of_descriptor_matchers.html" title="Common Interfaces of Descriptor Matchers"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="common_interfaces_of_feature_detectors.html" title="Common Interfaces of Feature Detectors"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="features2d.html" >features2d. 2D Features Framework</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/features2d/doc/common_interfaces_of_descriptor_extractors.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

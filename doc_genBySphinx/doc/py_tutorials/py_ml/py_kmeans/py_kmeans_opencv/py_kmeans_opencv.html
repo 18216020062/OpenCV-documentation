@@ -1,0 +1,382 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>K-Means Clustering in OpenCV &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../../../index.html" />
+    <link rel="up" title="K-Means Clustering" href="../py_kmeans_index.html" />
+    <link rel="next" title="Computational Photography" href="../../../py_photo/py_table_of_contents_photo/py_table_of_contents_photo.html" />
+    <link rel="prev" title="Understanding K-Means Clustering" href="../py_kmeans_understanding/py_kmeans_understanding.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py_photo/py_table_of_contents_photo/py_table_of_contents_photo.html" title="Computational Photography"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../py_kmeans_understanding/py_kmeans_understanding.html" title="Understanding K-Means Clustering"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../../py_table_of_contents_ml/py_table_of_contents_ml.html" >Machine Learning</a> &raquo;</li>
+          <li><a href="../py_kmeans_index.html" accesskey="U">K-Means Clustering</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../../index.html">
+              <img class="logo" src="../../../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">K-Means Clustering in OpenCV</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#understanding-parameters">Understanding Parameters</a><ul>
+<li><a class="reference internal" href="#input-parameters">Input parameters</a></li>
+<li><a class="reference internal" href="#output-parameters">Output parameters</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#data-with-only-one-feature">1. Data with Only One Feature</a></li>
+<li><a class="reference internal" href="#data-with-multiple-features">2. Data with Multiple Features</a></li>
+<li><a class="reference internal" href="#color-quantization">3. Color Quantization</a></li>
+<li><a class="reference internal" href="#additional-resources">Additional Resources</a></li>
+<li><a class="reference internal" href="#exercises">Exercises</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../py_kmeans_understanding/py_kmeans_understanding.html"
+                        title="previous chapter">Understanding K-Means Clustering</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../../py_photo/py_table_of_contents_photo/py_table_of_contents_photo.html"
+                        title="next chapter">Computational Photography</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="k-means-clustering-in-opencv">
+<span id="kmeans-opencv"></span><h1>K-Means Clustering in OpenCV<a class="headerlink" href="#k-means-clustering-in-opencv" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li>Learn to use <strong>cv2.kmeans()</strong> function in OpenCV for data clustering</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="understanding-parameters">
+<h2>Understanding Parameters<a class="headerlink" href="#understanding-parameters" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="input-parameters">
+<h3>Input parameters<a class="headerlink" href="#input-parameters" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ol class="arabic">
+<li><p class="first"><strong>samples</strong> : It should be of <strong>np.float32</strong> data type, and each feature should be put in a single column.</p>
+</li>
+<li><p class="first"><strong>nclusters(K)</strong> : Number of clusters required at end</p>
+</li>
+<li><dl class="first docutils">
+<dt><strong>criteria</strong> <span class="classifier-delimiter">:</span> <span class="classifier">It is the iteration termination criteria. When this criteria is satisfied, algorithm iteration stops. Actually, it should be a tuple of 3 parameters. They are <tt class="docutils literal"><span class="pre">(</span> <span class="pre">type,</span> <span class="pre">max_iter,</span> <span class="pre">epsilon</span> <span class="pre">)</span></tt>:</span></dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt>3.a - type of termination criteria <span class="classifier-delimiter">:</span> <span class="classifier">It has 3 flags as below:</span></dt>
+<dd><p class="first last"><strong>cv2.TERM_CRITERIA_EPS</strong> - stop the algorithm iteration if specified accuracy, <em>epsilon</em>, is reached.
+<strong>cv2.TERM_CRITERIA_MAX_ITER</strong> - stop the algorithm after the specified number of iterations, <em>max_iter</em>.
+<strong>cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER</strong> - stop the iteration when any of the above condition is met.</p>
+</dd>
+</dl>
+</li>
+<li><p class="first">3.b - max_iter - An integer specifying maximum number of iterations.</p>
+</li>
+<li><p class="first">3.c - epsilon - Required accuracy</p>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first"><strong>attempts</strong> : Flag to specify the number of times the algorithm is executed using different initial labellings. The algorithm returns the labels that yield the best compactness. This compactness is returned as output.</p>
+</li>
+<li><p class="first"><strong>flags</strong> : This flag is used to specify how initial centers are taken. Normally two flags are used for this : <strong>cv2.KMEANS_PP_CENTERS</strong> and <strong>cv2.KMEANS_RANDOM_CENTERS</strong>.</p>
+</li>
+</ol>
+</div></blockquote>
+</div>
+<div class="section" id="output-parameters">
+<h3>Output parameters<a class="headerlink" href="#output-parameters" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ol class="arabic simple">
+<li><strong>compactness</strong> : It is the sum of squared distance from each point to their corresponding centers.</li>
+<li><strong>labels</strong> : This is the label array (same as &#8216;code&#8217; in previous article) where each element marked &#8216;0&#8217;, &#8216;1&#8217;.....</li>
+<li><strong>centers</strong> : This is array of centers of clusters.</li>
+</ol>
+</div></blockquote>
+<p>Now we will see how to apply K-Means algorithm with three examples.</p>
+</div>
+</div>
+<div class="section" id="data-with-only-one-feature">
+<h2>1. Data with Only One Feature<a class="headerlink" href="#data-with-only-one-feature" title="Permalink to this headline">¶</a></h2>
+<p>Consider, you have a set of data with only one feature, ie one-dimensional. For eg, we can take our t-shirt problem where you use only height of people to decide the size of t-shirt.</p>
+<p>So we start by creating data and plot it in Matplotlib</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">25</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">175</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">25</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">))</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">50</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="mi">256</span><span class="p">,[</span><span class="mi">0</span><span class="p">,</span><span class="mi">256</span><span class="p">]),</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>So we have &#8216;z&#8217; which is an array of size 50, and values ranging from 0 to 255. I have reshaped &#8216;z&#8217; to a column vector. It will be more useful when more than one features are present. Then I made data of np.float32 type.</p>
+<p>We get following image :</p>
+<blockquote>
+<div><img alt="Test Data" class="align-center" src="../../../../../_images/oc_1d_testdata.png" />
+</div></blockquote>
+<p>Now we apply the KMeans function. Before that we need to specify the <cite>criteria</cite>. My criteria is such that, whenever 10 iterations of algorithm is ran, or an accuracy of <tt class="docutils literal"><span class="pre">epsilon</span> <span class="pre">=</span> <span class="pre">1.0</span></tt> is reached, stop the algorithm and return the answer.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Define criteria = ( type, max_iter = 10 , epsilon = 1.0 )</span>
+<span class="n">criteria</span> <span class="o">=</span> <span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">TERM_CRITERIA_EPS</span> <span class="o">+</span> <span class="n">cv2</span><span class="o">.</span><span class="n">TERM_CRITERIA_MAX_ITER</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+<span class="c"># Set flags (Just to avoid line break in the code)</span>
+<span class="n">flags</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">KMEANS_RANDOM_CENTERS</span>
+
+<span class="c"># Apply KMeans</span>
+<span class="n">compactness</span><span class="p">,</span><span class="n">labels</span><span class="p">,</span><span class="n">centers</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">kmeans</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="bp">None</span><span class="p">,</span><span class="n">criteria</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="n">flags</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This gives us the compactness, labels and centers. In this case, I got centers as 60 and 207. Labels will have the same size as that of test data where each data will be labelled as &#8216;0&#8217;,&#8216;1&#8217;,&#8216;2&#8217; etc. depending on their centroids. Now we split the data to different clusters depending on their labels.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">A</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">labels</span><span class="o">==</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">labels</span><span class="o">==</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Now we plot A in Red color and B in Blue color and their centroids in Yellow color.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Now plot &#39;A&#39; in red, &#39;B&#39; in blue, &#39;centers&#39; in yellow</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="mi">256</span><span class="p">,[</span><span class="mi">0</span><span class="p">,</span><span class="mi">256</span><span class="p">],</span><span class="n">color</span> <span class="o">=</span> <span class="s">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="mi">256</span><span class="p">,[</span><span class="mi">0</span><span class="p">,</span><span class="mi">256</span><span class="p">],</span><span class="n">color</span> <span class="o">=</span> <span class="s">&#39;b&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">centers</span><span class="p">,</span><span class="mi">32</span><span class="p">,[</span><span class="mi">0</span><span class="p">,</span><span class="mi">256</span><span class="p">],</span><span class="n">color</span> <span class="o">=</span> <span class="s">&#39;y&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Below is the output we got:</p>
+<blockquote>
+<div><img alt="Result of KMeans Clustering" class="align-center" src="../../../../../_images/oc_1d_clustered.png" />
+</div></blockquote>
+</div>
+<div class="section" id="data-with-multiple-features">
+<h2>2. Data with Multiple Features<a class="headerlink" href="#data-with-multiple-features" title="Permalink to this headline">¶</a></h2>
+<p>In previous example, we took only height for t-shirt problem. Here, we will take both height and weight, ie two features.</p>
+<p>Remember, in previous case, we made our data to a single column vector. Each feature is arranged in a column, while each row corresponds to an input test sample.</p>
+<p>For example, in this case, we set a test data of size 50x2, which are heights and weights of 50 people. First column corresponds to height of all the 50 people and second column corresponds to their weights. First row contains two elements where first one is the height of first person and second one his weight. Similarly remaining rows corresponds to heights and weights of other people. Check image below:</p>
+<blockquote>
+<div><img alt="Feature Representation" class="align-center" src="../../../../../_images/oc_feature_representation.jpg" />
+</div></blockquote>
+<p>Now I am directly moving to the code:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span><span class="mi">50</span><span class="p">,(</span><span class="mi">25</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span><span class="mi">85</span><span class="p">,(</span><span class="mi">25</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">))</span>
+
+<span class="c"># convert to np.float32</span>
+<span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span>
+
+<span class="c"># define criteria and apply kmeans()</span>
+<span class="n">criteria</span> <span class="o">=</span> <span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">TERM_CRITERIA_EPS</span> <span class="o">+</span> <span class="n">cv2</span><span class="o">.</span><span class="n">TERM_CRITERIA_MAX_ITER</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="n">ret</span><span class="p">,</span><span class="n">label</span><span class="p">,</span><span class="n">center</span><span class="o">=</span><span class="n">cv2</span><span class="o">.</span><span class="n">kmeans</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="bp">None</span><span class="p">,</span><span class="n">criteria</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="n">cv2</span><span class="o">.</span><span class="n">KMEANS_RANDOM_CENTERS</span><span class="p">)</span>
+
+<span class="c"># Now separate the data, Note the flatten()</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">Z</span><span class="p">[</span><span class="n">label</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span><span class="o">==</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">Z</span><span class="p">[</span><span class="n">label</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span><span class="o">==</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="c"># Plot the data</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">A</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">A</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">B</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">B</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">c</span> <span class="o">=</span> <span class="s">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">center</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">center</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">s</span> <span class="o">=</span> <span class="mi">80</span><span class="p">,</span><span class="n">c</span> <span class="o">=</span> <span class="s">&#39;y&#39;</span><span class="p">,</span> <span class="n">marker</span> <span class="o">=</span> <span class="s">&#39;s&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;Height&#39;</span><span class="p">),</span><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&#39;Weight&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Below is the output we get:</p>
+<blockquote>
+<div><img alt="Result of KMeans Clustering" class="align-center" src="../../../../../_images/oc_2d_clustered.jpg" />
+</div></blockquote>
+</div>
+<div class="section" id="color-quantization">
+<h2>3. Color Quantization<a class="headerlink" href="#color-quantization" title="Permalink to this headline">¶</a></h2>
+<p>Color Quantization is the process of reducing number of colors in an image. One reason to do so is to reduce the memory. Sometimes, some devices may have limitation such that it can produce only limited number of colors. In those cases also, color quantization is performed. Here we use k-means clustering for color quantization.</p>
+<p>There is nothing new to be explained here. There are 3 features, say, R,G,B. So we need to reshape the image to an array of Mx3 size (M is number of pixels in image). And after the clustering, we apply centroid values (it is also R,G,B) to all pixels, such that resulting image will have specified number of colors. And again we need to reshape it back to the shape of original image. Below is the code:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+
+<span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;home.jpg&#39;</span><span class="p">)</span>
+<span class="n">Z</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+
+<span class="c"># convert to np.float32</span>
+<span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span>
+
+<span class="c"># define criteria, number of clusters(K) and apply kmeans()</span>
+<span class="n">criteria</span> <span class="o">=</span> <span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">TERM_CRITERIA_EPS</span> <span class="o">+</span> <span class="n">cv2</span><span class="o">.</span><span class="n">TERM_CRITERIA_MAX_ITER</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="n">K</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">ret</span><span class="p">,</span><span class="n">label</span><span class="p">,</span><span class="n">center</span><span class="o">=</span><span class="n">cv2</span><span class="o">.</span><span class="n">kmeans</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span><span class="n">K</span><span class="p">,</span><span class="bp">None</span><span class="p">,</span><span class="n">criteria</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="n">cv2</span><span class="o">.</span><span class="n">KMEANS_RANDOM_CENTERS</span><span class="p">)</span>
+
+<span class="c"># Now convert back into uint8, and make original image</span>
+<span class="n">center</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">(</span><span class="n">center</span><span class="p">)</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">center</span><span class="p">[</span><span class="n">label</span><span class="o">.</span><span class="n">flatten</span><span class="p">()]</span>
+<span class="n">res2</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+
+<span class="n">cv2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="s">&#39;res2&#39;</span><span class="p">,</span><span class="n">res2</span><span class="p">)</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">destroyAllWindows</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>See the result below for K=8:</p>
+<blockquote>
+<div><img alt="Color Quantization" class="align-center" src="../../../../../_images/oc_color_quantization.jpg" />
+</div></blockquote>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py_photo/py_table_of_contents_photo/py_table_of_contents_photo.html" title="Computational Photography"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../py_kmeans_understanding/py_kmeans_understanding.html" title="Understanding K-Means Clustering"
+             >previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../../py_table_of_contents_ml/py_table_of_contents_ml.html" >Machine Learning</a> &raquo;</li>
+          <li><a href="../py_kmeans_index.html" >K-Means Clustering</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../../../_sources/doc/py_tutorials/py_ml/py_kmeans/py_kmeans_opencv/py_kmeans_opencv.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

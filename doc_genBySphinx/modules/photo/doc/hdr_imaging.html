@@ -1,0 +1,865 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>HDR imaging &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="photo. Computational Photography" href="photo.html" />
+    <link rel="next" title="Decolorization" href="decolor.html" />
+    <link rel="prev" title="Denoising" href="denoising.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="decolor.html" title="Decolorization"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="denoising.html" title="Denoising"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="photo.html" accesskey="U">photo. Computational Photography</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">HDR imaging</a><ul>
+<li><a class="reference internal" href="#tonemap">Tonemap</a></li>
+<li><a class="reference internal" href="#tonemap-process">Tonemap::process</a></li>
+<li><a class="reference internal" href="#createtonemap">createTonemap</a></li>
+<li><a class="reference internal" href="#tonemapdrago">TonemapDrago</a></li>
+<li><a class="reference internal" href="#createtonemapdrago">createTonemapDrago</a></li>
+<li><a class="reference internal" href="#tonemapdurand">TonemapDurand</a></li>
+<li><a class="reference internal" href="#createtonemapdurand">createTonemapDurand</a></li>
+<li><a class="reference internal" href="#tonemapreinhard">TonemapReinhard</a></li>
+<li><a class="reference internal" href="#createtonemapreinhard">createTonemapReinhard</a></li>
+<li><a class="reference internal" href="#tonemapmantiuk">TonemapMantiuk</a></li>
+<li><a class="reference internal" href="#createtonemapmantiuk">createTonemapMantiuk</a></li>
+<li><a class="reference internal" href="#alignexposures">AlignExposures</a></li>
+<li><a class="reference internal" href="#alignexposures-process">AlignExposures::process</a></li>
+<li><a class="reference internal" href="#alignmtb">AlignMTB</a></li>
+<li><a class="reference internal" href="#alignmtb-process">AlignMTB::process</a></li>
+<li><a class="reference internal" href="#alignmtb-calculateshift">AlignMTB::calculateShift</a></li>
+<li><a class="reference internal" href="#alignmtb-shiftmat">AlignMTB::shiftMat</a></li>
+<li><a class="reference internal" href="#alignmtb-computebitmaps">AlignMTB::computeBitmaps</a></li>
+<li><a class="reference internal" href="#createalignmtb">createAlignMTB</a></li>
+<li><a class="reference internal" href="#calibratecrf">CalibrateCRF</a></li>
+<li><a class="reference internal" href="#calibratecrf-process">CalibrateCRF::process</a></li>
+<li><a class="reference internal" href="#calibratedebevec">CalibrateDebevec</a></li>
+<li><a class="reference internal" href="#createcalibratedebevec">createCalibrateDebevec</a></li>
+<li><a class="reference internal" href="#calibraterobertson">CalibrateRobertson</a></li>
+<li><a class="reference internal" href="#createcalibraterobertson">createCalibrateRobertson</a></li>
+<li><a class="reference internal" href="#mergeexposures">MergeExposures</a></li>
+<li><a class="reference internal" href="#mergeexposures-process">MergeExposures::process</a></li>
+<li><a class="reference internal" href="#mergedebevec">MergeDebevec</a></li>
+<li><a class="reference internal" href="#createmergedebevec">createMergeDebevec</a></li>
+<li><a class="reference internal" href="#mergemertens">MergeMertens</a></li>
+<li><a class="reference internal" href="#mergemertens-process">MergeMertens::process</a></li>
+<li><a class="reference internal" href="#createmergemertens">createMergeMertens</a></li>
+<li><a class="reference internal" href="#mergerobertson">MergeRobertson</a></li>
+<li><a class="reference internal" href="#createmergerobertson">createMergeRobertson</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="denoising.html"
+                        title="previous chapter">Denoising</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="decolor.html"
+                        title="next chapter">Decolorization</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="hdr-imaging">
+<h1>HDR imaging<a class="headerlink" href="#hdr-imaging" title="Permalink to this headline">¶</a></h1>
+<p>This section describes high dynamic range imaging algorithms namely tonemapping, exposure alignment, camera calibration with multiple exposures and exposure fusion.</p>
+<div class="section" id="tonemap">
+<h2>Tonemap<a class="headerlink" href="#tonemap" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Tonemap : public Algorithm">
+<em class="property">class </em><tt class="descname">Tonemap</tt> : <em class="property">public</em> <tt class="descname">Algorithm</tt><a class="headerlink" href="#Tonemap : public Algorithm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base class for tonemapping algorithms - tools that are used to map HDR image to 8-bit range.</p>
+</div>
+<div class="section" id="tonemap-process">
+<h2>Tonemap::process<a class="headerlink" href="#tonemap-process" title="Permalink to this headline">¶</a></h2>
+<p>Tonemaps image</p>
+<dl class="function">
+<dt id="void Tonemap::process(InputArray src, OutputArray dst)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">Tonemap::</tt><tt class="descname">process</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong><big>)</big><a class="headerlink" href="#void Tonemap::process(InputArray src, OutputArray dst)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; source image - 32-bit 3-channel Mat</li>
+<li><strong>dst</strong> &#8211; destination image - 32-bit 3-channel Mat with values in [0, 1] range</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="createtonemap">
+<h2>createTonemap<a class="headerlink" href="#createtonemap" title="Permalink to this headline">¶</a></h2>
+<p>Creates simple linear mapper with gamma correction</p>
+<dl class="function">
+<dt id="Ptr&lt;Tonemap&gt; createTonemap(float gamma)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;Tonemap&gt; <tt class="descname">createTonemap</tt><big>(</big>float <strong>gamma</strong>=1.0f<big>)</big><a class="headerlink" href="#Ptr<Tonemap> createTonemap(float gamma)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>gamma</strong> &#8211; <p>positive value for gamma correction. Gamma value of 1.0 implies no correction, gamma equal to 2.2f is suitable for most displays.</p>
+<p>Generally gamma &gt; 1 brightens the image and gamma &lt; 1 darkens it.</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="tonemapdrago">
+<h2>TonemapDrago<a class="headerlink" href="#tonemapdrago" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="TonemapDrago : public Tonemap">
+<em class="property">class </em><tt class="descname">TonemapDrago</tt> : <em class="property">public</em> <tt class="descname">Tonemap</tt><a class="headerlink" href="#TonemapDrago : public Tonemap" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Adaptive logarithmic mapping is a fast global tonemapping algorithm that scales the image in logarithmic domain.</p>
+<p>Since it&#8217;s a global operator the same function is applied to all the pixels, it is controlled by the bias parameter.</p>
+<p>Optional saturation enhancement is possible as described in <a class="reference internal" href="#fl02" id="id1">[FL02]</a>.</p>
+<p>For more information see <a class="reference internal" href="#dm03" id="id2">[DM03]</a>.</p>
+</div>
+<div class="section" id="createtonemapdrago">
+<h2>createTonemapDrago<a class="headerlink" href="#createtonemapdrago" title="Permalink to this headline">¶</a></h2>
+<p>Creates TonemapDrago object</p>
+<dl class="function">
+<dt id="Ptr&lt;TonemapDrago&gt; createTonemapDrago(float gamma , float saturation , float bias)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;TonemapDrago&gt; <tt class="descname">createTonemapDrago</tt><big>(</big>float <strong>gamma</strong>=1.0f, float <strong>saturation</strong>=1.0f, float <strong>bias</strong>=0.85f<big>)</big><a class="headerlink" href="#Ptr<TonemapDrago> createTonemapDrago(float gamma , float saturation , float bias)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>gamma</strong> &#8211; gamma value for gamma correction. See <a class="reference internal" href="#Ptr&lt;Tonemap&gt; createTonemap(float gamma)" title="Ptr&lt;Tonemap&gt; createTonemap(float gamma)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">createTonemap()</span></tt></a></li>
+<li><strong>saturation</strong> &#8211; positive saturation enhancement value. 1.0 preserves saturation, values greater than 1 increase saturation and values less than 1 decrease it.</li>
+<li><strong>bias</strong> &#8211; value for bias function in [0, 1] range. Values from 0.7 to 0.9 usually give best results, default value is 0.85.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="tonemapdurand">
+<h2>TonemapDurand<a class="headerlink" href="#tonemapdurand" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="TonemapDurand : public Tonemap">
+<em class="property">class </em><tt class="descname">TonemapDurand</tt> : <em class="property">public</em> <tt class="descname">Tonemap</tt><a class="headerlink" href="#TonemapDurand : public Tonemap" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This algorithm decomposes image into two layers: base layer and detail layer using bilateral filter and compresses contrast of the base layer thus preserving all the details.</p>
+<p>This implementation uses regular bilateral filter from opencv.</p>
+<p>Saturation enhancement is possible as in ocv:class:<cite>TonemapDrago</cite>.</p>
+<p>For more information see <a class="reference internal" href="#dd02" id="id3">[DD02]</a>.</p>
+</div>
+<div class="section" id="createtonemapdurand">
+<h2>createTonemapDurand<a class="headerlink" href="#createtonemapdurand" title="Permalink to this headline">¶</a></h2>
+<p>Creates TonemapDurand object</p>
+<dl class="function">
+<dt id="Ptr&lt;TonemapDurand&gt; createTonemapDurand(float gamma , float contrast , float saturation , float sigma_space , float sigma_color)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;TonemapDurand&gt; <tt class="descname">createTonemapDurand</tt><big>(</big>float <strong>gamma</strong>=1.0f, float <strong>contrast</strong>=4.0f, float <strong>saturation</strong>=1.0f, float <strong>sigma_space</strong>=2.0f, float <strong>sigma_color</strong>=2.0f<big>)</big><a class="headerlink" href="#Ptr<TonemapDurand> createTonemapDurand(float gamma , float contrast , float saturation , float sigma_space , float sigma_color)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>gamma</strong> &#8211; gamma value for gamma correction. See <a class="reference internal" href="#Ptr&lt;Tonemap&gt; createTonemap(float gamma)" title="Ptr&lt;Tonemap&gt; createTonemap(float gamma)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">createTonemap()</span></tt></a></li>
+<li><strong>contrast</strong> &#8211; resulting contrast on logarithmic scale, i. e. log(max / min), where max and min are maximum and minimum luminance values of the resulting image.</li>
+<li><strong>saturation</strong> &#8211; saturation enhancement value. See <a class="reference internal" href="#Ptr&lt;TonemapDrago&gt; createTonemapDrago(float gamma , float saturation , float bias)" title="Ptr&lt;TonemapDrago&gt; createTonemapDrago(float gamma , float saturation , float bias)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">createTonemapDrago()</span></tt></a></li>
+<li><strong>sigma_space</strong> &#8211; bilateral filter sigma in color space</li>
+<li><strong>sigma_color</strong> &#8211; bilateral filter sigma in coordinate space</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="tonemapreinhard">
+<h2>TonemapReinhard<a class="headerlink" href="#tonemapreinhard" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="TonemapReinhard : public Tonemap">
+<em class="property">class </em><tt class="descname">TonemapReinhard</tt> : <em class="property">public</em> <tt class="descname">Tonemap</tt><a class="headerlink" href="#TonemapReinhard : public Tonemap" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This is a global tonemapping operator that models human visual system.</p>
+<p>Mapping function is controlled by adaptation parameter, that is computed using light adaptation and color adaptation.</p>
+<p>For more information see <a class="reference internal" href="#rd05" id="id4">[RD05]</a>.</p>
+</div>
+<div class="section" id="createtonemapreinhard">
+<h2>createTonemapReinhard<a class="headerlink" href="#createtonemapreinhard" title="Permalink to this headline">¶</a></h2>
+<p>Creates TonemapReinhard object</p>
+<dl class="function">
+<dt id="Ptr&lt;TonemapReinhard&gt; createTonemapReinhard(float gamma , float intensity , float light_adapt , float color_adapt)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;TonemapReinhard&gt; <tt class="descname">createTonemapReinhard</tt><big>(</big>float <strong>gamma</strong>=1.0f, float <strong>intensity</strong>=0.0f, float <strong>light_adapt</strong>=1.0f, float <strong>color_adapt</strong>=0.0f<big>)</big><a class="headerlink" href="#Ptr<TonemapReinhard> createTonemapReinhard(float gamma , float intensity , float light_adapt , float color_adapt)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>gamma</strong> &#8211; gamma value for gamma correction. See <a class="reference internal" href="#Ptr&lt;Tonemap&gt; createTonemap(float gamma)" title="Ptr&lt;Tonemap&gt; createTonemap(float gamma)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">createTonemap()</span></tt></a></li>
+<li><strong>intensity</strong> &#8211; result intensity in [-8, 8] range. Greater intensity produces brighter results.</li>
+<li><strong>light_adapt</strong> &#8211; light adaptation in [0, 1] range. If 1 adaptation is based only on pixel value, if 0 it&#8217;s global, otherwise it&#8217;s a weighted mean of this two cases.</li>
+<li><strong>color_adapt</strong> &#8211; chromatic adaptation in [0, 1] range. If 1 channels are treated independently, if 0 adaptation level is the same for each channel.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="tonemapmantiuk">
+<h2>TonemapMantiuk<a class="headerlink" href="#tonemapmantiuk" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="TonemapMantiuk : public Tonemap">
+<em class="property">class </em><tt class="descname">TonemapMantiuk</tt> : <em class="property">public</em> <tt class="descname">Tonemap</tt><a class="headerlink" href="#TonemapMantiuk : public Tonemap" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This algorithm transforms image to contrast using gradients on all levels of gaussian pyramid, transforms contrast values to HVS response and scales the response.
+After this the image is reconstructed from new contrast values.</p>
+<p>For more information see <a class="reference internal" href="#mm06" id="id5">[MM06]</a>.</p>
+</div>
+<div class="section" id="createtonemapmantiuk">
+<h2>createTonemapMantiuk<a class="headerlink" href="#createtonemapmantiuk" title="Permalink to this headline">¶</a></h2>
+<p>Creates TonemapMantiuk object</p>
+<dl class="function">
+<dt id="Ptr&lt;TonemapMantiuk&gt; createTonemapMantiuk(float gamma , float scale , float saturation)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;TonemapMantiuk&gt; <tt class="descname">createTonemapMantiuk</tt><big>(</big>float <strong>gamma</strong>=1.0f, float <strong>scale</strong>=0.7f, float <strong>saturation</strong>=1.0f<big>)</big><a class="headerlink" href="#Ptr<TonemapMantiuk> createTonemapMantiuk(float gamma , float scale , float saturation)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>gamma</strong> &#8211; gamma value for gamma correction. See <a class="reference internal" href="#Ptr&lt;Tonemap&gt; createTonemap(float gamma)" title="Ptr&lt;Tonemap&gt; createTonemap(float gamma)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">createTonemap()</span></tt></a></li>
+<li><strong>scale</strong> &#8211; contrast scale factor. HVS response is multiplied by this parameter, thus compressing dynamic range. Values from 0.6 to 0.9 produce best results.</li>
+<li><strong>saturation</strong> &#8211; saturation enhancement value. See <a class="reference internal" href="#Ptr&lt;TonemapDrago&gt; createTonemapDrago(float gamma , float saturation , float bias)" title="Ptr&lt;TonemapDrago&gt; createTonemapDrago(float gamma , float saturation , float bias)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">createTonemapDrago()</span></tt></a></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="alignexposures">
+<h2>AlignExposures<a class="headerlink" href="#alignexposures" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="AlignExposures : public Algorithm">
+<em class="property">class </em><tt class="descname">AlignExposures</tt> : <em class="property">public</em> <tt class="descname">Algorithm</tt><a class="headerlink" href="#AlignExposures : public Algorithm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The base class for algorithms that align images of the same scene with different exposures</p>
+</div>
+<div class="section" id="alignexposures-process">
+<h2>AlignExposures::process<a class="headerlink" href="#alignexposures-process" title="Permalink to this headline">¶</a></h2>
+<p>Aligns images</p>
+<dl class="function">
+<dt id="void AlignExposures::process(InputArrayOfArrays src, std::vector&lt;Mat&gt;&amp; dst, InputArray times, InputArray response)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">AlignExposures::</tt><tt class="descname">process</tt><big>(</big>InputArrayOfArrays <strong>src</strong>, std::vector&lt;Mat&gt;&amp; <strong>dst</strong>, InputArray <strong>times</strong>, InputArray <strong>response</strong><big>)</big><a class="headerlink" href="#void AlignExposures::process(InputArrayOfArrays src, std::vector<Mat>& dst, InputArray times, InputArray response)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; vector of input images</li>
+<li><strong>dst</strong> &#8211; vector of aligned images</li>
+<li><strong>times</strong> &#8211; vector of exposure time values for each image</li>
+<li><strong>response</strong> &#8211; 256x1 matrix with inverse camera response function for each pixel value, it should have the same number of channels as images.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="alignmtb">
+<h2>AlignMTB<a class="headerlink" href="#alignmtb" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="AlignMTB : public AlignExposures">
+<em class="property">class </em><tt class="descname">AlignMTB</tt> : <em class="property">public</em> <tt class="descname">AlignExposures</tt><a class="headerlink" href="#AlignMTB : public AlignExposures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This algorithm converts images to median threshold bitmaps (1 for pixels brighter than median luminance and 0 otherwise) and than aligns the resulting bitmaps using bit operations.</p>
+<p>It is invariant to exposure, so exposure values and camera response are not necessary.</p>
+<p>In this implementation new image regions are filled with zeros.</p>
+<p>For more information see <a class="reference internal" href="#gw03" id="id6">[GW03]</a>.</p>
+</div>
+<div class="section" id="alignmtb-process">
+<h2>AlignMTB::process<a class="headerlink" href="#alignmtb-process" title="Permalink to this headline">¶</a></h2>
+<p>Short version of process, that doesn&#8217;t take extra arguments.</p>
+<dl class="function">
+<dt id="void AlignMTB::process(InputArrayOfArrays src, std::vector&lt;Mat&gt;&amp; dst)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">AlignMTB::</tt><tt class="descname">process</tt><big>(</big>InputArrayOfArrays <strong>src</strong>, std::vector&lt;Mat&gt;&amp; <strong>dst</strong><big>)</big><a class="headerlink" href="#void AlignMTB::process(InputArrayOfArrays src, std::vector<Mat>& dst)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; vector of input images</li>
+<li><strong>dst</strong> &#8211; vector of aligned images</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="alignmtb-calculateshift">
+<h2>AlignMTB::calculateShift<a class="headerlink" href="#alignmtb-calculateshift" title="Permalink to this headline">¶</a></h2>
+<p>Calculates shift between two images, i. e. how to shift the second image to correspond it with the first.</p>
+<dl class="function">
+<dt id="Point AlignMTB::calculateShift(InputArray img0, InputArray img1)">
+<strong>C++:</strong><tt class="descname"> </tt>Point <tt class="descclassname">AlignMTB::</tt><tt class="descname">calculateShift</tt><big>(</big>InputArray <strong>img0</strong>, InputArray <strong>img1</strong><big>)</big><a class="headerlink" href="#Point AlignMTB::calculateShift(InputArray img0, InputArray img1)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>img0</strong> &#8211; first image</li>
+<li><strong>img1</strong> &#8211; second image</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="alignmtb-shiftmat">
+<h2>AlignMTB::shiftMat<a class="headerlink" href="#alignmtb-shiftmat" title="Permalink to this headline">¶</a></h2>
+<p>Helper function, that shift Mat filling new regions with zeros.</p>
+<dl class="function">
+<dt id="void AlignMTB::shiftMat(InputArray src, OutputArray dst, const Point shift)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">AlignMTB::</tt><tt class="descname">shiftMat</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, const Point <strong>shift</strong><big>)</big><a class="headerlink" href="#void AlignMTB::shiftMat(InputArray src, OutputArray dst, const Point shift)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; input image</li>
+<li><strong>dst</strong> &#8211; result image</li>
+<li><strong>shift</strong> &#8211; shift value</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="alignmtb-computebitmaps">
+<h2>AlignMTB::computeBitmaps<a class="headerlink" href="#alignmtb-computebitmaps" title="Permalink to this headline">¶</a></h2>
+<p>Computes median threshold and exclude bitmaps of given image.</p>
+<dl class="function">
+<dt id="void AlignMTB::computeBitmaps(InputArray img, OutputArray tb, OutputArray eb)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">AlignMTB::</tt><tt class="descname">computeBitmaps</tt><big>(</big>InputArray <strong>img</strong>, OutputArray <strong>tb</strong>, OutputArray <strong>eb</strong><big>)</big><a class="headerlink" href="#void AlignMTB::computeBitmaps(InputArray img, OutputArray tb, OutputArray eb)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>img</strong> &#8211; input image</li>
+<li><strong>tb</strong> &#8211; median threshold bitmap</li>
+<li><strong>eb</strong> &#8211; exclude bitmap</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="createalignmtb">
+<h2>createAlignMTB<a class="headerlink" href="#createalignmtb" title="Permalink to this headline">¶</a></h2>
+<p>Creates AlignMTB object</p>
+<dl class="function">
+<dt id="Ptr&lt;AlignMTB&gt; createAlignMTB(int max_bits , int exclude_range , bool cut)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;AlignMTB&gt; <tt class="descname">createAlignMTB</tt><big>(</big>int <strong>max_bits</strong>=6, int <strong>exclude_range</strong>=4, bool <strong>cut</strong>=true<big>)</big><a class="headerlink" href="#Ptr<AlignMTB> createAlignMTB(int max_bits , int exclude_range , bool cut)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>max_bits</strong> &#8211; logarithm to the base 2 of maximal shift in each dimension. Values of 5 and 6 are usually good enough (31 and 63 pixels shift respectively).</li>
+<li><strong>exclude_range</strong> &#8211; range for exclusion bitmap that is constructed to suppress noise around the median value.</li>
+<li><strong>cut</strong> &#8211; if true cuts images, otherwise fills the new regions with zeros.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="calibratecrf">
+<h2>CalibrateCRF<a class="headerlink" href="#calibratecrf" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="CalibrateCRF : public Algorithm">
+<em class="property">class </em><tt class="descname">CalibrateCRF</tt> : <em class="property">public</em> <tt class="descname">Algorithm</tt><a class="headerlink" href="#CalibrateCRF : public Algorithm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The base class for camera response calibration algorithms.</p>
+</div>
+<div class="section" id="calibratecrf-process">
+<h2>CalibrateCRF::process<a class="headerlink" href="#calibratecrf-process" title="Permalink to this headline">¶</a></h2>
+<p>Recovers inverse camera response.</p>
+<dl class="function">
+<dt id="void CalibrateCRF::process(InputArrayOfArrays src, OutputArray dst, InputArray times)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">CalibrateCRF::</tt><tt class="descname">process</tt><big>(</big>InputArrayOfArrays <strong>src</strong>, OutputArray <strong>dst</strong>, InputArray <strong>times</strong><big>)</big><a class="headerlink" href="#void CalibrateCRF::process(InputArrayOfArrays src, OutputArray dst, InputArray times)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; vector of input images</li>
+<li><strong>dst</strong> &#8211; 256x1 matrix with inverse camera response function</li>
+<li><strong>times</strong> &#8211; vector of exposure time values for each image</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="calibratedebevec">
+<h2>CalibrateDebevec<a class="headerlink" href="#calibratedebevec" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="CalibrateDebevec : public CalibrateCRF">
+<em class="property">class </em><tt class="descname">CalibrateDebevec</tt> : <em class="property">public</em> <tt class="descname">CalibrateCRF</tt><a class="headerlink" href="#CalibrateDebevec : public CalibrateCRF" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Inverse camera response function is extracted for each brightness value by minimizing an objective function as linear system.
+Objective function is constructed using pixel values on the same position in all images, extra term is added to make the result smoother.</p>
+<p>For more information see <a class="reference internal" href="#dm97" id="id7">[DM97]</a>.</p>
+</div>
+<div class="section" id="createcalibratedebevec">
+<h2>createCalibrateDebevec<a class="headerlink" href="#createcalibratedebevec" title="Permalink to this headline">¶</a></h2>
+<p>Creates CalibrateDebevec object</p>
+<dl class="function">
+<dt id="createCalibrateDebevec(int samples , float lambda , bool random)">
+<strong>C++:</strong><tt class="descname"> </tt> <tt class="descname">createCalibrateDebevec</tt><big>(</big>int <strong>samples</strong>=70, float <strong>lambda</strong>=10.0f, bool <strong>random</strong>=false<big>)</big><a class="headerlink" href="#createCalibrateDebevec(int samples , float lambda , bool random)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>samples</strong> &#8211; number of pixel locations to use</li>
+<li><strong>lambda</strong> &#8211; smoothness term weight. Greater values produce smoother results, but can alter the response.</li>
+<li><strong>random</strong> &#8211; if true sample pixel locations are chosen at random, otherwise the form a rectangular grid.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="calibraterobertson">
+<h2>CalibrateRobertson<a class="headerlink" href="#calibraterobertson" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="CalibrateRobertson : public CalibrateCRF">
+<em class="property">class </em><tt class="descname">CalibrateRobertson</tt> : <em class="property">public</em> <tt class="descname">CalibrateCRF</tt><a class="headerlink" href="#CalibrateRobertson : public CalibrateCRF" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Inverse camera response function is extracted for each brightness value by minimizing an objective function as linear system.
+This algorithm uses all image pixels.</p>
+<p>For more information see <a class="reference internal" href="#rb99" id="id8">[RB99]</a>.</p>
+</div>
+<div class="section" id="createcalibraterobertson">
+<h2>createCalibrateRobertson<a class="headerlink" href="#createcalibraterobertson" title="Permalink to this headline">¶</a></h2>
+<p>Creates CalibrateRobertson object</p>
+<dl class="function">
+<dt id="createCalibrateRobertson(int max_iter , float threshold)">
+<strong>C++:</strong><tt class="descname"> </tt> <tt class="descname">createCalibrateRobertson</tt><big>(</big>int <strong>max_iter</strong>=30, float <strong>threshold</strong>=0.01f<big>)</big><a class="headerlink" href="#createCalibrateRobertson(int max_iter , float threshold)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>max_iter</strong> &#8211; maximal number of Gauss-Seidel solver iterations.</li>
+<li><strong>threshold</strong> &#8211; target difference between results of two successive steps of the minimization.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="mergeexposures">
+<h2>MergeExposures<a class="headerlink" href="#mergeexposures" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="MergeExposures : public Algorithm">
+<em class="property">class </em><tt class="descname">MergeExposures</tt> : <em class="property">public</em> <tt class="descname">Algorithm</tt><a class="headerlink" href="#MergeExposures : public Algorithm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The base class algorithms that can merge exposure sequence to a single image.</p>
+</div>
+<div class="section" id="mergeexposures-process">
+<h2>MergeExposures::process<a class="headerlink" href="#mergeexposures-process" title="Permalink to this headline">¶</a></h2>
+<p>Merges images.</p>
+<dl class="function">
+<dt id="void MergeExposures::process(InputArrayOfArrays src, OutputArray dst, InputArray times, InputArray response)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">MergeExposures::</tt><tt class="descname">process</tt><big>(</big>InputArrayOfArrays <strong>src</strong>, OutputArray <strong>dst</strong>, InputArray <strong>times</strong>, InputArray <strong>response</strong><big>)</big><a class="headerlink" href="#void MergeExposures::process(InputArrayOfArrays src, OutputArray dst, InputArray times, InputArray response)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; vector of input images</li>
+<li><strong>dst</strong> &#8211; result image</li>
+<li><strong>times</strong> &#8211; vector of exposure time values for each image</li>
+<li><strong>response</strong> &#8211; 256x1 matrix with inverse camera response function for each pixel value, it should have the same number of channels as images.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="mergedebevec">
+<h2>MergeDebevec<a class="headerlink" href="#mergedebevec" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="MergeDebevec : public MergeExposures">
+<em class="property">class </em><tt class="descname">MergeDebevec</tt> : <em class="property">public</em> <tt class="descname">MergeExposures</tt><a class="headerlink" href="#MergeDebevec : public MergeExposures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The resulting HDR image is calculated as weighted average of the exposures considering exposure values and camera response.</p>
+<p>For more information see <a class="reference internal" href="#dm97" id="id9">[DM97]</a>.</p>
+</div>
+<div class="section" id="createmergedebevec">
+<h2>createMergeDebevec<a class="headerlink" href="#createmergedebevec" title="Permalink to this headline">¶</a></h2>
+<p>Creates MergeDebevec object</p>
+<dl class="function">
+<dt id="Ptr&lt;MergeDebevec&gt; createMergeDebevec()">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;MergeDebevec&gt; <tt class="descname">createMergeDebevec</tt><big>(</big><big>)</big><a class="headerlink" href="#Ptr<MergeDebevec> createMergeDebevec()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="mergemertens">
+<h2>MergeMertens<a class="headerlink" href="#mergemertens" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="MergeMertens : public MergeExposures">
+<em class="property">class </em><tt class="descname">MergeMertens</tt> : <em class="property">public</em> <tt class="descname">MergeExposures</tt><a class="headerlink" href="#MergeMertens : public MergeExposures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Pixels are weighted using contrast, saturation and well-exposedness measures, than images are combined using laplacian pyramids.</p>
+<p>The resulting image weight is constructed as weighted average of contrast, saturation and well-exposedness measures.</p>
+<p>The resulting image doesn&#8217;t require tonemapping and can be converted to 8-bit image by multiplying by 255, but it&#8217;s recommended to apply gamma correction and/or linear tonemapping.</p>
+<p>For more information see <a class="reference internal" href="#mk07" id="id10">[MK07]</a>.</p>
+</div>
+<div class="section" id="mergemertens-process">
+<h2>MergeMertens::process<a class="headerlink" href="#mergemertens-process" title="Permalink to this headline">¶</a></h2>
+<p>Short version of process, that doesn&#8217;t take extra arguments.</p>
+<dl class="function">
+<dt id="void MergeMertens::process(InputArrayOfArrays src, OutputArray dst)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">MergeMertens::</tt><tt class="descname">process</tt><big>(</big>InputArrayOfArrays <strong>src</strong>, OutputArray <strong>dst</strong><big>)</big><a class="headerlink" href="#void MergeMertens::process(InputArrayOfArrays src, OutputArray dst)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; vector of input images</li>
+<li><strong>dst</strong> &#8211; result image</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="createmergemertens">
+<h2>createMergeMertens<a class="headerlink" href="#createmergemertens" title="Permalink to this headline">¶</a></h2>
+<p>Creates MergeMertens object</p>
+<dl class="function">
+<dt id="Ptr&lt;MergeMertens&gt; createMergeMertens(float contrast_weight , float saturation_weight , float exposure_weight)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;MergeMertens&gt; <tt class="descname">createMergeMertens</tt><big>(</big>float <strong>contrast_weight</strong>=1.0f, float <strong>saturation_weight</strong>=1.0f, float <strong>exposure_weight</strong>=0.0f<big>)</big><a class="headerlink" href="#Ptr<MergeMertens> createMergeMertens(float contrast_weight , float saturation_weight , float exposure_weight)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>contrast_weight</strong> &#8211; contrast measure weight. See <a class="reference internal" href="#MergeMertens : public MergeExposures" title="class MergeMertens : public MergeExposures"><tt class="xref ocv ocv-class docutils literal"><span class="pre">MergeMertens</span></tt></a>.</li>
+<li><strong>saturation_weight</strong> &#8211; saturation measure weight</li>
+<li><strong>exposure_weight</strong> &#8211; well-exposedness measure weight</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="mergerobertson">
+<h2>MergeRobertson<a class="headerlink" href="#mergerobertson" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="MergeRobertson : public MergeExposures">
+<em class="property">class </em><tt class="descname">MergeRobertson</tt> : <em class="property">public</em> <tt class="descname">MergeExposures</tt><a class="headerlink" href="#MergeRobertson : public MergeExposures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The resulting HDR image is calculated as weighted average of the exposures considering exposure values and camera response.</p>
+<p>For more information see <a class="reference internal" href="#rb99" id="id11">[RB99]</a>.</p>
+</div>
+<div class="section" id="createmergerobertson">
+<h2>createMergeRobertson<a class="headerlink" href="#createmergerobertson" title="Permalink to this headline">¶</a></h2>
+<p>Creates MergeRobertson object</p>
+<dl class="function">
+<dt id="Ptr&lt;MergeRobertson&gt; createMergeRobertson()">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;MergeRobertson&gt; <tt class="descname">createMergeRobertson</tt><big>(</big><big>)</big><a class="headerlink" href="#Ptr<MergeRobertson> createMergeRobertson()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<table class="docutils citation" frame="void" id="dm03" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[DM03]</a></td><td><ol class="first last upperalpha simple" start="6">
+<li>Drago, K. Myszkowski, T. Annen, N. Chiba, &#8220;Adaptive Logarithmic Mapping For Displaying High Contrast Scenes&#8221;, Computer Graphics Forum, 2003, 22, 419 - 426.</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="fl02" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[FL02]</a></td><td><ol class="first last upperalpha simple" start="18">
+<li>Fattal, D. Lischinski, M. Werman, &#8220;Gradient Domain High Dynamic Range Compression&#8221;, Proceedings OF ACM SIGGRAPH, 2002, 249 - 256.</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="dd02" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[DD02]</a></td><td><ol class="first last upperalpha simple" start="6">
+<li>Durand and Julie Dorsey, &#8220;Fast Bilateral Filtering for the Display of High-Dynamic-Range Images&#8221;, ACM Transactions on Graphics, 2002, 21, 3, 257 - 266.</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="rd05" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[RD05]</a></td><td><ol class="first last upperalpha simple" start="5">
+<li>Reinhard, K. Devlin, &#8220;Dynamic Range Reduction Inspired by Photoreceptor Physiology&#8221;, IEEE Transactions on Visualization and Computer Graphics, 2005, 11, 13 - 24.</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="mm06" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[MM06]</a></td><td><ol class="first last upperalpha simple" start="18">
+<li>Mantiuk, K. Myszkowski, H.-P. Seidel, &#8220;Perceptual Framework for Contrast Processing of High Dynamic Range Images&#8221;, ACM Transactions on Applied Perception, 2006, 3, 3, 286 - 308.</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="gw03" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[GW03]</a></td><td><ol class="first last upperalpha simple" start="7">
+<li>Ward, &#8220;Fast, Robust Image Registration for Compositing High Dynamic Range Photographs from Handheld Exposures&#8221;, Journal of Graphics Tools, 2003, 8, 17 - 30.</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="dm97" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[DM97]</td><td><em>(<a class="fn-backref" href="#id7">1</a>, <a class="fn-backref" href="#id9">2</a>)</em> <ol class="last upperalpha simple" start="16">
+<li>Debevec, J. Malik, &#8220;Recovering High Dynamic Range Radiance Maps from Photographs&#8221;, Proceedings OF ACM SIGGRAPH, 1997, 369 - 378.</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="mk07" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id10">[MK07]</a></td><td><ol class="first last upperalpha simple" start="20">
+<li>Mertens, J. Kautz, F. Van Reeth, &#8220;Exposure Fusion&#8221;, Proceedings of the 15th Pacific Conference on Computer Graphics and Applications, 2007, 382 - 390.</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="rb99" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[RB99]</td><td><em>(<a class="fn-backref" href="#id8">1</a>, <a class="fn-backref" href="#id11">2</a>)</em> <ol class="last upperalpha simple" start="13">
+<li>Robertson , S. Borman , R. Stevenson , &#8220;Dynamic range improvement through multiple exposures &#8221;, Proceedings of the Int. Conf. on Image Processing , 1999, 159 - 163.</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="decolor.html" title="Decolorization"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="denoising.html" title="Denoising"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="photo.html" >photo. Computational Photography</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/photo/doc/hdr_imaging.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

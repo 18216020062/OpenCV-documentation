@@ -1,0 +1,427 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Expectation Maximization &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="ml. Machine Learning" href="ml.html" />
+    <link rel="next" title="Neural Networks" href="neural_networks.html" />
+    <link rel="prev" title="Random Trees" href="random_trees.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="neural_networks.html" title="Neural Networks"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="random_trees.html" title="Random Trees"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" accesskey="U">ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Expectation Maximization</a><ul>
+<li><a class="reference internal" href="#em">EM</a></li>
+<li><a class="reference internal" href="#em-params">EM::Params</a></li>
+<li><a class="reference internal" href="#em-params-params">EM::Params::Params</a></li>
+<li><a class="reference internal" href="#em-create">EM::create</a></li>
+<li><a class="reference internal" href="#em-train">EM::train</a></li>
+<li><a class="reference internal" href="#em-predict2">EM::predict2</a></li>
+<li><a class="reference internal" href="#em-getmeans">EM::getMeans</a></li>
+<li><a class="reference internal" href="#em-getweights">EM::getWeights</a></li>
+<li><a class="reference internal" href="#em-getcovs">EM::getCovs</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="random_trees.html"
+                        title="previous chapter">Random Trees</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="neural_networks.html"
+                        title="next chapter">Neural Networks</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="expectation-maximization">
+<span id="ml-expectation-maximization"></span><h1>Expectation Maximization<a class="headerlink" href="#expectation-maximization" title="Permalink to this headline">¶</a></h1>
+<p>The Expectation Maximization(EM) algorithm estimates the parameters of the multivariate probability density function in the form of a Gaussian mixture distribution with a specified number of mixtures.</p>
+<p>Consider the set of the N feature vectors
+{ <span class="math">x_1, x_2,...,x_{N}</span> } from a d-dimensional Euclidean space drawn from a Gaussian mixture:</p>
+<div class="math">
+<p><span class="math">p(x;a_k,S_k, \pi _k) =  \sum _{k=1}^{m} \pi _kp_k(x),  \quad \pi _k  \geq 0,  \quad \sum _{k=1}^{m} \pi _k=1,</span></p>
+</div><div class="math">
+<p><span class="math">p_k(x)= \varphi (x;a_k,S_k)= \frac{1}{(2\pi)^{d/2}\mid{S_k}\mid^{1/2}} exp \left \{ - \frac{1}{2} (x-a_k)^TS_k^{-1}(x-a_k) \right \} ,</span></p>
+</div><p>where
+<span class="math">m</span> is the number of mixtures,
+<span class="math">p_k</span> is the normal distribution
+density with the mean
+<span class="math">a_k</span> and covariance matrix
+<span class="math">S_k</span>,
+<span class="math">\pi_k</span> is the weight of the k-th mixture. Given the number of mixtures
+<span class="math">M</span> and the samples
+<span class="math">x_i</span>,
+<span class="math">i=1..N</span> the algorithm finds the
+maximum-likelihood estimates (MLE) of all the mixture parameters,
+that is,
+<span class="math">a_k</span>,
+<span class="math">S_k</span> and
+<span class="math">\pi_k</span> :</p>
+<div class="math">
+<p><span class="math">L(x, \theta )=logp(x, \theta )= \sum _{i=1}^{N}log \left ( \sum _{k=1}^{m} \pi _kp_k(x) \right ) \to \max _{ \theta \in \Theta },</span></p>
+</div><div class="math">
+<p><span class="math">\Theta = \left \{ (a_k,S_k, \pi _k): a_k  \in \mathbbm{R} ^d,S_k=S_k^T&gt;0,S_k  \in \mathbbm{R} ^{d  \times d}, \pi _k \geq 0, \sum _{k=1}^{m} \pi _k=1 \right \} .</span></p>
+</div><p>The EM algorithm is an iterative procedure. Each iteration includes
+two steps. At the first step (Expectation step or E-step), you find a
+probability
+<span class="math">p_{i,k}</span> (denoted
+<span class="math">\alpha_{i,k}</span> in the formula below) of
+sample <tt class="docutils literal"><span class="pre">i</span></tt> to belong to mixture <tt class="docutils literal"><span class="pre">k</span></tt> using the currently
+available mixture parameter estimates:</p>
+<div class="math">
+<p><span class="math">\alpha _{ki} =  \frac{\pi_k\varphi(x;a_k,S_k)}{\sum\limits_{j=1}^{m}\pi_j\varphi(x;a_j,S_j)} .</span></p>
+</div><p>At the second step (Maximization step or M-step), the mixture parameter estimates are refined using the computed probabilities:</p>
+<div class="math">
+<p><span class="math">\pi _k= \frac{1}{N} \sum _{i=1}^{N} \alpha _{ki},  \quad a_k= \frac{\sum\limits_{i=1}^{N}\alpha_{ki}x_i}{\sum\limits_{i=1}^{N}\alpha_{ki}} ,  \quad S_k= \frac{\sum\limits_{i=1}^{N}\alpha_{ki}(x_i-a_k)(x_i-a_k)^T}{\sum\limits_{i=1}^{N}\alpha_{ki}}</span></p>
+</div><p>Alternatively, the algorithm may start with the M-step when the initial values for
+<span class="math">p_{i,k}</span> can be provided. Another alternative when
+<span class="math">p_{i,k}</span> are unknown is to use a simpler clustering algorithm to pre-cluster the input samples and thus obtain initial
+<span class="math">p_{i,k}</span> . Often (including machine learning) the
+<tt class="docutils literal"><span class="pre">k-means</span></tt> algorithm is used for that purpose.</p>
+<p>One of the main problems of the EM algorithm is a large number
+of parameters to estimate. The majority of the parameters reside in
+covariance matrices, which are
+<span class="math">d \times d</span> elements each
+where
+<span class="math">d</span> is the feature space dimensionality. However, in
+many practical problems, the covariance matrices are close to diagonal
+or even to
+<span class="math">\mu_k*I</span> , where
+<span class="math">I</span> is an identity matrix and
+<span class="math">\mu_k</span> is a mixture-dependent &#8220;scale&#8221; parameter. So, a robust computation
+scheme could start with harder constraints on the covariance
+matrices and then use the estimated parameters as an input for a less
+constrained optimization problem (often a diagonal covariance matrix is
+already a good enough approximation).</p>
+<p><strong>References:</strong></p>
+<ul class="simple">
+<li>Bilmes98 J. A. Bilmes. <em>A Gentle Tutorial of the EM Algorithm and its Application to Parameter Estimation for Gaussian Mixture and Hidden Markov Models</em>. Technical Report TR-97-021, International Computer Science Institute and Computer Science Division, University of California at Berkeley, April 1998.</li>
+</ul>
+<div class="section" id="em">
+<h2>EM<a class="headerlink" href="#em" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="EM : public StatModel">
+<em class="property">class </em><tt class="descname">EM</tt> : <em class="property">public</em> <tt class="descname">StatModel</tt><a class="headerlink" href="#EM : public StatModel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The class implements the EM algorithm as described in the beginning of this section.</p>
+</div>
+<div class="section" id="em-params">
+<h2>EM::Params<a class="headerlink" href="#em-params" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="EM::Params">
+<em class="property">class </em><tt class="descclassname">EM::</tt><tt class="descname">Params</tt><a class="headerlink" href="#EM::Params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The class describes EM training parameters.</p>
+</div>
+<div class="section" id="em-params-params">
+<h2>EM::Params::Params<a class="headerlink" href="#em-params-params" title="Permalink to this headline">¶</a></h2>
+<p>The constructor</p>
+<dl class="function">
+<dt id="EM::Params::Params(int nclusters, int covMatType,const TermCriteria&amp; termCrit)">
+<strong>C++:</strong><tt class="descname"> </tt> <tt class="descclassname">EM::Params::</tt><tt class="descname">Params</tt><big>(</big>int <strong>nclusters</strong>=DEFAULT_NCLUSTERS, int <strong>covMatType</strong>=EM::COV_MAT_DIAGONAL, const TermCriteria&amp; <strong>termCrit</strong>=TermCriteria(TermCriteria::COUNT+TermCriteria::EPS, EM::DEFAULT_MAX_ITERS, 1e-6)<big>)</big><a class="headerlink" href="#EM::Params::Params(int nclusters, int covMatType,const TermCriteria& termCrit)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>nclusters</strong> &#8211; The number of mixture components in the Gaussian mixture model. Default value of the parameter is <tt class="docutils literal"><span class="pre">EM::DEFAULT_NCLUSTERS=5</span></tt>. Some of EM implementation could determine the optimal number of mixtures within a specified value range, but that is not the case in ML yet.</li>
+<li><strong>covMatType</strong> &#8211; <p>Constraint on covariance matrices which defines type of matrices. Possible values are:</p>
+<ul>
+<li><strong>EM::COV_MAT_SPHERICAL</strong> A scaled identity matrix <span class="math">\mu_k * I</span>. There is the only parameter <span class="math">\mu_k</span> to be estimated for each matrix. The option may be used in special cases, when the constraint is relevant, or as a first step in the optimization (for example in case when the data is preprocessed with PCA). The results of such preliminary estimation may be passed again to the optimization procedure, this time with <tt class="docutils literal"><span class="pre">covMatType=EM::COV_MAT_DIAGONAL</span></tt>.</li>
+<li><strong>EM::COV_MAT_DIAGONAL</strong> A diagonal matrix with positive diagonal elements. The number of free parameters is <tt class="docutils literal"><span class="pre">d</span></tt> for each matrix. This is most commonly used option yielding good estimation results.</li>
+<li><strong>EM::COV_MAT_GENERIC</strong> A symmetric positively defined matrix. The number of free parameters in each matrix is about <span class="math">d^2/2</span>. It is not recommended to use this option, unless there is pretty accurate initial estimation of the parameters and/or a huge number of training samples.</li>
+</ul>
+</li>
+<li><strong>termCrit</strong> &#8211; The termination criteria of the EM algorithm. The EM algorithm can be terminated by the number of iterations <tt class="docutils literal"><span class="pre">termCrit.maxCount</span></tt> (number of M-steps) or when relative change of likelihood logarithm is less than <tt class="docutils literal"><span class="pre">termCrit.epsilon</span></tt>. Default maximum number of iterations is <tt class="docutils literal"><span class="pre">EM::DEFAULT_MAX_ITERS=100</span></tt>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="em-create">
+<h2>EM::create<a class="headerlink" href="#em-create" title="Permalink to this headline">¶</a></h2>
+<p>Creates empty EM model</p>
+<dl class="function">
+<dt id="Ptr&lt;EM&gt; EM::create(const Params&amp; params)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;EM&gt; <tt class="descclassname">EM::</tt><tt class="descname">create</tt><big>(</big>const Params&amp; <strong>params</strong>=Params()<big>)</big><a class="headerlink" href="#Ptr<EM> EM::create(const Params& params)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>params</strong> &#8211; EM parameters</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The model should be trained then using <tt class="docutils literal"><span class="pre">StatModel::train(traindata,</span> <span class="pre">flags)</span></tt> method. Alternatively, you can use one of the <tt class="docutils literal"><span class="pre">EM::train*</span></tt> methods or load it from file using <tt class="docutils literal"><span class="pre">StatModel::load&lt;EM&gt;(filename)</span></tt>.</p>
+</div>
+<div class="section" id="em-train">
+<h2>EM::train<a class="headerlink" href="#em-train" title="Permalink to this headline">¶</a></h2>
+<p>Static methods that estimate the Gaussian mixture parameters from a samples set</p>
+<dl class="function">
+<dt id="Ptr&lt;EM&gt; EM::train(InputArray samples, OutputArray logLikelihoods, OutputArray labels, OutputArray probs, const Params&amp; params)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;EM&gt; <tt class="descclassname">EM::</tt><tt class="descname">train</tt><big>(</big>InputArray <strong>samples</strong>, OutputArray <strong>logLikelihoods</strong>=noArray(), OutputArray <strong>labels</strong>=noArray(), OutputArray <strong>probs</strong>=noArray(), const Params&amp; <strong>params</strong>=Params()<big>)</big><a class="headerlink" href="#Ptr<EM> EM::train(InputArray samples, OutputArray logLikelihoods, OutputArray labels, OutputArray probs, const Params& params)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="bool EM::train_startWithE(InputArray samples, InputArray means0, InputArray covs0, InputArray weights0, OutputArray logLikelihoods, OutputArray labels, OutputArray probs, const Params&amp; params)">
+<strong>C++:</strong><tt class="descname"> </tt>bool <tt class="descclassname">EM::</tt><tt class="descname">train_startWithE</tt><big>(</big>InputArray <strong>samples</strong>, InputArray <strong>means0</strong>, InputArray <strong>covs0</strong>=noArray(), InputArray <strong>weights0</strong>=noArray(), OutputArray <strong>logLikelihoods</strong>=noArray(), OutputArray <strong>labels</strong>=noArray(), OutputArray <strong>probs</strong>=noArray(), const Params&amp; <strong>params</strong>=Params()<big>)</big><a class="headerlink" href="#bool EM::train_startWithE(InputArray samples, InputArray means0, InputArray covs0, InputArray weights0, OutputArray logLikelihoods, OutputArray labels, OutputArray probs, const Params& params)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="bool EM::train_startWithM(InputArray samples, InputArray probs0, OutputArray logLikelihoods, OutputArray labels, OutputArray probs, const Params&amp; params)">
+<strong>C++:</strong><tt class="descname"> </tt>bool <tt class="descclassname">EM::</tt><tt class="descname">train_startWithM</tt><big>(</big>InputArray <strong>samples</strong>, InputArray <strong>probs0</strong>, OutputArray <strong>logLikelihoods</strong>=noArray(), OutputArray <strong>labels</strong>=noArray(), OutputArray <strong>probs</strong>=noArray(), const Params&amp; <strong>params</strong>=Params()<big>)</big><a class="headerlink" href="#bool EM::train_startWithM(InputArray samples, InputArray probs0, OutputArray logLikelihoods, OutputArray labels, OutputArray probs, const Params& params)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>samples</strong> &#8211; Samples from which the Gaussian mixture model will be estimated. It should be a one-channel matrix, each row of which is a sample. If the matrix does not have <tt class="docutils literal"><span class="pre">CV_64F</span></tt> type it will be converted to the inner matrix of such type for the further computing.</li>
+<li><strong>means0</strong> &#8211; Initial means <span class="math">a_k</span> of mixture components. It is a one-channel matrix of <span class="math">nclusters \times dims</span> size. If the matrix does not have <tt class="docutils literal"><span class="pre">CV_64F</span></tt> type it will be converted to the inner matrix of such type for the further computing.</li>
+<li><strong>covs0</strong> &#8211; The vector of initial covariance matrices <span class="math">S_k</span> of mixture components. Each of covariance matrices is a one-channel matrix of <span class="math">dims \times dims</span> size. If the matrices do not have <tt class="docutils literal"><span class="pre">CV_64F</span></tt> type they will be converted to the inner matrices of such type for the further computing.</li>
+<li><strong>weights0</strong> &#8211; Initial weights <span class="math">\pi_k</span> of mixture components. It should be a one-channel floating-point matrix with <span class="math">1 \times nclusters</span> or <span class="math">nclusters \times 1</span> size.</li>
+<li><strong>probs0</strong> &#8211; Initial probabilities <span class="math">p_{i,k}</span> of sample <span class="math">i</span> to belong to mixture component <span class="math">k</span>. It is a  one-channel floating-point matrix of <span class="math">nsamples \times nclusters</span> size.</li>
+<li><strong>logLikelihoods</strong> &#8211; The optional output matrix that contains a likelihood logarithm value for each sample. It has <span class="math">nsamples \times 1</span> size and <tt class="docutils literal"><span class="pre">CV_64FC1</span></tt> type.</li>
+<li><strong>labels</strong> &#8211; The optional output &#8220;class label&#8221; for each sample: <span class="math">\texttt{labels}_i=\texttt{arg max}_k(p_{i,k}), i=1..N</span> (indices of the most probable mixture component for each sample). It has <span class="math">nsamples \times 1</span> size and <tt class="docutils literal"><span class="pre">CV_32SC1</span></tt> type.</li>
+<li><strong>probs</strong> &#8211; The optional output matrix that contains posterior probabilities of each Gaussian mixture component given the each sample. It has <span class="math">nsamples \times nclusters</span> size and <tt class="docutils literal"><span class="pre">CV_64FC1</span></tt> type.</li>
+<li><strong>params</strong> &#8211; The Gaussian mixture params, see <tt class="docutils literal"><span class="pre">EM::Params</span></tt> description above.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Three versions of training method differ in the initialization of Gaussian mixture model parameters and start step:</p>
+<ul class="simple">
+<li><strong>train</strong> - Starts with Expectation step. Initial values of the model parameters will be estimated by the k-means algorithm.</li>
+<li><strong>trainE</strong> - Starts with Expectation step. You need to provide initial means <span class="math">a_k</span> of mixture components. Optionally you can pass initial weights <span class="math">\pi_k</span> and covariance matrices <span class="math">S_k</span> of mixture components.</li>
+<li><strong>trainM</strong> - Starts with Maximization step. You need to provide initial probabilities <span class="math">p_{i,k}</span> to use this option.</li>
+</ul>
+<p>The methods return <tt class="docutils literal"><span class="pre">true</span></tt> if the Gaussian mixture model was trained successfully, otherwise it returns <tt class="docutils literal"><span class="pre">false</span></tt>.</p>
+<p>Unlike many of the ML models, EM is an unsupervised learning algorithm and it does not take responses (class labels or function values) as input. Instead, it computes the
+<em>Maximum Likelihood Estimate</em> of the Gaussian mixture parameters from an input sample set, stores all the parameters inside the structure:
+<span class="math">p_{i,k}</span> in <tt class="docutils literal"><span class="pre">probs</span></tt>,
+<span class="math">a_k</span> in <tt class="docutils literal"><span class="pre">means</span></tt> ,
+<span class="math">S_k</span> in <tt class="docutils literal"><span class="pre">covs[k]</span></tt>,
+<span class="math">\pi_k</span> in <tt class="docutils literal"><span class="pre">weights</span></tt> , and optionally computes the output &#8220;class label&#8221; for each sample:
+<span class="math">\texttt{labels}_i=\texttt{arg max}_k(p_{i,k}), i=1..N</span> (indices of the most probable mixture component for each sample).</p>
+<p>The trained model can be used further for prediction, just like any other classifier. The trained model is similar to the
+<tt class="docutils literal"><span class="pre">NormalBayesClassifier</span></tt>.</p>
+</div>
+<div class="section" id="em-predict2">
+<h2>EM::predict2<a class="headerlink" href="#em-predict2" title="Permalink to this headline">¶</a></h2>
+<p>Returns a likelihood logarithm value and an index of the most probable mixture component for the given sample.</p>
+<dl class="function">
+<dt id="Vec2d EM::predict2(InputArray sample, OutputArray probs) const">
+<strong>C++:</strong><tt class="descname"> </tt>Vec2d <tt class="descclassname">EM::</tt><tt class="descname">predict2</tt><big>(</big>InputArray <strong>sample</strong>, OutputArray <strong>probs</strong>=noArray()<big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#Vec2d EM::predict2(InputArray sample, OutputArray probs) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sample</strong> &#8211; A sample for classification. It should be a one-channel matrix of <span class="math">1 \times dims</span> or <span class="math">dims \times 1</span> size.</li>
+<li><strong>probs</strong> &#8211; Optional output matrix that contains posterior probabilities of each component given the sample. It has <span class="math">1 \times nclusters</span> size and <tt class="docutils literal"><span class="pre">CV_64FC1</span></tt> type.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The method returns a two-element <tt class="docutils literal"><span class="pre">double</span></tt> vector. Zero element is a likelihood logarithm value for the sample. First element is an index of the most probable mixture component for the given sample.</p>
+</div>
+<div class="section" id="em-getmeans">
+<h2>EM::getMeans<a class="headerlink" href="#em-getmeans" title="Permalink to this headline">¶</a></h2>
+<p>Returns the cluster centers (means of the Gaussian mixture)</p>
+<dl class="function">
+<dt id="Mat EM::getMeans() const">
+<strong>C++:</strong><tt class="descname"> </tt>Mat <tt class="descclassname">EM::</tt><tt class="descname">getMeans</tt><big>(</big><big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#Mat EM::getMeans() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Returns matrix with the number of rows equal to the number of mixtures and number of columns equal to the space dimensionality.</p>
+</div>
+<div class="section" id="em-getweights">
+<h2>EM::getWeights<a class="headerlink" href="#em-getweights" title="Permalink to this headline">¶</a></h2>
+<p>Returns weights of the mixtures</p>
+<dl class="function">
+<dt id="Mat EM::getWeights() const">
+<strong>C++:</strong><tt class="descname"> </tt>Mat <tt class="descclassname">EM::</tt><tt class="descname">getWeights</tt><big>(</big><big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#Mat EM::getWeights() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Returns vector with the number of elements equal to the number of mixtures.</p>
+</div>
+<div class="section" id="em-getcovs">
+<h2>EM::getCovs<a class="headerlink" href="#em-getcovs" title="Permalink to this headline">¶</a></h2>
+<p>Returns covariation matrices</p>
+<dl class="function">
+<dt id="void EM::getCovs(std::vector&lt;Mat&gt;&amp; covs) const">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">EM::</tt><tt class="descname">getCovs</tt><big>(</big>std::vector&lt;Mat&gt;&amp; <strong>covs</strong><big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#void EM::getCovs(std::vector<Mat>& covs) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Returns vector of covariation matrices. Number of matrices is the number of gaussian mixtures, each matrix is a square floating-point matrix NxN, where N is the space dimensionality.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="neural_networks.html" title="Neural Networks"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="random_trees.html" title="Random Trees"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" >ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/ml/doc/expectation_maximization.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>OCR of Hand-written Data using kNN &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../../../index.html" />
+    <link rel="up" title="K-Nearest Neighbour" href="../py_knn_index.html" />
+    <link rel="next" title="Support Vector Machines (SVM)" href="../../py_svm/py_svm_index.html" />
+    <link rel="prev" title="Understanding k-Nearest Neighbour" href="../py_knn_understanding/py_knn_understanding.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py_svm/py_svm_index.html" title="Support Vector Machines (SVM)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../py_knn_understanding/py_knn_understanding.html" title="Understanding k-Nearest Neighbour"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../../py_table_of_contents_ml/py_table_of_contents_ml.html" >Machine Learning</a> &raquo;</li>
+          <li><a href="../py_knn_index.html" accesskey="U">K-Nearest Neighbour</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../../index.html">
+              <img class="logo" src="../../../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">OCR of Hand-written Data using kNN</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#ocr-of-hand-written-digits">OCR of Hand-written Digits</a></li>
+<li><a class="reference internal" href="#ocr-of-english-alphabets">OCR of English Alphabets</a></li>
+<li><a class="reference internal" href="#additional-resources">Additional Resources</a></li>
+<li><a class="reference internal" href="#exercises">Exercises</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../py_knn_understanding/py_knn_understanding.html"
+                        title="previous chapter">Understanding k-Nearest Neighbour</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../py_svm/py_svm_index.html"
+                        title="next chapter">Support Vector Machines (SVM)</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="ocr-of-hand-written-data-using-knn">
+<span id="knn-opencv"></span><h1>OCR of Hand-written Data using kNN<a class="headerlink" href="#ocr-of-hand-written-data-using-knn" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>In this chapter</dt>
+<dd><ul class="first last simple">
+<li>We will use our knowledge on kNN to build a basic OCR application.</li>
+<li>We will try with Digits and Alphabets data available that comes with OpenCV.</li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="ocr-of-hand-written-digits">
+<h2>OCR of Hand-written Digits<a class="headerlink" href="#ocr-of-hand-written-digits" title="Permalink to this headline">¶</a></h2>
+<p>Our goal is to build an application which can read the handwritten digits. For this we need some train_data and test_data. OpenCV comes with an image <cite>digits.png</cite> (in the folder <tt class="docutils literal"><span class="pre">opencv/samples/python2/data/</span></tt>) which has 5000 handwritten digits (500 for each digit). Each digit is a 20x20 image. So our first step is to split this image into 5000 different digits. For each digit, we flatten it into a single row with 400 pixels. That is our feature set, ie intensity values of all pixels. It is the simplest feature set we can create. We use first 250 samples of each digit as train_data, and next 250 samples as test_data. So let&#8217;s prepare them first.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;digits.png&#39;</span><span class="p">)</span>
+<span class="n">gray</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
+
+<span class="c"># Now we split the image to 5000 cells, each 20x20 size</span>
+<span class="n">cells</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">hsplit</span><span class="p">(</span><span class="n">row</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">vsplit</span><span class="p">(</span><span class="n">gray</span><span class="p">,</span><span class="mi">50</span><span class="p">)]</span>
+
+<span class="c"># Make it into a Numpy array. It size will be (50,100,20,20)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cells</span><span class="p">)</span>
+
+<span class="c"># Now we prepare train_data and test_data.</span>
+<span class="n">train</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:,:</span><span class="mi">50</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">400</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="c"># Size = (2500,400)</span>
+<span class="n">test</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:,</span><span class="mi">50</span><span class="p">:</span><span class="mi">100</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">400</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="c"># Size = (2500,400)</span>
+
+<span class="c"># Create labels for train and test data</span>
+<span class="n">k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">train_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="mi">250</span><span class="p">)[:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+<span class="n">test_labels</span> <span class="o">=</span> <span class="n">train_labels</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="c"># Initiate kNN, train the data, then test it with test data for k=1</span>
+<span class="n">knn</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">KNearest</span><span class="p">()</span>
+<span class="n">knn</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">train</span><span class="p">,</span><span class="n">train_labels</span><span class="p">)</span>
+<span class="n">ret</span><span class="p">,</span><span class="n">result</span><span class="p">,</span><span class="n">neighbours</span><span class="p">,</span><span class="n">dist</span> <span class="o">=</span> <span class="n">knn</span><span class="o">.</span><span class="n">find_nearest</span><span class="p">(</span><span class="n">test</span><span class="p">,</span><span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="c"># Now we check the accuracy of classification</span>
+<span class="c"># For that, compare the result with test_labels and check which are wrong</span>
+<span class="n">matches</span> <span class="o">=</span> <span class="n">result</span><span class="o">==</span><span class="n">test_labels</span>
+<span class="n">correct</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span>
+<span class="n">accuracy</span> <span class="o">=</span> <span class="n">correct</span><span class="o">*</span><span class="mf">100.0</span><span class="o">/</span><span class="n">result</span><span class="o">.</span><span class="n">size</span>
+<span class="k">print</span> <span class="n">accuracy</span>
+</pre></div>
+</div>
+<p>So our basic OCR app is ready. This particular example gave me an accuracy of 91%. One option improve accuracy is to add more data for training, especially the wrong ones. So instead of finding this training data everytime I start application, I better save it, so that next time, I directly read this data from a file and start classification. You can do it with the help of some Numpy functions like np.savetxt, np.savez, np.load etc. Please check their docs for more details.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># save the data</span>
+<span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span><span class="s">&#39;knn_data.npz&#39;</span><span class="p">,</span><span class="n">train</span><span class="o">=</span><span class="n">train</span><span class="p">,</span> <span class="n">train_labels</span><span class="o">=</span><span class="n">train_labels</span><span class="p">)</span>
+
+<span class="c"># Now load the data</span>
+<span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s">&#39;knn_data.npz&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">data</span><span class="p">:</span>
+    <span class="k">print</span> <span class="n">data</span><span class="o">.</span><span class="n">files</span>
+    <span class="n">train</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s">&#39;train&#39;</span><span class="p">]</span>
+    <span class="n">train_labels</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s">&#39;train_labels&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>In my system, it takes around 4.4 MB of memory. Since we are using intensity values (uint8 data) as features, it would be better to convert the data to np.uint8 first and then save it. It takes only 1.1 MB in this case. Then while loading, you can convert back into float32.</p>
+</div>
+<div class="section" id="ocr-of-english-alphabets">
+<h2>OCR of English Alphabets<a class="headerlink" href="#ocr-of-english-alphabets" title="Permalink to this headline">¶</a></h2>
+<p>Next we will do the same for English alphabets, but there is a slight change in data and feature set. Here, instead of images, OpenCV comes with a data file, <tt class="docutils literal"><span class="pre">letter-recognition.data</span></tt> in <tt class="docutils literal"><span class="pre">opencv/samples/cpp/</span></tt> folder. If you open it, you will see 20000 lines which may, on first sight, look like garbage. Actually, in each row, first column is an alphabet which is our label. Next 16 numbers following it are its different features. These features are obtained from <a class="reference external" href="http://archive.ics.uci.edu/ml/">UCI Machine Learning Repository</a>. You can find the details of these features in <a class="reference external" href="http://archive.ics.uci.edu/ml/datasets/Letter+Recognition">this page</a>.</p>
+<p>There are 20000 samples available, so we take first 10000 data as training samples and remaining 10000 as test samples. We should change the alphabets to ascii characters because we can&#8217;t work with alphabets directly.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+
+<span class="c"># Load the data, converters convert the letter to a number</span>
+<span class="n">data</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s">&#39;letter-recognition.data&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span> <span class="s">&#39;float32&#39;</span><span class="p">,</span> <span class="n">delimiter</span> <span class="o">=</span> <span class="s">&#39;,&#39;</span><span class="p">,</span>
+                    <span class="n">converters</span><span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">ch</span><span class="p">:</span> <span class="nb">ord</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span><span class="o">-</span><span class="nb">ord</span><span class="p">(</span><span class="s">&#39;A&#39;</span><span class="p">)})</span>
+
+<span class="c"># split the data to two, 10000 each for train and test</span>
+<span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vsplit</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c"># split trainData and testData to features and responses</span>
+<span class="n">responses</span><span class="p">,</span> <span class="n">trainData</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hsplit</span><span class="p">(</span><span class="n">train</span><span class="p">,[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">labels</span><span class="p">,</span> <span class="n">testData</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hsplit</span><span class="p">(</span><span class="n">test</span><span class="p">,[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="c"># Initiate the kNN, classify, measure accuracy.</span>
+<span class="n">knn</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">KNearest</span><span class="p">()</span>
+<span class="n">knn</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">trainData</span><span class="p">,</span> <span class="n">responses</span><span class="p">)</span>
+<span class="n">ret</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">neighbours</span><span class="p">,</span> <span class="n">dist</span> <span class="o">=</span> <span class="n">knn</span><span class="o">.</span><span class="n">find_nearest</span><span class="p">(</span><span class="n">testData</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="n">correct</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">result</span> <span class="o">==</span> <span class="n">labels</span><span class="p">)</span>
+<span class="n">accuracy</span> <span class="o">=</span> <span class="n">correct</span><span class="o">*</span><span class="mf">100.0</span><span class="o">/</span><span class="mi">10000</span>
+<span class="k">print</span> <span class="n">accuracy</span>
+</pre></div>
+</div>
+<p>It gives me an accuracy of 93.22%. Again, if you want to increase accuracy, you can iteratively add error data in each level.</p>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py_svm/py_svm_index.html" title="Support Vector Machines (SVM)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../py_knn_understanding/py_knn_understanding.html" title="Understanding k-Nearest Neighbour"
+             >previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../../py_table_of_contents_ml/py_table_of_contents_ml.html" >Machine Learning</a> &raquo;</li>
+          <li><a href="../py_knn_index.html" >K-Nearest Neighbour</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../../../_sources/doc/py_tutorials/py_ml/py_knn/py_knn_opencv/py_knn_opencv.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

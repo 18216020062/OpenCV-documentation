@@ -1,0 +1,584 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Stereo Correspondence &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="cudastereo. CUDA-accelerated Stereo Correspondence" href="cudastereo.html" />
+    <link rel="next" title="cudawarping. CUDA-accelerated Image Warping" href="../../cudawarping/doc/cudawarping.html" />
+    <link rel="prev" title="cudastereo. CUDA-accelerated Stereo Correspondence" href="cudastereo.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../cudawarping/doc/cudawarping.html" title="cudawarping. CUDA-accelerated Image Warping"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="cudastereo.html" title="cudastereo. CUDA-accelerated Stereo Correspondence"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="cudastereo.html" accesskey="U">cudastereo. CUDA-accelerated Stereo Correspondence</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Stereo Correspondence</a><ul>
+<li><a class="reference internal" href="#cuda-stereobm">cuda::StereoBM</a></li>
+<li><a class="reference internal" href="#cuda-createstereobm">cuda::createStereoBM</a></li>
+<li><a class="reference internal" href="#cuda-stereobeliefpropagation">cuda::StereoBeliefPropagation</a></li>
+<li><a class="reference internal" href="#cuda-createstereobeliefpropagation">cuda::createStereoBeliefPropagation</a></li>
+<li><a class="reference internal" href="#cuda-stereobeliefpropagation-estimaterecommendedparams">cuda::StereoBeliefPropagation::estimateRecommendedParams</a></li>
+<li><a class="reference internal" href="#cuda-stereobeliefpropagation-compute">cuda::StereoBeliefPropagation::compute</a></li>
+<li><a class="reference internal" href="#cuda-stereoconstantspacebp">cuda::StereoConstantSpaceBP</a></li>
+<li><a class="reference internal" href="#cuda-createstereoconstantspacebp">cuda::createStereoConstantSpaceBP</a></li>
+<li><a class="reference internal" href="#cuda-stereoconstantspacebp-estimaterecommendedparams">cuda::StereoConstantSpaceBP::estimateRecommendedParams</a></li>
+<li><a class="reference internal" href="#cuda-disparitybilateralfilter">cuda::DisparityBilateralFilter</a></li>
+<li><a class="reference internal" href="#cuda-createdisparitybilateralfilter">cuda::createDisparityBilateralFilter</a></li>
+<li><a class="reference internal" href="#cuda-disparitybilateralfilter-apply">cuda::DisparityBilateralFilter::apply</a></li>
+<li><a class="reference internal" href="#cuda-reprojectimageto3d">cuda::reprojectImageTo3D</a></li>
+<li><a class="reference internal" href="#cuda-drawcolordisp">cuda::drawColorDisp</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="cudastereo.html"
+                        title="previous chapter">cudastereo. CUDA-accelerated Stereo Correspondence</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../cudawarping/doc/cudawarping.html"
+                        title="next chapter">cudawarping. CUDA-accelerated Image Warping</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="stereo-correspondence">
+<h1>Stereo Correspondence<a class="headerlink" href="#stereo-correspondence" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>A basic stereo matching example can be found at opencv_source_code/samples/gpu/stereo_match.cpp</li>
+<li>A stereo matching example using several GPU&#8217;s can be found at opencv_source_code/samples/gpu/stereo_multi.cpp</li>
+<li>A stereo matching example using several GPU&#8217;s and driver API can be found at opencv_source_code/samples/gpu/driver_api_stereo_multi.cpp</li>
+</ul>
+</div>
+<div class="section" id="cuda-stereobm">
+<h2>cuda::StereoBM<a class="headerlink" href="#cuda-stereobm" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cuda::StereoBM : public cv::StereoBM">
+<em class="property">class </em><tt class="descclassname">cuda::</tt><tt class="descname">StereoBM</tt> : <em class="property">public</em> <tt class="descclassname">cv::</tt><tt class="descname">StereoBM</tt><a class="headerlink" href="#cuda::StereoBM : public cv::StereoBM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class computing stereo correspondence (disparity map) using the block matching algorithm.</p>
+<div class="highlight-cpp"><div class="highlight"><pre>.. seealso:: :ocv:class:`StereoBM`
+</pre></div>
+</div>
+</div>
+<div class="section" id="cuda-createstereobm">
+<h2>cuda::createStereoBM<a class="headerlink" href="#cuda-createstereobm" title="Permalink to this headline">¶</a></h2>
+<p>Creates StereoBM object.</p>
+<dl class="function">
+<dt id="Ptr&lt;cuda::StereoBM&gt; cuda::createStereoBM(int numDisparities , int blockSize)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;cuda::StereoBM&gt; <tt class="descclassname">cuda::</tt><tt class="descname">createStereoBM</tt><big>(</big>int <strong>numDisparities</strong>=64, int <strong>blockSize</strong>=19<big>)</big><a class="headerlink" href="#Ptr<cuda::StereoBM> cuda::createStereoBM(int numDisparities , int blockSize)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>numDisparities</strong> &#8211; the disparity search range. For each pixel algorithm will find the best disparity from 0 (default minimum disparity) to <tt class="docutils literal"><span class="pre">numDisparities</span></tt>. The search range can then be shifted by changing the minimum disparity.</li>
+<li><strong>blockSize</strong> &#8211; the linear size of the blocks compared by the algorithm. The size should be odd (as the block is centered at the current pixel). Larger block size implies smoother, though less accurate disparity map. Smaller block size gives more detailed disparity map, but there is higher chance for algorithm to find a wrong correspondence.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-stereobeliefpropagation">
+<h2>cuda::StereoBeliefPropagation<a class="headerlink" href="#cuda-stereobeliefpropagation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cuda::StereoBeliefPropagation : public cv::StereoMatcher">
+<em class="property">class </em><tt class="descclassname">cuda::</tt><tt class="descname">StereoBeliefPropagation</tt> : <em class="property">public</em> <tt class="descclassname">cv::</tt><tt class="descname">StereoMatcher</tt><a class="headerlink" href="#cuda::StereoBeliefPropagation : public cv::StereoMatcher" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class computing stereo correspondence using the belief propagation algorithm.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">StereoBeliefPropagation</span> <span class="p">:</span> <span class="k">public</span> <span class="n">cv</span><span class="o">::</span><span class="n">StereoMatcher</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">using</span> <span class="n">cv</span><span class="o">::</span><span class="n">StereoMatcher</span><span class="o">::</span><span class="n">compute</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">compute</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">left</span><span class="p">,</span> <span class="n">InputArray</span> <span class="n">right</span><span class="p">,</span> <span class="n">OutputArray</span> <span class="n">disparity</span><span class="p">,</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">stream</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">//! version for user specified data term</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">compute</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">data</span><span class="p">,</span> <span class="n">OutputArray</span> <span class="n">disparity</span><span class="p">,</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="o">::</span><span class="n">Null</span><span class="p">())</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">//! number of BP iterations on each level</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">getNumIters</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setNumIters</span><span class="p">(</span><span class="kt">int</span> <span class="n">iters</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">//! number of levels</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">getNumLevels</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setNumLevels</span><span class="p">(</span><span class="kt">int</span> <span class="n">levels</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">//! truncation of data cost</span>
+    <span class="k">virtual</span> <span class="kt">double</span> <span class="n">getMaxDataTerm</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setMaxDataTerm</span><span class="p">(</span><span class="kt">double</span> <span class="n">max_data_term</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">//! data weight</span>
+    <span class="k">virtual</span> <span class="kt">double</span> <span class="n">getDataWeight</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setDataWeight</span><span class="p">(</span><span class="kt">double</span> <span class="n">data_weight</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">//! truncation of discontinuity cost</span>
+    <span class="k">virtual</span> <span class="kt">double</span> <span class="n">getMaxDiscTerm</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setMaxDiscTerm</span><span class="p">(</span><span class="kt">double</span> <span class="n">max_disc_term</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">//! discontinuity single jump</span>
+    <span class="k">virtual</span> <span class="kt">double</span> <span class="n">getDiscSingleJump</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setDiscSingleJump</span><span class="p">(</span><span class="kt">double</span> <span class="n">disc_single_jump</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">getMsgType</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setMsgType</span><span class="p">(</span><span class="kt">int</span> <span class="n">msg_type</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">estimateRecommendedParams</span><span class="p">(</span><span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">,</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">ndisp</span><span class="p">,</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">iters</span><span class="p">,</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">levels</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The class implements algorithm described in <a class="reference internal" href="#felzenszwalb2006" id="id1">[Felzenszwalb2006]</a> . It can compute own data cost (using a truncated linear model) or use a user-provided data cost.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p><tt class="docutils literal"><span class="pre">StereoBeliefPropagation</span></tt> requires a lot of memory for message storage:</p>
+<div class="math">
+<p><span class="math">width \_ step  \cdot height  \cdot ndisp  \cdot 4  \cdot (1 + 0.25)</span></p>
+</div><p>and for data cost storage:</p>
+<div class="math">
+<p><span class="math">width\_step \cdot height \cdot ndisp \cdot (1 + 0.25 + 0.0625 +  \dotsm + \frac{1}{4^{levels}})</span></p>
+</div><p class="last"><tt class="docutils literal"><span class="pre">width_step</span></tt> is the number of bytes in a line including padding.</p>
+</div>
+<p><tt class="docutils literal"><span class="pre">StereoBeliefPropagation</span></tt> uses a truncated linear model for the data cost and discontinuity terms:</p>
+<div class="math">
+<p><span class="math">DataCost = data \_ weight  \cdot \min ( \lvert Img_Left(x,y)-Img_Right(x-d,y)  \rvert , max \_ data \_ term)</span></p>
+</div><div class="math">
+<p><span class="math">DiscTerm =  \min (disc \_ single \_ jump  \cdot \lvert f_1-f_2  \rvert , max \_ disc \_ term)</span></p>
+</div><p>For more details, see <a class="reference internal" href="#felzenszwalb2006" id="id2">[Felzenszwalb2006]</a>.</p>
+<p>By default, <tt class="docutils literal"><span class="pre">StereoBeliefPropagation</span></tt> uses floating-point arithmetics and the <tt class="docutils literal"><span class="pre">CV_32FC1</span></tt> type for messages. But it can also use fixed-point arithmetics and the <tt class="docutils literal"><span class="pre">CV_16SC1</span></tt> message type for better performance. To avoid an overflow in this case, the parameters must satisfy the following requirement:</p>
+<div class="math">
+<p><span class="math">10  \cdot 2^{levels-1}  \cdot max \_ data \_ term &lt; SHRT \_ MAX</span></p>
+</div><div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../calib3d/doc/camera_calibration_and_3d_reconstruction.html#StereoMatcher : public Algorithm" title="class StereoMatcher : public Algorithm"><tt class="xref ocv ocv-class docutils literal"><span class="pre">StereoMatcher</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-createstereobeliefpropagation">
+<h2>cuda::createStereoBeliefPropagation<a class="headerlink" href="#cuda-createstereobeliefpropagation" title="Permalink to this headline">¶</a></h2>
+<p>Creates StereoBeliefPropagation object.</p>
+<dl class="function">
+<dt id="Ptr&lt;cuda::StereoBeliefPropagation&gt; cuda::createStereoBeliefPropagation(int ndisp , int iters , int levels , int msg_type)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;cuda::StereoBeliefPropagation&gt; <tt class="descclassname">cuda::</tt><tt class="descname">createStereoBeliefPropagation</tt><big>(</big>int <strong>ndisp</strong>=64, int <strong>iters</strong>=5, int <strong>levels</strong>=5, int <strong>msg_type</strong>=CV_32F<big>)</big><a class="headerlink" href="#Ptr<cuda::StereoBeliefPropagation> cuda::createStereoBeliefPropagation(int ndisp , int iters , int levels , int msg_type)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ndisp</strong> &#8211; Number of disparities.</li>
+<li><strong>iters</strong> &#8211; Number of BP iterations on each level.</li>
+<li><strong>levels</strong> &#8211; Number of levels.</li>
+<li><strong>msg_type</strong> &#8211; Type for messages.  <tt class="docutils literal"><span class="pre">CV_16SC1</span></tt>  and  <tt class="docutils literal"><span class="pre">CV_32FC1</span></tt> types are supported.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-stereobeliefpropagation-estimaterecommendedparams">
+<h2>cuda::StereoBeliefPropagation::estimateRecommendedParams<a class="headerlink" href="#cuda-stereobeliefpropagation-estimaterecommendedparams" title="Permalink to this headline">¶</a></h2>
+<p>Uses a heuristic method to compute the recommended parameters ( <tt class="docutils literal"><span class="pre">ndisp</span></tt>, <tt class="docutils literal"><span class="pre">iters</span></tt> and <tt class="docutils literal"><span class="pre">levels</span></tt> ) for the specified image size ( <tt class="docutils literal"><span class="pre">width</span></tt> and <tt class="docutils literal"><span class="pre">height</span></tt> ).</p>
+<dl class="function">
+<dt id="void cuda::StereoBeliefPropagation::estimateRecommendedParams(int width, int height, int&amp; ndisp, int&amp; iters, int&amp; levels)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::StereoBeliefPropagation::</tt><tt class="descname">estimateRecommendedParams</tt><big>(</big>int <strong>width</strong>, int <strong>height</strong>, int&amp; <strong>ndisp</strong>, int&amp; <strong>iters</strong>, int&amp; <strong>levels</strong><big>)</big><a class="headerlink" href="#void cuda::StereoBeliefPropagation::estimateRecommendedParams(int width, int height, int& ndisp, int& iters, int& levels)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="cuda-stereobeliefpropagation-compute">
+<h2>cuda::StereoBeliefPropagation::compute<a class="headerlink" href="#cuda-stereobeliefpropagation-compute" title="Permalink to this headline">¶</a></h2>
+<p>Enables the stereo correspondence operator that finds the disparity for the specified data cost.</p>
+<dl class="function">
+<dt id="void cuda::StereoBeliefPropagation::compute(InputArray data, OutputArray disparity, Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::StereoBeliefPropagation::</tt><tt class="descname">compute</tt><big>(</big>InputArray <strong>data</strong>, OutputArray <strong>disparity</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::StereoBeliefPropagation::compute(InputArray data, OutputArray disparity, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>data</strong> &#8211; User-specified data cost, a matrix of <tt class="docutils literal"><span class="pre">msg_type</span></tt> type and <tt class="docutils literal"><span class="pre">Size(&lt;image</span> <span class="pre">columns&gt;*ndisp,</span> <span class="pre">&lt;image</span> <span class="pre">rows&gt;)</span></tt> size.</li>
+<li><strong>disparity</strong> &#8211; Output disparity map. If  <tt class="docutils literal"><span class="pre">disparity</span></tt>  is empty, the output type is  <tt class="docutils literal"><span class="pre">CV_16SC1</span></tt> . Otherwise, the type is retained.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-stereoconstantspacebp">
+<h2>cuda::StereoConstantSpaceBP<a class="headerlink" href="#cuda-stereoconstantspacebp" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cuda::StereoConstantSpaceBP : public cuda::StereoBeliefPropagation">
+<em class="property">class </em><tt class="descclassname">cuda::</tt><tt class="descname">StereoConstantSpaceBP</tt> : <em class="property">public</em> <tt class="descclassname">cuda::</tt><tt class="descname">StereoBeliefPropagation</tt><a class="headerlink" href="#cuda::StereoConstantSpaceBP : public cuda::StereoBeliefPropagation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class computing stereo correspondence using the constant space belief propagation algorithm.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">StereoConstantSpaceBP</span> <span class="p">:</span> <span class="k">public</span> <span class="n">cuda</span><span class="o">::</span><span class="n">StereoBeliefPropagation</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="c1">//! number of active disparity on the first level</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">getNrPlane</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setNrPlane</span><span class="p">(</span><span class="kt">int</span> <span class="n">nr_plane</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">bool</span> <span class="n">getUseLocalInitDataCost</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setUseLocalInitDataCost</span><span class="p">(</span><span class="kt">bool</span> <span class="n">use_local_init_data_cost</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">estimateRecommendedParams</span><span class="p">(</span><span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">,</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">ndisp</span><span class="p">,</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">iters</span><span class="p">,</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">levels</span><span class="p">,</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">nr_plane</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The class implements algorithm described in <a class="reference internal" href="#yang2010" id="id3">[Yang2010]</a>. <tt class="docutils literal"><span class="pre">StereoConstantSpaceBP</span></tt> supports both local minimum and global minimum data cost initialization algorithms. For more details, see the paper mentioned above. By default, a local algorithm is used. To enable a global algorithm, set <tt class="docutils literal"><span class="pre">use_local_init_data_cost</span></tt> to <tt class="docutils literal"><span class="pre">false</span></tt> .</p>
+<p><tt class="docutils literal"><span class="pre">StereoConstantSpaceBP</span></tt> uses a truncated linear model for the data cost and discontinuity terms:</p>
+<div class="math">
+<p><span class="math">DataCost = data \_ weight  \cdot \min ( \lvert I_2-I_1  \rvert , max \_ data \_ term)</span></p>
+</div><div class="math">
+<p><span class="math">DiscTerm =  \min (disc \_ single \_ jump  \cdot \lvert f_1-f_2  \rvert , max \_ disc \_ term)</span></p>
+</div><p>For more details, see <a class="reference internal" href="#yang2010" id="id4">[Yang2010]</a>.</p>
+<p>By default, <tt class="docutils literal"><span class="pre">StereoConstantSpaceBP</span></tt> uses floating-point arithmetics and the <tt class="docutils literal"><span class="pre">CV_32FC1</span></tt> type for messages. But it can also use fixed-point arithmetics and the <tt class="docutils literal"><span class="pre">CV_16SC1</span></tt> message type for better performance. To avoid an overflow in this case, the parameters must satisfy the following requirement:</p>
+<div class="math">
+<p><span class="math">10  \cdot 2^{levels-1}  \cdot max \_ data \_ term &lt; SHRT \_ MAX</span></p>
+</div></div>
+<div class="section" id="cuda-createstereoconstantspacebp">
+<h2>cuda::createStereoConstantSpaceBP<a class="headerlink" href="#cuda-createstereoconstantspacebp" title="Permalink to this headline">¶</a></h2>
+<p>Creates StereoConstantSpaceBP object.</p>
+<dl class="function">
+<dt id="Ptr&lt;cuda::StereoConstantSpaceBP&gt; cuda::createStereoConstantSpaceBP(int ndisp , int iters , int levels , int nr_plane , int msg_type)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;cuda::StereoConstantSpaceBP&gt; <tt class="descclassname">cuda::</tt><tt class="descname">createStereoConstantSpaceBP</tt><big>(</big>int <strong>ndisp</strong>=128, int <strong>iters</strong>=8, int <strong>levels</strong>=4, int <strong>nr_plane</strong>=4, int <strong>msg_type</strong>=CV_32F<big>)</big><a class="headerlink" href="#Ptr<cuda::StereoConstantSpaceBP> cuda::createStereoConstantSpaceBP(int ndisp , int iters , int levels , int nr_plane , int msg_type)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ndisp</strong> &#8211; Number of disparities.</li>
+<li><strong>iters</strong> &#8211; Number of BP iterations on each level.</li>
+<li><strong>levels</strong> &#8211; Number of levels.</li>
+<li><strong>nr_plane</strong> &#8211; Number of disparity levels on the first level.</li>
+<li><strong>msg_type</strong> &#8211; Type for messages.  <tt class="docutils literal"><span class="pre">CV_16SC1</span></tt>  and  <tt class="docutils literal"><span class="pre">CV_32FC1</span></tt> types are supported.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-stereoconstantspacebp-estimaterecommendedparams">
+<h2>cuda::StereoConstantSpaceBP::estimateRecommendedParams<a class="headerlink" href="#cuda-stereoconstantspacebp-estimaterecommendedparams" title="Permalink to this headline">¶</a></h2>
+<p>Uses a heuristic method to compute parameters (ndisp, iters, levelsand nrplane) for the specified image size (widthand height).</p>
+<dl class="function">
+<dt id="void cuda::StereoConstantSpaceBP::estimateRecommendedParams(int width, int height, int&amp; ndisp, int&amp; iters, int&amp; levels, int&amp; nr_plane)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::StereoConstantSpaceBP::</tt><tt class="descname">estimateRecommendedParams</tt><big>(</big>int <strong>width</strong>, int <strong>height</strong>, int&amp; <strong>ndisp</strong>, int&amp; <strong>iters</strong>, int&amp; <strong>levels</strong>, int&amp; <strong>nr_plane</strong><big>)</big><a class="headerlink" href="#void cuda::StereoConstantSpaceBP::estimateRecommendedParams(int width, int height, int& ndisp, int& iters, int& levels, int& nr_plane)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="cuda-disparitybilateralfilter">
+<h2>cuda::DisparityBilateralFilter<a class="headerlink" href="#cuda-disparitybilateralfilter" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cuda::DisparityBilateralFilter : public cv::Algorithm">
+<em class="property">class </em><tt class="descclassname">cuda::</tt><tt class="descname">DisparityBilateralFilter</tt> : <em class="property">public</em> <tt class="descclassname">cv::</tt><tt class="descname">Algorithm</tt><a class="headerlink" href="#cuda::DisparityBilateralFilter : public cv::Algorithm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class refining a disparity map using joint bilateral filtering.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">DisparityBilateralFilter</span> <span class="p">:</span> <span class="k">public</span> <span class="n">cv</span><span class="o">::</span><span class="n">Algorithm</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="c1">//! the disparity map refinement operator. Refine disparity map using joint bilateral filtering given a single color image.</span>
+    <span class="c1">//! disparity must have CV_8U or CV_16S type, image must have CV_8UC1 or CV_8UC3 type.</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">apply</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">disparity</span><span class="p">,</span> <span class="n">InputArray</span> <span class="n">image</span><span class="p">,</span> <span class="n">OutputArray</span> <span class="n">dst</span><span class="p">,</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="o">::</span><span class="n">Null</span><span class="p">())</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">getNumDisparities</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setNumDisparities</span><span class="p">(</span><span class="kt">int</span> <span class="n">numDisparities</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">getRadius</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setRadius</span><span class="p">(</span><span class="kt">int</span> <span class="n">radius</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">getNumIters</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setNumIters</span><span class="p">(</span><span class="kt">int</span> <span class="n">iters</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">//! truncation of data continuity</span>
+    <span class="k">virtual</span> <span class="kt">double</span> <span class="n">getEdgeThreshold</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setEdgeThreshold</span><span class="p">(</span><span class="kt">double</span> <span class="n">edge_threshold</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">//! truncation of disparity continuity</span>
+    <span class="k">virtual</span> <span class="kt">double</span> <span class="n">getMaxDiscThreshold</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setMaxDiscThreshold</span><span class="p">(</span><span class="kt">double</span> <span class="n">max_disc_threshold</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">//! filter range sigma</span>
+    <span class="k">virtual</span> <span class="kt">double</span> <span class="n">getSigmaRange</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setSigmaRange</span><span class="p">(</span><span class="kt">double</span> <span class="n">sigma_range</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The class implements <a class="reference internal" href="#yang2010" id="id5">[Yang2010]</a> algorithm.</p>
+</div>
+<div class="section" id="cuda-createdisparitybilateralfilter">
+<h2>cuda::createDisparityBilateralFilter<a class="headerlink" href="#cuda-createdisparitybilateralfilter" title="Permalink to this headline">¶</a></h2>
+<p>Creates DisparityBilateralFilter object.</p>
+<dl class="function">
+<dt id="Ptr&lt;cuda::DisparityBilateralFilter&gt; cuda::createDisparityBilateralFilter(int ndisp , int radius , int iters)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;cuda::DisparityBilateralFilter&gt; <tt class="descclassname">cuda::</tt><tt class="descname">createDisparityBilateralFilter</tt><big>(</big>int <strong>ndisp</strong>=64, int <strong>radius</strong>=3, int <strong>iters</strong>=1<big>)</big><a class="headerlink" href="#Ptr<cuda::DisparityBilateralFilter> cuda::createDisparityBilateralFilter(int ndisp , int radius , int iters)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ndisp</strong> &#8211; Number of disparities.</li>
+<li><strong>radius</strong> &#8211; Filter radius.</li>
+<li><strong>iters</strong> &#8211; Number of iterations.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-disparitybilateralfilter-apply">
+<h2>cuda::DisparityBilateralFilter::apply<a class="headerlink" href="#cuda-disparitybilateralfilter-apply" title="Permalink to this headline">¶</a></h2>
+<p>Refines a disparity map using joint bilateral filtering.</p>
+<dl class="function">
+<dt id="void cuda::DisparityBilateralFilter::apply(InputArray disparity, InputArray image, OutputArray dst, Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::DisparityBilateralFilter::</tt><tt class="descname">apply</tt><big>(</big>InputArray <strong>disparity</strong>, InputArray <strong>image</strong>, OutputArray <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::DisparityBilateralFilter::apply(InputArray disparity, InputArray image, OutputArray dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>disparity</strong> &#8211; Input disparity map.  <tt class="docutils literal"><span class="pre">CV_8UC1</span></tt>  and  <tt class="docutils literal"><span class="pre">CV_16SC1</span></tt>  types are supported.</li>
+<li><strong>image</strong> &#8211; Input image. <tt class="docutils literal"><span class="pre">CV_8UC1</span></tt>  and  <tt class="docutils literal"><span class="pre">CV_8UC3</span></tt>  types are supported.</li>
+<li><strong>dst</strong> &#8211; Destination disparity map. It has the same size and type as  <tt class="docutils literal"><span class="pre">disparity</span></tt> .</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-reprojectimageto3d">
+<h2>cuda::reprojectImageTo3D<a class="headerlink" href="#cuda-reprojectimageto3d" title="Permalink to this headline">¶</a></h2>
+<p>Reprojects a disparity image to 3D space.</p>
+<dl class="function">
+<dt id="void cuda::reprojectImageTo3D(InputArray disp, OutputArray xyzw, InputArray Q, int dst_cn , Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">reprojectImageTo3D</tt><big>(</big>InputArray <strong>disp</strong>, OutputArray <strong>xyzw</strong>, InputArray <strong>Q</strong>, int <strong>dst_cn</strong>=4, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::reprojectImageTo3D(InputArray disp, OutputArray xyzw, InputArray Q, int dst_cn , Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>disp</strong> &#8211; Input disparity image.  <tt class="docutils literal"><span class="pre">CV_8U</span></tt>  and  <tt class="docutils literal"><span class="pre">CV_16S</span></tt>  types are supported.</li>
+<li><strong>xyzw</strong> &#8211; Output 3- or 4-channel floating-point image of the same size as  <tt class="docutils literal"><span class="pre">disp</span></tt> . Each element of  <tt class="docutils literal"><span class="pre">xyzw(x,y)</span></tt>  contains 3D coordinates <tt class="docutils literal"><span class="pre">(x,y,z)</span></tt> or <tt class="docutils literal"><span class="pre">(x,y,z,1)</span></tt>  of the point  <tt class="docutils literal"><span class="pre">(x,y)</span></tt> , computed from the disparity map.</li>
+<li><strong>Q</strong> &#8211; <span class="math">4 \times 4</span>  perspective transformation matrix that can be obtained via  <a class="reference internal" href="../../calib3d/doc/camera_calibration_and_3d_reconstruction.html#void stereoRectify(InputArray cameraMatrix1, InputArray distCoeffs1, InputArray cameraMatrix2, InputArray distCoeffs2, Size imageSize, InputArray R, InputArray T, OutputArray R1, OutputArray R2, OutputArray P1, OutputArray P2, OutputArray Q, int flags, double alpha, Size newImageSize, Rect* validPixROI1, Rect* validPixROI2)" title="void stereoRectify(InputArray cameraMatrix1, InputArray distCoeffs1, InputArray cameraMatrix2, InputArray distCoeffs2, Size imageSize, InputArray R, InputArray T, OutputArray R1, OutputArray R2, OutputArray P1, OutputArray P2, OutputArray Q, int flags, double alpha, Size newImageSize, Rect* validPixROI1, Rect* validPixROI2)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">stereoRectify()</span></tt></a> .</li>
+<li><strong>dst_cn</strong> &#8211; The number of channels for output image. Can be 3 or 4.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../calib3d/doc/camera_calibration_and_3d_reconstruction.html#void reprojectImageTo3D(InputArray disparity, OutputArray _3dImage, InputArray Q, bool handleMissingValues, int ddepth)" title="void reprojectImageTo3D(InputArray disparity, OutputArray _3dImage, InputArray Q, bool handleMissingValues, int ddepth)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">reprojectImageTo3D()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-drawcolordisp">
+<h2>cuda::drawColorDisp<a class="headerlink" href="#cuda-drawcolordisp" title="Permalink to this headline">¶</a></h2>
+<p>Colors a disparity image.</p>
+<dl class="function">
+<dt id="void cuda::drawColorDisp(InputArray src_disp, OutputArray dst_disp, int ndisp, Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">drawColorDisp</tt><big>(</big>InputArray <strong>src_disp</strong>, OutputArray <strong>dst_disp</strong>, int <strong>ndisp</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::drawColorDisp(InputArray src_disp, OutputArray dst_disp, int ndisp, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src_disp</strong> &#8211; Source disparity image.  <tt class="docutils literal"><span class="pre">CV_8UC1</span></tt>  and  <tt class="docutils literal"><span class="pre">CV_16SC1</span></tt>  types are supported.</li>
+<li><strong>dst_disp</strong> &#8211; Output disparity image. It has the same size as  <tt class="docutils literal"><span class="pre">src_disp</span></tt> . The  type is <tt class="docutils literal"><span class="pre">CV_8UC4</span></tt>  in  <tt class="docutils literal"><span class="pre">BGRA</span></tt>  format (alpha = 255).</li>
+<li><strong>ndisp</strong> &#8211; Number of disparities.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This function draws a colored disparity map by converting disparity values from <tt class="docutils literal"><span class="pre">[0..ndisp)</span></tt> interval first to <tt class="docutils literal"><span class="pre">HSV</span></tt> color space (where different disparity values correspond to different hues) and then converting the pixels to <tt class="docutils literal"><span class="pre">RGB</span></tt> for visualization.</p>
+<table class="docutils citation" frame="void" id="felzenszwalb2006" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[Felzenszwalb2006]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id2">2</a>)</em> Pedro F. Felzenszwalb algorithm [Pedro F. Felzenszwalb and Daniel P. Huttenlocher. <em>Efficient belief propagation for early vision</em>. International Journal of Computer Vision, 70(1), October 2006</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="yang2010" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[Yang2010]</td><td><em>(<a class="fn-backref" href="#id3">1</a>, <a class="fn-backref" href="#id4">2</a>, <a class="fn-backref" href="#id5">3</a>)</em> <ol class="last upperalpha simple" start="17">
+<li>Yang, L. Wang, and N. Ahuja. <em>A constant-space belief propagation algorithm for stereo matching</em>. In CVPR, 2010.</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../cudawarping/doc/cudawarping.html" title="cudawarping. CUDA-accelerated Image Warping"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="cudastereo.html" title="cudastereo. CUDA-accelerated Stereo Correspondence"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="cudastereo.html" >cudastereo. CUDA-accelerated Stereo Correspondence</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/cudastereo/doc/stereo.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

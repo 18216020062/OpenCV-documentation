@@ -1,0 +1,397 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Arithm Operations on Matrices &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="cudaarithm. CUDA-accelerated Operations on Matrices" href="cudaarithm.html" />
+    <link rel="next" title="cudabgsegm. CUDA-accelerated Background Segmentation" href="../../cudabgsegm/doc/cudabgsegm.html" />
+    <link rel="prev" title="Matrix Reductions" href="reductions.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../cudabgsegm/doc/cudabgsegm.html" title="cudabgsegm. CUDA-accelerated Background Segmentation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="reductions.html" title="Matrix Reductions"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="cudaarithm.html" accesskey="U">cudaarithm. CUDA-accelerated Operations on Matrices</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Arithm Operations on Matrices</a><ul>
+<li><a class="reference internal" href="#cuda-gemm">cuda::gemm</a></li>
+<li><a class="reference internal" href="#cuda-mulspectrums">cuda::mulSpectrums</a></li>
+<li><a class="reference internal" href="#cuda-mulandscalespectrums">cuda::mulAndScaleSpectrums</a></li>
+<li><a class="reference internal" href="#cuda-dft">cuda::dft</a></li>
+<li><a class="reference internal" href="#cuda-convolution">cuda::Convolution</a></li>
+<li><a class="reference internal" href="#cuda-convolution-convolve">cuda::Convolution::convolve</a></li>
+<li><a class="reference internal" href="#cuda-createconvolution">cuda::createConvolution</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="reductions.html"
+                        title="previous chapter">Matrix Reductions</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../cudabgsegm/doc/cudabgsegm.html"
+                        title="next chapter">cudabgsegm. CUDA-accelerated Background Segmentation</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="arithm-operations-on-matrices">
+<h1>Arithm Operations on Matrices<a class="headerlink" href="#arithm-operations-on-matrices" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="cuda-gemm">
+<h2>cuda::gemm<a class="headerlink" href="#cuda-gemm" title="Permalink to this headline">¶</a></h2>
+<p>Performs generalized matrix multiplication.</p>
+<dl class="function">
+<dt id="void cuda::gemm(InputArray src1, InputArray src2, double alpha, InputArray src3, double beta, OutputArray dst, int flags , Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">gemm</tt><big>(</big>InputArray <strong>src1</strong>, InputArray <strong>src2</strong>, double <strong>alpha</strong>, InputArray <strong>src3</strong>, double <strong>beta</strong>, OutputArray <strong>dst</strong>, int <strong>flags</strong>=0, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::gemm(InputArray src1, InputArray src2, double alpha, InputArray src3, double beta, OutputArray dst, int flags , Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src1</strong> &#8211; First multiplied input matrix that should have  <tt class="docutils literal"><span class="pre">CV_32FC1</span></tt> , <tt class="docutils literal"><span class="pre">CV_64FC1</span></tt> , <tt class="docutils literal"><span class="pre">CV_32FC2</span></tt> , or  <tt class="docutils literal"><span class="pre">CV_64FC2</span></tt>  type.</li>
+<li><strong>src2</strong> &#8211; Second multiplied input matrix of the same type as  <tt class="docutils literal"><span class="pre">src1</span></tt> .</li>
+<li><strong>alpha</strong> &#8211; Weight of the matrix product.</li>
+<li><strong>src3</strong> &#8211; Third optional delta matrix added to the matrix product. It should have the same type as  <tt class="docutils literal"><span class="pre">src1</span></tt>  and  <tt class="docutils literal"><span class="pre">src2</span></tt> .</li>
+<li><strong>beta</strong> &#8211; Weight of  <tt class="docutils literal"><span class="pre">src3</span></tt> .</li>
+<li><strong>dst</strong> &#8211; Destination matrix. It has the proper size and the same type as input matrices.</li>
+<li><strong>flags</strong> &#8211; <p>Operation flags:</p>
+<ul>
+<li><strong>GEMM_1_T</strong> transpose  <tt class="docutils literal"><span class="pre">src1</span></tt></li>
+<li><strong>GEMM_2_T</strong> transpose  <tt class="docutils literal"><span class="pre">src2</span></tt></li>
+<li><strong>GEMM_3_T</strong> transpose  <tt class="docutils literal"><span class="pre">src3</span></tt></li>
+</ul>
+</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function performs generalized matrix multiplication similar to the <tt class="docutils literal"><span class="pre">gemm</span></tt> functions in BLAS level 3. For example, <tt class="docutils literal"><span class="pre">gemm(src1,</span> <span class="pre">src2,</span> <span class="pre">alpha,</span> <span class="pre">src3,</span> <span class="pre">beta,</span> <span class="pre">dst,</span> <span class="pre">GEMM_1_T</span> <span class="pre">+</span> <span class="pre">GEMM_3_T)</span></tt> corresponds to</p>
+<div class="math">
+<p><span class="math">\texttt{dst} =  \texttt{alpha} \cdot \texttt{src1} ^T  \cdot \texttt{src2} +  \texttt{beta} \cdot \texttt{src3} ^T</span></p>
+</div><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Transposition operation doesn&#8217;t support  <tt class="docutils literal"><span class="pre">CV_64FC2</span></tt>  input type.</p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void gemm(InputArray src1, InputArray src2, double alpha, InputArray src3, double beta, OutputArray dst, int flags)" title="void gemm(InputArray src1, InputArray src2, double alpha, InputArray src3, double beta, OutputArray dst, int flags)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">gemm()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-mulspectrums">
+<h2>cuda::mulSpectrums<a class="headerlink" href="#cuda-mulspectrums" title="Permalink to this headline">¶</a></h2>
+<p>Performs a per-element multiplication of two Fourier spectrums.</p>
+<dl class="function">
+<dt id="void cuda::mulSpectrums(InputArray src1, InputArray src2, OutputArray dst, int flags, bool conjB, Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">mulSpectrums</tt><big>(</big>InputArray <strong>src1</strong>, InputArray <strong>src2</strong>, OutputArray <strong>dst</strong>, int <strong>flags</strong>, bool <strong>conjB</strong>=false, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::mulSpectrums(InputArray src1, InputArray src2, OutputArray dst, int flags, bool conjB, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src1</strong> &#8211; First spectrum.</li>
+<li><strong>src2</strong> &#8211; Second spectrum with the same size and type as  <tt class="docutils literal"><span class="pre">a</span></tt> .</li>
+<li><strong>dst</strong> &#8211; Destination spectrum.</li>
+<li><strong>flags</strong> &#8211; Mock parameter used for CPU/CUDA interfaces similarity.</li>
+<li><strong>conjB</strong> &#8211; Optional flag to specify if the second spectrum needs to be conjugated before the multiplication.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Only full (not packed) <tt class="docutils literal"><span class="pre">CV_32FC2</span></tt> complex spectrums in the interleaved format are supported for now.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void mulSpectrums(InputArray a, InputArray b, OutputArray c, int flags, bool conjB)" title="void mulSpectrums(InputArray a, InputArray b, OutputArray c, int flags, bool conjB)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">mulSpectrums()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-mulandscalespectrums">
+<h2>cuda::mulAndScaleSpectrums<a class="headerlink" href="#cuda-mulandscalespectrums" title="Permalink to this headline">¶</a></h2>
+<p>Performs a per-element multiplication of two Fourier spectrums and scales the result.</p>
+<dl class="function">
+<dt id="void cuda::mulAndScaleSpectrums(InputArray src1, InputArray src2, OutputArray dst, int flags, float scale, bool conjB, Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">mulAndScaleSpectrums</tt><big>(</big>InputArray <strong>src1</strong>, InputArray <strong>src2</strong>, OutputArray <strong>dst</strong>, int <strong>flags</strong>, float <strong>scale</strong>, bool <strong>conjB</strong>=false, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::mulAndScaleSpectrums(InputArray src1, InputArray src2, OutputArray dst, int flags, float scale, bool conjB, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src1</strong> &#8211; First spectrum.</li>
+<li><strong>src2</strong> &#8211; Second spectrum with the same size and type as  <tt class="docutils literal"><span class="pre">a</span></tt> .</li>
+<li><strong>dst</strong> &#8211; Destination spectrum.</li>
+<li><strong>flags</strong> &#8211; Mock parameter used for CPU/CUDA interfaces similarity.</li>
+<li><strong>scale</strong> &#8211; Scale constant.</li>
+<li><strong>conjB</strong> &#8211; Optional flag to specify if the second spectrum needs to be conjugated before the multiplication.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Only full (not packed) <tt class="docutils literal"><span class="pre">CV_32FC2</span></tt> complex spectrums in the interleaved format are supported for now.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void mulSpectrums(InputArray a, InputArray b, OutputArray c, int flags, bool conjB)" title="void mulSpectrums(InputArray a, InputArray b, OutputArray c, int flags, bool conjB)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">mulSpectrums()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-dft">
+<h2>cuda::dft<a class="headerlink" href="#cuda-dft" title="Permalink to this headline">¶</a></h2>
+<p>Performs a forward or inverse discrete Fourier transform (1D or 2D) of the floating point matrix.</p>
+<dl class="function">
+<dt id="void cuda::dft(InputArray src, OutputArray dst, Size dft_size, int flags, Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">dft</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, Size <strong>dft_size</strong>, int <strong>flags</strong>=0, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::dft(InputArray src, OutputArray dst, Size dft_size, int flags, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source matrix (real or complex).</li>
+<li><strong>dst</strong> &#8211; Destination matrix (real or complex).</li>
+<li><strong>dft_size</strong> &#8211; Size of a discrete Fourier transform.</li>
+<li><strong>flags</strong> &#8211; <p>Optional flags:</p>
+<ul>
+<li><strong>DFT_ROWS</strong> transforms each individual row of the source matrix.</li>
+<li><strong>DFT_SCALE</strong> scales the result: divide it by the number of elements in the transform (obtained from  <tt class="docutils literal"><span class="pre">dft_size</span></tt> ).</li>
+<li><strong>DFT_INVERSE</strong> inverts DFT. Use for complex-complex cases (real-complex and complex-real cases are always forward and inverse, respectively).</li>
+<li><strong>DFT_REAL_OUTPUT</strong> specifies the output as real. The source matrix is the result of real-complex transform, so the destination matrix must be real.</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Use to handle real matrices ( <tt class="docutils literal"><span class="pre">CV32FC1</span></tt> ) and complex matrices in the interleaved format ( <tt class="docutils literal"><span class="pre">CV32FC2</span></tt> ).</p>
+<p>The source matrix should be continuous, otherwise reallocation and data copying is performed. The function chooses an operation mode depending on the flags, size, and channel count of the source matrix:</p>
+<blockquote>
+<div><ul class="simple">
+<li>If the source matrix is complex and the output is not specified as real, the destination matrix is complex and has the <tt class="docutils literal"><span class="pre">dft_size</span></tt>    size and <tt class="docutils literal"><span class="pre">CV_32FC2</span></tt>    type. The destination matrix contains a full result of the DFT (forward or inverse).</li>
+<li>If the source matrix is complex and the output is specified as real, the function assumes that its input is the result of the forward transform (see the next item). The destination matrix has the <tt class="docutils literal"><span class="pre">dft_size</span></tt> size and <tt class="docutils literal"><span class="pre">CV_32FC1</span></tt> type. It contains the result of the inverse DFT.</li>
+<li>If the source matrix is real (its type is <tt class="docutils literal"><span class="pre">CV_32FC1</span></tt> ), forward DFT is performed. The result of the DFT is packed into complex ( <tt class="docutils literal"><span class="pre">CV_32FC2</span></tt> ) matrix. So, the width of the destination matrix is <tt class="docutils literal"><span class="pre">dft_size.width</span> <span class="pre">/</span> <span class="pre">2</span> <span class="pre">+</span> <span class="pre">1</span></tt> . But if the source is a single column, the height is reduced instead of the width.</li>
+</ul>
+</div></blockquote>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void dft(InputArray src, OutputArray dst, int flags, int nonzeroRows)" title="void dft(InputArray src, OutputArray dst, int flags, int nonzeroRows)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">dft()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-convolution">
+<h2>cuda::Convolution<a class="headerlink" href="#cuda-convolution" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cuda::Convolution : public Algorithm">
+<em class="property">class </em><tt class="descclassname">cuda::</tt><tt class="descname">Convolution</tt> : <em class="property">public</em> <tt class="descname">Algorithm</tt><a class="headerlink" href="#cuda::Convolution : public Algorithm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base class for convolution (or cross-correlation) operator.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">Convolution</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Algorithm</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">convolve</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">image</span><span class="p">,</span> <span class="n">InputArray</span> <span class="n">templ</span><span class="p">,</span> <span class="n">OutputArray</span> <span class="n">result</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">ccorr</span> <span class="o">=</span> <span class="nb">false</span><span class="p">,</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="o">::</span><span class="n">Null</span><span class="p">())</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cuda-convolution-convolve">
+<h2>cuda::Convolution::convolve<a class="headerlink" href="#cuda-convolution-convolve" title="Permalink to this headline">¶</a></h2>
+<p>Computes a convolution (or cross-correlation) of two images.</p>
+<dl class="function">
+<dt id="void cuda::Convolution::convolve(InputArray image, InputArray templ, OutputArray result, bool ccorr , Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::Convolution::</tt><tt class="descname">convolve</tt><big>(</big>InputArray <strong>image</strong>, InputArray <strong>templ</strong>, OutputArray <strong>result</strong>, bool <strong>ccorr</strong>=false, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::Convolution::convolve(InputArray image, InputArray templ, OutputArray result, bool ccorr , Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; Source image. Only  <tt class="docutils literal"><span class="pre">CV_32FC1</span></tt> images are supported for now.</li>
+<li><strong>templ</strong> &#8211; Template image. The size is not greater than the  <tt class="docutils literal"><span class="pre">image</span></tt> size. The type is the same as  <tt class="docutils literal"><span class="pre">image</span></tt> .</li>
+<li><strong>result</strong> &#8211; Result image. If  <tt class="docutils literal"><span class="pre">image</span></tt> is  <em>W x H</em>  and <tt class="docutils literal"><span class="pre">templ</span></tt> is  <em>w x h</em>, then  <tt class="docutils literal"><span class="pre">result</span></tt> must be <em>W-w+1 x H-h+1</em>.</li>
+<li><strong>ccorr</strong> &#8211; Flags to evaluate cross-correlation instead of convolution.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-createconvolution">
+<h2>cuda::createConvolution<a class="headerlink" href="#cuda-createconvolution" title="Permalink to this headline">¶</a></h2>
+<p>Creates implementation for <a class="reference internal" href="#cuda::Convolution : public Algorithm" title="class cuda::Convolution : public Algorithm"><tt class="xref ocv ocv-class docutils literal"><span class="pre">cuda::Convolution</span></tt></a> .</p>
+<dl class="function">
+<dt id="Ptr&lt;Convolution&gt; createConvolution(Size user_block_size)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;Convolution&gt; <tt class="descname">createConvolution</tt><big>(</big>Size <strong>user_block_size</strong>=Size()<big>)</big><a class="headerlink" href="#Ptr<Convolution> createConvolution(Size user_block_size)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>user_block_size</strong> &#8211; Block size. If you leave default value <cite>Size(0,0)</cite> then automatic estimation of block size will be used (which is optimized for speed). By varying <cite>user_block_size</cite> you can reduce memory requirements at the cost of speed.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../cudabgsegm/doc/cudabgsegm.html" title="cudabgsegm. CUDA-accelerated Background Segmentation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="reductions.html" title="Matrix Reductions"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="cudaarithm.html" >cudaarithm. CUDA-accelerated Operations on Matrices</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/cudaarithm/doc/arithm.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

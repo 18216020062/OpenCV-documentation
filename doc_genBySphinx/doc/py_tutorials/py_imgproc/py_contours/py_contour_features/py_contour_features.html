@@ -1,0 +1,359 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Contour Features &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../../../index.html" />
+    <link rel="up" title="Contours in OpenCV" href="../py_table_of_contents_contours/py_table_of_contents_contours.html" />
+    <link rel="next" title="Contour Properties" href="../py_contour_properties/py_contour_properties.html" />
+    <link rel="prev" title="Contours : Getting Started" href="../py_contours_begin/py_contours_begin.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py_contour_properties/py_contour_properties.html" title="Contour Properties"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../py_contours_begin/py_contours_begin.html" title="Contours : Getting Started"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../../py_table_of_contents_imgproc/py_table_of_contents_imgproc.html" >Image Processing in OpenCV</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_contours/py_table_of_contents_contours.html" accesskey="U">Contours in OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../../index.html">
+              <img class="logo" src="../../../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Contour Features</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#moments">1. Moments</a></li>
+<li><a class="reference internal" href="#contour-area">2. Contour Area</a></li>
+<li><a class="reference internal" href="#contour-perimeter">3. Contour Perimeter</a></li>
+<li><a class="reference internal" href="#contour-approximation">4. Contour Approximation</a></li>
+<li><a class="reference internal" href="#convex-hull">5. Convex Hull</a></li>
+<li><a class="reference internal" href="#checking-convexity">6. Checking Convexity</a></li>
+<li><a class="reference internal" href="#bounding-rectangle">7. Bounding Rectangle</a><ul>
+<li><a class="reference internal" href="#a-straight-bounding-rectangle">7.a. Straight Bounding Rectangle</a></li>
+<li><a class="reference internal" href="#b-rotated-rectangle">7.b. Rotated Rectangle</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#minimum-enclosing-circle">8. Minimum Enclosing Circle</a></li>
+<li><a class="reference internal" href="#fitting-an-ellipse">9. Fitting an Ellipse</a></li>
+<li><a class="reference internal" href="#fitting-a-line">10. Fitting a Line</a></li>
+<li><a class="reference internal" href="#additional-resources">Additional Resources</a></li>
+<li><a class="reference internal" href="#exercises">Exercises</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../py_contours_begin/py_contours_begin.html"
+                        title="previous chapter">Contours : Getting Started</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../py_contour_properties/py_contour_properties.html"
+                        title="next chapter">Contour Properties</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="contour-features">
+<span id="id1"></span><h1>Contour Features<a class="headerlink" href="#contour-features" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this article, we will learn</p>
+<blockquote>
+<div><ul class="simple">
+<li>To find the different features of contours, like area, perimeter, centroid, bounding box etc</li>
+<li>You will see plenty of functions related to contours.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="moments">
+<h2>1. Moments<a class="headerlink" href="#moments" title="Permalink to this headline">¶</a></h2>
+<p>Image moments help you to calculate some features like center of mass of the object, area of the object etc. Check out the wikipedia page on <a class="reference external" href="http://en.wikipedia.org/wiki/Image_moment">Image Moments</a></p>
+<p>The function <strong>cv2.moments()</strong> gives a dictionary of all moment values calculated. See below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;star.jpg&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">ret</span><span class="p">,</span><span class="n">thresh</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">threshold</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="mi">127</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">contours</span><span class="p">,</span><span class="n">hierarchy</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">findContours</span><span class="p">(</span><span class="n">thresh</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="n">cnt</span> <span class="o">=</span> <span class="n">contours</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">M</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">moments</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">M</span>
+</pre></div>
+</div>
+<p>From this moments, you can extract useful data like area, centroid etc. Centroid is given by the relations, <span class="math">C_x = \frac{M_{10}}{M_{00}}</span> and <span class="math">C_y = \frac{M_{01}}{M_{00}}</span>. This can be done as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">cx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">M</span><span class="p">[</span><span class="s">&#39;m10&#39;</span><span class="p">]</span><span class="o">/</span><span class="n">M</span><span class="p">[</span><span class="s">&#39;m00&#39;</span><span class="p">])</span>
+<span class="n">cy</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">M</span><span class="p">[</span><span class="s">&#39;m01&#39;</span><span class="p">]</span><span class="o">/</span><span class="n">M</span><span class="p">[</span><span class="s">&#39;m00&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="contour-area">
+<h2>2. Contour Area<a class="headerlink" href="#contour-area" title="Permalink to this headline">¶</a></h2>
+<p>Contour area is given by the function <strong>cv2.contourArea()</strong> or from moments, <strong>M[&#8216;m00&#8217;]</strong>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">area</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">contourArea</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="contour-perimeter">
+<h2>3. Contour Perimeter<a class="headerlink" href="#contour-perimeter" title="Permalink to this headline">¶</a></h2>
+<p>It is also called arc length. It can be found out using <strong>cv2.arcLength()</strong> function. Second argument specify whether shape is a closed contour (if passed <tt class="docutils literal"><span class="pre">True</span></tt>), or just a curve.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">perimeter</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">arcLength</span><span class="p">(</span><span class="n">cnt</span><span class="p">,</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="contour-approximation">
+<h2>4. Contour Approximation<a class="headerlink" href="#contour-approximation" title="Permalink to this headline">¶</a></h2>
+<p>It approximates a contour shape to another shape with less number of vertices depending upon the precision we specify. It is an implementation of <a class="reference external" href="http://en.wikipedia.org/wiki/Ramer-Douglas-Peucker_algorithm">Douglas-Peucker algorithm</a>. Check the wikipedia page for algorithm and demonstration.</p>
+<p>To understand this, suppose you are trying to find a square in an image, but due to some problems in the image, you didn&#8217;t get a perfect square, but a &#8220;bad shape&#8221; (As shown in first image below). Now you can use this function to approximate the shape. In this, second argument is called <tt class="docutils literal"><span class="pre">epsilon</span></tt>, which is maximum distance from contour to approximated contour. It is an accuracy parameter. A wise selection of <tt class="docutils literal"><span class="pre">epsilon</span></tt> is needed to get the correct output.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">epsilon</span> <span class="o">=</span> <span class="mf">0.1</span><span class="o">*</span><span class="n">cv2</span><span class="o">.</span><span class="n">arcLength</span><span class="p">(</span><span class="n">cnt</span><span class="p">,</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">approx</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">approxPolyDP</span><span class="p">(</span><span class="n">cnt</span><span class="p">,</span><span class="n">epsilon</span><span class="p">,</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Below, in second image, green line shows the approximated curve for <tt class="docutils literal"><span class="pre">epsilon</span> <span class="pre">=</span> <span class="pre">10%</span> <span class="pre">of</span> <span class="pre">arc</span> <span class="pre">length</span></tt>. Third image shows the same for <tt class="docutils literal"><span class="pre">epsilon</span> <span class="pre">=</span> <span class="pre">1%</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">arc</span> <span class="pre">length</span></tt>. Third argument specifies whether curve is closed or not.</p>
+<blockquote>
+<div><img alt="Contour Approximation" class="align-center" src="../../../../../_images/approx.jpg" />
+</div></blockquote>
+</div>
+<div class="section" id="convex-hull">
+<h2>5. Convex Hull<a class="headerlink" href="#convex-hull" title="Permalink to this headline">¶</a></h2>
+<p>Convex Hull will look similar to contour approximation, but it is not (Both may provide same results in some cases). Here, <strong>cv2.convexHull()</strong> function checks a curve for convexity defects and corrects it. Generally speaking, convex curves are the curves which are always bulged out, or at-least flat. And if it is bulged inside, it is called convexity defects. For example, check the below image of hand. Red line shows the convex hull of hand. The double-sided arrow marks shows the convexity defects, which are the local maximum deviations of hull from contours.</p>
+<blockquote>
+<div><img alt="Convex Hull" class="align-center" src="../../../../../_images/convexitydefects.jpg" />
+</div></blockquote>
+<p>There is a little bit things to discuss about it its syntax:</p>
+<div class="highlight-python"><div class="highlight"><pre>hull = cv2.convexHull(points[, hull[, clockwise[, returnPoints]]
+</pre></div>
+</div>
+<p>Arguments details:</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>points</strong> are the contours we pass into.</li>
+<li><strong>hull</strong> is the output, normally we avoid it.</li>
+<li><strong>clockwise</strong> : Orientation flag. If it is <tt class="docutils literal"><span class="pre">True</span></tt>, the output convex hull is oriented clockwise. Otherwise, it is oriented counter-clockwise.</li>
+<li><strong>returnPoints</strong> : By default, <tt class="docutils literal"><span class="pre">True</span></tt>. Then it returns the coordinates of the hull points. If <tt class="docutils literal"><span class="pre">False</span></tt>, it returns the indices of contour points corresponding to the hull points.</li>
+</ul>
+</div></blockquote>
+<p>So to get a convex hull as in above image, following is sufficient:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">hull</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">convexHull</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>But if you want to find convexity defects, you need to pass <tt class="docutils literal"><span class="pre">returnPoints</span> <span class="pre">=</span> <span class="pre">False</span></tt>. To understand it, we will take the rectangle image above. First I found its contour as <tt class="docutils literal"><span class="pre">cnt</span></tt>. Now I found its convex hull with <tt class="docutils literal"><span class="pre">returnPoints</span> <span class="pre">=</span> <span class="pre">True</span></tt>, I got following values: <tt class="docutils literal"><span class="pre">[[[234</span> <span class="pre">202]],</span> <span class="pre">[[</span> <span class="pre">51</span> <span class="pre">202]],</span> <span class="pre">[[</span> <span class="pre">51</span> <span class="pre">79]],</span> <span class="pre">[[234</span> <span class="pre">79]]]</span></tt> which are the four corner points of rectangle. Now if do the same with <tt class="docutils literal"><span class="pre">returnPoints</span> <span class="pre">=</span> <span class="pre">False</span></tt>, I get following result: <tt class="docutils literal"><span class="pre">[[129],[</span> <span class="pre">67],[</span> <span class="pre">0],[142]]</span></tt>. These are the indices of corresponding points in contours. For eg, check the first value: <tt class="docutils literal"><span class="pre">cnt[129]</span> <span class="pre">=</span> <span class="pre">[[234,</span> <span class="pre">202]]</span></tt> which is same as first result (and so on for others).</p>
+<p>You will see it again when we discuss about convexity defects.</p>
+</div>
+<div class="section" id="checking-convexity">
+<h2>6. Checking Convexity<a class="headerlink" href="#checking-convexity" title="Permalink to this headline">¶</a></h2>
+<p>There is a function to check if a curve is convex or not, <strong>cv2.isContourConvex()</strong>. It just return whether True or False. Not a big deal.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">k</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">isContourConvex</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="bounding-rectangle">
+<h2>7. Bounding Rectangle<a class="headerlink" href="#bounding-rectangle" title="Permalink to this headline">¶</a></h2>
+<p>There are two types of bounding rectangles.</p>
+<div class="section" id="a-straight-bounding-rectangle">
+<h3>7.a. Straight Bounding Rectangle<a class="headerlink" href="#a-straight-bounding-rectangle" title="Permalink to this headline">¶</a></h3>
+<p>It is a straight rectangle, it doesn&#8217;t consider the rotation of the object. So area of the bounding rectangle won&#8217;t be minimum. It is found by the function <strong>cv2.boundingRect()</strong>.</p>
+<p>Let (x,y) be the top-left coordinate of the rectangle and (w,h) be its width and height.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">h</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">boundingRect</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="n">img</span><span class="p">,(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">),(</span><span class="n">x</span><span class="o">+</span><span class="n">w</span><span class="p">,</span><span class="n">y</span><span class="o">+</span><span class="n">h</span><span class="p">),(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="b-rotated-rectangle">
+<h3>7.b. Rotated Rectangle<a class="headerlink" href="#b-rotated-rectangle" title="Permalink to this headline">¶</a></h3>
+<p>Here, bounding rectangle is drawn with minimum area, so it considers the rotation also. The function used is <strong>cv2.minAreaRect()</strong>. It returns a Box2D structure which contains following detals - ( center (x,y), (width, height), angle of rotation ). But to draw this rectangle, we need 4 corners of the rectangle. It is obtained by the function <strong>cv2.boxPoints()</strong></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">rect</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">minAreaRect</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span>
+<span class="n">box</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">boxPoints</span><span class="p">(</span><span class="n">rect</span><span class="p">)</span>
+<span class="n">box</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int0</span><span class="p">(</span><span class="n">box</span><span class="p">)</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">drawContours</span><span class="p">(</span><span class="n">img</span><span class="p">,[</span><span class="n">box</span><span class="p">],</span><span class="mi">0</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Both the rectangles are shown in a single image. Green rectangle shows the normal bounding rect. Red rectangle is the rotated rect.</p>
+<blockquote>
+<div><img alt="Bounding Rectangle" class="align-center" src="../../../../../_images/boundingrect.png" />
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="minimum-enclosing-circle">
+<h2>8. Minimum Enclosing Circle<a class="headerlink" href="#minimum-enclosing-circle" title="Permalink to this headline">¶</a></h2>
+<p>Next we find the circumcircle of an object using the function <strong>cv2.minEnclosingCircle()</strong>. It is a circle which completely covers the object with minimum area.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">),</span><span class="n">radius</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">minEnclosingCircle</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span>
+<span class="n">center</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="nb">int</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+<span class="n">radius</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">center</span><span class="p">,</span><span class="n">radius</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="Minimum Enclosing Circle" class="align-center" src="../../../../../_images/circumcircle.png" />
+</div>
+<div class="section" id="fitting-an-ellipse">
+<h2>9. Fitting an Ellipse<a class="headerlink" href="#fitting-an-ellipse" title="Permalink to this headline">¶</a></h2>
+<p>Next one is to fit an ellipse to an object. It returns the rotated rectangle in which the ellipse is inscribed.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ellipse</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">fitEllipse</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">ellipse</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">ellipse</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="Fitting an Ellipse" class="align-center" src="../../../../../_images/fitellipse.png" />
+</div>
+<div class="section" id="fitting-a-line">
+<h2>10. Fitting a Line<a class="headerlink" href="#fitting-a-line" title="Permalink to this headline">¶</a></h2>
+<p>Similarly we can fit a line to a set of points. Below image contains a set of white points. We can approximate a straight line to it.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">rows</span><span class="p">,</span><span class="n">cols</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+<span class="p">[</span><span class="n">vx</span><span class="p">,</span><span class="n">vy</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">fitLine</span><span class="p">(</span><span class="n">cnt</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">DIST_L2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.01</span><span class="p">,</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="n">lefty</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="o">-</span><span class="n">x</span><span class="o">*</span><span class="n">vy</span><span class="o">/</span><span class="n">vx</span><span class="p">)</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">righty</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(((</span><span class="n">cols</span><span class="o">-</span><span class="n">x</span><span class="p">)</span><span class="o">*</span><span class="n">vy</span><span class="o">/</span><span class="n">vx</span><span class="p">)</span><span class="o">+</span><span class="n">y</span><span class="p">)</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">img</span><span class="p">,(</span><span class="n">cols</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">righty</span><span class="p">),(</span><span class="mi">0</span><span class="p">,</span><span class="n">lefty</span><span class="p">),(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="Fitting a Line" class="align-center" src="../../../../../_images/fitline.jpg" />
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py_contour_properties/py_contour_properties.html" title="Contour Properties"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../py_contours_begin/py_contours_begin.html" title="Contours : Getting Started"
+             >previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../../py_table_of_contents_imgproc/py_table_of_contents_imgproc.html" >Image Processing in OpenCV</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_contours/py_table_of_contents_contours.html" >Contours in OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../../../_sources/doc/py_tutorials/py_imgproc/py_contours/py_contour_features/py_contour_features.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

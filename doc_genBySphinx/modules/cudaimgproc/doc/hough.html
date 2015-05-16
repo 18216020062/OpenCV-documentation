@@ -1,0 +1,502 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Hough Transform &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="cudaimgproc. CUDA-accelerated Image Processing" href="cudaimgproc.html" />
+    <link rel="next" title="Feature Detection" href="feature_detection.html" />
+    <link rel="prev" title="Histogram Calculation" href="histogram.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="feature_detection.html" title="Feature Detection"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="histogram.html" title="Histogram Calculation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="cudaimgproc.html" accesskey="U">cudaimgproc. CUDA-accelerated Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Hough Transform</a><ul>
+<li><a class="reference internal" href="#cuda-houghlinesdetector">cuda::HoughLinesDetector</a></li>
+<li><a class="reference internal" href="#cuda-houghlinesdetector-detect">cuda::HoughLinesDetector::detect</a></li>
+<li><a class="reference internal" href="#cuda-houghlinesdetector-downloadresults">cuda::HoughLinesDetector::downloadResults</a></li>
+<li><a class="reference internal" href="#cuda-createhoughlinesdetector">cuda::createHoughLinesDetector</a></li>
+<li><a class="reference internal" href="#cuda-houghsegmentdetector">cuda::HoughSegmentDetector</a></li>
+<li><a class="reference internal" href="#cuda-houghsegmentdetector-detect">cuda::HoughSegmentDetector::detect</a></li>
+<li><a class="reference internal" href="#cuda-createhoughsegmentdetector">cuda::createHoughSegmentDetector</a></li>
+<li><a class="reference internal" href="#cuda-houghcirclesdetector">cuda::HoughCirclesDetector</a></li>
+<li><a class="reference internal" href="#cuda-houghcirclesdetector-detect">cuda::HoughCirclesDetector::detect</a></li>
+<li><a class="reference internal" href="#cuda-createhoughcirclesdetector">cuda::createHoughCirclesDetector</a></li>
+<li><a class="reference internal" href="#cuda-creategeneralizedhoughballard">cuda::createGeneralizedHoughBallard</a></li>
+<li><a class="reference internal" href="#cuda-creategeneralizedhoughguil">cuda::createGeneralizedHoughGuil</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="histogram.html"
+                        title="previous chapter">Histogram Calculation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="feature_detection.html"
+                        title="next chapter">Feature Detection</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="hough-transform">
+<h1>Hough Transform<a class="headerlink" href="#hough-transform" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="cuda-houghlinesdetector">
+<h2>cuda::HoughLinesDetector<a class="headerlink" href="#cuda-houghlinesdetector" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cuda::HoughLinesDetector : public Algorithm">
+<em class="property">class </em><tt class="descclassname">cuda::</tt><tt class="descname">HoughLinesDetector</tt> : <em class="property">public</em> <tt class="descname">Algorithm</tt><a class="headerlink" href="#cuda::HoughLinesDetector : public Algorithm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base class for lines detector algorithm.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">HoughLinesDetector</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Algorithm</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">detect</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">src</span><span class="p">,</span> <span class="n">OutputArray</span> <span class="n">lines</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">downloadResults</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">d_lines</span><span class="p">,</span> <span class="n">OutputArray</span> <span class="n">h_lines</span><span class="p">,</span> <span class="n">OutputArray</span> <span class="n">h_votes</span> <span class="o">=</span> <span class="n">noArray</span><span class="p">())</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setRho</span><span class="p">(</span><span class="kt">float</span> <span class="n">rho</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">float</span> <span class="n">getRho</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setTheta</span><span class="p">(</span><span class="kt">float</span> <span class="n">theta</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">float</span> <span class="n">getTheta</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setThreshold</span><span class="p">(</span><span class="kt">int</span> <span class="n">threshold</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">getThreshold</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setDoSort</span><span class="p">(</span><span class="kt">bool</span> <span class="n">doSort</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">bool</span> <span class="n">getDoSort</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setMaxLines</span><span class="p">(</span><span class="kt">int</span> <span class="n">maxLines</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">getMaxLines</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cuda-houghlinesdetector-detect">
+<h2>cuda::HoughLinesDetector::detect<a class="headerlink" href="#cuda-houghlinesdetector-detect" title="Permalink to this headline">¶</a></h2>
+<p>Finds lines in a binary image using the classical Hough transform.</p>
+<dl class="function">
+<dt id="void cuda::HoughLinesDetector::detect(InputArray src, OutputArray lines)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::HoughLinesDetector::</tt><tt class="descname">detect</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>lines</strong><big>)</big><a class="headerlink" href="#void cuda::HoughLinesDetector::detect(InputArray src, OutputArray lines)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; 8-bit, single-channel binary source image.</li>
+<li><strong>lines</strong> &#8211; Output vector of lines. Each line is represented by a two-element vector  <span class="math">(\rho, \theta)</span> .  <span class="math">\rho</span>  is the distance from the coordinate origin  <span class="math">(0,0)</span>  (top-left corner of the image).  <span class="math">\theta</span>  is the line rotation angle in radians ( <span class="math">0 \sim \textrm{vertical line}, \pi/2 \sim \textrm{horizontal line}</span> ).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/feature_detection.html#void HoughLines(InputArray image, OutputArray lines, double rho, double theta, int threshold, double srn, double stn, double min_theta, double max_theta)" title="void HoughLines(InputArray image, OutputArray lines, double rho, double theta, int threshold, double srn, double stn, double min_theta, double max_theta)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">HoughLines()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-houghlinesdetector-downloadresults">
+<h2>cuda::HoughLinesDetector::downloadResults<a class="headerlink" href="#cuda-houghlinesdetector-downloadresults" title="Permalink to this headline">¶</a></h2>
+<p>Downloads results from <a class="reference internal" href="#void cuda::HoughLinesDetector::detect(InputArray src, OutputArray lines)" title="void cuda::HoughLinesDetector::detect(InputArray src, OutputArray lines)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cuda::HoughLinesDetector::detect()</span></tt></a> to host memory.</p>
+<dl class="function">
+<dt id="void cuda::HoughLinesDetector::downloadResults(InputArray d_lines, OutputArray h_lines, OutputArray h_votes)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::HoughLinesDetector::</tt><tt class="descname">downloadResults</tt><big>(</big>InputArray <strong>d_lines</strong>, OutputArray <strong>h_lines</strong>, OutputArray <strong>h_votes</strong>=noArray()<big>)</big><a class="headerlink" href="#void cuda::HoughLinesDetector::downloadResults(InputArray d_lines, OutputArray h_lines, OutputArray h_votes)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>d_lines</strong> &#8211; Result of <a class="reference internal" href="#void cuda::HoughLinesDetector::detect(InputArray src, OutputArray lines)" title="void cuda::HoughLinesDetector::detect(InputArray src, OutputArray lines)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cuda::HoughLinesDetector::detect()</span></tt></a> .</li>
+<li><strong>h_lines</strong> &#8211; Output host array.</li>
+<li><strong>h_votes</strong> &#8211; Optional output array for line&#8217;s votes.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-createhoughlinesdetector">
+<h2>cuda::createHoughLinesDetector<a class="headerlink" href="#cuda-createhoughlinesdetector" title="Permalink to this headline">¶</a></h2>
+<p>Creates implementation for <a class="reference internal" href="#cuda::HoughLinesDetector : public Algorithm" title="class cuda::HoughLinesDetector : public Algorithm"><tt class="xref ocv ocv-class docutils literal"><span class="pre">cuda::HoughLinesDetector</span></tt></a> .</p>
+<dl class="function">
+<dt id="Ptr&lt;HoughLinesDetector&gt; cuda::createHoughLinesDetector(float rho, float theta, int threshold, bool doSort , int maxLines)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;HoughLinesDetector&gt; <tt class="descclassname">cuda::</tt><tt class="descname">createHoughLinesDetector</tt><big>(</big>float <strong>rho</strong>, float <strong>theta</strong>, int <strong>threshold</strong>, bool <strong>doSort</strong>=false, int <strong>maxLines</strong>=4096<big>)</big><a class="headerlink" href="#Ptr<HoughLinesDetector> cuda::createHoughLinesDetector(float rho, float theta, int threshold, bool doSort , int maxLines)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>rho</strong> &#8211; Distance resolution of the accumulator in pixels.</li>
+<li><strong>theta</strong> &#8211; Angle resolution of the accumulator in radians.</li>
+<li><strong>threshold</strong> &#8211; Accumulator threshold parameter. Only those lines are returned that get enough votes ( <span class="math">&gt;\texttt{threshold}</span> ).</li>
+<li><strong>doSort</strong> &#8211; Performs lines sort by votes.</li>
+<li><strong>maxLines</strong> &#8211; Maximum number of output lines.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-houghsegmentdetector">
+<h2>cuda::HoughSegmentDetector<a class="headerlink" href="#cuda-houghsegmentdetector" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cuda::HoughSegmentDetector : public Algorithm">
+<em class="property">class </em><tt class="descclassname">cuda::</tt><tt class="descname">HoughSegmentDetector</tt> : <em class="property">public</em> <tt class="descname">Algorithm</tt><a class="headerlink" href="#cuda::HoughSegmentDetector : public Algorithm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base class for line segments detector algorithm.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">HoughSegmentDetector</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Algorithm</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">detect</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">src</span><span class="p">,</span> <span class="n">OutputArray</span> <span class="n">lines</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setRho</span><span class="p">(</span><span class="kt">float</span> <span class="n">rho</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">float</span> <span class="n">getRho</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setTheta</span><span class="p">(</span><span class="kt">float</span> <span class="n">theta</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">float</span> <span class="n">getTheta</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setMinLineLength</span><span class="p">(</span><span class="kt">int</span> <span class="n">minLineLength</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">getMinLineLength</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setMaxLineGap</span><span class="p">(</span><span class="kt">int</span> <span class="n">maxLineGap</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">getMaxLineGap</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setMaxLines</span><span class="p">(</span><span class="kt">int</span> <span class="n">maxLines</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">getMaxLines</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example using the Hough segment detector can be found at opencv_source_code/samples/gpu/houghlines.cpp</li>
+</ul>
+</div>
+</div>
+<div class="section" id="cuda-houghsegmentdetector-detect">
+<h2>cuda::HoughSegmentDetector::detect<a class="headerlink" href="#cuda-houghsegmentdetector-detect" title="Permalink to this headline">¶</a></h2>
+<p>Finds line segments in a binary image using the probabilistic Hough transform.</p>
+<dl class="function">
+<dt id="void cuda::HoughSegmentDetector::detect(InputArray src, OutputArray lines)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::HoughSegmentDetector::</tt><tt class="descname">detect</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>lines</strong><big>)</big><a class="headerlink" href="#void cuda::HoughSegmentDetector::detect(InputArray src, OutputArray lines)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; 8-bit, single-channel binary source image.</li>
+<li><strong>lines</strong> &#8211; Output vector of lines. Each line is represented by a 4-element vector  <span class="math">(x_1, y_1, x_2, y_2)</span> , where  <span class="math">(x_1,y_1)</span>  and  <span class="math">(x_2, y_2)</span>  are the ending points of each detected line segment.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/feature_detection.html#void HoughLinesP(InputArray image, OutputArray lines, double rho, double theta, int threshold, double minLineLength, double maxLineGap)" title="void HoughLinesP(InputArray image, OutputArray lines, double rho, double theta, int threshold, double minLineLength, double maxLineGap)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">HoughLinesP()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-createhoughsegmentdetector">
+<h2>cuda::createHoughSegmentDetector<a class="headerlink" href="#cuda-createhoughsegmentdetector" title="Permalink to this headline">¶</a></h2>
+<p>Creates implementation for <a class="reference internal" href="#cuda::HoughSegmentDetector : public Algorithm" title="class cuda::HoughSegmentDetector : public Algorithm"><tt class="xref ocv ocv-class docutils literal"><span class="pre">cuda::HoughSegmentDetector</span></tt></a> .</p>
+<dl class="function">
+<dt id="Ptr&lt;HoughSegmentDetector&gt; cuda::createHoughSegmentDetector(float rho, float theta, int minLineLength, int maxLineGap, int maxLines)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;HoughSegmentDetector&gt; <tt class="descclassname">cuda::</tt><tt class="descname">createHoughSegmentDetector</tt><big>(</big>float <strong>rho</strong>, float <strong>theta</strong>, int <strong>minLineLength</strong>, int <strong>maxLineGap</strong>, int <strong>maxLines</strong>=4096<big>)</big><a class="headerlink" href="#Ptr<HoughSegmentDetector> cuda::createHoughSegmentDetector(float rho, float theta, int minLineLength, int maxLineGap, int maxLines)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>rho</strong> &#8211; Distance resolution of the accumulator in pixels.</li>
+<li><strong>theta</strong> &#8211; Angle resolution of the accumulator in radians.</li>
+<li><strong>minLineLength</strong> &#8211; Minimum line length. Line segments shorter than that are rejected.</li>
+<li><strong>maxLineGap</strong> &#8211; Maximum allowed gap between points on the same line to link them.</li>
+<li><strong>maxLines</strong> &#8211; Maximum number of output lines.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-houghcirclesdetector">
+<h2>cuda::HoughCirclesDetector<a class="headerlink" href="#cuda-houghcirclesdetector" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cuda::HoughCirclesDetector : public Algorithm">
+<em class="property">class </em><tt class="descclassname">cuda::</tt><tt class="descname">HoughCirclesDetector</tt> : <em class="property">public</em> <tt class="descname">Algorithm</tt><a class="headerlink" href="#cuda::HoughCirclesDetector : public Algorithm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base class for circles detector algorithm.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">HoughCirclesDetector</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Algorithm</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">detect</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">src</span><span class="p">,</span> <span class="n">OutputArray</span> <span class="n">circles</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setDp</span><span class="p">(</span><span class="kt">float</span> <span class="n">dp</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">float</span> <span class="n">getDp</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setMinDist</span><span class="p">(</span><span class="kt">float</span> <span class="n">minDist</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">float</span> <span class="n">getMinDist</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setCannyThreshold</span><span class="p">(</span><span class="kt">int</span> <span class="n">cannyThreshold</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">getCannyThreshold</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setVotesThreshold</span><span class="p">(</span><span class="kt">int</span> <span class="n">votesThreshold</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">getVotesThreshold</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setMinRadius</span><span class="p">(</span><span class="kt">int</span> <span class="n">minRadius</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">getMinRadius</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setMaxRadius</span><span class="p">(</span><span class="kt">int</span> <span class="n">maxRadius</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">getMaxRadius</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setMaxCircles</span><span class="p">(</span><span class="kt">int</span> <span class="n">maxCircles</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">getMaxCircles</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cuda-houghcirclesdetector-detect">
+<h2>cuda::HoughCirclesDetector::detect<a class="headerlink" href="#cuda-houghcirclesdetector-detect" title="Permalink to this headline">¶</a></h2>
+<p>Finds circles in a grayscale image using the Hough transform.</p>
+<dl class="function">
+<dt id="void cuda::HoughCirclesDetector::detect(InputArray src, OutputArray circles)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::HoughCirclesDetector::</tt><tt class="descname">detect</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>circles</strong><big>)</big><a class="headerlink" href="#void cuda::HoughCirclesDetector::detect(InputArray src, OutputArray circles)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; 8-bit, single-channel grayscale input image.</li>
+<li><strong>circles</strong> &#8211; Output vector of found circles. Each vector is encoded as a 3-element floating-point vector  <span class="math">(x, y, radius)</span> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/feature_detection.html#void HoughCircles(InputArray image, OutputArray circles, int method, double dp, double minDist, double param1, double param2, int minRadius, int maxRadius)" title="void HoughCircles(InputArray image, OutputArray circles, int method, double dp, double minDist, double param1, double param2, int minRadius, int maxRadius)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">HoughCircles()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-createhoughcirclesdetector">
+<h2>cuda::createHoughCirclesDetector<a class="headerlink" href="#cuda-createhoughcirclesdetector" title="Permalink to this headline">¶</a></h2>
+<p>Creates implementation for <a class="reference internal" href="#cuda::HoughCirclesDetector : public Algorithm" title="class cuda::HoughCirclesDetector : public Algorithm"><tt class="xref ocv ocv-class docutils literal"><span class="pre">cuda::HoughCirclesDetector</span></tt></a> .</p>
+<dl class="function">
+<dt id="Ptr&lt;HoughCirclesDetector&gt; cuda::createHoughCirclesDetector(float dp, float minDist, int cannyThreshold, int votesThreshold, int minRadius, int maxRadius, int maxCircles)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;HoughCirclesDetector&gt; <tt class="descclassname">cuda::</tt><tt class="descname">createHoughCirclesDetector</tt><big>(</big>float <strong>dp</strong>, float <strong>minDist</strong>, int <strong>cannyThreshold</strong>, int <strong>votesThreshold</strong>, int <strong>minRadius</strong>, int <strong>maxRadius</strong>, int <strong>maxCircles</strong>=4096<big>)</big><a class="headerlink" href="#Ptr<HoughCirclesDetector> cuda::createHoughCirclesDetector(float dp, float minDist, int cannyThreshold, int votesThreshold, int minRadius, int maxRadius, int maxCircles)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>dp</strong> &#8211; Inverse ratio of the accumulator resolution to the image resolution. For example, if  <tt class="docutils literal"><span class="pre">dp=1</span></tt> , the accumulator has the same resolution as the input image. If  <tt class="docutils literal"><span class="pre">dp=2</span></tt> , the accumulator has half as big width and height.</li>
+<li><strong>minDist</strong> &#8211; Minimum distance between the centers of the detected circles. If the parameter is too small, multiple neighbor circles may be falsely detected in addition to a true one. If it is too large, some circles may be missed.</li>
+<li><strong>cannyThreshold</strong> &#8211; The higher threshold of the two passed to Canny edge detector (the lower one is twice smaller).</li>
+<li><strong>votesThreshold</strong> &#8211; The accumulator threshold for the circle centers at the detection stage. The smaller it is, the more false circles may be detected.</li>
+<li><strong>minRadius</strong> &#8211; Minimum circle radius.</li>
+<li><strong>maxRadius</strong> &#8211; Maximum circle radius.</li>
+<li><strong>maxCircles</strong> &#8211; Maximum number of output circles.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-creategeneralizedhoughballard">
+<h2>cuda::createGeneralizedHoughBallard<a class="headerlink" href="#cuda-creategeneralizedhoughballard" title="Permalink to this headline">¶</a></h2>
+<p>Creates implementation for generalized hough transform from <a class="reference internal" href="#ballard1981" id="id1">[Ballard1981]</a> .</p>
+<dl class="function">
+<dt id="Ptr&lt;GeneralizedHoughBallard&gt; cuda::createGeneralizedHoughBallard()">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;GeneralizedHoughBallard&gt; <tt class="descclassname">cuda::</tt><tt class="descname">createGeneralizedHoughBallard</tt><big>(</big><big>)</big><a class="headerlink" href="#Ptr<GeneralizedHoughBallard> cuda::createGeneralizedHoughBallard()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="cuda-creategeneralizedhoughguil">
+<h2>cuda::createGeneralizedHoughGuil<a class="headerlink" href="#cuda-creategeneralizedhoughguil" title="Permalink to this headline">¶</a></h2>
+<p>Creates implementation for generalized hough transform from <a class="reference internal" href="#guil1999" id="id2">[Guil1999]</a> .</p>
+<dl class="function">
+<dt id="Ptr&lt;GeneralizedHoughGuil&gt; cuda::createGeneralizedHoughGuil()">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;GeneralizedHoughGuil&gt; <tt class="descclassname">cuda::</tt><tt class="descname">createGeneralizedHoughGuil</tt><big>(</big><big>)</big><a class="headerlink" href="#Ptr<GeneralizedHoughGuil> cuda::createGeneralizedHoughGuil()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<table class="docutils citation" frame="void" id="ballard1981" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[Ballard1981]</a></td><td>Ballard, D.H. (1981). Generalizing the Hough transform to detect arbitrary shapes. Pattern Recognition 13 (2): 111-122.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="guil1999" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[Guil1999]</a></td><td>Guil, N., González-Linares, J.M. and Zapata, E.L. (1999). Bidimensional shape detection using an invariant approach. Pattern Recognition 32 (6): 1025-1038.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="feature_detection.html" title="Feature Detection"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="histogram.html" title="Histogram Calculation"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="cudaimgproc.html" >cudaimgproc. CUDA-accelerated Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/cudaimgproc/doc/hough.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

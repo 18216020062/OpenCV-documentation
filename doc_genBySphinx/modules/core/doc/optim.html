@@ -1,0 +1,682 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Optimization Algorithms &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="core. The Core Functionality" href="core.html" />
+    <link rel="next" title="imgproc. Image Processing" href="../../imgproc/doc/imgproc.html" />
+    <link rel="prev" title="Intel® IPP Asynchronous C/C++ Converters" href="ipp_async_converters.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../imgproc/doc/imgproc.html" title="imgproc. Image Processing"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="ipp_async_converters.html" title="Intel® IPP Asynchronous C/C++ Converters"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="core.html" accesskey="U">core. The Core Functionality</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Optimization Algorithms</a><ul>
+<li><a class="reference internal" href="#solvelp">solveLP</a></li>
+<li><a class="reference internal" href="#downhillsolver">DownhillSolver</a></li>
+<li><a class="reference internal" href="#downhillsolver-getfunction">DownhillSolver::getFunction</a></li>
+<li><a class="reference internal" href="#downhillsolver-setfunction">DownhillSolver::setFunction</a></li>
+<li><a class="reference internal" href="#downhillsolver-gettermcriteria">DownhillSolver::getTermCriteria</a></li>
+<li><a class="reference internal" href="#downhillsolver-settermcriteria">DownhillSolver::setTermCriteria</a></li>
+<li><a class="reference internal" href="#downhillsolver-getinitstep">DownhillSolver::getInitStep</a></li>
+<li><a class="reference internal" href="#downhillsolver-setinitstep">DownhillSolver::setInitStep</a></li>
+<li><a class="reference internal" href="#downhillsolver-minimize">DownhillSolver::minimize</a></li>
+<li><a class="reference internal" href="#createdownhillsolver">createDownhillSolver</a></li>
+<li><a class="reference internal" href="#conjgradsolver">ConjGradSolver</a></li>
+<li><a class="reference internal" href="#conjgradsolver-getfunction">ConjGradSolver::getFunction</a></li>
+<li><a class="reference internal" href="#conjgradsolver-setfunction">ConjGradSolver::setFunction</a></li>
+<li><a class="reference internal" href="#conjgradsolver-gettermcriteria">ConjGradSolver::getTermCriteria</a></li>
+<li><a class="reference internal" href="#conjgradsolver-settermcriteria">ConjGradSolver::setTermCriteria</a></li>
+<li><a class="reference internal" href="#conjgradsolver-minimize">ConjGradSolver::minimize</a></li>
+<li><a class="reference internal" href="#createconjgradsolver">createConjGradSolver</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ipp_async_converters.html"
+                        title="previous chapter">Intel® IPP Asynchronous C/C++ Converters</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../imgproc/doc/imgproc.html"
+                        title="next chapter">imgproc. Image Processing</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="optimization-algorithms">
+<h1>Optimization Algorithms<a class="headerlink" href="#optimization-algorithms" title="Permalink to this headline">¶</a></h1>
+<p>The algorithms in this section minimize or maximize function value within specified constraints or without any constraints.</p>
+<div class="section" id="solvelp">
+<h2>solveLP<a class="headerlink" href="#solvelp" title="Permalink to this headline">¶</a></h2>
+<p>Solve given (non-integer) linear programming problem using the Simplex Algorithm (Simplex Method).
+What we mean here by &#8220;linear programming problem&#8221; (or LP problem, for short) can be
+formulated as:</p>
+<div class="math">
+<p><span class="math">\mbox{Maximize } c\cdot x\\
+\mbox{Subject to:}\\
+Ax\leq b\\
+x\geq 0</span></p>
+</div><p>Where <span class="math">c</span> is fixed <em>1</em>-by-<em>n</em> row-vector, <span class="math">A</span> is fixed <em>m</em>-by-<em>n</em> matrix, <span class="math">b</span> is fixed <em>m</em>-by-<em>1</em> column vector and
+<span class="math">x</span> is an arbitrary <em>n</em>-by-<em>1</em> column vector, which satisfies the constraints.</p>
+<p>Simplex algorithm is one of many algorithms that are designed to handle this sort of problems efficiently. Although it is not optimal in theoretical
+sense (there exist algorithms that can solve any problem written as above in polynomial type, while simplex method degenerates to exponential time
+for some special cases), it is well-studied, easy to implement and is shown to work well for real-life purposes.</p>
+<p>The particular implementation is taken almost verbatim from <strong>Introduction to Algorithms, third edition</strong>
+by T. H. Cormen, C. E. Leiserson, R. L. Rivest and Clifford Stein. In particular, the Bland&#8217;s rule
+(<a class="reference external" href="http://en.wikipedia.org/wiki/Bland%27s_rule">http://en.wikipedia.org/wiki/Bland%27s_rule</a>) is used to prevent cycling.</p>
+<dl class="function">
+<dt id="int solveLP(const Mat&amp; Func, const Mat&amp; Constr, Mat&amp; z)">
+<strong>C++:</strong><tt class="descname"> </tt>int <tt class="descname">solveLP</tt><big>(</big>const Mat&amp; <strong>Func</strong>, const Mat&amp; <strong>Constr</strong>, Mat&amp; <strong>z</strong><big>)</big><a class="headerlink" href="#int solveLP(const Mat& Func, const Mat& Constr, Mat& z)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>Func</strong> &#8211; This row-vector corresponds to <span class="math">c</span> in the LP problem formulation (see above). It should contain 32- or 64-bit floating point numbers. As a convenience, column-vector may be also submitted, in the latter case it is understood to correspond to <span class="math">c^T</span>.</li>
+<li><strong>Constr</strong> &#8211; <em>m</em>-by-<em>n+1</em> matrix, whose rightmost column corresponds to <span class="math">b</span> in formulation above and the remaining to <span class="math">A</span>. It should containt 32- or 64-bit floating point numbers.</li>
+<li><strong>z</strong> &#8211; The solution will be returned here as a column-vector - it corresponds to <span class="math">c</span> in the formulation above. It will contain 64-bit floating point numbers.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">One of the return codes:</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">//!the return codes for solveLP() function</span>
+<span class="k">enum</span>
+<span class="p">{</span>
+    <span class="n">SOLVELP_UNBOUNDED</span>    <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="c1">//problem is unbounded (target function can achieve arbitrary high values)</span>
+    <span class="n">SOLVELP_UNFEASIBLE</span>    <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="c1">//problem is unfeasible (there are no points that satisfy all the constraints imposed)</span>
+    <span class="n">SOLVELP_SINGLE</span>    <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="c1">//there is only one maximum for target function</span>
+    <span class="n">SOLVELP_MULTI</span>    <span class="o">=</span> <span class="mi">1</span> <span class="c1">//there are multiple maxima for target function - the arbitrary one is returned</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="downhillsolver">
+<h2>DownhillSolver<a class="headerlink" href="#downhillsolver" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="DownhillSolver">
+<em class="property">class </em><tt class="descname">DownhillSolver</tt><a class="headerlink" href="#DownhillSolver" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This class is used to perform the non-linear non-constrained <em>minimization</em> of a function, defined on an <em>n</em>-dimensional Euclidean space,
+using the <strong>Nelder-Mead method</strong>, also known as <strong>downhill simplex method</strong>. The basic idea about the method can be obtained from
+(<a class="reference external" href="http://en.wikipedia.org/wiki/Nelder-Mead_method">http://en.wikipedia.org/wiki/Nelder-Mead_method</a>). It should be noted, that
+this method, although deterministic, is rather a heuristic and therefore may converge to a local minima, not necessary a global one.
+It is iterative optimization technique, which at each step uses an information about the values of a function evaluated only at
+<em>n+1</em> points, arranged as a <em>simplex</em> in <em>n</em>-dimensional space (hence the second name of the method). At each step new point is
+chosen to evaluate function at, obtained value is compared with previous ones and based on this information simplex changes it&#8217;s shape
+, slowly moving to the local minimum. Thus this method is using <em>only</em> function values to make decision, on contrary to, say, Nonlinear
+Conjugate Gradient method (which is also implemented in <tt class="docutils literal"><span class="pre">optim</span></tt>).</p>
+<p>Algorithm stops when the number of function evaluations done exceeds <tt class="docutils literal"><span class="pre">termcrit.maxCount</span></tt>, when the function values at the
+vertices of simplex are within <tt class="docutils literal"><span class="pre">termcrit.epsilon</span></tt> range or simplex becomes so small that it
+can enclosed in a box with <tt class="docutils literal"><span class="pre">termcrit.epsilon</span></tt> sides, whatever comes first, for some defined by user
+positive integer <tt class="docutils literal"><span class="pre">termcrit.maxCount</span></tt> and positive non-integer <tt class="docutils literal"><span class="pre">termcrit.epsilon</span></tt>.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">Solver</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Algorithm</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">Function</span>
+    <span class="p">{</span>
+    <span class="k">public</span><span class="o">:</span>
+        <span class="k">virtual</span> <span class="o">~</span><span class="n">Function</span><span class="p">()</span> <span class="p">{}</span>
+        <span class="k">virtual</span> <span class="kt">double</span> <span class="n">calc</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span><span class="o">*</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">getGradient</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span><span class="o">*</span> <span class="cm">/*x*/</span><span class="p">,</span><span class="kt">double</span><span class="o">*</span> <span class="cm">/*grad*/</span><span class="p">)</span> <span class="p">{}</span>
+    <span class="p">};</span>
+
+    <span class="k">virtual</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">Function</span><span class="o">&gt;</span> <span class="n">getFunction</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setFunction</span><span class="p">(</span><span class="k">const</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">Function</span><span class="o">&gt;&amp;</span> <span class="n">f</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="n">TermCriteria</span> <span class="n">getTermCriteria</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setTermCriteria</span><span class="p">(</span><span class="k">const</span> <span class="n">TermCriteria</span><span class="o">&amp;</span> <span class="n">termcrit</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">// x contain the initial point before the call and the minima position (if algorithm converged) after. x is assumed to be (something that</span>
+    <span class="c1">// after getMat() will return) row-vector or column-vector. *It&#39;s size  and should</span>
+    <span class="c1">// be consisted with previous dimensionality data given, if any (otherwise, it determines dimensionality)*</span>
+    <span class="k">virtual</span> <span class="kt">double</span> <span class="n">minimize</span><span class="p">(</span><span class="n">InputOutputArray</span> <span class="n">x</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">DownhillSolver</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Solver</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="c1">//! returns row-vector, even if the column-vector was given</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">getInitStep</span><span class="p">(</span><span class="n">OutputArray</span> <span class="n">step</span><span class="p">)</span> <span class="k">const</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+    <span class="c1">//!This should be called at least once before the first call to minimize() and step is assumed to be (something that</span>
+    <span class="c1">//! after getMat() will return) row-vector or column-vector. *It&#39;s dimensionality determines the dimensionality of a problem.*</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setInitStep</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">step</span><span class="p">)</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>It should be noted, that <tt class="docutils literal"><span class="pre">DownhillSolver</span></tt> is a derivative of the abstract interface <tt class="docutils literal"><span class="pre">Solver</span></tt>, which in
+turn is derived from the <tt class="docutils literal"><span class="pre">Algorithm</span></tt> interface and is used to encapsulate the functionality, common to all non-linear optimization
+algorithms in the <tt class="docutils literal"><span class="pre">optim</span></tt> module.</p>
+</div>
+<div class="section" id="downhillsolver-getfunction">
+<h2>DownhillSolver::getFunction<a class="headerlink" href="#downhillsolver-getfunction" title="Permalink to this headline">¶</a></h2>
+<p>Getter for the optimized function. The optimized function is represented by <tt class="docutils literal"><span class="pre">Solver::Function</span></tt> interface, which requires
+derivatives to implement the sole method <tt class="docutils literal"><span class="pre">calc(double*)</span></tt> to evaluate the function.</p>
+<dl class="function">
+<dt id="Ptr&lt;Solver::Function&gt; DownhillSolver::getFunction()">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;Solver::Function&gt; <tt class="descclassname">DownhillSolver::</tt><tt class="descname">getFunction</tt><big>(</big><big>)</big><a class="headerlink" href="#Ptr<Solver::Function> DownhillSolver::getFunction()" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Smart-pointer to an object that implements <tt class="docutils literal"><span class="pre">Solver::Function</span></tt> interface - it represents the function that is being optimized. It can be empty, if no function was given so far.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="downhillsolver-setfunction">
+<h2>DownhillSolver::setFunction<a class="headerlink" href="#downhillsolver-setfunction" title="Permalink to this headline">¶</a></h2>
+<p>Setter for the optimized function. <em>It should be called at least once before the call to</em> <tt class="docutils literal"><span class="pre">DownhillSolver::minimize()</span></tt>, as
+default value is not usable.</p>
+<dl class="function">
+<dt id="void DownhillSolver::setFunction(const Ptr&lt;Solver::Function&gt;&amp; f)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">DownhillSolver::</tt><tt class="descname">setFunction</tt><big>(</big>const Ptr&lt;Solver::Function&gt;&amp; <strong>f</strong><big>)</big><a class="headerlink" href="#void DownhillSolver::setFunction(const Ptr<Solver::Function>& f)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>f</strong> &#8211; The new function to optimize.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="downhillsolver-gettermcriteria">
+<h2>DownhillSolver::getTermCriteria<a class="headerlink" href="#downhillsolver-gettermcriteria" title="Permalink to this headline">¶</a></h2>
+<p>Getter for the previously set terminal criteria for this algorithm.</p>
+<dl class="function">
+<dt id="TermCriteria DownhillSolver::getTermCriteria()">
+<strong>C++:</strong><tt class="descname"> </tt>TermCriteria <tt class="descclassname">DownhillSolver::</tt><tt class="descname">getTermCriteria</tt><big>(</big><big>)</big><a class="headerlink" href="#TermCriteria DownhillSolver::getTermCriteria()" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Deep copy of the terminal criteria used at the moment.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="downhillsolver-settermcriteria">
+<h2>DownhillSolver::setTermCriteria<a class="headerlink" href="#downhillsolver-settermcriteria" title="Permalink to this headline">¶</a></h2>
+<p>Set terminal criteria for downhill simplex method. Two things should be noted. First, this method <em>is not necessary</em> to be called
+before the first call to <tt class="docutils literal"><span class="pre">DownhillSolver::minimize()</span></tt>, as the default value is sensible. Second, the method will raise an error
+if <tt class="docutils literal"><span class="pre">termcrit.type!=(TermCriteria::MAX_ITER+TermCriteria::EPS)</span></tt>, <tt class="docutils literal"><span class="pre">termcrit.epsilon&lt;=0</span></tt> or <tt class="docutils literal"><span class="pre">termcrit.maxCount&lt;=0</span></tt>. That is,
+both <tt class="docutils literal"><span class="pre">epsilon</span></tt> and <tt class="docutils literal"><span class="pre">maxCount</span></tt> should be set to positive values (non-integer and integer respectively) and they represent
+tolerance and maximal number of function evaluations that is allowed.</p>
+<p>Algorithm stops when the number of function evaluations done exceeds <tt class="docutils literal"><span class="pre">termcrit.maxCount</span></tt>, when the function values at the
+vertices of simplex are within <tt class="docutils literal"><span class="pre">termcrit.epsilon</span></tt> range or simplex becomes so small that it
+can enclosed in a box with <tt class="docutils literal"><span class="pre">termcrit.epsilon</span></tt> sides, whatever comes first.</p>
+<dl class="function">
+<dt id="void DownhillSolver::setTermCriteria(const TermCriteria&amp; termcrit)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">DownhillSolver::</tt><tt class="descname">setTermCriteria</tt><big>(</big>const TermCriteria&amp; <strong>termcrit</strong><big>)</big><a class="headerlink" href="#void DownhillSolver::setTermCriteria(const TermCriteria& termcrit)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>termcrit</strong> &#8211; Terminal criteria to be used, represented as <tt class="docutils literal"><span class="pre">TermCriteria</span></tt> structure (defined elsewhere in openCV). Mind you, that it should meet <tt class="docutils literal"><span class="pre">(termcrit.type==(TermCriteria::MAX_ITER+TermCriteria::EPS)</span> <span class="pre">&amp;&amp;</span> <span class="pre">termcrit.epsilon&gt;0</span> <span class="pre">&amp;&amp;</span> <span class="pre">termcrit.maxCount&gt;0)</span></tt>, otherwise the error will be raised.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="downhillsolver-getinitstep">
+<h2>DownhillSolver::getInitStep<a class="headerlink" href="#downhillsolver-getinitstep" title="Permalink to this headline">¶</a></h2>
+<p>Returns the initial step that will be used in downhill simplex algorithm. See the description
+of corresponding setter (follows next) for the meaning of this parameter.</p>
+<dl class="function">
+<dt id="void getInitStep(OutputArray step)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">getInitStep</tt><big>(</big>OutputArray <strong>step</strong><big>)</big><a class="headerlink" href="#void getInitStep(OutputArray step)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>step</strong> &#8211; Initial step that will be used in algorithm. Note, that although corresponding setter accepts column-vectors as well as row-vectors, this method will return a row-vector.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="downhillsolver-setinitstep">
+<h2>DownhillSolver::setInitStep<a class="headerlink" href="#downhillsolver-setinitstep" title="Permalink to this headline">¶</a></h2>
+<p>Sets the initial step that will be used in downhill simplex algorithm. Step, together with initial point (givin in <tt class="docutils literal"><span class="pre">DownhillSolver::minimize</span></tt>)
+are two <em>n</em>-dimensional vectors that are used to determine the shape of initial simplex. Roughly said, initial point determines the position
+of a simplex (it will become simplex&#8217;s centroid), while step determines the spread (size in each dimension) of a simplex. To be more precise,
+if <span class="math">s,x_0\in\mathbb{R}^n</span> are the initial step and initial point respectively, the vertices of a simplex will be: <span class="math">v_0:=x_0-\frac{1}{2}
+s</span> and <span class="math">v_i:=x_0+s_i</span> for <span class="math">i=1,2,\dots,n</span> where <span class="math">s_i</span> denotes projections of the initial step of <em>n</em>-th coordinate (the result
+of projection is treated to be vector given by <span class="math">s_i:=e_i\cdot\left&lt;e_i\cdot s\right&gt;</span>, where <span class="math">e_i</span> form canonical basis)</p>
+<dl class="function">
+<dt id="void setInitStep(InputArray step)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">setInitStep</tt><big>(</big>InputArray <strong>step</strong><big>)</big><a class="headerlink" href="#void setInitStep(InputArray step)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>step</strong> &#8211; Initial step that will be used in algorithm. Roughly said, it determines the spread (size in each dimension) of an initial simplex.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="downhillsolver-minimize">
+<h2>DownhillSolver::minimize<a class="headerlink" href="#downhillsolver-minimize" title="Permalink to this headline">¶</a></h2>
+<p>The main method of the <tt class="docutils literal"><span class="pre">DownhillSolver</span></tt>. It actually runs the algorithm and performs the minimization. The sole input parameter determines the
+centroid of the starting simplex (roughly, it tells where to start), all the others (terminal criteria, initial step, function to be minimized)
+are supposed to be set via the setters before the call to this method or the default values (not always sensible) will be used.</p>
+<dl class="function">
+<dt id="double DownhillSolver::minimize(InputOutputArray x)">
+<strong>C++:</strong><tt class="descname"> </tt>double <tt class="descclassname">DownhillSolver::</tt><tt class="descname">minimize</tt><big>(</big>InputOutputArray <strong>x</strong><big>)</big><a class="headerlink" href="#double DownhillSolver::minimize(InputOutputArray x)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong> &#8211; The initial point, that will become a centroid of an initial simplex. After the algorithm will terminate, it will be setted to the point where the algorithm stops, the point of possible minimum.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The value of a function at the point found.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="createdownhillsolver">
+<h2>createDownhillSolver<a class="headerlink" href="#createdownhillsolver" title="Permalink to this headline">¶</a></h2>
+<p>This function returns the reference to the ready-to-use <tt class="docutils literal"><span class="pre">DownhillSolver</span></tt> object. All the parameters are optional, so this procedure can be called
+even without parameters at all. In this case, the default values will be used. As default value for terminal criteria are the only sensible ones,
+<tt class="docutils literal"><span class="pre">DownhillSolver::setFunction()</span></tt> and <tt class="docutils literal"><span class="pre">DownhillSolver::setInitStep()</span></tt> should be called upon the obtained object, if the respective parameters
+were not given to <tt class="docutils literal"><span class="pre">createDownhillSolver()</span></tt>. Otherwise, the two ways (give parameters to <tt class="docutils literal"><span class="pre">createDownhillSolver()</span></tt> or miss them out and call the
+<tt class="docutils literal"><span class="pre">DownhillSolver::setFunction()</span></tt> and <tt class="docutils literal"><span class="pre">DownhillSolver::setInitStep()</span></tt>) are absolutely equivalent (and will drop the same errors in the same way,
+should invalid input be detected).</p>
+<dl class="function">
+<dt id="Ptr&lt;DownhillSolver&gt; createDownhillSolver(const Ptr&lt;Solver::Function&gt;&amp; f,InputArray initStep, TermCriteria termcrit)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;DownhillSolver&gt; <tt class="descname">createDownhillSolver</tt><big>(</big>const Ptr&lt;Solver::Function&gt;&amp; <strong>f</strong>, InputArray <strong>initStep</strong>, TermCriteria <strong>termcrit</strong><big>)</big><a class="headerlink" href="#Ptr<DownhillSolver> createDownhillSolver(const Ptr<Solver::Function>& f,InputArray initStep, TermCriteria termcrit)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>f</strong> &#8211; Pointer to the function that will be minimized, similarly to the one you submit via <tt class="docutils literal"><span class="pre">DownhillSolver::setFunction</span></tt>.</li>
+<li><strong>step</strong> &#8211; Initial step, that will be used to construct the initial simplex, similarly to the one you submit via <tt class="docutils literal"><span class="pre">DownhillSolver::setInitStep</span></tt>.</li>
+<li><strong>termcrit</strong> &#8211; Terminal criteria to the algorithm, similarly to the one you submit via <tt class="docutils literal"><span class="pre">DownhillSolver::setTermCriteria</span></tt>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="conjgradsolver">
+<h2>ConjGradSolver<a class="headerlink" href="#conjgradsolver" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ConjGradSolver">
+<em class="property">class </em><tt class="descname">ConjGradSolver</tt><a class="headerlink" href="#ConjGradSolver" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This class is used to perform the non-linear non-constrained <em>minimization</em> of a function with <em>known gradient</em>
+, defined on an <em>n</em>-dimensional Euclidean space,
+using the <strong>Nonlinear Conjugate Gradient method</strong>. The implementation was done based on the beautifully clear explanatory article <a class="reference external" href="http://www.cs.cmu.edu/~quake-papers/painless-conjugate-gradient.pdf">An Introduction to the Conjugate Gradient Method Without the Agonizing Pain</a>
+by Jonathan Richard Shewchuk. The method can be seen as an adaptation of a standard Conjugate Gradient method (see, for example
+<a class="reference external" href="http://en.wikipedia.org/wiki/Conjugate_gradient_method">http://en.wikipedia.org/wiki/Conjugate_gradient_method</a>) for numerically solving the
+systems of linear equations.</p>
+<p>It should be noted, that
+this method, although deterministic, is rather a heuristic method and therefore may converge to a local minima, not necessary a global one. What
+is even more disastrous, most of its behaviour is ruled by gradient, therefore it essentially cannot distinguish between local minima and maxima.
+Therefore, if it starts sufficiently near to the local maximum, it may converge to it. Another obvious restriction is that it should be possible
+to compute the gradient of a function at any point, thus it is preferable to have analytic expression for gradient and computational burden
+should be born by the user.</p>
+<p>The latter responsibility is accompilished via the <tt class="docutils literal"><span class="pre">getGradient(const</span> <span class="pre">double*</span> <span class="pre">x,double*</span> <span class="pre">grad)</span></tt> method of a
+<tt class="docutils literal"><span class="pre">Solver::Function</span></tt> interface (which represents function that is being optimized). This method takes point a point in <em>n</em>-dimensional space
+(first argument represents the array of coordinates of that point) and comput its gradient (it should be stored in the second argument as an array).</p>
+<blockquote>
+<div><div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">Solver</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Algorithm</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">Function</span>
+    <span class="p">{</span>
+    <span class="k">public</span><span class="o">:</span>
+       <span class="k">virtual</span> <span class="o">~</span><span class="n">Function</span><span class="p">()</span> <span class="p">{}</span>
+       <span class="k">virtual</span> <span class="kt">double</span> <span class="n">calc</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span><span class="o">*</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+       <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">getGradient</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span><span class="o">*</span> <span class="cm">/*x*/</span><span class="p">,</span><span class="kt">double</span><span class="o">*</span> <span class="cm">/*grad*/</span><span class="p">)</span> <span class="p">{}</span>
+    <span class="p">};</span>
+
+    <span class="k">virtual</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">Function</span><span class="o">&gt;</span> <span class="n">getFunction</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setFunction</span><span class="p">(</span><span class="k">const</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">Function</span><span class="o">&gt;&amp;</span> <span class="n">f</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="n">TermCriteria</span> <span class="n">getTermCriteria</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setTermCriteria</span><span class="p">(</span><span class="k">const</span> <span class="n">TermCriteria</span><span class="o">&amp;</span> <span class="n">termcrit</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">// x contain the initial point before the call and the minima position (if algorithm converged) after. x is assumed to be (something that</span>
+    <span class="c1">// after getMat() will return) row-vector or column-vector. *It&#39;s size  and should</span>
+    <span class="c1">// be consisted with previous dimensionality data given, if any (otherwise, it determines dimensionality)*</span>
+    <span class="k">virtual</span> <span class="kt">double</span> <span class="n">minimize</span><span class="p">(</span><span class="n">InputOutputArray</span> <span class="n">x</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">ConjGradSolver</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Solver</span><span class="p">{</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Note, that class <tt class="docutils literal"><span class="pre">ConjGradSolver</span></tt> thus does not add any new methods to the basic <tt class="docutils literal"><span class="pre">Solver</span></tt> interface.</p>
+</div></blockquote>
+</div>
+<div class="section" id="conjgradsolver-getfunction">
+<h2>ConjGradSolver::getFunction<a class="headerlink" href="#conjgradsolver-getfunction" title="Permalink to this headline">¶</a></h2>
+<p>Getter for the optimized function. The optimized function is represented by <tt class="docutils literal"><span class="pre">Solver::Function</span></tt> interface, which requires
+derivatives to implement the method <tt class="docutils literal"><span class="pre">calc(double*)</span></tt> to evaluate the function. It should be emphasized once more, that since Nonlinear
+Conjugate Gradient method requires gradient to be computable in addition to the function values,
+<tt class="docutils literal"><span class="pre">getGradient(const</span> <span class="pre">double*</span> <span class="pre">x,double*</span> <span class="pre">grad)</span></tt> method of a <tt class="docutils literal"><span class="pre">Solver::Function</span></tt> interface should be also implemented meaningfully.</p>
+<dl class="function">
+<dt id="Ptr&lt;Solver::Function&gt; ConjGradSolver::getFunction()">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;Solver::Function&gt; <tt class="descclassname">ConjGradSolver::</tt><tt class="descname">getFunction</tt><big>(</big><big>)</big><a class="headerlink" href="#Ptr<Solver::Function> ConjGradSolver::getFunction()" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Smart-pointer to an object that implements <tt class="docutils literal"><span class="pre">Solver::Function</span></tt> interface - it represents the function that is being optimized. It can be empty, if no function was given so far.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="conjgradsolver-setfunction">
+<h2>ConjGradSolver::setFunction<a class="headerlink" href="#conjgradsolver-setfunction" title="Permalink to this headline">¶</a></h2>
+<p>Setter for the optimized function. <em>It should be called at least once before the call to</em> <tt class="docutils literal"><span class="pre">ConjGradSolver::minimize()</span></tt>, as
+default value is not usable.</p>
+<dl class="function">
+<dt id="void ConjGradSolver::setFunction(const Ptr&lt;Solver::Function&gt;&amp; f)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">ConjGradSolver::</tt><tt class="descname">setFunction</tt><big>(</big>const Ptr&lt;Solver::Function&gt;&amp; <strong>f</strong><big>)</big><a class="headerlink" href="#void ConjGradSolver::setFunction(const Ptr<Solver::Function>& f)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>f</strong> &#8211; The new function to optimize.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="conjgradsolver-gettermcriteria">
+<h2>ConjGradSolver::getTermCriteria<a class="headerlink" href="#conjgradsolver-gettermcriteria" title="Permalink to this headline">¶</a></h2>
+<p>Getter for the previously set terminal criteria for this algorithm.</p>
+<dl class="function">
+<dt id="TermCriteria ConjGradSolver::getTermCriteria()">
+<strong>C++:</strong><tt class="descname"> </tt>TermCriteria <tt class="descclassname">ConjGradSolver::</tt><tt class="descname">getTermCriteria</tt><big>(</big><big>)</big><a class="headerlink" href="#TermCriteria ConjGradSolver::getTermCriteria()" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Deep copy of the terminal criteria used at the moment.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="conjgradsolver-settermcriteria">
+<h2>ConjGradSolver::setTermCriteria<a class="headerlink" href="#conjgradsolver-settermcriteria" title="Permalink to this headline">¶</a></h2>
+<p>Set terminal criteria for downhill simplex method. Two things should be noted. First, this method <em>is not necessary</em> to be called
+before the first call to <tt class="docutils literal"><span class="pre">ConjGradSolver::minimize()</span></tt>, as the default value is sensible. Second, the method will raise an error
+if <tt class="docutils literal"><span class="pre">termcrit.type!=(TermCriteria::MAX_ITER+TermCriteria::EPS)</span></tt> and <tt class="docutils literal"><span class="pre">termcrit.type!=TermCriteria::MAX_ITER</span></tt>. This means that termination criteria
+has to restrict maximum number of iterations to be done and may optionally allow algorithm to stop earlier if certain tolerance
+is achieved (what we mean by &#8220;tolerance is achieved&#8221; will be clarified below). If <tt class="docutils literal"><span class="pre">termcrit</span></tt> restricts both tolerance and maximum iteration
+number, both <tt class="docutils literal"><span class="pre">termcrit.epsilon</span></tt> and <tt class="docutils literal"><span class="pre">termcrit.maxCount</span></tt> should be positive. In case, if <tt class="docutils literal"><span class="pre">termcrit.type==TermCriteria::MAX_ITER</span></tt>,
+only member <tt class="docutils literal"><span class="pre">termcrit.maxCount</span></tt> is required to be positive and in this case algorithm will just work for required number of iterations.</p>
+<p>In current implementation, &#8220;tolerance is achieved&#8221; means that we have arrived at the point where the <span class="math">L_2</span>-norm of the gradient is less
+than the tolerance value.</p>
+<dl class="function">
+<dt id="void ConjGradSolver::setTermCriteria(const TermCriteria&amp; termcrit)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">ConjGradSolver::</tt><tt class="descname">setTermCriteria</tt><big>(</big>const TermCriteria&amp; <strong>termcrit</strong><big>)</big><a class="headerlink" href="#void ConjGradSolver::setTermCriteria(const TermCriteria& termcrit)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>termcrit</strong> &#8211; Terminal criteria to be used, represented as <tt class="docutils literal"><span class="pre">TermCriteria</span></tt> structure (defined elsewhere in openCV). Mind you, that it should meet <tt class="docutils literal"><span class="pre">termcrit.type==(TermCriteria::MAX_ITER+TermCriteria::EPS)</span> <span class="pre">&amp;&amp;</span> <span class="pre">termcrit.epsilon&gt;0</span> <span class="pre">&amp;&amp;</span> <span class="pre">termcrit.maxCount&gt;0</span></tt> or <tt class="docutils literal"><span class="pre">termcrit.type==TermCriteria::MAX_ITER)</span> <span class="pre">&amp;&amp;</span> <span class="pre">termcrit.maxCount&gt;0</span></tt>, otherwise the error will be raised.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="conjgradsolver-minimize">
+<h2>ConjGradSolver::minimize<a class="headerlink" href="#conjgradsolver-minimize" title="Permalink to this headline">¶</a></h2>
+<p>The main method of the <tt class="docutils literal"><span class="pre">ConjGradSolver</span></tt>. It actually runs the algorithm and performs the minimization. The sole input parameter determines the
+centroid of the starting simplex (roughly, it tells where to start), all the others (terminal criteria and function to be minimized)
+are supposed to be set via the setters before the call to this method or the default values (not always sensible) will be used. Sometimes it may
+throw an error, if these default values cannot be used (say, you forgot to set the function to minimize and default value, that is, empty function,
+cannot be used).</p>
+<dl class="function">
+<dt id="double ConjGradSolver::minimize(InputOutputArray x)">
+<strong>C++:</strong><tt class="descname"> </tt>double <tt class="descclassname">ConjGradSolver::</tt><tt class="descname">minimize</tt><big>(</big>InputOutputArray <strong>x</strong><big>)</big><a class="headerlink" href="#double ConjGradSolver::minimize(InputOutputArray x)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong> &#8211; The initial point. It is hard to overemphasize how important the choise of initial point is when you are using the heuristic algorithm like this one. Badly chosen initial point can make algorithm converge to (local) maximum instead of minimum, do not converge at all, converge to local minimum instead of global one.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The value of a function at the point found.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="createconjgradsolver">
+<h2>createConjGradSolver<a class="headerlink" href="#createconjgradsolver" title="Permalink to this headline">¶</a></h2>
+<p>This function returns the reference to the ready-to-use <tt class="docutils literal"><span class="pre">ConjGradSolver</span></tt> object. All the parameters are optional, so this procedure can be called
+even without parameters at all. In this case, the default values will be used. As default value for terminal criteria are the only sensible ones,
+<tt class="docutils literal"><span class="pre">ConjGradSolver::setFunction()</span></tt> should be called upon the obtained object, if the function
+was not given to <tt class="docutils literal"><span class="pre">createConjGradSolver()</span></tt>. Otherwise, the two ways (submit it to <tt class="docutils literal"><span class="pre">createConjGradSolver()</span></tt> or miss it out and call the
+<tt class="docutils literal"><span class="pre">ConjGradSolver::setFunction()</span></tt>) are absolutely equivalent (and will drop the same errors in the same way,
+should invalid input be detected).</p>
+<dl class="function">
+<dt id="Ptr&lt;ConjGradSolver&gt; createConjGradSolver(const Ptr&lt;Solver::Function&gt;&amp; f, TermCriteria termcrit)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;ConjGradSolver&gt; <tt class="descname">createConjGradSolver</tt><big>(</big>const Ptr&lt;Solver::Function&gt;&amp; <strong>f</strong>, TermCriteria <strong>termcrit</strong><big>)</big><a class="headerlink" href="#Ptr<ConjGradSolver> createConjGradSolver(const Ptr<Solver::Function>& f, TermCriteria termcrit)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>f</strong> &#8211; Pointer to the function that will be minimized, similarly to the one you submit via <tt class="docutils literal"><span class="pre">ConjGradSolver::setFunction</span></tt>.</li>
+<li><strong>termcrit</strong> &#8211; Terminal criteria to the algorithm, similarly to the one you submit via <tt class="docutils literal"><span class="pre">ConjGradSolver::setTermCriteria</span></tt>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../imgproc/doc/imgproc.html" title="imgproc. Image Processing"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="ipp_async_converters.html" title="Intel® IPP Asynchronous C/C++ Converters"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="core.html" >core. The Core Functionality</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/core/doc/optim.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

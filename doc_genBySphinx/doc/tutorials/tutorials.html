@@ -1,0 +1,365 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>OpenCV Tutorials &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../index.html" />
+    <link rel="next" title="Introduction to OpenCV" href="introduction/table_of_content_introduction/table_of_content_introduction.html" />
+    <link rel="prev" title="HighGUI" href="../user_guide/ug_intelperc.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="introduction/table_of_content_introduction/table_of_content_introduction.html" title="Introduction to OpenCV"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../user_guide/ug_intelperc.html" title="HighGUI"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../user_guide/ug_intelperc.html"
+                        title="previous chapter">HighGUI</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="introduction/table_of_content_introduction/table_of_content_introduction.html"
+                        title="next chapter">Introduction to OpenCV</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="opencv-tutorials">
+<h1>OpenCV Tutorials<a class="headerlink" href="#opencv-tutorials" title="Permalink to this headline">¶</a></h1>
+<p>The following links describe a set of basic OpenCV  tutorials. All the source code mentioned here is provided as part of the OpenCV regular releases, so check before you start copy &amp; pasting the code. The list of tutorials below is automatically generated from reST files located in our GIT repository.</p>
+<p>As always, we would be happy to hear your comments and receive your contributions on any tutorial.</p>
+<ul>
+<li><p class="first"><a class="reference internal" href="introduction/table_of_content_introduction/table_of_content_introduction.html#table-of-content-introduction"><em>Introduction to OpenCV</em></a></p>
+<table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="17%" />
+<col width="83%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../_images/introduction.jpg"><img alt="Introduction Icon" src="../../_images/introduction.jpg" style="width: 80pt; height: 80pt;" /></a></td>
+<td>You will learn how to setup OpenCV on your computer!</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p class="first"><a class="reference internal" href="core/table_of_content_core/table_of_content_core.html#table-of-content-core"><em>core module. The Core Functionality</em></a></p>
+<table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="6%" />
+<col width="94%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../_images/core1.jpg"><img alt="core Icon" src="../../_images/core1.jpg" style="width: 80pt; height: 80pt;" /></a></td>
+<td>Here you will learn the about the basic building blocks of the library. A must read and know for     understanding how to manipulate the images on a pixel level.</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p class="first"><a class="reference internal" href="imgproc/table_of_content_imgproc/table_of_content_imgproc.html#table-of-content-imgproc"><em>imgproc module. Image Processing</em></a></p>
+<table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../_images/imgproc1.jpg"><img alt="imgproc Icon" src="../../_images/imgproc1.jpg" style="width: 80pt; height: 80pt;" /></a></td>
+<td>In this section you will learn about the image processing (manipulation) functions inside OpenCV.</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p class="first"><a class="reference internal" href="highgui/table_of_content_highgui/table_of_content_highgui.html#table-of-content-highgui"><em>highgui module. High Level GUI and Media</em></a></p>
+<table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="7%" />
+<col width="93%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../_images/highgui.jpg"><img alt="highgui Icon" src="../../_images/highgui.jpg" style="width: 80pt; height: 80pt;" /></a></td>
+<td>This section contains valuable tutorials about how to read/save your image/video files and how to use the built-in graphical user interface of the library.</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p class="first"><a class="reference internal" href="calib3d/table_of_content_calib3d/table_of_content_calib3d.html#table-of-content-calib3d"><em>calib3d module. Camera calibration and 3D reconstruction</em></a></p>
+<table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="6%" />
+<col width="94%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../_images/calib3d.jpg"><img alt="calib3d Icon" src="../../_images/calib3d.jpg" style="width: 80pt; height: 80pt;" /></a></td>
+<td>Although we got most of our images in a 2D format they do come from a 3D world. Here you will learn how to find out from the 2D images information about the 3D world.</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p class="first"><a class="reference internal" href="features2d/table_of_content_features2d/table_of_content_features2d.html#table-of-content-feature2d"><em>feature2d module. 2D Features framework</em></a></p>
+<table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="9%" />
+<col width="91%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../_images/feature2D.jpg"><img alt="feature2D Icon" src="../../_images/feature2D.jpg" style="width: 80pt; height: 80pt;" /></a></td>
+<td>Learn about how to use the feature points  detectors, descriptors and matching framework found inside OpenCV.</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p class="first"><a class="reference internal" href="video/table_of_content_video/table_of_content_video.html#table-of-content-video"><em>video module. Video analysis</em></a></p>
+<table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="7%" />
+<col width="93%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../_images/video.jpg"><img alt="video Icon" src="../../_images/video.jpg" style="width: 80pt; height: 80pt;" /></a></td>
+<td>Look here in order to find algorithms usable on your video streams like: motion extraction, feature tracking and foreground extractions.</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p class="first"><a class="reference internal" href="objdetect/table_of_content_objdetect/table_of_content_objdetect.html#table-of-content-objdetect"><em>objdetect module. Object Detection</em></a></p>
+<table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="11%" />
+<col width="89%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../_images/objdetect.jpg"><img alt="objdetect Icon" src="../../_images/objdetect.jpg" style="width: 80pt; height: 80pt;" /></a></td>
+<td>Ever wondered how your digital camera detects peoples and faces? Look here to find out!</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p class="first"><a class="reference internal" href="ml/table_of_content_ml/table_of_content_ml.html#table-of-content-ml"><em>ml module. Machine Learning</em></a></p>
+<table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="9%" />
+<col width="91%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../_images/ml.jpg"><img alt="ml Icon" src="../../_images/ml.jpg" style="width: 80pt; height: 80pt;" /></a></td>
+<td>Use the powerful machine learning classes for statistical classification, regression and clustering of data.</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p class="first"><a class="reference internal" href="photo/table_of_content_photo/table_of_content_photo.html#table-of-content-photo"><em>photo module. Computational photography</em></a></p>
+<table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="17%" />
+<col width="83%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../_images/photo.png"><img alt="photo Icon" src="../../_images/photo.png" style="width: 80pt; height: 80pt;" /></a></td>
+<td>Use OpenCV for advanced photo processing.</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p class="first"><a class="reference internal" href="gpu/table_of_content_gpu/table_of_content_gpu.html#table-of-content-gpu"><em>gpu module. GPU-Accelerated Computer Vision</em></a></p>
+<table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="8%" />
+<col width="92%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../_images/gpu.jpg"><img alt="gpu icon" src="../../_images/gpu.jpg" style="width: 80pt; height: 80pt;" /></a></td>
+<td>Squeeze out every little computation power from your system by using the power of your video card to run the OpenCV algorithms.</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p class="first"><a class="reference internal" href="ios/table_of_content_ios/table_of_content_ios.html#table-of-content-ios"><em>OpenCV iOS</em></a></p>
+<table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="17%" />
+<col width="83%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../_images/opencv_ios1.png"><img alt="gpu icon" src="../../_images/opencv_ios1.png" style="width: 80pt; height: 80pt;" /></a></td>
+<td>Run OpenCV and your vision apps on an iDevice</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<div></div></blockquote>
+</li>
+<li><p class="first"><a class="reference internal" href="viz/table_of_content_viz/table_of_content_viz.html#table-of-content-viz"><em>OpenCV Viz</em></a></p>
+<table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="16%" />
+<col width="84%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../_images/viz.jpg"><img alt="viz icon" src="../../_images/viz.jpg" style="width: 80pt; height: 80pt;" /></a></td>
+<td>These tutorials show how to use Viz module effectively.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<div></div></blockquote>
+</li>
+<li><p class="first"><a class="reference internal" href="general/table_of_content_general/table_of_content_general.html#table-of-content-general"><em>General tutorials</em></a></p>
+<blockquote>
+<div></div></blockquote>
+<table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="7%" />
+<col width="93%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../_images/general.jpg"><img alt="General Icon" src="../../_images/general.jpg" style="width: 80pt; height: 80pt;" /></a></td>
+<td>These tutorials are the bottom of the iceberg as they link together multiple of the modules presented above in order to solve complex problems.</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="introduction/table_of_content_introduction/table_of_content_introduction.html" title="Introduction to OpenCV"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../user_guide/ug_intelperc.html" title="HighGUI"
+             >previous</a> |</li>
+        <li><a href="../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../_sources/doc/tutorials/tutorials.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Install OpenCV-Python in Windows &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../../index.html" />
+    <link rel="up" title="Introduction to OpenCV" href="../py_table_of_contents_setup/py_table_of_contents_setup.html" />
+    <link rel="next" title="Install OpenCV-Python in Fedora" href="../py_setup_in_fedora/py_setup_in_fedora.html" />
+    <link rel="prev" title="Introduction to OpenCV-Python Tutorials" href="../py_intro/py_intro.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py_setup_in_fedora/py_setup_in_fedora.html" title="Install OpenCV-Python in Fedora"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../py_intro/py_intro.html" title="Introduction to OpenCV-Python Tutorials"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_setup/py_table_of_contents_setup.html" accesskey="U">Introduction to OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Install OpenCV-Python in Windows</a><ul>
+<li><a class="reference internal" href="#goals">Goals</a></li>
+<li><a class="reference internal" href="#installing-opencv-from-prebuilt-binaries">Installing OpenCV from prebuilt binaries</a></li>
+<li><a class="reference internal" href="#building-opencv-from-source">Building OpenCV from source</a></li>
+<li><a class="reference internal" href="#additional-resources">Additional Resources</a></li>
+<li><a class="reference internal" href="#exercises">Exercises</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../py_intro/py_intro.html"
+                        title="previous chapter">Introduction to OpenCV-Python Tutorials</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../py_setup_in_fedora/py_setup_in_fedora.html"
+                        title="next chapter">Install OpenCV-Python in Fedora</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="install-opencv-python-in-windows">
+<span id="id1"></span><h1>Install OpenCV-Python in Windows<a class="headerlink" href="#install-opencv-python-in-windows" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goals">
+<h2>Goals<a class="headerlink" href="#goals" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>In this tutorial</dt>
+<dd><ul class="first last simple">
+<li>We will learn to setup OpenCV-Python in your Windows system.</li>
+</ul>
+</dd>
+</dl>
+<p><em>Below steps are tested in a Windows 7-64 bit machine with Visual Studio 2010 and Visual Studio 2012. The screenshots shows VS2012.</em></p>
+</div>
+<div class="section" id="installing-opencv-from-prebuilt-binaries">
+<h2>Installing OpenCV from prebuilt binaries<a class="headerlink" href="#installing-opencv-from-prebuilt-binaries" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Below Python packages are to be downloaded and installed to their default locations.</p>
+<blockquote>
+<div><p>1.1. <a class="reference external" href="http://python.org/ftp/python/2.7.5/python-2.7.5.msi">Python-2.7.x</a>.</p>
+<p>1.2. <a class="reference external" href="http://sourceforge.net/projects/numpy/files/NumPy/1.7.1/numpy-1.7.1-win32-superpack-python2.7.exe/download">Numpy</a>.</p>
+<p>1.3. <a class="reference external" href="https://downloads.sourceforge.net/project/matplotlib/matplotlib/matplotlib-1.3.0/matplotlib-1.3.0.win32-py2.7.exe">Matplotlib</a> (<em>Matplotlib is optional, but recommended since we use it a lot in our tutorials</em>).</p>
+</div></blockquote>
+</li>
+<li><p class="first">Install all packages into their default locations. Python will be installed to <strong>C:/Python27/</strong>.</p>
+</li>
+<li><p class="first">After installation, open Python IDLE. Enter <tt class="docutils literal"><span class="pre">import</span> <span class="pre">numpy</span></tt> and make sure Numpy is working fine.</p>
+</li>
+<li><p class="first">Download latest OpenCV release from <a class="reference external" href="http://sourceforge.net/projects/opencvlibrary/files/opencv-win/2.4.6/OpenCV-2.4.6.0.exe/download">sourceforge site</a> and double-click to extract it.</p>
+</li>
+</ol>
+<ol class="arabic" start="7">
+<li><p class="first">Goto <strong>opencv/build/python/2.7</strong> folder.</p>
+</li>
+<li><p class="first">Copy <strong>cv2.pyd</strong> to <strong>C:/Python27/lib/site-packages</strong>.</p>
+</li>
+<li><p class="first">Open Python IDLE and type following codes in Python terminal.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cv2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">cv2</span><span class="o">.</span><span class="n">__version__</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>If the results are printed out without any errors, congratulations !!! You have installed OpenCV-Python successfully.</p>
+</div>
+<div class="section" id="building-opencv-from-source">
+<h2>Building OpenCV from source<a class="headerlink" href="#building-opencv-from-source" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Download and install Visual Studio and CMake.</p>
+<blockquote>
+<div><p>1.1. <a class="reference external" href="http://go.microsoft.com/?linkid=9816768">Visual Studio 2012</a></p>
+<p>1.2. <a class="reference external" href="http://www.cmake.org/files/v2.8/cmake-2.8.11.2-win32-x86.exe">CMake</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">Download and install necessary Python packages to their default locations</p>
+<blockquote>
+<div><p>2.1. <a class="reference external" href="http://python.org/ftp/python/2.7.5/python-2.7.5.msi">Python 2.7.x</a></p>
+<p>2.2. <a class="reference external" href="http://sourceforge.net/projects/numpy/files/NumPy/1.7.1/numpy-1.7.1-win32-superpack-python2.7.exe/download">Numpy</a></p>
+<p>2.3. <a class="reference external" href="https://downloads.sourceforge.net/project/matplotlib/matplotlib/matplotlib-1.3.0/matplotlib-1.3.0.win32-py2.7.exe">Matplotlib</a> (<em>Matplotlib is optional, but recommended since we use it a lot in our tutorials.</em>)</p>
+</div></blockquote>
+</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In this case, we are using 32-bit binaries of Python packages. But if you want to use OpenCV for x64, 64-bit binaries of Python packages are to be installed. Problem is that, there is no official 64-bit binaries of Numpy. You have to build it on your own. For that, you have to use the same compiler used to build Python. When you start Python IDLE, it shows the compiler details. You can get more <a class="reference external" href="http://stackoverflow.com/q/2676763/1134940">information here</a>. So your system must have the same Visual Studio version and build Numpy from source.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Another method to have 64-bit Python packages is to use ready-made Python distributions from third-parties like <a class="reference external" href="http://www.continuum.io/downloads">Anaconda</a>, <a class="reference external" href="https://www.enthought.com/downloads/">Enthought</a> etc. It will be bigger in size, but will have everything you need. Everything in a single shell. You can also download 32-bit versions also.</p>
+</div>
+<ol class="arabic" start="3">
+<li><p class="first">Make sure Python and Numpy are working fine.</p>
+</li>
+<li><p class="first">Download OpenCV source. It can be from <a class="reference external" href="http://sourceforge.net/projects/opencvlibrary/">Sourceforge</a> (for official release version) or from <a class="reference external" href="https://github.com/Itseez/opencv">Github</a> (for latest source).</p>
+</li>
+<li><p class="first">Extract it to a folder, <tt class="docutils literal"><span class="pre">opencv</span></tt> and create a new folder <tt class="docutils literal"><span class="pre">build</span></tt> in it.</p>
+</li>
+<li><p class="first">Open CMake-gui (<em>Start &gt; All Programs &gt; CMake-gui</em>)</p>
+</li>
+<li><p class="first">Fill the fields as follows (see the image below):</p>
+<blockquote>
+<div><p>7.1. Click on <strong>Browse Source...</strong> and locate the <tt class="docutils literal"><span class="pre">opencv</span></tt> folder.</p>
+<p>7.2. Click on <strong>Browse Build...</strong> and locate the <tt class="docutils literal"><span class="pre">build</span></tt> folder we created.</p>
+<p>7.3. Click on <strong>Configure</strong>.</p>
+<blockquote>
+<div><img alt="capture1" class="align-center" src="../../../../_images/Capture1.jpg" />
+</div></blockquote>
+<p>7.4. It will open a new window to select the compiler. Choose appropriate compiler (here, Visual Studio 11) and click <strong>Finish</strong>.</p>
+<blockquote>
+<div><img alt="capture2" class="align-center" src="../../../../_images/Capture2.png" />
+</div></blockquote>
+<p>7.5. Wait until analysis is finished.</p>
+</div></blockquote>
+</li>
+<li><p class="first">You will see all the fields are marked in red. Click on the <strong>WITH</strong> field to expand it. It decides what extra features you need. So mark appropriate fields. See the below image:</p>
+<blockquote>
+<div><img alt="capture3" class="align-center" src="../../../../_images/Capture3.png" />
+</div></blockquote>
+</li>
+<li><p class="first">Now click on <strong>BUILD</strong> field to expand it. First few fields configure the build method. See the below image:</p>
+<blockquote>
+<div><img alt="capture5" class="align-center" src="../../../../_images/Capture5.png" />
+</div></blockquote>
+</li>
+<li><p class="first">Remaining fields specify what modules are to be built. Since GPU modules are not yet supported by OpenCV-Python, you can completely avoid it to save time (But if you work with them, keep it there). See the image below:</p>
+<img alt="capture6" class="align-center" src="../../../../_images/Capture6.png" />
+</li>
+<li><p class="first">Now click on <strong>ENABLE</strong> field to expand it. Make sure <strong>ENABLE_SOLUTION_FOLDERS</strong> is unchecked (Solution folders are not supported by Visual Studio Express edition). See the image below:</p>
+<img alt="capture7" class="align-center" src="../../../../_images/Capture7.png" />
+</li>
+<li><p class="first">Also make sure that in the <strong>PYTHON</strong> field, everything is filled. (Ignore PYTHON_DEBUG_LIBRARY). See image below:</p>
+<img alt="capture80" class="align-center" src="../../../../_images/Capture80.png" />
+</li>
+<li><p class="first">Finally click the <strong>Generate</strong> button.</p>
+</li>
+<li><p class="first">Now go to our <strong>opencv/build</strong> folder. There you will find <strong>OpenCV.sln</strong> file. Open it with Visual Studio.</p>
+</li>
+<li><p class="first">Check build mode as <strong>Release</strong> instead of <strong>Debug</strong>.</p>
+</li>
+<li><p class="first">In the solution explorer, right-click on the <strong>Solution</strong> (or <strong>ALL_BUILD</strong>) and build it. It will take some time to finish.</p>
+</li>
+<li><p class="first">Again, right-click on <strong>INSTALL</strong> and build it. Now OpenCV-Python will be installed.</p>
+<img alt="capture8" class="align-center" src="../../../../_images/Capture8.png" />
+</li>
+<li><p class="first">Open Python IDLE and enter <tt class="docutils literal"><span class="pre">import</span> <span class="pre">cv2</span></tt>. If no error, it is installed correctly.</p>
+</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">We have installed with no other support like TBB, Eigen, Qt, Documentation etc. It would be difficult to explain it here. A more detailed video will be added soon or you can just hack around.</p>
+</div>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>If you have a windows machine, compile the OpenCV from source. Do all kinds of hacks. If you meet any problem, visit OpenCV forum and explain your problem.</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py_setup_in_fedora/py_setup_in_fedora.html" title="Install OpenCV-Python in Fedora"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../py_intro/py_intro.html" title="Introduction to OpenCV-Python Tutorials"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_setup/py_table_of_contents_setup.html" >Introduction to OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../../_sources/doc/py_tutorials/py_setup/py_setup_in_windows/py_setup_in_windows.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

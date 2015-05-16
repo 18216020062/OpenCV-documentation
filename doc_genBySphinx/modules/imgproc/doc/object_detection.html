@@ -1,0 +1,273 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Object Detection &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="imgproc. Image Processing" href="imgproc.html" />
+    <link rel="next" title="imgcodecs. Image file reading and writing" href="../../imgcodecs/doc/imgcodecs.html" />
+    <link rel="prev" title="Feature Detection" href="feature_detection.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../imgcodecs/doc/imgcodecs.html" title="imgcodecs. Image file reading and writing"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="feature_detection.html" title="Feature Detection"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="imgproc.html" accesskey="U">imgproc. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Object Detection</a><ul>
+<li><a class="reference internal" href="#matchtemplate">matchTemplate</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="feature_detection.html"
+                        title="previous chapter">Feature Detection</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../imgcodecs/doc/imgcodecs.html"
+                        title="next chapter">imgcodecs. Image file reading and writing</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="object-detection">
+<h1>Object Detection<a class="headerlink" href="#object-detection" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="matchtemplate">
+<h2>matchTemplate<a class="headerlink" href="#matchtemplate" title="Permalink to this headline">¶</a></h2>
+<p>Compares a template against overlapped image regions.</p>
+<dl class="function">
+<dt id="void matchTemplate(InputArray image, InputArray templ, OutputArray result, int method)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">matchTemplate</tt><big>(</big>InputArray <strong>image</strong>, InputArray <strong>templ</strong>, OutputArray <strong>result</strong>, int <strong>method</strong><big>)</big><a class="headerlink" href="#void matchTemplate(InputArray image, InputArray templ, OutputArray result, int method)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.matchTemplate">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.</tt><tt class="descname">matchTemplate</tt><big>(</big>image, templ, method<span class="optional">[</span>, result<span class="optional">]</span><big>)</big> &rarr; result<a class="headerlink" href="#cv2.matchTemplate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvMatchTemplate(const CvArr* image, const CvArr* templ, CvArr* result, int method)">
+<strong>C:</strong><tt class="descname"> </tt>void <tt class="descname">cvMatchTemplate</tt><big>(</big>const CvArr* <strong>image</strong>, const CvArr* <strong>templ</strong>, CvArr* <strong>result</strong>, int <strong>method</strong><big>)</big><a class="headerlink" href="#void cvMatchTemplate(const CvArr* image, const CvArr* templ, CvArr* result, int method)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; Image where the search is running. It must be 8-bit or 32-bit floating-point.</li>
+<li><strong>templ</strong> &#8211; Searched template. It must be not greater than the source image and have the same data type.</li>
+<li><strong>result</strong> &#8211; Map of comparison results. It must be single-channel 32-bit floating-point. If  <tt class="docutils literal"><span class="pre">image</span></tt>  is  <span class="math">W \times H</span>  and <tt class="docutils literal"><span class="pre">templ</span></tt>  is  <span class="math">w \times h</span> , then  <tt class="docutils literal"><span class="pre">result</span></tt>  is  <span class="math">(W-w+1) \times (H-h+1)</span> .</li>
+<li><strong>method</strong> &#8211; Parameter specifying the comparison method (see below).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function slides through <tt class="docutils literal"><span class="pre">image</span></tt> , compares the
+overlapped patches of size
+<span class="math">w \times h</span> against <tt class="docutils literal"><span class="pre">templ</span></tt> using the specified method and stores the comparison results in <tt class="docutils literal"><span class="pre">result</span></tt> . Here are the formulae for the available comparison
+methods (
+<span class="math">I</span> denotes <tt class="docutils literal"><span class="pre">image</span></tt>, <span class="math">T</span> <tt class="docutils literal"><span class="pre">template</span></tt>, <span class="math">R</span> <tt class="docutils literal"><span class="pre">result</span></tt> ). The summation is done over template and/or the
+image patch:
+<span class="math">x' = 0...w-1, y' = 0...h-1</span></p>
+<ul>
+<li><p class="first">method=CV_TM_SQDIFF</p>
+<blockquote>
+<div><div class="math">
+<p><span class="math">R(x,y)= \sum _{x',y'} (T(x',y')-I(x+x',y+y'))^2</span></p>
+</div></div></blockquote>
+</li>
+<li><p class="first">method=CV_TM_SQDIFF_NORMED</p>
+<blockquote>
+<div><div class="math">
+<p><span class="math">R(x,y)= \frac{\sum_{x',y'} (T(x',y')-I(x+x',y+y'))^2}{\sqrt{\sum_{x',y'}T(x',y')^2 \cdot \sum_{x',y'} I(x+x',y+y')^2}}</span></p>
+</div></div></blockquote>
+</li>
+<li><p class="first">method=CV_TM_CCORR</p>
+<blockquote>
+<div><div class="math">
+<p><span class="math">R(x,y)= \sum _{x',y'} (T(x',y')  \cdot I(x+x',y+y'))</span></p>
+</div></div></blockquote>
+</li>
+<li><p class="first">method=CV_TM_CCORR_NORMED</p>
+<blockquote>
+<div><div class="math">
+<p><span class="math">R(x,y)= \frac{\sum_{x',y'} (T(x',y') \cdot I(x+x',y+y'))}{\sqrt{\sum_{x',y'}T(x',y')^2 \cdot \sum_{x',y'} I(x+x',y+y')^2}}</span></p>
+</div></div></blockquote>
+</li>
+<li><p class="first">method=CV_TM_CCOEFF</p>
+<blockquote>
+<div><div class="math">
+<p><span class="math">R(x,y)= \sum _{x',y'} (T'(x',y')  \cdot I'(x+x',y+y'))</span></p>
+</div><p>where</p>
+<div class="math">
+<p><span class="math">\begin{array}{l} T'(x',y')=T(x',y') - 1/(w  \cdot h)  \cdot \sum _{x'',y''} T(x'',y'') \\ I'(x+x',y+y')=I(x+x',y+y') - 1/(w  \cdot h)  \cdot \sum _{x'',y''} I(x+x'',y+y'') \end{array}</span></p>
+</div></div></blockquote>
+</li>
+<li><p class="first">method=CV_TM_CCOEFF_NORMED</p>
+<blockquote>
+<div><div class="math">
+<p><span class="math">R(x,y)= \frac{ \sum_{x',y'} (T'(x',y') \cdot I'(x+x',y+y')) }{ \sqrt{\sum_{x',y'}T'(x',y')^2 \cdot \sum_{x',y'} I'(x+x',y+y')^2} }</span></p>
+</div></div></blockquote>
+</li>
+</ul>
+<p>After the function finishes the comparison, the best matches can be found as global minimums (when <tt class="docutils literal"><span class="pre">CV_TM_SQDIFF</span></tt> was used) or maximums (when <tt class="docutils literal"><span class="pre">CV_TM_CCORR</span></tt> or <tt class="docutils literal"><span class="pre">CV_TM_CCOEFF</span></tt> was used) using the
+<a class="reference internal" href="../../core/doc/operations_on_arrays.html#void minMaxLoc(InputArray src, double* minVal, double* maxVal, Point* minLoc, Point* maxLoc, InputArray mask)" title="void minMaxLoc(InputArray src, double* minVal, double* maxVal, Point* minLoc, Point* maxLoc, InputArray mask)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">minMaxLoc()</span></tt></a> function. In case of a color image, template summation in the numerator and each sum in the denominator is done over all of the channels and separate mean values are used for each channel. That is, the function can take a color template and a color image. The result will still be a single-channel image, which is easier to analyze.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>(Python) An example on how to match mouse selected regions in an image can be found at opencv_source_code/samples/python2/mouse_and_match.py</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../imgcodecs/doc/imgcodecs.html" title="imgcodecs. Image file reading and writing"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="feature_detection.html" title="Feature Detection"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="imgproc.html" >imgproc. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/imgproc/doc/object_detection.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

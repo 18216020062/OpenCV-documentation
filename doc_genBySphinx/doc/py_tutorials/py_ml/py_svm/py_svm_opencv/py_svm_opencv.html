@@ -1,0 +1,312 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>OCR of Hand-written Data using SVM &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../../../index.html" />
+    <link rel="up" title="Support Vector Machines (SVM)" href="../py_svm_index.html" />
+    <link rel="next" title="K-Means Clustering" href="../../py_kmeans/py_kmeans_index.html" />
+    <link rel="prev" title="Understanding SVM" href="../py_svm_basics/py_svm_basics.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py_kmeans/py_kmeans_index.html" title="K-Means Clustering"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../py_svm_basics/py_svm_basics.html" title="Understanding SVM"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../../py_table_of_contents_ml/py_table_of_contents_ml.html" >Machine Learning</a> &raquo;</li>
+          <li><a href="../py_svm_index.html" accesskey="U">Support Vector Machines (SVM)</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../../index.html">
+              <img class="logo" src="../../../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">OCR of Hand-written Data using SVM</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#ocr-of-hand-written-digits">OCR of Hand-written Digits</a></li>
+<li><a class="reference internal" href="#additional-resources">Additional Resources</a></li>
+<li><a class="reference internal" href="#exercises">Exercises</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../py_svm_basics/py_svm_basics.html"
+                        title="previous chapter">Understanding SVM</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../py_kmeans/py_kmeans_index.html"
+                        title="next chapter">K-Means Clustering</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="ocr-of-hand-written-data-using-svm">
+<span id="svm-opencv"></span><h1>OCR of Hand-written Data using SVM<a class="headerlink" href="#ocr-of-hand-written-data-using-svm" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this chapter</p>
+<blockquote>
+<div><ul class="simple">
+<li>We will revisit the hand-written data OCR, but, with SVM instead of kNN.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="ocr-of-hand-written-digits">
+<h2>OCR of Hand-written Digits<a class="headerlink" href="#ocr-of-hand-written-digits" title="Permalink to this headline">¶</a></h2>
+<p>In kNN, we directly used pixel intensity as the feature vector. This time we will use <a class="reference external" href="http://en.wikipedia.org/wiki/Histogram_of_oriented_gradients">Histogram of Oriented Gradients</a> (HOG) as feature vectors.</p>
+<p>Here, before finding the HOG, we deskew the image using its second order moments. So we first define a function <strong>deskew()</strong> which takes a digit image and deskew it. Below is the deskew() function:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">deskew</span><span class="p">(</span><span class="n">img</span><span class="p">):</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">moments</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="s">&#39;mu02&#39;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">1e-2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">img</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">skew</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="s">&#39;mu11&#39;</span><span class="p">]</span><span class="o">/</span><span class="n">m</span><span class="p">[</span><span class="s">&#39;mu02&#39;</span><span class="p">]</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="n">skew</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">SZ</span><span class="o">*</span><span class="n">skew</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">warpAffine</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">M</span><span class="p">,(</span><span class="n">SZ</span><span class="p">,</span> <span class="n">SZ</span><span class="p">),</span><span class="n">flags</span><span class="o">=</span><span class="n">affine_flags</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">img</span>
+</pre></div>
+</div>
+<p>Below image shows above deskew function applied to an image of zero. Left image is the original image and right image is the deskewed image.</p>
+<blockquote>
+<div><img alt="Deskew" class="align-center" src="../../../../../_images/deskew.jpg" />
+</div></blockquote>
+<p>Next we have to find the HOG Descriptor of each cell. For that, we find Sobel derivatives of each cell in X and Y direction. Then find their magnitude and direction of gradient at each pixel. This gradient is quantized to 16 integer values. Divide this image to four sub-squares. For each sub-square, calculate the histogram of direction (16 bins) weighted with their magnitude. So each sub-square gives you a vector containing 16 values. Four such vectors (of four sub-squares) together gives us a feature vector containing 64 values. This is the feature vector we use to train our data.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">hog</span><span class="p">(</span><span class="n">img</span><span class="p">):</span>
+    <span class="n">gx</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">Sobel</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">CV_32F</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">gy</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">Sobel</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">CV_32F</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">mag</span><span class="p">,</span> <span class="n">ang</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cartToPolar</span><span class="p">(</span><span class="n">gx</span><span class="p">,</span> <span class="n">gy</span><span class="p">)</span>
+
+    <span class="c"># quantizing binvalues in (0...16)</span>
+    <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">bin_n</span><span class="o">*</span><span class="n">ang</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span>
+
+    <span class="c"># Divide to 4 sub-squares</span>
+    <span class="n">bin_cells</span> <span class="o">=</span> <span class="n">bins</span><span class="p">[:</span><span class="mi">10</span><span class="p">,:</span><span class="mi">10</span><span class="p">],</span> <span class="n">bins</span><span class="p">[</span><span class="mi">10</span><span class="p">:,:</span><span class="mi">10</span><span class="p">],</span> <span class="n">bins</span><span class="p">[:</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">:],</span> <span class="n">bins</span><span class="p">[</span><span class="mi">10</span><span class="p">:,</span><span class="mi">10</span><span class="p">:]</span>
+    <span class="n">mag_cells</span> <span class="o">=</span> <span class="n">mag</span><span class="p">[:</span><span class="mi">10</span><span class="p">,:</span><span class="mi">10</span><span class="p">],</span> <span class="n">mag</span><span class="p">[</span><span class="mi">10</span><span class="p">:,:</span><span class="mi">10</span><span class="p">],</span> <span class="n">mag</span><span class="p">[:</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">:],</span> <span class="n">mag</span><span class="p">[</span><span class="mi">10</span><span class="p">:,</span><span class="mi">10</span><span class="p">:]</span>
+    <span class="n">hists</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">m</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">bin_n</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">bin_cells</span><span class="p">,</span> <span class="n">mag_cells</span><span class="p">)]</span>
+    <span class="n">hist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="n">hists</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">hist</span>
+</pre></div>
+</div>
+<p>Finally, as in the previous case, we start by splitting our big dataset into individual cells. For every digit, 250 cells are reserved for training data and remaining 250 data is reserved for testing. Full code is given below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="n">SZ</span><span class="o">=</span><span class="mi">20</span>
+<span class="n">bin_n</span> <span class="o">=</span> <span class="mi">16</span> <span class="c"># Number of bins</span>
+
+<span class="n">svm_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span> <span class="n">kernel_type</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">SVM_LINEAR</span><span class="p">,</span>
+                    <span class="n">svm_type</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">SVM_C_SVC</span><span class="p">,</span>
+                    <span class="n">C</span><span class="o">=</span><span class="mf">2.67</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">5.383</span> <span class="p">)</span>
+
+<span class="n">affine_flags</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">WARP_INVERSE_MAP</span><span class="o">|</span><span class="n">cv2</span><span class="o">.</span><span class="n">INTER_LINEAR</span>
+
+<span class="k">def</span> <span class="nf">deskew</span><span class="p">(</span><span class="n">img</span><span class="p">):</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">moments</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="s">&#39;mu02&#39;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">1e-2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">img</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">skew</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="s">&#39;mu11&#39;</span><span class="p">]</span><span class="o">/</span><span class="n">m</span><span class="p">[</span><span class="s">&#39;mu02&#39;</span><span class="p">]</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="n">skew</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">SZ</span><span class="o">*</span><span class="n">skew</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">warpAffine</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">M</span><span class="p">,(</span><span class="n">SZ</span><span class="p">,</span> <span class="n">SZ</span><span class="p">),</span><span class="n">flags</span><span class="o">=</span><span class="n">affine_flags</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">img</span>
+
+<span class="k">def</span> <span class="nf">hog</span><span class="p">(</span><span class="n">img</span><span class="p">):</span>
+    <span class="n">gx</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">Sobel</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">CV_32F</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">gy</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">Sobel</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">CV_32F</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">mag</span><span class="p">,</span> <span class="n">ang</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cartToPolar</span><span class="p">(</span><span class="n">gx</span><span class="p">,</span> <span class="n">gy</span><span class="p">)</span>
+    <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">bin_n</span><span class="o">*</span><span class="n">ang</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span>    <span class="c"># quantizing binvalues in (0...16)</span>
+    <span class="n">bin_cells</span> <span class="o">=</span> <span class="n">bins</span><span class="p">[:</span><span class="mi">10</span><span class="p">,:</span><span class="mi">10</span><span class="p">],</span> <span class="n">bins</span><span class="p">[</span><span class="mi">10</span><span class="p">:,:</span><span class="mi">10</span><span class="p">],</span> <span class="n">bins</span><span class="p">[:</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">:],</span> <span class="n">bins</span><span class="p">[</span><span class="mi">10</span><span class="p">:,</span><span class="mi">10</span><span class="p">:]</span>
+    <span class="n">mag_cells</span> <span class="o">=</span> <span class="n">mag</span><span class="p">[:</span><span class="mi">10</span><span class="p">,:</span><span class="mi">10</span><span class="p">],</span> <span class="n">mag</span><span class="p">[</span><span class="mi">10</span><span class="p">:,:</span><span class="mi">10</span><span class="p">],</span> <span class="n">mag</span><span class="p">[:</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">:],</span> <span class="n">mag</span><span class="p">[</span><span class="mi">10</span><span class="p">:,</span><span class="mi">10</span><span class="p">:]</span>
+    <span class="n">hists</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">m</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">bin_n</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">bin_cells</span><span class="p">,</span> <span class="n">mag_cells</span><span class="p">)]</span>
+    <span class="n">hist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="n">hists</span><span class="p">)</span>     <span class="c"># hist is a 64 bit vector</span>
+    <span class="k">return</span> <span class="n">hist</span>
+
+<span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;digits.png&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">cells</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">hsplit</span><span class="p">(</span><span class="n">row</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">vsplit</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="mi">50</span><span class="p">)]</span>
+
+<span class="c"># First half is trainData, remaining is testData</span>
+<span class="n">train_cells</span> <span class="o">=</span> <span class="p">[</span> <span class="n">i</span><span class="p">[:</span><span class="mi">50</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">cells</span> <span class="p">]</span>
+<span class="n">test_cells</span> <span class="o">=</span> <span class="p">[</span> <span class="n">i</span><span class="p">[</span><span class="mi">50</span><span class="p">:]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">cells</span><span class="p">]</span>
+
+<span class="c">######     Now training      ########################</span>
+
+<span class="n">deskewed</span> <span class="o">=</span> <span class="p">[</span><span class="nb">map</span><span class="p">(</span><span class="n">deskew</span><span class="p">,</span><span class="n">row</span><span class="p">)</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">train_cells</span><span class="p">]</span>
+<span class="n">hogdata</span> <span class="o">=</span> <span class="p">[</span><span class="nb">map</span><span class="p">(</span><span class="n">hog</span><span class="p">,</span><span class="n">row</span><span class="p">)</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">deskewed</span><span class="p">]</span>
+<span class="n">trainData</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">hogdata</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">64</span><span class="p">)</span>
+<span class="n">responses</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span><span class="mi">250</span><span class="p">)[:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">])</span>
+
+<span class="n">svm</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">SVM</span><span class="p">()</span>
+<span class="n">svm</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">trainData</span><span class="p">,</span><span class="n">responses</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">svm_params</span><span class="p">)</span>
+<span class="n">svm</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s">&#39;svm_data.dat&#39;</span><span class="p">)</span>
+
+<span class="c">######     Now testing      ########################</span>
+
+<span class="n">deskewed</span> <span class="o">=</span> <span class="p">[</span><span class="nb">map</span><span class="p">(</span><span class="n">deskew</span><span class="p">,</span><span class="n">row</span><span class="p">)</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">test_cells</span><span class="p">]</span>
+<span class="n">hogdata</span> <span class="o">=</span> <span class="p">[</span><span class="nb">map</span><span class="p">(</span><span class="n">hog</span><span class="p">,</span><span class="n">row</span><span class="p">)</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">deskewed</span><span class="p">]</span>
+<span class="n">testData</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">hogdata</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">bin_n</span><span class="o">*</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">svm</span><span class="o">.</span><span class="n">predict_all</span><span class="p">(</span><span class="n">testData</span><span class="p">)</span>
+
+<span class="c">#######   Check Accuracy   ########################</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">result</span><span class="o">==</span><span class="n">responses</span>
+<span class="n">correct</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">correct</span><span class="o">*</span><span class="mf">100.0</span><span class="o">/</span><span class="n">result</span><span class="o">.</span><span class="n">size</span>
+</pre></div>
+</div>
+<p>This particular technique gave me nearly 94% accuracy. You can try different values for various parameters of SVM to check if higher accuracy is possible. Or you can read technical papers on this area and try to implement them.</p>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><a class="reference external" href="www.youtube.com/watch?v=0Zib1YEE4LU‎">Histograms of Oriented Gradients Video</a></li>
+</ol>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>OpenCV samples contain <tt class="docutils literal"><span class="pre">digits.py</span></tt> which applies a slight improvement of the above method to get improved result. It also contains the reference. Check it and understand it.</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py_kmeans/py_kmeans_index.html" title="K-Means Clustering"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../py_svm_basics/py_svm_basics.html" title="Understanding SVM"
+             >previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../../py_table_of_contents_ml/py_table_of_contents_ml.html" >Machine Learning</a> &raquo;</li>
+          <li><a href="../py_svm_index.html" >Support Vector Machines (SVM)</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../../../_sources/doc/py_tutorials/py_ml/py_svm/py_svm_opencv/py_svm_opencv.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

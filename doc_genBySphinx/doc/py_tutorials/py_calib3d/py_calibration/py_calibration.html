@@ -1,0 +1,367 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Camera Calibration &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../../index.html" />
+    <link rel="up" title="Camera Calibration and 3D Reconstruction" href="../py_table_of_contents_calib3d/py_table_of_contents_calib3d.html" />
+    <link rel="next" title="Pose Estimation" href="../py_pose/py_pose.html" />
+    <link rel="prev" title="Camera Calibration and 3D Reconstruction" href="../py_table_of_contents_calib3d/py_table_of_contents_calib3d.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py_pose/py_pose.html" title="Pose Estimation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../py_table_of_contents_calib3d/py_table_of_contents_calib3d.html" title="Camera Calibration and 3D Reconstruction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_calib3d/py_table_of_contents_calib3d.html" accesskey="U">Camera Calibration and 3D Reconstruction</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Camera Calibration</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#basics">Basics</a></li>
+<li><a class="reference internal" href="#code">Code</a><ul>
+<li><a class="reference internal" href="#setup">Setup</a></li>
+<li><a class="reference internal" href="#id1">Calibration</a></li>
+<li><a class="reference internal" href="#undistortion">Undistortion</a><ul>
+<li><a class="reference internal" href="#using-cv2-undistort">1. Using <strong>cv2.undistort()</strong></a></li>
+<li><a class="reference internal" href="#using-remapping">2. Using <strong>remapping</strong></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#re-projection-error">Re-projection Error</a></li>
+<li><a class="reference internal" href="#additional-resources">Additional Resources</a></li>
+<li><a class="reference internal" href="#exercises">Exercises</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../py_table_of_contents_calib3d/py_table_of_contents_calib3d.html"
+                        title="previous chapter">Camera Calibration and 3D Reconstruction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../py_pose/py_pose.html"
+                        title="next chapter">Pose Estimation</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="camera-calibration">
+<span id="calibration"></span><h1>Camera Calibration<a class="headerlink" href="#camera-calibration" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>In this section,</dt>
+<dd><ul class="first last simple">
+<li>We will learn about distortions in camera, intrinsic and extrinsic parameters of camera etc.</li>
+<li>We will learn to find these parameters, undistort images etc.</li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="basics">
+<h2>Basics<a class="headerlink" href="#basics" title="Permalink to this headline">¶</a></h2>
+<p>Today&#8217;s cheap pinhole cameras introduces a lot of distortion to images. Two major distortions are radial distortion and tangential distortion.</p>
+<p>Due to radial distortion, straight lines will appear curved. Its effect is more as we move away from the center of image. For example, one image is shown below, where two edges of a chess board are marked with red lines. But you can see that border is not a straight line and doesn&#8217;t match with the red line. All the expected straight lines are bulged out. Visit <a class="reference external" href="http://en.wikipedia.org/wiki/Distortion_%28optics%29">Distortion (optics)</a> for more details.</p>
+<blockquote>
+<div><img alt="Radial Distortion" class="align-center" src="../../../../_images/calib_radial.jpg" />
+</div></blockquote>
+<p>This distortion is solved as follows:</p>
+<div class="math">
+<p><span class="math">x_{corrected} = x( 1 + k_1 r^2 + k_2 r^4 + k_3 r^6) \\
+y_{corrected} = y( 1 + k_1 r^2 + k_2 r^4 + k_3 r^6)</span></p>
+</div><p>Similarly, another distortion is the tangential distortion which occurs because image taking lense is not aligned perfectly parallel to the imaging plane. So some areas in image may look nearer than expected. It is solved as below:</p>
+<div class="math">
+<p><span class="math">x_{corrected} = x + [ 2p_1xy + p_2(r^2+2x^2)] \\
+y_{corrected} = y + [ p_1(r^2+ 2y^2)+ 2p_2xy]</span></p>
+</div><p>In short, we need to find five parameters, known as distortion coefficients given by:</p>
+<div class="math">
+<p><span class="math">Distortion \; coefficients=(k_1 \hspace{10pt} k_2 \hspace{10pt} p_1 \hspace{10pt} p_2 \hspace{10pt} k_3)</span></p>
+</div><p>In addition to this, we need to find a few more information, like intrinsic and extrinsic parameters of a camera. Intrinsic parameters are specific to a camera. It includes information like focal length (<span class="math">f_x,f_y</span>), optical centers (<span class="math">c_x, c_y</span>) etc. It is also called camera matrix. It depends on the camera only, so once calculated, it can be stored for future purposes. It is expressed as a 3x3 matrix:</p>
+<div class="math">
+<p><span class="math">camera \; matrix = \left [ \begin{matrix}   f_x &amp; 0 &amp; c_x \\  0 &amp; f_y &amp; c_y \\   0 &amp; 0 &amp; 1 \end{matrix} \right ]</span></p>
+</div><p>Extrinsic parameters corresponds to rotation and translation vectors which translates a coordinates of a 3D point to a coordinate system.</p>
+<p>For stereo applications, these distortions need to be corrected first. To find all these parameters, what we have to do is to provide some sample images of a well defined pattern (eg, chess board). We find some specific points in it ( square corners in chess board). We know its coordinates in real world space and we know its coordinates in image. With these data, some mathematical problem is solved in background to get the distortion coefficients. That is the summary of the whole story. For better results, we need atleast 10 test patterns.</p>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<p>As mentioned above, we need atleast 10 test patterns for camera calibration. OpenCV comes with some images of chess board (see <tt class="docutils literal"><span class="pre">samples/cpp/left01.jpg</span> <span class="pre">--</span> <span class="pre">left14.jpg</span></tt>), so we will utilize it. For sake of understanding, consider just one image of a chess board. Important input datas needed for camera calibration is a set of 3D real world points and its corresponding 2D image points. 2D image points are OK which we can easily find from the image. (These image points are locations where two black squares touch each other in chess boards)</p>
+<p>What about the 3D points from real world space? Those images are taken from a static camera and chess boards are placed at different locations and orientations. So we need to know <span class="math">(X,Y,Z)</span> values. But for simplicity, we can say chess board was kept stationary at XY plane, (so Z=0 always) and camera was moved accordingly. This consideration helps us to find only X,Y values. Now for X,Y values, we can simply pass the points as (0,0), (1,0), (2,0), ... which denotes the location of points. In this case, the results we get will be in the scale of size of chess board square. But if we know the square size, (say 30 mm), and we can pass the values as (0,0),(30,0),(60,0),..., we get the results in mm. (In this case, we don&#8217;t know square size since we didn&#8217;t take those images, so we pass in terms of square size).</p>
+<p>3D points are called <strong>object points</strong> and 2D image points are called <strong>image points.</strong></p>
+<div class="section" id="setup">
+<h3>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h3>
+<p>So to find pattern in chess board, we use the function, <strong>cv2.findChessboardCorners()</strong>. We also need to pass what kind of pattern we are looking, like 8x8 grid, 5x5 grid etc. In this example, we use 7x6 grid. (Normally a chess board has 8x8 squares and 7x7 internal corners). It returns the corner points and retval which will be True if pattern is obtained. These corners will be placed in an order (from left-to-right, top-to-bottom)</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">This function may not be able to find the required pattern in all the images. So one good option is to write the code such that, it starts the camera and check each frame for required pattern. Once pattern is obtained, find the corners and store it in a list. Also provides some interval before reading next frame so that we can adjust our chess board in different direction. Continue this process until required number of good patterns are obtained. Even in the example provided here, we are not sure out of 14 images given, how many are good. So we read all the images and take the good ones.</p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">Instead of chess board, we can use some circular grid, but then use the function <strong>cv2.findCirclesGrid()</strong> to find the pattern. It is said that less number of images are enough when using circular grid.</p>
+</div>
+<p>Once we find the corners, we can increase their accuracy using <strong>cv2.cornerSubPix()</strong>. We can also draw the pattern using <strong>cv2.drawChessboardCorners()</strong>. All these steps are included in below code:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+
+<span class="c"># termination criteria</span>
+<span class="n">criteria</span> <span class="o">=</span> <span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">TERM_CRITERIA_EPS</span> <span class="o">+</span> <span class="n">cv2</span><span class="o">.</span><span class="n">TERM_CRITERIA_MAX_ITER</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">)</span>
+
+<span class="c"># prepare object points, like (0,0,0), (1,0,0), (2,0,0) ....,(6,5,0)</span>
+<span class="n">objp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">6</span><span class="o">*</span><span class="mi">7</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">objp</span><span class="p">[:,:</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">7</span><span class="p">,</span><span class="mi">0</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c"># Arrays to store object points and image points from all the images.</span>
+<span class="n">objpoints</span> <span class="o">=</span> <span class="p">[]</span> <span class="c"># 3d point in real world space</span>
+<span class="n">imgpoints</span> <span class="o">=</span> <span class="p">[]</span> <span class="c"># 2d points in image plane.</span>
+
+<span class="n">images</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s">&#39;*.jpg&#39;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">images</span><span class="p">:</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+    <span class="n">gray</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
+
+    <span class="c"># Find the chess board corners</span>
+    <span class="n">ret</span><span class="p">,</span> <span class="n">corners</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">findChessboardCorners</span><span class="p">(</span><span class="n">gray</span><span class="p">,</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span><span class="bp">None</span><span class="p">)</span>
+
+    <span class="c"># If found, add object points, image points (after refining them)</span>
+    <span class="k">if</span> <span class="n">ret</span> <span class="o">==</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">objpoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">objp</span><span class="p">)</span>
+
+        <span class="n">cv2</span><span class="o">.</span><span class="n">cornerSubPix</span><span class="p">(</span><span class="n">gray</span><span class="p">,</span><span class="n">corners</span><span class="p">,(</span><span class="mi">11</span><span class="p">,</span><span class="mi">11</span><span class="p">),(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="n">criteria</span><span class="p">)</span>
+        <span class="n">imgpoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">corners</span><span class="p">)</span>
+
+        <span class="c"># Draw and display the corners</span>
+        <span class="n">cv2</span><span class="o">.</span><span class="n">drawChessboardCorners</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span> <span class="n">corners2</span><span class="p">,</span><span class="n">ret</span><span class="p">)</span>
+        <span class="n">cv2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="s">&#39;img&#39;</span><span class="p">,</span><span class="n">img</span><span class="p">)</span>
+        <span class="n">cv2</span><span class="o">.</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+
+<span class="n">cv2</span><span class="o">.</span><span class="n">destroyAllWindows</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>One image with pattern drawn on it is shown below:</p>
+<blockquote>
+<div><img alt="Calibration Pattern" class="align-center" src="../../../../_images/calib_pattern.jpg" />
+</div></blockquote>
+</div>
+<div class="section" id="id1">
+<h3>Calibration<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>So now we have our object points and image points we are ready to go for calibration. For that we use the function, <strong>cv2.calibrateCamera()</strong>. It returns the camera matrix, distortion coefficients, rotation and translation vectors etc.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ret</span><span class="p">,</span> <span class="n">mtx</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="n">rvecs</span><span class="p">,</span> <span class="n">tvecs</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">calibrateCamera</span><span class="p">(</span><span class="n">objpoints</span><span class="p">,</span> <span class="n">imgpoints</span><span class="p">,</span> <span class="n">gray</span><span class="o">.</span><span class="n">shape</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="bp">None</span><span class="p">,</span><span class="bp">None</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="undistortion">
+<h3>Undistortion<a class="headerlink" href="#undistortion" title="Permalink to this headline">¶</a></h3>
+<p>We have got what we were trying. Now we can take an image and undistort it. OpenCV comes with two methods, we will see both. But before that, we can refine the camera matrix based on a free scaling parameter using <strong>cv2.getOptimalNewCameraMatrix()</strong>. If the scaling parameter <tt class="docutils literal"><span class="pre">alpha=0</span></tt>, it returns undistorted image with minimum unwanted pixels. So it may even remove some pixels at image corners. If <tt class="docutils literal"><span class="pre">alpha=1</span></tt>, all pixels are retained with some extra black images. It also returns an image ROI which can be used to crop the result.</p>
+<p>So we take a new image (<tt class="docutils literal"><span class="pre">left12.jpg</span></tt> in this case. That is the first image in this chapter)</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;left12.jpg&#39;</span><span class="p">)</span>
+<span class="n">h</span><span class="p">,</span>  <span class="n">w</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">newcameramtx</span><span class="p">,</span> <span class="n">roi</span><span class="o">=</span><span class="n">cv2</span><span class="o">.</span><span class="n">getOptimalNewCameraMatrix</span><span class="p">(</span><span class="n">mtx</span><span class="p">,</span><span class="n">dist</span><span class="p">,(</span><span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="p">),</span><span class="mi">1</span><span class="p">,(</span><span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="section" id="using-cv2-undistort">
+<h4>1. Using <strong>cv2.undistort()</strong><a class="headerlink" href="#using-cv2-undistort" title="Permalink to this headline">¶</a></h4>
+<p>This is the shortest path. Just call the function and use ROI obtained above to crop the result.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># undistort</span>
+<span class="n">dst</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">undistort</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">mtx</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="n">newcameramtx</span><span class="p">)</span>
+
+<span class="c"># crop the image</span>
+<span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">h</span> <span class="o">=</span> <span class="n">roi</span>
+<span class="n">dst</span> <span class="o">=</span> <span class="n">dst</span><span class="p">[</span><span class="n">y</span><span class="p">:</span><span class="n">y</span><span class="o">+</span><span class="n">h</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="o">+</span><span class="n">w</span><span class="p">]</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="s">&#39;calibresult.png&#39;</span><span class="p">,</span><span class="n">dst</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-remapping">
+<h4>2. Using <strong>remapping</strong><a class="headerlink" href="#using-remapping" title="Permalink to this headline">¶</a></h4>
+<p>This is curved path. First find a mapping function from distorted image to undistorted image. Then use the remap function.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># undistort</span>
+<span class="n">mapx</span><span class="p">,</span><span class="n">mapy</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">initUndistortRectifyMap</span><span class="p">(</span><span class="n">mtx</span><span class="p">,</span><span class="n">dist</span><span class="p">,</span><span class="bp">None</span><span class="p">,</span><span class="n">newcameramtx</span><span class="p">,(</span><span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="p">),</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">dst</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">remap</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">mapx</span><span class="p">,</span><span class="n">mapy</span><span class="p">,</span><span class="n">cv2</span><span class="o">.</span><span class="n">INTER_LINEAR</span><span class="p">)</span>
+
+<span class="c"># crop the image</span>
+<span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">h</span> <span class="o">=</span> <span class="n">roi</span>
+<span class="n">dst</span> <span class="o">=</span> <span class="n">dst</span><span class="p">[</span><span class="n">y</span><span class="p">:</span><span class="n">y</span><span class="o">+</span><span class="n">h</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="o">+</span><span class="n">w</span><span class="p">]</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="s">&#39;calibresult.png&#39;</span><span class="p">,</span><span class="n">dst</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Both the methods give the same result. See the result below:</p>
+<blockquote>
+<div><img alt="Calibration Result" class="align-center" src="../../../../_images/calib_result.jpg" />
+</div></blockquote>
+<p>You can see in the result that all the edges are straight.</p>
+<p>Now you can store the camera matrix and distortion coefficients using write functions in Numpy (np.savez, np.savetxt etc) for future uses.</p>
+</div>
+</div>
+</div>
+<div class="section" id="re-projection-error">
+<h2>Re-projection Error<a class="headerlink" href="#re-projection-error" title="Permalink to this headline">¶</a></h2>
+<p>Re-projection error gives a good estimation of just how exact is the found parameters. This should be as close to zero as possible. Given the intrinsic, distortion, rotation and translation matrices, we first transform the object point to image point using <strong>cv2.projectPoints()</strong>. Then we calculate the absolute norm between what we got with our transformation and the corner finding algorithm. To find the average error we calculate the arithmetical mean of the errors calculate for all the calibration images.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">mean_error</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">objpoints</span><span class="p">)):</span>
+    <span class="n">imgpoints2</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">projectPoints</span><span class="p">(</span><span class="n">objpoints</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">rvecs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">tvecs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">mtx</span><span class="p">,</span> <span class="n">dist</span><span class="p">)</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">imgpoints</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">imgpoints2</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">NORM_L2</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">imgpoints2</span><span class="p">)</span>
+    <span class="n">tot_error</span> <span class="o">+=</span> <span class="n">error</span>
+
+<span class="k">print</span> <span class="s">&quot;total error: &quot;</span><span class="p">,</span> <span class="n">mean_error</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">objpoints</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Try camera calibration with circular grid.</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py_pose/py_pose.html" title="Pose Estimation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../py_table_of_contents_calib3d/py_table_of_contents_calib3d.html" title="Camera Calibration and 3D Reconstruction"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_calib3d/py_table_of_contents_calib3d.html" >Camera Calibration and 3D Reconstruction</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../../_sources/doc/py_tutorials/py_calib3d/py_calibration/py_calibration.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

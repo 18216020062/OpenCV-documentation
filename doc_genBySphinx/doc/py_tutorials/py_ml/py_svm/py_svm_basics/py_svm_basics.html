@@ -1,0 +1,267 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Understanding SVM &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../../../index.html" />
+    <link rel="up" title="Support Vector Machines (SVM)" href="../py_svm_index.html" />
+    <link rel="next" title="OCR of Hand-written Data using SVM" href="../py_svm_opencv/py_svm_opencv.html" />
+    <link rel="prev" title="Support Vector Machines (SVM)" href="../py_svm_index.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py_svm_opencv/py_svm_opencv.html" title="OCR of Hand-written Data using SVM"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../py_svm_index.html" title="Support Vector Machines (SVM)"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../../py_table_of_contents_ml/py_table_of_contents_ml.html" >Machine Learning</a> &raquo;</li>
+          <li><a href="../py_svm_index.html" accesskey="U">Support Vector Machines (SVM)</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../../index.html">
+              <img class="logo" src="../../../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Understanding SVM</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#theory">Theory</a><ul>
+<li><a class="reference internal" href="#linearly-separable-data">Linearly Separable Data</a></li>
+<li><a class="reference internal" href="#non-linearly-separable-data">Non-Linearly Separable Data</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#additional-resources">Additional Resources</a></li>
+<li><a class="reference internal" href="#exercises">Exercises</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../py_svm_index.html"
+                        title="previous chapter">Support Vector Machines (SVM)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../py_svm_opencv/py_svm_opencv.html"
+                        title="next chapter">OCR of Hand-written Data using SVM</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="understanding-svm">
+<span id="svm-understanding"></span><h1>Understanding SVM<a class="headerlink" href="#understanding-svm" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>In this chapter</dt>
+<dd><ul class="first last simple">
+<li>We will see an intuitive understanding of SVM</li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="linearly-separable-data">
+<h3>Linearly Separable Data<a class="headerlink" href="#linearly-separable-data" title="Permalink to this headline">¶</a></h3>
+<p>Consider the image below which has two types of data, red and blue. In kNN, for a test data, we used to measure its distance to all the training samples and take the one with minimum distance. It takes plenty of time to measure all the distances and plenty of memory to store all the training-samples. But considering the data given in image, should we need that much?</p>
+<blockquote>
+<div><img alt="Test Data" class="align-center" src="../../../../../_images/svm_basics1.png" />
+</div></blockquote>
+<p>Consider another idea. We find a line, <span class="math">f(x)=ax_1+bx_2+c</span> which divides both the data to two regions. When we get a new test_data <span class="math">X</span>, just substitute it in <span class="math">f(x)</span>. If <span class="math">f(X) &gt; 0</span>, it belongs to blue group, else it belongs to red group. We can call this line as <strong>Decision Boundary</strong>. It is very simple and memory-efficient. Such data which can be divided into two with a straight line (or hyperplanes in higher dimensions) is called <strong>Linear Separable</strong>.</p>
+<p>So in above image, you can see plenty of such lines are possible. Which one we will take? Very intuitively we can say that the line should be passing as far as possible from all the points. Why? Because there can be noise in the incoming data. This data should not affect the classification accuracy. So taking a farthest line will provide more immunity against noise. So what SVM does is to find a straight line (or hyperplane) with largest minimum distance to the training samples. See the bold line in below image passing through the center.</p>
+<blockquote>
+<div><img alt="Decision Boundary" class="align-center" src="../../../../../_images/svm_basics2.png" />
+</div></blockquote>
+<p>So to find this Decision Boundary, you need training data. Do you need all? NO. Just the ones which are close to the opposite group are sufficient. In our image, they are the one blue filled circle and two red filled squares. We can call them <strong>Support Vectors</strong> and the lines passing through them are called <strong>Support Planes</strong>. They are adequate for finding our decision boundary. We need not worry about all the data. It helps in data reduction.</p>
+<p>What happened is, first two hyperplanes are found which best represents the data. For eg, blue data is represented by <span class="math">w^Tx+b_0 &gt; 1</span> while red data is represented by <span class="math">w^Tx+b_0 &lt; -1</span> where <span class="math">w</span> is <strong>weight vector</strong> ( <span class="math">w=[w_1, w_2,..., w_n]</span>) and <span class="math">x</span> is the feature vector (<span class="math">x = [x_1,x_2,..., x_n]</span>). <span class="math">b_0</span> is the <strong>bias</strong>. Weight vector decides the orientation of decision boundary while bias point decides its location. Now decision boundary is defined to be midway between these hyperplanes, so expressed as <span class="math">w^Tx+b_0 = 0</span>. The minimum distance from support vector to the decision boundary is given by, <span class="math">distance_{support \, vectors}=\frac{1}{||w||}</span>. Margin is twice this distance, and we need to maximize this margin. i.e. we need to minimize a new function <span class="math">L(w, b_0)</span> with some constraints which can expressed below:</p>
+<div class="math">
+<p><span class="math">\min_{w, b_0} L(w, b_0) = \frac{1}{2}||w||^2 \; \text{subject to} \; t_i(w^Tx+b_0) \geq 1 \; \forall i</span></p>
+</div><p>where <span class="math">t_i</span> is the label of each class, <span class="math">t_i \in [-1,1]</span>.</p>
+</div>
+<div class="section" id="non-linearly-separable-data">
+<h3>Non-Linearly Separable Data<a class="headerlink" href="#non-linearly-separable-data" title="Permalink to this headline">¶</a></h3>
+<p>Consider some data which can&#8217;t be divided into two with a straight line. For example, consider an one-dimensional data where &#8216;X&#8217; is at -3 &amp; +3 and &#8216;O&#8217; is at -1 &amp; +1. Clearly it is not linearly separable. But there are methods to solve these kinds of problems. If we can map this data set with a function, <span class="math">f(x) = x^2</span>, we get &#8216;X&#8217; at 9 and &#8216;O&#8217; at 1 which are linear separable.</p>
+<p>Otherwise we can convert this one-dimensional to two-dimensional data. We can use <span class="math">f(x)=(x,x^2)</span> function to map this data. Then &#8216;X&#8217; becomes (-3,9) and (3,9) while &#8216;O&#8217; becomes (-1,1) and (1,1). This is also linear separable. In short, chance is more for a non-linear separable data in lower-dimensional space to become linear separable in higher-dimensional space.</p>
+<p>In general, it is possible to map points in a d-dimensional space to some D-dimensional space <span class="math">(D&gt;d)</span> to check the possibility of linear separability. There is an idea which helps to compute the dot product in the high-dimensional (kernel) space by performing computations in the low-dimensional input (feature) space. We can illustrate with following example.</p>
+<p>Consider two points in two-dimensional space, <span class="math">p=(p_1,p_2)</span> and <span class="math">q=(q_1,q_2)</span>. Let <span class="math">\phi</span> be a mapping function which maps a two-dimensional point to three-dimensional space as follows:</p>
+<div class="math">
+<p><span class="math">\phi (p) = (p_{1}^2,p_{2}^2,\sqrt{2} p_1 p_2)
+\phi (q) = (q_{1}^2,q_{2}^2,\sqrt{2} q_1 q_2)</span></p>
+</div><p>Let us define a kernel function <span class="math">K(p,q)</span> which does a dot product between two points, shown below:</p>
+<div class="math">
+<p><span class="math">K(p,q)  = \phi(p).\phi(q) &amp;= \phi(p)^T \phi(q) \\
+                          &amp;= (p_{1}^2,p_{2}^2,\sqrt{2} p_1 p_2).(q_{1}^2,q_{2}^2,\sqrt{2} q_1 q_2) \\
+                          &amp;= p_1 q_1 + p_2 q_2 + 2 p_1 q_1 p_2 q_2 \\
+                          &amp;= (p_1 q_1 + p_2 q_2)^2 \\
+          \phi(p).\phi(q) &amp;= (p.q)^2</span></p>
+</div><p>It means, a dot product in three-dimensional space can be achieved using squared dot product in two-dimensional space. This can be applied to higher dimensional space. So we can calculate higher dimensional features from lower dimensions itself. Once we map them, we get a higher dimensional space.</p>
+<p>In addition to all these concepts, there comes the problem of misclassification. So just finding decision boundary with maximum margin is not sufficient. We need to consider the problem of misclassification errors also. Sometimes, it may be possible to find a decision boundary with less margin, but with reduced misclassification. Anyway we need to modify our model such that it should find decision boundary with maximum margin, but with less misclassification. The minimization criteria is modified as:</p>
+<div class="math">
+<p><span class="math">min \; ||w||^2 + C(distance \; of \; misclassified \; samples \; to \; their \; correct \; regions)</span></p>
+</div><p>Below image shows this concept. For each sample of the training data a new parameter <span class="math">\xi_i</span> is defined. It is the distance from its corresponding training sample to their correct decision region. For those who are not misclassified, they fall on their corresponding support planes, so their distance is zero.</p>
+<blockquote>
+<div><img alt="Misclassification" class="align-center" src="../../../../../_images/svm_basics3.png" />
+</div></blockquote>
+<p>So the new optimization problem is :</p>
+<div class="math">
+<p><span class="math">\min_{w, b_{0}} L(w,b_0) = ||w||^{2} + C \sum_{i} {\xi_{i}} \text{ subject to } y_{i}(w^{T} x_{i} + b_{0}) \geq 1 - \xi_{i} \text{ and } \xi_{i} \geq 0 \text{ } \forall i</span></p>
+</div><p>How should the parameter C be chosen? It is obvious that the answer to this question depends on how the training data is distributed. Although there is no general answer, it is useful to take into account these rules:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Large values of C give solutions with less misclassification errors but a smaller margin. Consider that in this case it is expensive to make misclassification errors. Since the aim of the optimization is to minimize the argument, few misclassifications errors are allowed.</li>
+<li>Small values of C give solutions with bigger margin and more classification errors. In this case the minimization does not consider that much the term of the sum so it focuses more on finding a hyperplane with big margin.</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><a class="reference external" href="http://www.nptel.iitm.ac.in/courses/106108057/26">NPTEL notes on Statistical Pattern Recognition, Chapters 25-29</a>.</li>
+</ol>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py_svm_opencv/py_svm_opencv.html" title="OCR of Hand-written Data using SVM"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../py_svm_index.html" title="Support Vector Machines (SVM)"
+             >previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../../py_table_of_contents_ml/py_table_of_contents_ml.html" >Machine Learning</a> &raquo;</li>
+          <li><a href="../py_svm_index.html" >Support Vector Machines (SVM)</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../../../_sources/doc/py_tutorials/py_ml/py_svm/py_svm_basics/py_svm_basics.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

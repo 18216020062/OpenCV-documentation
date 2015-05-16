@@ -1,0 +1,592 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Feature Detection and Description &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="features2d. 2D Features Framework" href="features2d.html" />
+    <link rel="next" title="Common Interfaces of Feature Detectors" href="common_interfaces_of_feature_detectors.html" />
+    <link rel="prev" title="features2d. 2D Features Framework" href="features2d.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="common_interfaces_of_feature_detectors.html" title="Common Interfaces of Feature Detectors"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="features2d.html" title="features2d. 2D Features Framework"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="features2d.html" accesskey="U">features2d. 2D Features Framework</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Feature Detection and Description</a><ul>
+<li><a class="reference internal" href="#fast">FAST</a></li>
+<li><a class="reference internal" href="#mser">MSER</a></li>
+<li><a class="reference internal" href="#orb">ORB</a></li>
+<li><a class="reference internal" href="#orb-orb">ORB::ORB</a></li>
+<li><a class="reference internal" href="#orb-operator">ORB::operator()</a></li>
+<li><a class="reference internal" href="#brisk">BRISK</a></li>
+<li><a class="reference internal" href="#brisk-brisk">BRISK::BRISK</a></li>
+<li><a class="reference internal" href="#id4">BRISK::BRISK</a></li>
+<li><a class="reference internal" href="#brisk-operator">BRISK::operator()</a></li>
+<li><a class="reference internal" href="#kaze">KAZE</a></li>
+<li><a class="reference internal" href="#kaze-kaze">KAZE::KAZE</a></li>
+<li><a class="reference internal" href="#akaze">AKAZE</a></li>
+<li><a class="reference internal" href="#akaze-akaze">AKAZE::AKAZE</a></li>
+<li><a class="reference internal" href="#sift">SIFT</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="features2d.html"
+                        title="previous chapter">features2d. 2D Features Framework</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="common_interfaces_of_feature_detectors.html"
+                        title="next chapter">Common Interfaces of Feature Detectors</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="feature-detection-and-description">
+<h1>Feature Detection and Description<a class="headerlink" href="#feature-detection-and-description" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example explaining keypoint detection and description can be found at opencv_source_code/samples/cpp/descriptor_extractor_matcher.cpp</li>
+</ul>
+</div>
+<div class="section" id="fast">
+<h2>FAST<a class="headerlink" href="#fast" title="Permalink to this headline">¶</a></h2>
+<p>Detects corners using the FAST algorithm</p>
+<dl class="function">
+<dt id="void FAST(InputArray image, vector&lt;KeyPoint&gt;&amp; keypoints, int threshold, bool nonmaxSuppression)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">FAST</tt><big>(</big>InputArray <strong>image</strong>, vector&lt;KeyPoint&gt;&amp; <strong>keypoints</strong>, int <strong>threshold</strong>, bool <strong>nonmaxSuppression</strong>=true <big>)</big><a class="headerlink" href="#void FAST(InputArray image, vector<KeyPoint>& keypoints, int threshold, bool nonmaxSuppression)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void FAST(InputArray image, vector&lt;KeyPoint&gt;&amp; keypoints, int threshold, bool nonmaxSuppression, int type)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">FAST</tt><big>(</big>InputArray <strong>image</strong>, vector&lt;KeyPoint&gt;&amp; <strong>keypoints</strong>, int <strong>threshold</strong>, bool <strong>nonmaxSuppression</strong>, int <strong>type</strong><big>)</big><a class="headerlink" href="#void FAST(InputArray image, vector<KeyPoint>& keypoints, int threshold, bool nonmaxSuppression, int type)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; grayscale image where keypoints (corners) are detected.</li>
+<li><strong>keypoints</strong> &#8211; keypoints detected on the image.</li>
+<li><strong>threshold</strong> &#8211; threshold on difference between intensity of the central pixel and pixels of a circle around this pixel.</li>
+<li><strong>nonmaxSuppression</strong> &#8211; if true, non-maximum suppression is applied to detected corners (keypoints).</li>
+<li><strong>type</strong> &#8211; one of the three neighborhoods as defined in the paper: <tt class="docutils literal"><span class="pre">FastFeatureDetector::TYPE_9_16</span></tt>, <tt class="docutils literal"><span class="pre">FastFeatureDetector::TYPE_7_12</span></tt>, <tt class="docutils literal"><span class="pre">FastFeatureDetector::TYPE_5_8</span></tt></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Detects corners using the FAST algorithm by <a class="reference internal" href="#rosten06" id="id1">[Rosten06]</a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In Python API, types are given as <tt class="docutils literal"><span class="pre">cv2.FAST_FEATURE_DETECTOR_TYPE_5_8</span></tt>, <tt class="docutils literal"><span class="pre">cv2.FAST_FEATURE_DETECTOR_TYPE_7_12</span></tt> and  <tt class="docutils literal"><span class="pre">cv2.FAST_FEATURE_DETECTOR_TYPE_9_16</span></tt>. For corner detection, use <tt class="docutils literal"><span class="pre">cv2.FAST.detect()</span></tt> method.</p>
+</div>
+<table class="docutils citation" frame="void" id="rosten06" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[Rosten06]</a></td><td><ol class="first last upperalpha simple" start="5">
+<li>Rosten. Machine Learning for High-speed Corner Detection, 2006.</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mser">
+<h2>MSER<a class="headerlink" href="#mser" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="MSER : public FeatureDetector">
+<em class="property">class </em><tt class="descname">MSER</tt> : <em class="property">public</em> <tt class="descname">FeatureDetector</tt><a class="headerlink" href="#MSER : public FeatureDetector" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Maximally stable extremal region extractor.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MSER</span> <span class="o">:</span> <span class="k">public</span> <span class="n">CvMSERParams</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="c1">// default constructor</span>
+    <span class="n">MSER</span><span class="p">();</span>
+    <span class="c1">// constructor that initializes all the algorithm parameters</span>
+    <span class="n">MSER</span><span class="p">(</span> <span class="kt">int</span> <span class="n">_delta</span><span class="p">,</span> <span class="kt">int</span> <span class="n">_min_area</span><span class="p">,</span> <span class="kt">int</span> <span class="n">_max_area</span><span class="p">,</span>
+          <span class="kt">float</span> <span class="n">_max_variation</span><span class="p">,</span> <span class="kt">float</span> <span class="n">_min_diversity</span><span class="p">,</span>
+          <span class="kt">int</span> <span class="n">_max_evolution</span><span class="p">,</span> <span class="kt">double</span> <span class="n">_area_threshold</span><span class="p">,</span>
+          <span class="kt">double</span> <span class="n">_min_margin</span><span class="p">,</span> <span class="kt">int</span> <span class="n">_edge_blur_size</span> <span class="p">);</span>
+    <span class="c1">// runs the extractor on the specified image; returns the MSERs,</span>
+    <span class="c1">// each encoded as a contour (vector&lt;Point&gt;, see findContours)</span>
+    <span class="c1">// the optional mask marks the area where MSERs are searched for</span>
+    <span class="kt">void</span> <span class="n">detectRegions</span><span class="p">(</span> <span class="n">InputArray</span> <span class="n">image</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Point</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">msers</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Rect</span><span class="o">&gt;&amp;</span> <span class="n">bboxes</span> <span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The class encapsulates all the parameters of the MSER extraction algorithm (see
+<a class="reference external" href="http://en.wikipedia.org/wiki/Maximally_stable_extremal_regions">http://en.wikipedia.org/wiki/Maximally_stable_extremal_regions</a>). Also see <a class="reference external" href="http://code.opencv.org/projects/opencv/wiki/MSER">http://code.opencv.org/projects/opencv/wiki/MSER</a> for useful comments and parameters description.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>(Python) A complete example showing the use of the MSER detector can be found at opencv_source_code/samples/python2/mser.py</li>
+</ul>
+</div>
+</div>
+<div class="section" id="orb">
+<h2>ORB<a class="headerlink" href="#orb" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ORB : public Feature2D">
+<em class="property">class </em><tt class="descname">ORB</tt> : <em class="property">public</em> <tt class="descname">Feature2D</tt><a class="headerlink" href="#ORB : public Feature2D" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class implementing the ORB (<em>oriented BRIEF</em>) keypoint detector and descriptor extractor, described in <a class="reference internal" href="#rrkb11" id="id2">[RRKB11]</a>. The algorithm uses FAST in pyramids to detect stable keypoints, selects the strongest features using FAST or Harris response, finds their orientation using first-order moments and computes the descriptors using BRIEF (where the coordinates of random point pairs (or k-tuples) are rotated according to the measured orientation).</p>
+<table class="docutils citation" frame="void" id="rrkb11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[RRKB11]</a></td><td>Ethan Rublee, Vincent Rabaud, Kurt Konolige, Gary R. Bradski: ORB: An efficient alternative to SIFT or SURF. ICCV 2011: 2564-2571.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="orb-orb">
+<h2>ORB::ORB<a class="headerlink" href="#orb-orb" title="Permalink to this headline">¶</a></h2>
+<p>The ORB constructor</p>
+<dl class="function">
+<dt id="ORB::ORB(int nfeatures , float scaleFactor , int nlevels , int edgeThreshold , int firstLevel , int WTA_K, int scoreType, int patchSize)">
+<strong>C++:</strong><tt class="descname"> </tt> <tt class="descclassname">ORB::</tt><tt class="descname">ORB</tt><big>(</big>int <strong>nfeatures</strong>=500, float <strong>scaleFactor</strong>=1.2f, int <strong>nlevels</strong>=8, int <strong>edgeThreshold</strong>=31, int <strong>firstLevel</strong>=0, int <strong>WTA_K</strong>=2, int <strong>scoreType</strong>=ORB::HARRIS_SCORE, int <strong>patchSize</strong>=31<big>)</big><a class="headerlink" href="#ORB::ORB(int nfeatures , float scaleFactor , int nlevels , int edgeThreshold , int firstLevel , int WTA_K, int scoreType, int patchSize)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.ORB">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.</tt><tt class="descname">ORB</tt><big>(</big><span class="optional">[</span>nfeatures<span class="optional">[</span>, scaleFactor<span class="optional">[</span>, nlevels<span class="optional">[</span>, edgeThreshold<span class="optional">[</span>, firstLevel<span class="optional">[</span>, WTA_K<span class="optional">[</span>, scoreType<span class="optional">[</span>, patchSize<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big> &rarr; &lt;ORB object&gt;<a class="headerlink" href="#cv2.ORB" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>nfeatures</strong> &#8211; The maximum number of features to retain.</li>
+<li><strong>scaleFactor</strong> &#8211; Pyramid decimation ratio, greater than 1. <tt class="docutils literal"><span class="pre">scaleFactor==2</span></tt> means the classical pyramid, where each next level has 4x less pixels than the previous, but such a big scale factor will degrade feature matching scores dramatically. On the other hand, too close to 1 scale factor will mean that to cover certain scale range you will need more pyramid levels and so the speed will suffer.</li>
+<li><strong>nlevels</strong> &#8211; The number of pyramid levels. The smallest level will have linear size equal to <tt class="docutils literal"><span class="pre">input_image_linear_size/pow(scaleFactor,</span> <span class="pre">nlevels)</span></tt>.</li>
+<li><strong>edgeThreshold</strong> &#8211; This is size of the border where the features are not detected. It should roughly match the <tt class="docutils literal"><span class="pre">patchSize</span></tt> parameter.</li>
+<li><strong>firstLevel</strong> &#8211; It should be 0 in the current implementation.</li>
+<li><strong>WTA_K</strong> &#8211; The number of points that produce each element of the oriented BRIEF descriptor. The default value 2 means the BRIEF where we take a random point pair and compare their brightnesses, so we get 0/1 response. Other possible values are 3 and 4. For example, 3 means that we take 3 random points (of course, those point coordinates are random, but they are generated from the pre-defined seed, so each element of BRIEF descriptor is computed deterministically from the pixel rectangle), find point of maximum brightness and output index of the winner (0, 1 or 2). Such output will occupy 2 bits, and therefore it will need a special variant of Hamming distance, denoted as <tt class="docutils literal"><span class="pre">NORM_HAMMING2</span></tt> (2 bits per bin).  When <tt class="docutils literal"><span class="pre">WTA_K=4</span></tt>, we take 4 random points to compute each bin (that will also occupy 2 bits with possible values 0, 1, 2 or 3).</li>
+<li><strong>scoreType</strong> &#8211; The default HARRIS_SCORE means that Harris algorithm is used to rank features (the score is written to <tt class="docutils literal"><span class="pre">KeyPoint::score</span></tt> and is used to retain best <tt class="docutils literal"><span class="pre">nfeatures</span></tt> features); FAST_SCORE is alternative value of the parameter that produces slightly less stable keypoints, but it is a little faster to compute.</li>
+<li><strong>patchSize</strong> &#8211; size of the patch used by the oriented BRIEF descriptor. Of course, on smaller pyramid layers the perceived image area covered by a feature will be larger.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="orb-operator">
+<h2>ORB::operator()<a class="headerlink" href="#orb-operator" title="Permalink to this headline">¶</a></h2>
+<p>Finds keypoints in an image and computes their descriptors</p>
+<dl class="function">
+<dt id="void ORB::operator()(InputArray image, InputArray mask, vector&lt;KeyPoint&gt;&amp; keypoints, OutputArray descriptors, bool useProvidedKeypoints) const">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">ORB::</tt><tt class="descname">operator()</tt><big>(</big>InputArray <strong>image</strong>, InputArray <strong>mask</strong>, vector&lt;KeyPoint&gt;&amp; <strong>keypoints</strong>, OutputArray <strong>descriptors</strong>, bool <strong>useProvidedKeypoints</strong>=false <big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#void ORB::operator()(InputArray image, InputArray mask, vector<KeyPoint>& keypoints, OutputArray descriptors, bool useProvidedKeypoints) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.ORB.detect">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.ORB.</tt><tt class="descname">detect</tt><big>(</big>image<span class="optional">[</span>, mask<span class="optional">]</span><big>)</big> &rarr; keypoints<a class="headerlink" href="#cv2.ORB.detect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.ORB.compute">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.ORB.</tt><tt class="descname">compute</tt><big>(</big>image, keypoints<span class="optional">[</span>, descriptors<span class="optional">]</span><big>)</big> &rarr; keypoints, descriptors<a class="headerlink" href="#cv2.ORB.compute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.ORB.detectAndCompute">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.ORB.</tt><tt class="descname">detectAndCompute</tt><big>(</big>image, mask<span class="optional">[</span>, descriptors<span class="optional">[</span>, useProvidedKeypoints<span class="optional">]</span><span class="optional">]</span><big>)</big> &rarr; keypoints, descriptors<a class="headerlink" href="#cv2.ORB.detectAndCompute" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; The input 8-bit grayscale image.</li>
+<li><strong>mask</strong> &#8211; The operation mask.</li>
+<li><strong>keypoints</strong> &#8211; The output vector of keypoints.</li>
+<li><strong>descriptors</strong> &#8211; The output descriptors. Pass <tt class="docutils literal"><span class="pre">cv::noArray()</span></tt> if you do not need it.</li>
+<li><strong>useProvidedKeypoints</strong> &#8211; If it is true, then the method will use the provided vector of keypoints instead of detecting them.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="brisk">
+<h2>BRISK<a class="headerlink" href="#brisk" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="BRISK : public Feature2D">
+<em class="property">class </em><tt class="descname">BRISK</tt> : <em class="property">public</em> <tt class="descname">Feature2D</tt><a class="headerlink" href="#BRISK : public Feature2D" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class implementing the BRISK keypoint detector and descriptor extractor, described in <a class="reference internal" href="#lcs11" id="id3">[LCS11]</a>.</p>
+<table class="docutils citation" frame="void" id="lcs11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[LCS11]</a></td><td>Stefan Leutenegger, Margarita Chli and Roland Siegwart: BRISK: Binary Robust Invariant Scalable Keypoints. ICCV 2011: 2548-2555.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="brisk-brisk">
+<h2>BRISK::BRISK<a class="headerlink" href="#brisk-brisk" title="Permalink to this headline">¶</a></h2>
+<p>The BRISK constructor</p>
+<dl class="function">
+<dt id="BRISK::BRISK(int thresh, int octaves, float patternScale)">
+<strong>C++:</strong><tt class="descname"> </tt> <tt class="descclassname">BRISK::</tt><tt class="descname">BRISK</tt><big>(</big>int <strong>thresh</strong>=30, int <strong>octaves</strong>=3, float <strong>patternScale</strong>=1.0f<big>)</big><a class="headerlink" href="#BRISK::BRISK(int thresh, int octaves, float patternScale)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.BRISK">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.</tt><tt class="descname">BRISK</tt><big>(</big><span class="optional">[</span>thresh<span class="optional">[</span>, octaves<span class="optional">[</span>, patternScale<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big> &rarr; &lt;BRISK object&gt;<a class="headerlink" href="#cv2.BRISK" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>thresh</strong> &#8211; FAST/AGAST detection threshold score.</li>
+<li><strong>octaves</strong> &#8211; detection octaves. Use 0 to do single scale.</li>
+<li><strong>patternScale</strong> &#8211; apply this scale to the pattern used for sampling the neighbourhood of a keypoint.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="id4">
+<h2>BRISK::BRISK<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>The BRISK constructor for a custom pattern</p>
+<dl class="function">
+<dt id="BRISK::BRISK(std::vector&lt;float&gt; &amp;radiusList, std::vector&lt;int&gt; &amp;numberList, float dMax, float dMin, std::vector&lt;int&gt; indexChange)">
+<strong>C++:</strong><tt class="descname"> </tt> <tt class="descclassname">BRISK::</tt><tt class="descname">BRISK</tt><big>(</big>std::vector&lt;float&gt;&amp; <strong>radiusList</strong>, std::vector&lt;int&gt;&amp; <strong>numberList</strong>, float <strong>dMax</strong>=5.85f, float <strong>dMin</strong>=8.2f, std::vector&lt;int&gt; <strong>indexChange</strong>=std::vector&lt;int&gt;()<big>)</big><a class="headerlink" href="#BRISK::BRISK(std::vector<float> &radiusList, std::vector<int> &numberList, float dMax, float dMin, std::vector<int> indexChange)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt>
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.</tt><tt class="descname">BRISK</tt><big>(</big>radiusList, numberList<span class="optional">[</span>, dMax<span class="optional">[</span>, dMin<span class="optional">[</span>, indexChange<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big> &rarr; &lt;BRISK object&gt;</dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>radiusList</strong> &#8211; defines the radii (in pixels) where the samples around a keypoint are taken (for keypoint scale 1).</li>
+<li><strong>numberList</strong> &#8211; defines the number of sampling points on the sampling circle. Must be the same size as radiusList..</li>
+<li><strong>dMax</strong> &#8211; threshold for the short pairings used for descriptor formation (in pixels for keypoint scale 1).</li>
+<li><strong>dMin</strong> &#8211; threshold for the long pairings used for orientation determination (in pixels for keypoint scale 1).</li>
+<li><strong>indexChanges</strong> &#8211; index remapping of the bits.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="brisk-operator">
+<h2>BRISK::operator()<a class="headerlink" href="#brisk-operator" title="Permalink to this headline">¶</a></h2>
+<p>Finds keypoints in an image and computes their descriptors</p>
+<dl class="function">
+<dt id="void BRISK::operator()(InputArray image, InputArray mask, vector&lt;KeyPoint&gt;&amp; keypoints, OutputArray descriptors, bool useProvidedKeypoints) const">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">BRISK::</tt><tt class="descname">operator()</tt><big>(</big>InputArray <strong>image</strong>, InputArray <strong>mask</strong>, vector&lt;KeyPoint&gt;&amp; <strong>keypoints</strong>, OutputArray <strong>descriptors</strong>, bool <strong>useProvidedKeypoints</strong>=false <big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#void BRISK::operator()(InputArray image, InputArray mask, vector<KeyPoint>& keypoints, OutputArray descriptors, bool useProvidedKeypoints) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.BRISK.detect">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.BRISK.</tt><tt class="descname">detect</tt><big>(</big>image<span class="optional">[</span>, mask<span class="optional">]</span><big>)</big> &rarr; keypoints<a class="headerlink" href="#cv2.BRISK.detect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.BRISK.compute">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.BRISK.</tt><tt class="descname">compute</tt><big>(</big>image, keypoints<span class="optional">[</span>, descriptors<span class="optional">]</span><big>)</big> &rarr; keypoints, descriptors<a class="headerlink" href="#cv2.BRISK.compute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.BRISK.detectAndCompute">
+<strong>Python:</strong><tt class="descname"> </tt><tt class="descclassname">cv2.BRISK.</tt><tt class="descname">detectAndCompute</tt><big>(</big>image, mask<span class="optional">[</span>, descriptors<span class="optional">[</span>, useProvidedKeypoints<span class="optional">]</span><span class="optional">]</span><big>)</big> &rarr; keypoints, descriptors<a class="headerlink" href="#cv2.BRISK.detectAndCompute" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; The input 8-bit grayscale image.</li>
+<li><strong>mask</strong> &#8211; The operation mask.</li>
+<li><strong>keypoints</strong> &#8211; The output vector of keypoints.</li>
+<li><strong>descriptors</strong> &#8211; The output descriptors. Pass <tt class="docutils literal"><span class="pre">cv::noArray()</span></tt> if you do not need it.</li>
+<li><strong>useProvidedKeypoints</strong> &#8211; If it is true, then the method will use the provided vector of keypoints instead of detecting them.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="kaze">
+<h2>KAZE<a class="headerlink" href="#kaze" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="KAZE : public Feature2D">
+<em class="property">class </em><tt class="descname">KAZE</tt> : <em class="property">public</em> <tt class="descname">Feature2D</tt><a class="headerlink" href="#KAZE : public Feature2D" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class implementing the KAZE keypoint detector and descriptor extractor, described in <a class="reference internal" href="#abd12" id="id5">[ABD12]</a>.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS_W</span> <span class="nl">KAZE</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Feature2D</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">CV_WRAP</span> <span class="n">KAZE</span><span class="p">();</span>
+    <span class="n">CV_WRAP</span> <span class="k">explicit</span> <span class="nf">KAZE</span><span class="p">(</span><span class="kt">bool</span> <span class="n">extended</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">upright</span><span class="p">,</span> <span class="kt">float</span> <span class="n">threshold</span> <span class="o">=</span> <span class="mf">0.001f</span><span class="p">,</span>
+                          <span class="kt">int</span> <span class="n">octaves</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="kt">int</span> <span class="n">sublevels</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="kt">int</span> <span class="n">diffusivity</span> <span class="o">=</span> <span class="n">DIFF_PM_G2</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">AKAZE descriptor can only be used with KAZE or AKAZE keypoints</p>
+</div>
+<table class="docutils citation" frame="void" id="abd12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[ABD12]</a></td><td>KAZE Features. Pablo F. Alcantarilla, Adrien Bartoli and Andrew J. Davison. In European Conference on Computer Vision (ECCV), Fiorenze, Italy, October 2012.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="kaze-kaze">
+<h2>KAZE::KAZE<a class="headerlink" href="#kaze-kaze" title="Permalink to this headline">¶</a></h2>
+<p>The KAZE constructor</p>
+<dl class="function">
+<dt id="KAZE::KAZE(bool extended, bool upright, float threshold, int octaves, int sublevels, int diffusivity)">
+<strong>C++:</strong><tt class="descname"> </tt> <tt class="descclassname">KAZE::</tt><tt class="descname">KAZE</tt><big>(</big>bool <strong>extended</strong>, bool <strong>upright</strong>, float <strong>threshold</strong>, int <strong>octaves</strong>, int <strong>sublevels</strong>, int <strong>diffusivity</strong><big>)</big><a class="headerlink" href="#KAZE::KAZE(bool extended, bool upright, float threshold, int octaves, int sublevels, int diffusivity)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>extended</strong> &#8211; Set to enable extraction of extended (128-byte) descriptor.</li>
+<li><strong>upright</strong> &#8211; Set to enable use of upright descriptors (non rotation-invariant).</li>
+<li><strong>threshold</strong> &#8211; Detector response threshold to accept point</li>
+<li><strong>octaves</strong> &#8211; Maximum octave evolution of the image</li>
+<li><strong>sublevels</strong> &#8211; Default number of sublevels per scale level</li>
+<li><strong>diffusivity</strong> &#8211; Diffusivity type. DIFF_PM_G1, DIFF_PM_G2, DIFF_WEICKERT or DIFF_CHARBONNIER</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="akaze">
+<h2>AKAZE<a class="headerlink" href="#akaze" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="AKAZE : public Feature2D">
+<em class="property">class </em><tt class="descname">AKAZE</tt> : <em class="property">public</em> <tt class="descname">Feature2D</tt><a class="headerlink" href="#AKAZE : public Feature2D" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class implementing the AKAZE keypoint detector and descriptor extractor, described in <a class="reference internal" href="#anb13" id="id6">[ANB13]</a>.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS_W</span> <span class="nl">AKAZE</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Feature2D</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">CV_WRAP</span> <span class="n">AKAZE</span><span class="p">();</span>
+    <span class="n">CV_WRAP</span> <span class="k">explicit</span> <span class="nf">AKAZE</span><span class="p">(</span><span class="kt">int</span> <span class="n">descriptor_type</span><span class="p">,</span> <span class="kt">int</span> <span class="n">descriptor_size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="kt">int</span> <span class="n">descriptor_channels</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+                           <span class="kt">float</span> <span class="n">threshold</span> <span class="o">=</span> <span class="mf">0.001f</span><span class="p">,</span> <span class="kt">int</span> <span class="n">octaves</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="kt">int</span> <span class="n">sublevels</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="kt">int</span> <span class="n">diffusivity</span> <span class="o">=</span> <span class="n">DIFF_PM_G2</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">AKAZE descriptors can only be used with KAZE or AKAZE keypoints. Try to avoid using <em>extract</em> and <em>detect</em> instead of <em>operator()</em> due to performance reasons.</p>
+</div>
+<table class="docutils citation" frame="void" id="anb13" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[ANB13]</a></td><td>Fast Explicit Diffusion for Accelerated Features in Nonlinear Scale Spaces. Pablo F. Alcantarilla, Jesús Nuevo and Adrien Bartoli. In British Machine Vision Conference (BMVC), Bristol, UK, September 2013.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="akaze-akaze">
+<h2>AKAZE::AKAZE<a class="headerlink" href="#akaze-akaze" title="Permalink to this headline">¶</a></h2>
+<p>The AKAZE constructor</p>
+<dl class="function">
+<dt id="AKAZE::AKAZE(int descriptor_type, int descriptor_size, int descriptor_channels, float threshold, int octaves, int sublevels, int diffusivity)">
+<strong>C++:</strong><tt class="descname"> </tt> <tt class="descclassname">AKAZE::</tt><tt class="descname">AKAZE</tt><big>(</big>int <strong>descriptor_type</strong>, int <strong>descriptor_size</strong>, int <strong>descriptor_channels</strong>, float <strong>threshold</strong>, int <strong>octaves</strong>, int <strong>sublevels</strong>, int <strong>diffusivity</strong><big>)</big><a class="headerlink" href="#AKAZE::AKAZE(int descriptor_type, int descriptor_size, int descriptor_channels, float threshold, int octaves, int sublevels, int diffusivity)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>descriptor_type</strong> &#8211; Type of the extracted descriptor: DESCRIPTOR_KAZE, DESCRIPTOR_KAZE_UPRIGHT, DESCRIPTOR_MLDB or DESCRIPTOR_MLDB_UPRIGHT.</li>
+<li><strong>descriptor_size</strong> &#8211; Size of the descriptor in bits. 0 -&gt; Full size</li>
+<li><strong>descriptor_channels</strong> &#8211; Number of channels in the descriptor (1, 2, 3)</li>
+<li><strong>threshold</strong> &#8211; Detector response threshold to accept point</li>
+<li><strong>octaves</strong> &#8211; Maximum octave evolution of the image</li>
+<li><strong>sublevels</strong> &#8211; Default number of sublevels per scale level</li>
+<li><strong>diffusivity</strong> &#8211; Diffusivity type. DIFF_PM_G1, DIFF_PM_G2, DIFF_WEICKERT or DIFF_CHARBONNIER</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="sift">
+<h2>SIFT<a class="headerlink" href="#sift" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="SIFT : public Feature2D">
+<em class="property">class </em><tt class="descname">SIFT</tt> : <em class="property">public</em> <tt class="descname">Feature2D</tt><a class="headerlink" href="#SIFT : public Feature2D" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The SIFT algorithm has been moved to opencv_contrib/xfeatures2d module.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="common_interfaces_of_feature_detectors.html" title="Common Interfaces of Feature Detectors"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="features2d.html" title="features2d. 2D Features Framework"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="features2d.html" >features2d. 2D Features Framework</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/features2d/doc/feature_detection_and_description.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,529 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Image Warping &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="cudawarping. CUDA-accelerated Image Warping" href="cudawarping.html" />
+    <link rel="next" title="shape. Shape Distance and Matching" href="../../shape/doc/shape.html" />
+    <link rel="prev" title="cudawarping. CUDA-accelerated Image Warping" href="cudawarping.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../shape/doc/shape.html" title="shape. Shape Distance and Matching"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="cudawarping.html" title="cudawarping. CUDA-accelerated Image Warping"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="cudawarping.html" accesskey="U">cudawarping. CUDA-accelerated Image Warping</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Image Warping</a><ul>
+<li><a class="reference internal" href="#cuda-remap">cuda::remap</a></li>
+<li><a class="reference internal" href="#cuda-resize">cuda::resize</a></li>
+<li><a class="reference internal" href="#cuda-warpaffine">cuda::warpAffine</a></li>
+<li><a class="reference internal" href="#cuda-buildwarpaffinemaps">cuda::buildWarpAffineMaps</a></li>
+<li><a class="reference internal" href="#cuda-warpperspective">cuda::warpPerspective</a></li>
+<li><a class="reference internal" href="#cuda-buildwarpperspectivemaps">cuda::buildWarpPerspectiveMaps</a></li>
+<li><a class="reference internal" href="#cuda-buildwarpplanemaps">cuda::buildWarpPlaneMaps</a></li>
+<li><a class="reference internal" href="#cuda-buildwarpcylindricalmaps">cuda::buildWarpCylindricalMaps</a></li>
+<li><a class="reference internal" href="#cuda-buildwarpsphericalmaps">cuda::buildWarpSphericalMaps</a></li>
+<li><a class="reference internal" href="#cuda-rotate">cuda::rotate</a></li>
+<li><a class="reference internal" href="#cuda-pyrdown">cuda::pyrDown</a></li>
+<li><a class="reference internal" href="#cuda-pyrup">cuda::pyrUp</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="cudawarping.html"
+                        title="previous chapter">cudawarping. CUDA-accelerated Image Warping</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../shape/doc/shape.html"
+                        title="next chapter">shape. Shape Distance and Matching</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="image-warping">
+<h1>Image Warping<a class="headerlink" href="#image-warping" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="cuda-remap">
+<h2>cuda::remap<a class="headerlink" href="#cuda-remap" title="Permalink to this headline">¶</a></h2>
+<p>Applies a generic geometrical transformation to an image.</p>
+<dl class="function">
+<dt id="void cuda::remap(InputArray src, OutputArray dst, InputArray xmap, InputArray ymap, int interpolation, int borderMode , Scalar borderValue , Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">remap</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, InputArray <strong>xmap</strong>, InputArray <strong>ymap</strong>, int <strong>interpolation</strong>, int <strong>borderMode</strong>=BORDER_CONSTANT, Scalar <strong>borderValue</strong>=Scalar(), Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::remap(InputArray src, OutputArray dst, InputArray xmap, InputArray ymap, int interpolation, int borderMode , Scalar borderValue , Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image.</li>
+<li><strong>dst</strong> &#8211; Destination image with the size the same as  <tt class="docutils literal"><span class="pre">xmap</span></tt> and the type the same as  <tt class="docutils literal"><span class="pre">src</span></tt> .</li>
+<li><strong>xmap</strong> &#8211; X values. Only  <tt class="docutils literal"><span class="pre">CV_32FC1</span></tt> type is supported.</li>
+<li><strong>ymap</strong> &#8211; Y values. Only  <tt class="docutils literal"><span class="pre">CV_32FC1</span></tt> type is supported.</li>
+<li><strong>interpolation</strong> &#8211; Interpolation method (see  <a class="reference internal" href="../../imgproc/doc/geometric_transformations.html#void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)" title="void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">resize()</span></tt></a> ). <tt class="docutils literal"><span class="pre">INTER_NEAREST</span></tt> , <tt class="docutils literal"><span class="pre">INTER_LINEAR</span></tt> and <tt class="docutils literal"><span class="pre">INTER_CUBIC</span></tt> are supported for now.</li>
+<li><strong>borderMode</strong> &#8211; Pixel extrapolation method (see  <a class="reference internal" href="../../core/doc/operations_on_arrays.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></tt></a> ). <tt class="docutils literal"><span class="pre">BORDER_REFLECT101</span></tt> , <tt class="docutils literal"><span class="pre">BORDER_REPLICATE</span></tt> , <tt class="docutils literal"><span class="pre">BORDER_CONSTANT</span></tt> , <tt class="docutils literal"><span class="pre">BORDER_REFLECT</span></tt> and <tt class="docutils literal"><span class="pre">BORDER_WRAP</span></tt> are supported for now.</li>
+<li><strong>borderValue</strong> &#8211; Value used in case of a constant border. By default, it is 0.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function transforms the source image using the specified map:</p>
+<div class="math">
+<p><span class="math">\texttt{dst} (x,y) =  \texttt{src} (xmap(x,y), ymap(x,y))</span></p>
+</div><p>Values of pixels with non-integer coordinates are computed using the bilinear interpolation.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/geometric_transformations.html#void remap(InputArray src, OutputArray dst, InputArray map1, InputArray map2, int interpolation, int borderMode, const Scalar&amp; borderValue)" title="void remap(InputArray src, OutputArray dst, InputArray map1, InputArray map2, int interpolation, int borderMode, const Scalar&amp; borderValue)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">remap()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-resize">
+<h2>cuda::resize<a class="headerlink" href="#cuda-resize" title="Permalink to this headline">¶</a></h2>
+<p>Resizes an image.</p>
+<dl class="function">
+<dt id="void cuda::resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation , Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">resize</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, Size <strong>dsize</strong>, double <strong>fx</strong>=0, double <strong>fy</strong>=0, int <strong>interpolation</strong>=INTER_LINEAR, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation , Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image.</li>
+<li><strong>dst</strong> &#8211; Destination image  with the same type as  <tt class="docutils literal"><span class="pre">src</span></tt> . The size is <tt class="docutils literal"><span class="pre">dsize</span></tt> (when it is non-zero) or the size is computed from  <tt class="docutils literal"><span class="pre">src.size()</span></tt> , <tt class="docutils literal"><span class="pre">fx</span></tt> , and  <tt class="docutils literal"><span class="pre">fy</span></tt> .</li>
+<li><strong>dsize</strong> &#8211; <p>Destination image size. If it is zero, it is computed as:</p>
+<div class="math">
+<p><span class="math">\texttt{dsize = Size(round(fx*src.cols), round(fy*src.rows))}</span></p>
+</div><p>Either  <tt class="docutils literal"><span class="pre">dsize</span></tt> or both  <tt class="docutils literal"><span class="pre">fx</span></tt> and  <tt class="docutils literal"><span class="pre">fy</span></tt> must be non-zero.</p>
+</li>
+<li><strong>fx</strong> &#8211; <p>Scale factor along the horizontal axis. If it is zero, it is computed as:</p>
+<div class="math">
+<p><span class="math">\texttt{(double)dsize.width/src.cols}</span></p>
+</div></li>
+<li><strong>fy</strong> &#8211; <p>Scale factor along the vertical axis. If it is zero, it is computed as:</p>
+<div class="math">
+<p><span class="math">\texttt{(double)dsize.height/src.rows}</span></p>
+</div></li>
+<li><strong>interpolation</strong> &#8211; Interpolation method. <tt class="docutils literal"><span class="pre">INTER_NEAREST</span></tt> , <tt class="docutils literal"><span class="pre">INTER_LINEAR</span></tt> and <tt class="docutils literal"><span class="pre">INTER_CUBIC</span></tt> are supported for now.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/geometric_transformations.html#void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)" title="void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">resize()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-warpaffine">
+<h2>cuda::warpAffine<a class="headerlink" href="#cuda-warpaffine" title="Permalink to this headline">¶</a></h2>
+<p>Applies an affine transformation to an image.</p>
+<dl class="function">
+<dt id="void cuda::warpAffine(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags , int borderMode , Scalar borderValue , Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">warpAffine</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, InputArray <strong>M</strong>, Size <strong>dsize</strong>, int <strong>flags</strong>=INTER_LINEAR, int <strong>borderMode</strong>=BORDER_CONSTANT, Scalar <strong>borderValue</strong>=Scalar(), Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::warpAffine(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags , int borderMode , Scalar borderValue , Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image.  <tt class="docutils literal"><span class="pre">CV_8U</span></tt> , <tt class="docutils literal"><span class="pre">CV_16U</span></tt> , <tt class="docutils literal"><span class="pre">CV_32S</span></tt> , or  <tt class="docutils literal"><span class="pre">CV_32F</span></tt> depth and 1, 3, or 4 channels are supported.</li>
+<li><strong>dst</strong> &#8211; Destination image with the same type as  <tt class="docutils literal"><span class="pre">src</span></tt> . The size is  <tt class="docutils literal"><span class="pre">dsize</span></tt> .</li>
+<li><strong>M</strong> &#8211; <em>2x3</em>  transformation matrix.</li>
+<li><strong>dsize</strong> &#8211; Size of the destination image.</li>
+<li><strong>flags</strong> &#8211; Combination of interpolation methods (see  <a class="reference internal" href="../../imgproc/doc/geometric_transformations.html#void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)" title="void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">resize()</span></tt></a>) and the optional flag  <tt class="docutils literal"><span class="pre">WARP_INVERSE_MAP</span></tt> specifying that  <tt class="docutils literal"><span class="pre">M</span></tt> is an inverse transformation ( <tt class="docutils literal"><span class="pre">dst=&gt;src</span></tt> ). Only <tt class="docutils literal"><span class="pre">INTER_NEAREST</span></tt> , <tt class="docutils literal"><span class="pre">INTER_LINEAR</span></tt> , and  <tt class="docutils literal"><span class="pre">INTER_CUBIC</span></tt> interpolation methods are supported.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/geometric_transformations.html#void warpAffine(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags, int borderMode, const Scalar&amp; borderValue)" title="void warpAffine(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags, int borderMode, const Scalar&amp; borderValue)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">warpAffine()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-buildwarpaffinemaps">
+<h2>cuda::buildWarpAffineMaps<a class="headerlink" href="#cuda-buildwarpaffinemaps" title="Permalink to this headline">¶</a></h2>
+<p>Builds transformation maps for affine transformation.</p>
+<dl class="function">
+<dt id="void cuda::buildWarpAffineMaps(InputArray M, bool inverse, Size dsize, OutputArray xmap, OutputArray ymap, Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">buildWarpAffineMaps</tt><big>(</big>InputArray <strong>M</strong>, bool <strong>inverse</strong>, Size <strong>dsize</strong>, OutputArray <strong>xmap</strong>, OutputArray <strong>ymap</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::buildWarpAffineMaps(InputArray M, bool inverse, Size dsize, OutputArray xmap, OutputArray ymap, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>M</strong> &#8211; <em>2x3</em>  transformation matrix.</li>
+<li><strong>inverse</strong> &#8211; Flag  specifying that  <tt class="docutils literal"><span class="pre">M</span></tt> is an inverse transformation ( <tt class="docutils literal"><span class="pre">dst=&gt;src</span></tt> ).</li>
+<li><strong>dsize</strong> &#8211; Size of the destination image.</li>
+<li><strong>xmap</strong> &#8211; X values with  <tt class="docutils literal"><span class="pre">CV_32FC1</span></tt> type.</li>
+<li><strong>ymap</strong> &#8211; Y values with  <tt class="docutils literal"><span class="pre">CV_32FC1</span></tt> type.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void cuda::warpAffine(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags , int borderMode , Scalar borderValue , Stream&amp; stream)" title="void cuda::warpAffine(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags , int borderMode , Scalar borderValue , Stream&amp; stream)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cuda::warpAffine()</span></tt></a> , <a class="reference internal" href="#void cuda::remap(InputArray src, OutputArray dst, InputArray xmap, InputArray ymap, int interpolation, int borderMode , Scalar borderValue , Stream&amp; stream)" title="void cuda::remap(InputArray src, OutputArray dst, InputArray xmap, InputArray ymap, int interpolation, int borderMode , Scalar borderValue , Stream&amp; stream)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cuda::remap()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-warpperspective">
+<h2>cuda::warpPerspective<a class="headerlink" href="#cuda-warpperspective" title="Permalink to this headline">¶</a></h2>
+<p>Applies a perspective transformation to an image.</p>
+<dl class="function">
+<dt id="void cuda::warpPerspective(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags , int borderMode , Scalar borderValue , Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">warpPerspective</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, InputArray <strong>M</strong>, Size <strong>dsize</strong>, int <strong>flags</strong>=INTER_LINEAR, int <strong>borderMode</strong>=BORDER_CONSTANT, Scalar <strong>borderValue</strong>=Scalar(), Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::warpPerspective(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags , int borderMode , Scalar borderValue , Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image. <tt class="docutils literal"><span class="pre">CV_8U</span></tt> , <tt class="docutils literal"><span class="pre">CV_16U</span></tt> , <tt class="docutils literal"><span class="pre">CV_32S</span></tt> , or  <tt class="docutils literal"><span class="pre">CV_32F</span></tt> depth and 1, 3, or 4 channels are supported.</li>
+<li><strong>dst</strong> &#8211; Destination image with the same type as  <tt class="docutils literal"><span class="pre">src</span></tt> . The size is  <tt class="docutils literal"><span class="pre">dsize</span></tt> .</li>
+<li><strong>M</strong> &#8211; <em>3x3</em> transformation matrix.</li>
+<li><strong>dsize</strong> &#8211; Size of the destination image.</li>
+<li><strong>flags</strong> &#8211; Combination of interpolation methods (see  <a class="reference internal" href="../../imgproc/doc/geometric_transformations.html#void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)" title="void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">resize()</span></tt></a> ) and the optional flag  <tt class="docutils literal"><span class="pre">WARP_INVERSE_MAP</span></tt> specifying that  <tt class="docutils literal"><span class="pre">M</span></tt> is the inverse transformation ( <tt class="docutils literal"><span class="pre">dst</span> <span class="pre">=&gt;</span> <span class="pre">src</span></tt> ). Only  <tt class="docutils literal"><span class="pre">INTER_NEAREST</span></tt> , <tt class="docutils literal"><span class="pre">INTER_LINEAR</span></tt> , and  <tt class="docutils literal"><span class="pre">INTER_CUBIC</span></tt> interpolation methods are supported.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/geometric_transformations.html#void warpPerspective(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags, int borderMode, const Scalar&amp; borderValue)" title="void warpPerspective(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags, int borderMode, const Scalar&amp; borderValue)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">warpPerspective()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-buildwarpperspectivemaps">
+<h2>cuda::buildWarpPerspectiveMaps<a class="headerlink" href="#cuda-buildwarpperspectivemaps" title="Permalink to this headline">¶</a></h2>
+<p>Builds transformation maps for perspective transformation.</p>
+<dl class="function">
+<dt>
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">buildWarpAffineMaps</tt><big>(</big>InputArray <strong>M</strong>, bool <strong>inverse</strong>, Size <strong>dsize</strong>, OutputArray <strong>xmap</strong>, OutputArray <strong>ymap</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>M</strong> &#8211; <em>3x3</em>  transformation matrix.</li>
+<li><strong>inverse</strong> &#8211; Flag  specifying that  <tt class="docutils literal"><span class="pre">M</span></tt> is an inverse transformation ( <tt class="docutils literal"><span class="pre">dst=&gt;src</span></tt> ).</li>
+<li><strong>dsize</strong> &#8211; Size of the destination image.</li>
+<li><strong>xmap</strong> &#8211; X values with  <tt class="docutils literal"><span class="pre">CV_32FC1</span></tt> type.</li>
+<li><strong>ymap</strong> &#8211; Y values with  <tt class="docutils literal"><span class="pre">CV_32FC1</span></tt> type.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void cuda::warpPerspective(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags , int borderMode , Scalar borderValue , Stream&amp; stream)" title="void cuda::warpPerspective(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags , int borderMode , Scalar borderValue , Stream&amp; stream)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cuda::warpPerspective()</span></tt></a> , <a class="reference internal" href="#void cuda::remap(InputArray src, OutputArray dst, InputArray xmap, InputArray ymap, int interpolation, int borderMode , Scalar borderValue , Stream&amp; stream)" title="void cuda::remap(InputArray src, OutputArray dst, InputArray xmap, InputArray ymap, int interpolation, int borderMode , Scalar borderValue , Stream&amp; stream)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cuda::remap()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-buildwarpplanemaps">
+<h2>cuda::buildWarpPlaneMaps<a class="headerlink" href="#cuda-buildwarpplanemaps" title="Permalink to this headline">¶</a></h2>
+<p>Builds plane warping maps.</p>
+<dl class="function">
+<dt id="void cuda::buildWarpPlaneMaps(Size src_size, Rect dst_roi, InputArray K, InputArray R, InputArray T, float scale, OutputArray map_x, OutputArray map_y, Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">buildWarpPlaneMaps</tt><big>(</big>Size <strong>src_size</strong>, Rect <strong>dst_roi</strong>, InputArray <strong>K</strong>, InputArray <strong>R</strong>, InputArray <strong>T</strong>, float <strong>scale</strong>, OutputArray <strong>map_x</strong>, OutputArray <strong>map_y</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::buildWarpPlaneMaps(Size src_size, Rect dst_roi, InputArray K, InputArray R, InputArray T, float scale, OutputArray map_x, OutputArray map_y, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-buildwarpcylindricalmaps">
+<h2>cuda::buildWarpCylindricalMaps<a class="headerlink" href="#cuda-buildwarpcylindricalmaps" title="Permalink to this headline">¶</a></h2>
+<p>Builds cylindrical warping maps.</p>
+<dl class="function">
+<dt id="void cuda::buildWarpCylindricalMaps(Size src_size, Rect dst_roi, InputArray K, InputArray R, float scale, OutputArray map_x, OutputArray map_y, Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">buildWarpCylindricalMaps</tt><big>(</big>Size <strong>src_size</strong>, Rect <strong>dst_roi</strong>, InputArray <strong>K</strong>, InputArray <strong>R</strong>, float <strong>scale</strong>, OutputArray <strong>map_x</strong>, OutputArray <strong>map_y</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::buildWarpCylindricalMaps(Size src_size, Rect dst_roi, InputArray K, InputArray R, float scale, OutputArray map_x, OutputArray map_y, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-buildwarpsphericalmaps">
+<h2>cuda::buildWarpSphericalMaps<a class="headerlink" href="#cuda-buildwarpsphericalmaps" title="Permalink to this headline">¶</a></h2>
+<p>Builds spherical warping maps.</p>
+<dl class="function">
+<dt id="void cuda::buildWarpSphericalMaps(Size src_size, Rect dst_roi, InputArray K, InputArray R, float scale, OutputArray map_x, OutputArray map_y, Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">buildWarpSphericalMaps</tt><big>(</big>Size <strong>src_size</strong>, Rect <strong>dst_roi</strong>, InputArray <strong>K</strong>, InputArray <strong>R</strong>, float <strong>scale</strong>, OutputArray <strong>map_x</strong>, OutputArray <strong>map_y</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::buildWarpSphericalMaps(Size src_size, Rect dst_roi, InputArray K, InputArray R, float scale, OutputArray map_x, OutputArray map_y, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-rotate">
+<h2>cuda::rotate<a class="headerlink" href="#cuda-rotate" title="Permalink to this headline">¶</a></h2>
+<p>Rotates an image around the origin (0,0) and then shifts it.</p>
+<dl class="function">
+<dt id="void cuda::rotate(InputArray src, OutputArray dst, Size dsize, double angle, double xShift , double yShift , int interpolation , Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">rotate</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, Size <strong>dsize</strong>, double <strong>angle</strong>, double <strong>xShift</strong>=0, double <strong>yShift</strong>=0, int <strong>interpolation</strong>=INTER_LINEAR, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::rotate(InputArray src, OutputArray dst, Size dsize, double angle, double xShift , double yShift , int interpolation , Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image. Supports 1, 3 or 4 channels images with <tt class="docutils literal"><span class="pre">CV_8U</span></tt> , <tt class="docutils literal"><span class="pre">CV_16U</span></tt> or <tt class="docutils literal"><span class="pre">CV_32F</span></tt> depth.</li>
+<li><strong>dst</strong> &#8211; Destination image with the same type as  <tt class="docutils literal"><span class="pre">src</span></tt> . The size is  <tt class="docutils literal"><span class="pre">dsize</span></tt> .</li>
+<li><strong>dsize</strong> &#8211; Size of the destination image.</li>
+<li><strong>angle</strong> &#8211; Angle of rotation in degrees.</li>
+<li><strong>xShift</strong> &#8211; Shift along the horizontal axis.</li>
+<li><strong>yShift</strong> &#8211; Shift along the vertical axis.</li>
+<li><strong>interpolation</strong> &#8211; Interpolation method. Only  <tt class="docutils literal"><span class="pre">INTER_NEAREST</span></tt> , <tt class="docutils literal"><span class="pre">INTER_LINEAR</span></tt> , and  <tt class="docutils literal"><span class="pre">INTER_CUBIC</span></tt> are supported.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void cuda::warpAffine(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags , int borderMode , Scalar borderValue , Stream&amp; stream)" title="void cuda::warpAffine(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags , int borderMode , Scalar borderValue , Stream&amp; stream)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cuda::warpAffine()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-pyrdown">
+<h2>cuda::pyrDown<a class="headerlink" href="#cuda-pyrdown" title="Permalink to this headline">¶</a></h2>
+<p>Smoothes an image and downsamples it.</p>
+<dl class="function">
+<dt id="void cuda::pyrDown(InputArray src, OutputArray dst, Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">pyrDown</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::pyrDown(InputArray src, OutputArray dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image.</li>
+<li><strong>dst</strong> &#8211; Destination image. Will have <tt class="docutils literal"><span class="pre">Size((src.cols+1)/2,</span> <span class="pre">(src.rows+1)/2)</span></tt> size and the same type as <tt class="docutils literal"><span class="pre">src</span></tt> .</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/filtering.html#void pyrDown(InputArray src, OutputArray dst, const Size&amp; dstsize, int borderType)" title="void pyrDown(InputArray src, OutputArray dst, const Size&amp; dstsize, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">pyrDown()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-pyrup">
+<h2>cuda::pyrUp<a class="headerlink" href="#cuda-pyrup" title="Permalink to this headline">¶</a></h2>
+<p>Upsamples an image and then smoothes it.</p>
+<dl class="function">
+<dt id="void cuda::pyrUp(InputArray src, OutputArray dst, Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">pyrUp</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::pyrUp(InputArray src, OutputArray dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image.</li>
+<li><strong>dst</strong> &#8211; Destination image. Will have <tt class="docutils literal"><span class="pre">Size(src.cols*2,</span> <span class="pre">src.rows*2)</span></tt> size and the same type as <tt class="docutils literal"><span class="pre">src</span></tt> .</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/filtering.html#void pyrUp(InputArray src, OutputArray dst, const Size&amp; dstsize, int borderType)" title="void pyrUp(InputArray src, OutputArray dst, const Size&amp; dstsize, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">pyrUp()</span></tt></a></p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../shape/doc/shape.html" title="shape. Shape Distance and Matching"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="cudawarping.html" title="cudawarping. CUDA-accelerated Image Warping"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="cudawarping.html" >cudawarping. CUDA-accelerated Image Warping</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/cudawarping/doc/warping.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

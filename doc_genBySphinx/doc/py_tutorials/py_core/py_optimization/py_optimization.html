@@ -1,0 +1,321 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Performance Measurement and Improvement Techniques &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../../index.html" />
+    <link rel="up" title="Core Operations" href="../py_table_of_contents_core/py_table_of_contents_core.html" />
+    <link rel="next" title="Mathematical Tools in OpenCV" href="../py_maths_tools/py_maths_tools.html" />
+    <link rel="prev" title="Arithmetic Operations on Images" href="../py_image_arithmetics/py_image_arithmetics.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py_maths_tools/py_maths_tools.html" title="Mathematical Tools in OpenCV"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../py_image_arithmetics/py_image_arithmetics.html" title="Arithmetic Operations on Images"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_core/py_table_of_contents_core.html" accesskey="U">Core Operations</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Performance Measurement and Improvement Techniques</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#measuring-performance-with-opencv">Measuring Performance with OpenCV</a></li>
+<li><a class="reference internal" href="#default-optimization-in-opencv">Default Optimization in OpenCV</a></li>
+<li><a class="reference internal" href="#measuring-performance-in-ipython">Measuring Performance in IPython</a></li>
+<li><a class="reference internal" href="#more-ipython-magic-commands">More IPython magic commands</a></li>
+<li><a class="reference internal" href="#performance-optimization-techniques">Performance Optimization Techniques</a></li>
+<li><a class="reference internal" href="#additional-resources">Additional Resources</a></li>
+<li><a class="reference internal" href="#exercises">Exercises</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../py_image_arithmetics/py_image_arithmetics.html"
+                        title="previous chapter">Arithmetic Operations on Images</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../py_maths_tools/py_maths_tools.html"
+                        title="next chapter">Mathematical Tools in OpenCV</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="performance-measurement-and-improvement-techniques">
+<span id="optimization-techniques"></span><h1>Performance Measurement and Improvement Techniques<a class="headerlink" href="#performance-measurement-and-improvement-techniques" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In image processing, since you are dealing with large number of operations per second, it is mandatory that your code is not only providing the correct solution, but also in the fastest manner. So in this chapter, you will learn</p>
+<blockquote>
+<div><ul class="simple">
+<li>To measure the performance of your code.</li>
+<li>Some tips to improve the performance of your code.</li>
+<li>You will see these functions : <strong>cv2.getTickCount</strong>, <strong>cv2.getTickFrequency</strong> etc.</li>
+</ul>
+</div></blockquote>
+<p>Apart from OpenCV, Python also provides a module <strong>time</strong> which is helpful in measuring the time of execution. Another module <strong>profile</strong> helps to get detailed report on the code, like how much time each function in the code took, how many times the function was called etc. But, if you are using IPython, all these features are integrated in an user-friendly manner. We will see some important ones, and for more details, check links in <strong>Additional Resouces</strong> section.</p>
+</div>
+<div class="section" id="measuring-performance-with-opencv">
+<h2>Measuring Performance with OpenCV<a class="headerlink" href="#measuring-performance-with-opencv" title="Permalink to this headline">¶</a></h2>
+<p><strong>cv2.getTickCount</strong> function returns the number of clock-cycles after a reference event (like the moment machine was switched ON) to the moment this function is called. So if you call it before and after the function execution, you get number of clock-cycles used to execute a function.</p>
+<p><strong>cv2.getTickFrequency</strong> function returns the frequency of clock-cycles, or the number of clock-cycles per second. So to find the time of execution in seconds, you can do following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">e1</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">getTickCount</span><span class="p">()</span>
+<span class="c"># your code execution</span>
+<span class="n">e2</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">getTickCount</span><span class="p">()</span>
+<span class="n">time</span> <span class="o">=</span> <span class="p">(</span><span class="n">e2</span> <span class="o">-</span> <span class="n">e1</span><span class="p">)</span><span class="o">/</span> <span class="n">cv2</span><span class="o">.</span><span class="n">getTickFrequency</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We will demonstrate with following example. Following example apply median filtering with a kernel of odd size ranging from 5 to 49. (Don&#8217;t worry about what will the result look like, that is not our goal):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">img1</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;messi5.jpg&#39;</span><span class="p">)</span>
+
+<span class="n">e1</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">getTickCount</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">49</span><span class="p">,</span><span class="mi">2</span><span class="p">):</span>
+    <span class="n">img1</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">medianBlur</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span><span class="n">i</span><span class="p">)</span>
+<span class="n">e2</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">getTickCount</span><span class="p">()</span>
+<span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="n">e2</span> <span class="o">-</span> <span class="n">e1</span><span class="p">)</span><span class="o">/</span><span class="n">cv2</span><span class="o">.</span><span class="n">getTickFrequency</span><span class="p">()</span>
+<span class="k">print</span> <span class="n">t</span>
+
+<span class="c"># Result I got is 0.521107655 seconds</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You can do the same with <tt class="docutils literal"><span class="pre">time</span></tt> module. Instead of <tt class="docutils literal"><span class="pre">cv2.getTickCount</span></tt>, use <tt class="docutils literal"><span class="pre">time.time()</span></tt> function. Then take the difference of two times.</p>
+</div>
+</div>
+<div class="section" id="default-optimization-in-opencv">
+<h2>Default Optimization in OpenCV<a class="headerlink" href="#default-optimization-in-opencv" title="Permalink to this headline">¶</a></h2>
+<p>Many of the OpenCV functions are optimized using SSE2, AVX etc. It contains unoptimized code also. So if our system support these features, we should exploit them (almost all modern day processors support them). It is enabled by default while compiling. So OpenCV runs the optimized code if it is enabled, else it runs the unoptimized code. You can use <strong>cv2.useOptimized()</strong> to check if it is enabled/disabled and <strong>cv2.setUseOptimized()</strong> to enable/disable it. Let&#8217;s see a simple example.</p>
+<div class="highlight-python"><div class="highlight"><pre># check if optimization is enabled
+In [5]: cv2.useOptimized()
+Out[5]: True
+
+In [6]: %timeit res = cv2.medianBlur(img,49)
+10 loops, best of 3: 34.9 ms per loop
+
+# Disable it
+In [7]: cv2.setUseOptimized(False)
+
+In [8]: cv2.useOptimized()
+Out[8]: False
+
+In [9]: %timeit res = cv2.medianBlur(img,49)
+10 loops, best of 3: 64.1 ms per loop
+</pre></div>
+</div>
+<p>See, optimized median filtering is ~2x faster than unoptimized version. If you check its source, you can see median filtering is SIMD optimized. So you can use this to enable optimization at the top of your code (remember it is enabled by default).</p>
+</div>
+<div class="section" id="measuring-performance-in-ipython">
+<h2>Measuring Performance in IPython<a class="headerlink" href="#measuring-performance-in-ipython" title="Permalink to this headline">¶</a></h2>
+<p>Sometimes you may need to compare the performance of two similar operations. IPython gives you a magic command <tt class="docutils literal"><span class="pre">%timeit</span></tt> to perform this. It runs the code several times to get more accurate results. Once again, they are suitable to measure single line codes.</p>
+<p>For example, do you know which of the following addition operation is better, <tt class="docutils literal"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">5;</span> <span class="pre">y</span> <span class="pre">=</span> <span class="pre">x**2</span></tt>, <tt class="docutils literal"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">5;</span> <span class="pre">y</span> <span class="pre">=</span> <span class="pre">x*x</span></tt>, <tt class="docutils literal"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">np.uint8([5]);</span> <span class="pre">y</span> <span class="pre">=</span> <span class="pre">x*x</span></tt> or <tt class="docutils literal"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">np.square(x)</span></tt> ? We will find it with %timeit in IPython shell.</p>
+<div class="highlight-python"><div class="highlight"><pre>In [10]: x = 5
+
+In [11]: %timeit y=x**2
+10000000 loops, best of 3: 73 ns per loop
+
+In [12]: %timeit y=x*x
+10000000 loops, best of 3: 58.3 ns per loop
+
+In [15]: z = np.uint8([5])
+
+In [17]: %timeit y=z*z
+1000000 loops, best of 3: 1.25 us per loop
+
+In [19]: %timeit y=np.square(z)
+1000000 loops, best of 3: 1.16 us per loop
+</pre></div>
+</div>
+<p>You can see that, <tt class="docutils literal"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">5</span> <span class="pre">;</span> <span class="pre">y</span> <span class="pre">=</span> <span class="pre">x*x</span></tt> is fastest and it is around 20x faster compared to Numpy. If you consider the array creation also, it may reach upto 100x faster. Cool, right? <em>(Numpy devs are working on this issue)</em></p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Python scalar operations are faster than Numpy scalar operations. So for operations including one or two elements, Python scalar is better than Numpy arrays. Numpy takes advantage when size of array is a little bit bigger.</p>
+</div>
+<p>We will try one more example. This time, we will compare the performance of <strong>cv2.countNonZero()</strong> and <strong>np.count_nonzero()</strong> for same image.</p>
+<div class="highlight-python"><div class="highlight"><pre>In [35]: %timeit z = cv2.countNonZero(img)
+100000 loops, best of 3: 15.8 us per loop
+
+In [36]: %timeit z = np.count_nonzero(img)
+1000 loops, best of 3: 370 us per loop
+</pre></div>
+</div>
+<p>See, OpenCV function is nearly 25x faster than Numpy function.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Normally, OpenCV functions are faster than Numpy functions. So for same operation, OpenCV functions are preferred. But, there can be exceptions, especially when Numpy works with views instead of copies.</p>
+</div>
+</div>
+<div class="section" id="more-ipython-magic-commands">
+<h2>More IPython magic commands<a class="headerlink" href="#more-ipython-magic-commands" title="Permalink to this headline">¶</a></h2>
+<p>There are several other magic commands to measure the performance, profiling, line profiling, memory measurement etc. They all are well documented. So only links to those docs are provided here. Interested readers are recommended to try them out.</p>
+</div>
+<div class="section" id="performance-optimization-techniques">
+<h2>Performance Optimization Techniques<a class="headerlink" href="#performance-optimization-techniques" title="Permalink to this headline">¶</a></h2>
+<p>There are several techniques and coding methods to exploit maximum performance of Python and Numpy. Only relevant ones are noted here and links are given to important sources. The main thing to be noted here is that, first try to implement the algorithm in a simple manner. Once it is working, profile it, find the bottlenecks and optimize them.</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Avoid using loops in Python as far as possible, especially double/triple loops etc. They are inherently slow.</li>
+<li>Vectorize the algorithm/code to the maximum possible extent because Numpy and OpenCV are optimized for vector operations.</li>
+<li>Exploit the cache coherence.</li>
+<li>Never make copies of array unless it is needed. Try to use views instead. Array copying is a costly operation.</li>
+</ol>
+</div></blockquote>
+<p>Even after doing all these operations, if your code is still slow, or use of large loops are inevitable, use additional libraries like Cython to make it faster.</p>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><a class="reference external" href="http://wiki.python.org/moin/PythonSpeed/PerformanceTips">Python Optimization Techniques</a></li>
+<li>Scipy Lecture Notes - <a class="reference external" href="http://scipy-lectures.github.io/advanced/advanced_numpy/index.html#advanced-numpy">Advanced Numpy</a></li>
+<li><a class="reference external" href="http://pynash.org/2013/03/06/timing-and-profiling.html">Timing and Profiling in IPython</a></li>
+</ol>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py_maths_tools/py_maths_tools.html" title="Mathematical Tools in OpenCV"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../py_image_arithmetics/py_image_arithmetics.html" title="Arithmetic Operations on Images"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_core/py_table_of_contents_core.html" >Core Operations</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../../_sources/doc/py_tutorials/py_core/py_optimization/py_optimization.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

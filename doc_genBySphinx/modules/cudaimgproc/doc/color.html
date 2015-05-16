@@ -1,0 +1,362 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Color space processing &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="cudaimgproc. CUDA-accelerated Image Processing" href="cudaimgproc.html" />
+    <link rel="next" title="Histogram Calculation" href="histogram.html" />
+    <link rel="prev" title="cudaimgproc. CUDA-accelerated Image Processing" href="cudaimgproc.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="histogram.html" title="Histogram Calculation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="cudaimgproc.html" title="cudaimgproc. CUDA-accelerated Image Processing"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="cudaimgproc.html" accesskey="U">cudaimgproc. CUDA-accelerated Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Color space processing</a><ul>
+<li><a class="reference internal" href="#cuda-cvtcolor">cuda::cvtColor</a></li>
+<li><a class="reference internal" href="#cuda-demosaicing">cuda::demosaicing</a></li>
+<li><a class="reference internal" href="#cuda-swapchannels">cuda::swapChannels</a></li>
+<li><a class="reference internal" href="#cuda-gammacorrection">cuda::gammaCorrection</a></li>
+<li><a class="reference internal" href="#cuda-alphacomp">cuda::alphaComp</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="cudaimgproc.html"
+                        title="previous chapter">cudaimgproc. CUDA-accelerated Image Processing</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="histogram.html"
+                        title="next chapter">Histogram Calculation</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="color-space-processing">
+<h1>Color space processing<a class="headerlink" href="#color-space-processing" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="cuda-cvtcolor">
+<h2>cuda::cvtColor<a class="headerlink" href="#cuda-cvtcolor" title="Permalink to this headline">¶</a></h2>
+<p>Converts an image from one color space to another.</p>
+<dl class="function">
+<dt id="void cuda::cvtColor(InputArray src, OutputArray dst, int code, int dcn , Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">cvtColor</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, int <strong>code</strong>, int <strong>dcn</strong>=0, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::cvtColor(InputArray src, OutputArray dst, int code, int dcn , Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image with  <tt class="docutils literal"><span class="pre">CV_8U</span></tt> , <tt class="docutils literal"><span class="pre">CV_16U</span></tt> , or  <tt class="docutils literal"><span class="pre">CV_32F</span></tt> depth and 1, 3, or 4 channels.</li>
+<li><strong>dst</strong> &#8211; Destination image.</li>
+<li><strong>code</strong> &#8211; Color space conversion code. For details, see  <a class="reference internal" href="../../imgproc/doc/miscellaneous_transformations.html#void cvtColor(InputArray src, OutputArray dst, int code, int dstCn)" title="void cvtColor(InputArray src, OutputArray dst, int code, int dstCn)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cvtColor()</span></tt></a> .</li>
+<li><strong>dcn</strong> &#8211; Number of channels in the destination image. If the parameter is 0, the number of the channels is derived automatically from  <tt class="docutils literal"><span class="pre">src</span></tt> and the  <tt class="docutils literal"><span class="pre">code</span></tt> .</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>3-channel color spaces (like <tt class="docutils literal"><span class="pre">HSV</span></tt>, <tt class="docutils literal"><span class="pre">XYZ</span></tt>, and so on) can be stored in a 4-channel image for better performance.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/miscellaneous_transformations.html#void cvtColor(InputArray src, OutputArray dst, int code, int dstCn)" title="void cvtColor(InputArray src, OutputArray dst, int code, int dstCn)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cvtColor()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-demosaicing">
+<h2>cuda::demosaicing<a class="headerlink" href="#cuda-demosaicing" title="Permalink to this headline">¶</a></h2>
+<p>Converts an image from Bayer pattern to RGB or grayscale.</p>
+<dl class="function">
+<dt id="void cuda::demosaicing(InputArray src, OutputArray dst, int code, int dcn , Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">demosaicing</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, int <strong>code</strong>, int <strong>dcn</strong>=-1, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::demosaicing(InputArray src, OutputArray dst, int code, int dcn , Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image (8-bit or 16-bit single channel).</li>
+<li><strong>dst</strong> &#8211; Destination image.</li>
+<li><strong>code</strong> &#8211; Color space conversion code (see the description below).</li>
+<li><strong>dcn</strong> &#8211; Number of channels in the destination image. If the parameter is 0, the number of the channels is derived automatically from  <tt class="docutils literal"><span class="pre">src</span></tt> and the  <tt class="docutils literal"><span class="pre">code</span></tt> .</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function can do the following transformations:</p>
+<ul>
+<li><p class="first">Demosaicing using bilinear interpolation</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">COLOR_BayerBG2GRAY</span></tt> , <tt class="docutils literal"><span class="pre">COLOR_BayerGB2GRAY</span></tt> , <tt class="docutils literal"><span class="pre">COLOR_BayerRG2GRAY</span></tt> , <tt class="docutils literal"><span class="pre">COLOR_BayerGR2GRAY</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">COLOR_BayerBG2BGR</span></tt> , <tt class="docutils literal"><span class="pre">COLOR_BayerGB2BGR</span></tt> , <tt class="docutils literal"><span class="pre">COLOR_BayerRG2BGR</span></tt> , <tt class="docutils literal"><span class="pre">COLOR_BayerGR2BGR</span></tt></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Demosaicing using Malvar-He-Cutler algorithm (<a class="reference internal" href="#mht2011" id="id1">[MHT2011]</a>)</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">COLOR_BayerBG2GRAY_MHT</span></tt> , <tt class="docutils literal"><span class="pre">COLOR_BayerGB2GRAY_MHT</span></tt> , <tt class="docutils literal"><span class="pre">COLOR_BayerRG2GRAY_MHT</span></tt> , <tt class="docutils literal"><span class="pre">COLOR_BayerGR2GRAY_MHT</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">COLOR_BayerBG2BGR_MHT</span></tt> , <tt class="docutils literal"><span class="pre">COLOR_BayerGB2BGR_MHT</span></tt> , <tt class="docutils literal"><span class="pre">COLOR_BayerRG2BGR_MHT</span></tt> , <tt class="docutils literal"><span class="pre">COLOR_BayerGR2BGR_MHT</span></tt></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/miscellaneous_transformations.html#void cvtColor(InputArray src, OutputArray dst, int code, int dstCn)" title="void cvtColor(InputArray src, OutputArray dst, int code, int dstCn)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cvtColor()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-swapchannels">
+<h2>cuda::swapChannels<a class="headerlink" href="#cuda-swapchannels" title="Permalink to this headline">¶</a></h2>
+<p>Exchanges the color channels of an image in-place.</p>
+<dl class="function">
+<dt id="void cuda::swapChannels(InputOutputArray image, const int dstOrder[4], Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">swapChannels</tt><big>(</big>InputOutputArray <strong>image</strong>, const int <strong>dstOrder</strong>[4], Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::swapChannels(InputOutputArray image, const int dstOrder[4], Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; Source image. Supports only <tt class="docutils literal"><span class="pre">CV_8UC4</span></tt> type.</li>
+<li><strong>dstOrder</strong> &#8211; Integer array describing how channel values are permutated. The n-th entry of the array contains the number of the channel that is stored in the n-th channel of the output image. E.g. Given an RGBA image, aDstOrder = [3,2,1,0] converts this to ABGR channel order.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The methods support arbitrary permutations of the original channels, including replication.</p>
+</div>
+<div class="section" id="cuda-gammacorrection">
+<h2>cuda::gammaCorrection<a class="headerlink" href="#cuda-gammacorrection" title="Permalink to this headline">¶</a></h2>
+<p>Routines for correcting image color gamma.</p>
+<dl class="function">
+<dt id="void cuda::gammaCorrection(InputArray src, OutputArray dst, bool forward , Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">gammaCorrection</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, bool <strong>forward</strong>=true, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::gammaCorrection(InputArray src, OutputArray dst, bool forward , Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image (3- or 4-channel 8 bit).</li>
+<li><strong>dst</strong> &#8211; Destination image.</li>
+<li><strong>forward</strong> &#8211; <tt class="docutils literal"><span class="pre">true</span></tt> for forward gamma correction or <tt class="docutils literal"><span class="pre">false</span></tt> for inverse gamma correction.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-alphacomp">
+<h2>cuda::alphaComp<a class="headerlink" href="#cuda-alphacomp" title="Permalink to this headline">¶</a></h2>
+<p>Composites two images using alpha opacity values contained in each image.</p>
+<dl class="function">
+<dt id="void cuda::alphaComp(InputArray img1, InputArray img2, OutputArray dst, int alpha_op, Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">alphaComp</tt><big>(</big>InputArray <strong>img1</strong>, InputArray <strong>img2</strong>, OutputArray <strong>dst</strong>, int <strong>alpha_op</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::alphaComp(InputArray img1, InputArray img2, OutputArray dst, int alpha_op, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>img1</strong> &#8211; First image. Supports <tt class="docutils literal"><span class="pre">CV_8UC4</span></tt> , <tt class="docutils literal"><span class="pre">CV_16UC4</span></tt> , <tt class="docutils literal"><span class="pre">CV_32SC4</span></tt> and <tt class="docutils literal"><span class="pre">CV_32FC4</span></tt> types.</li>
+<li><strong>img2</strong> &#8211; Second image. Must have the same size and the same type as <tt class="docutils literal"><span class="pre">img1</span></tt> .</li>
+<li><strong>dst</strong> &#8211; Destination image.</li>
+<li><strong>alpha_op</strong> &#8211; <p>Flag specifying the alpha-blending operation:</p>
+<ul>
+<li><strong>ALPHA_OVER</strong></li>
+<li><strong>ALPHA_IN</strong></li>
+<li><strong>ALPHA_OUT</strong></li>
+<li><strong>ALPHA_ATOP</strong></li>
+<li><strong>ALPHA_XOR</strong></li>
+<li><strong>ALPHA_PLUS</strong></li>
+<li><strong>ALPHA_OVER_PREMUL</strong></li>
+<li><strong>ALPHA_IN_PREMUL</strong></li>
+<li><strong>ALPHA_OUT_PREMUL</strong></li>
+<li><strong>ALPHA_ATOP_PREMUL</strong></li>
+<li><strong>ALPHA_XOR_PREMUL</strong></li>
+<li><strong>ALPHA_PLUS_PREMUL</strong></li>
+<li><strong>ALPHA_PREMUL</strong></li>
+</ul>
+</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example demonstrating the use of alphaComp can be found at opencv_source_code/samples/gpu/alpha_comp.cpp</li>
+</ul>
+</div>
+<table class="docutils citation" frame="void" id="mht2011" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[MHT2011]</a></td><td>Pascal Getreuer, Malvar-He-Cutler Linear Image Demosaicking, Image Processing On Line, 2011</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="histogram.html" title="Histogram Calculation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="cudaimgproc.html" title="cudaimgproc. CUDA-accelerated Image Processing"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="cudaimgproc.html" >cudaimgproc. CUDA-accelerated Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/cudaimgproc/doc/color.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

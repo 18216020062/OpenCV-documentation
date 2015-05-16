@@ -1,0 +1,341 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Statistical Models &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="ml. Machine Learning" href="ml.html" />
+    <link rel="next" title="Normal Bayes Classifier" href="normal_bayes_classifier.html" />
+    <link rel="prev" title="ml. Machine Learning" href="ml.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="normal_bayes_classifier.html" title="Normal Bayes Classifier"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="ml.html" title="ml. Machine Learning"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" accesskey="U">ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Statistical Models</a><ul>
+<li><a class="reference internal" href="#statmodel">StatModel</a></li>
+<li><a class="reference internal" href="#statmodel-train">StatModel::train</a></li>
+<li><a class="reference internal" href="#statmodel-istrained">StatModel::isTrained</a></li>
+<li><a class="reference internal" href="#statmodel-isclassifier">StatModel::isClassifier</a></li>
+<li><a class="reference internal" href="#statmodel-getvarcount">StatModel::getVarCount</a></li>
+<li><a class="reference internal" href="#statmodel-predict">StatModel::predict</a></li>
+<li><a class="reference internal" href="#statmodel-calcerror">StatModel::calcError</a></li>
+<li><a class="reference internal" href="#statmodel-save">StatModel::save</a></li>
+<li><a class="reference internal" href="#statmodel-load">StatModel::load</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ml.html"
+                        title="previous chapter">ml. Machine Learning</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="normal_bayes_classifier.html"
+                        title="next chapter">Normal Bayes Classifier</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="statistical-models">
+<h1>Statistical Models<a class="headerlink" href="#statistical-models" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="statmodel">
+<span id="index-0"></span><h2>StatModel<a class="headerlink" href="#statmodel" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="StatModel">
+<em class="property">class </em><tt class="descname">StatModel</tt><a class="headerlink" href="#StatModel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base class for statistical models in OpenCV ML.</p>
+</div>
+<div class="section" id="statmodel-train">
+<h2>StatModel::train<a class="headerlink" href="#statmodel-train" title="Permalink to this headline">¶</a></h2>
+<p>Trains the statistical model</p>
+<dl class="function">
+<dt id="bool StatModel::train(const Ptr&lt;TrainData&gt;&amp; trainData, int flags)">
+<strong>C++:</strong><tt class="descname"> </tt>bool <tt class="descclassname">StatModel::</tt><tt class="descname">train</tt><big>(</big>const Ptr&lt;TrainData&gt;&amp; <strong>trainData</strong>, int <strong>flags</strong>=0 <big>)</big><a class="headerlink" href="#bool StatModel::train(const Ptr<TrainData>& trainData, int flags)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="bool StatModel::train(InputArray samples, int layout, InputArray responses)">
+<strong>C++:</strong><tt class="descname"> </tt>bool <tt class="descclassname">StatModel::</tt><tt class="descname">train</tt><big>(</big>InputArray <strong>samples</strong>, int <strong>layout</strong>, InputArray <strong>responses</strong><big>)</big><a class="headerlink" href="#bool StatModel::train(InputArray samples, int layout, InputArray responses)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Ptr&lt;_Tp&gt; StatModel::train(const Ptr&lt;TrainData&gt;&amp; data, const _Tp::Params&amp; p, int flags)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;_Tp&gt; <tt class="descclassname">StatModel::</tt><tt class="descname">train</tt><big>(</big>const Ptr&lt;TrainData&gt;&amp; <strong>data</strong>, const _Tp::Params&amp; <strong>p</strong>, int <strong>flags</strong>=0 <big>)</big><a class="headerlink" href="#Ptr<_Tp> StatModel::train(const Ptr<TrainData>& data, const _Tp::Params& p, int flags)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Ptr&lt;_Tp&gt; StatModel::train(InputArray samples, int layout, InputArray responses, const _Tp::Params&amp; p, int flags)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;_Tp&gt; <tt class="descclassname">StatModel::</tt><tt class="descname">train</tt><big>(</big>InputArray <strong>samples</strong>, int <strong>layout</strong>, InputArray <strong>responses</strong>, const _Tp::Params&amp; <strong>p</strong>, int <strong>flags</strong>=0 <big>)</big><a class="headerlink" href="#Ptr<_Tp> StatModel::train(InputArray samples, int layout, InputArray responses, const _Tp::Params& p, int flags)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>trainData</strong> &#8211; training data that can be loaded from file using <tt class="docutils literal"><span class="pre">TrainData::loadFromCSV</span></tt> or created with <tt class="docutils literal"><span class="pre">TrainData::create</span></tt>.</li>
+<li><strong>samples</strong> &#8211; training samples</li>
+<li><strong>layout</strong> &#8211; <tt class="docutils literal"><span class="pre">ROW_SAMPLE</span></tt> (training samples are the matrix rows) or <tt class="docutils literal"><span class="pre">COL_SAMPLE</span></tt> (training samples are the matrix columns)</li>
+<li><strong>responses</strong> &#8211; vector of responses associated with the training samples.</li>
+<li><strong>p</strong> &#8211; the stat model parameters.</li>
+<li><strong>flags</strong> &#8211; optional flags, depending on the model. Some of the models can be updated with the new training samples, not completely overwritten (such as <tt class="docutils literal"><span class="pre">NormalBayesClassifier</span></tt> or <tt class="docutils literal"><span class="pre">ANN_MLP</span></tt>).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>There are 2 instance methods and 2 static (class) template methods. The first two train the already created model (the very first method must be overwritten in the derived classes). And the latter two variants are convenience methods that construct empty model and then call its train method.</p>
+</div>
+<div class="section" id="statmodel-istrained">
+<h2>StatModel::isTrained<a class="headerlink" href="#statmodel-istrained" title="Permalink to this headline">¶</a></h2>
+<p>Returns true if the model is trained</p>
+<dl class="function">
+<dt id="bool StatModel::isTrained()">
+<strong>C++:</strong><tt class="descname"> </tt>bool <tt class="descclassname">StatModel::</tt><tt class="descname">isTrained</tt><big>(</big><big>)</big><a class="headerlink" href="#bool StatModel::isTrained()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The method must be overwritten in the derived classes.</p>
+</div>
+<div class="section" id="statmodel-isclassifier">
+<h2>StatModel::isClassifier<a class="headerlink" href="#statmodel-isclassifier" title="Permalink to this headline">¶</a></h2>
+<p>Returns true if the model is classifier</p>
+<dl class="function">
+<dt id="bool StatModel::isClassifier()">
+<strong>C++:</strong><tt class="descname"> </tt>bool <tt class="descclassname">StatModel::</tt><tt class="descname">isClassifier</tt><big>(</big><big>)</big><a class="headerlink" href="#bool StatModel::isClassifier()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The method must be overwritten in the derived classes.</p>
+</div>
+<div class="section" id="statmodel-getvarcount">
+<h2>StatModel::getVarCount<a class="headerlink" href="#statmodel-getvarcount" title="Permalink to this headline">¶</a></h2>
+<p>Returns the number of variables in training samples</p>
+<dl class="function">
+<dt id="int StatModel::getVarCount()">
+<strong>C++:</strong><tt class="descname"> </tt>int <tt class="descclassname">StatModel::</tt><tt class="descname">getVarCount</tt><big>(</big><big>)</big><a class="headerlink" href="#int StatModel::getVarCount()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The method must be overwritten in the derived classes.</p>
+</div>
+<div class="section" id="statmodel-predict">
+<h2>StatModel::predict<a class="headerlink" href="#statmodel-predict" title="Permalink to this headline">¶</a></h2>
+<p>Predicts response(s) for the provided sample(s)</p>
+<dl class="function">
+<dt id="float StatModel::predict(InputArray samples, OutputArray results, int flags) const">
+<strong>C++:</strong><tt class="descname"> </tt>float <tt class="descclassname">StatModel::</tt><tt class="descname">predict</tt><big>(</big>InputArray <strong>samples</strong>, OutputArray <strong>results</strong>=noArray(), int <strong>flags</strong>=0 <big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#float StatModel::predict(InputArray samples, OutputArray results, int flags) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>samples</strong> &#8211; The input samples, floating-point matrix</li>
+<li><strong>results</strong> &#8211; The optional output matrix of results.</li>
+<li><strong>flags</strong> &#8211; The optional flags, model-dependent. Some models, such as <tt class="docutils literal"><span class="pre">Boost</span></tt>, <tt class="docutils literal"><span class="pre">SVM</span></tt> recognize <tt class="docutils literal"><span class="pre">StatModel::RAW_OUTPUT</span></tt> flag, which makes the method return the raw results (the sum), not the class label.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="statmodel-calcerror">
+<h2>StatModel::calcError<a class="headerlink" href="#statmodel-calcerror" title="Permalink to this headline">¶</a></h2>
+<p>Computes error on the training or test dataset</p>
+<dl class="function">
+<dt id="float StatModel::calcError(const Ptr&lt;TrainData&gt;&amp; data, bool test, OutputArray resp) const">
+<strong>C++:</strong><tt class="descname"> </tt>float <tt class="descclassname">StatModel::</tt><tt class="descname">calcError</tt><big>(</big>const Ptr&lt;TrainData&gt;&amp; <strong>data</strong>, bool <strong>test</strong>, OutputArray <strong>resp</strong><big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#float StatModel::calcError(const Ptr<TrainData>& data, bool test, OutputArray resp) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>data</strong> &#8211; the training data</li>
+<li><strong>test</strong> &#8211; if true, the error is computed over the test subset of the data, otherwise it&#8217;s computed over the training subset of the data. Please note that if you loaded a completely different dataset to evaluate already trained classifier, you will probably want not to set the test subset at all with <tt class="docutils literal"><span class="pre">TrainData::setTrainTestSplitRatio</span></tt> and specify <tt class="docutils literal"><span class="pre">test=false</span></tt>, so that the error is computed for the whole new set. Yes, this sounds a bit confusing.</li>
+<li><strong>resp</strong> &#8211; the optional output responses.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The method uses <tt class="docutils literal"><span class="pre">StatModel::predict</span></tt> to compute the error. For regression models the error is computed as RMS, for classifiers - as a percent of missclassified samples (0%-100%).</p>
+</div>
+<div class="section" id="statmodel-save">
+<h2>StatModel::save<a class="headerlink" href="#statmodel-save" title="Permalink to this headline">¶</a></h2>
+<p>Saves the model to a file.</p>
+<dl class="function">
+<dt id="void StatModel::save(const String&amp; filename)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">StatModel::</tt><tt class="descname">save</tt><big>(</big>const String&amp; <strong>filename</strong><big>)</big><a class="headerlink" href="#void StatModel::save(const String& filename)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>In order to make this method work, the derived class must overwrite <tt class="docutils literal"><span class="pre">Algorithm::write(FileStorage&amp;</span> <span class="pre">fs)</span></tt>.</p>
+</div>
+<div class="section" id="statmodel-load">
+<h2>StatModel::load<a class="headerlink" href="#statmodel-load" title="Permalink to this headline">¶</a></h2>
+<p>Loads model from the file</p>
+<dl class="function">
+<dt id="Ptr&lt;_Tp&gt; StatModel::load(const String&amp; filename)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;_Tp&gt; <tt class="descclassname">StatModel::</tt><tt class="descname">load</tt><big>(</big>const String&amp; <strong>filename</strong><big>)</big><a class="headerlink" href="#Ptr<_Tp> StatModel::load(const String& filename)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This is static template method of StatModel. It&#8217;s usage is following (in the case of SVM):</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">SVM</span><span class="o">&gt;</span> <span class="n">svm</span> <span class="o">=</span> <span class="n">StatModel</span><span class="o">::</span><span class="n">load</span><span class="o">&lt;</span><span class="n">SVM</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;my_svm_model.xml&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>In order to make this method work, the derived class must overwrite <tt class="docutils literal"><span class="pre">Algorithm::read(const</span> <span class="pre">FileNode&amp;</span> <span class="pre">fn)</span></tt>.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="normal_bayes_classifier.html" title="Normal Bayes Classifier"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="ml.html" title="ml. Machine Learning"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" >ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/ml/doc/statistical_models.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

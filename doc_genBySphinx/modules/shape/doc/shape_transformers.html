@@ -1,0 +1,346 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Shape Transformers and Interfaces &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="shape. Shape Distance and Matching" href="shape.html" />
+    <link rel="next" title="Cost Matrix for Histograms Common Interface" href="histogram_cost_matrix.html" />
+    <link rel="prev" title="Shape Distance and Common Interfaces" href="shape_distances.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="histogram_cost_matrix.html" title="Cost Matrix for Histograms Common Interface"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="shape_distances.html" title="Shape Distance and Common Interfaces"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="shape.html" accesskey="U">shape. Shape Distance and Matching</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Shape Transformers and Interfaces</a><ul>
+<li><a class="reference internal" href="#shapetransformer">ShapeTransformer</a></li>
+<li><a class="reference internal" href="#shapetransformer-estimatetransformation">ShapeTransformer::estimateTransformation</a></li>
+<li><a class="reference internal" href="#shapetransformer-applytransformation">ShapeTransformer::applyTransformation</a></li>
+<li><a class="reference internal" href="#shapetransformer-warpimage">ShapeTransformer::warpImage</a></li>
+<li><a class="reference internal" href="#thinplatesplineshapetransformer">ThinPlateSplineShapeTransformer</a></li>
+<li><a class="reference internal" href="#thinplatesplineshapetransformer-setregularizationparameter">ThinPlateSplineShapeTransformer::setRegularizationParameter</a></li>
+<li><a class="reference internal" href="#affinetransformer">AffineTransformer</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="shape_distances.html"
+                        title="previous chapter">Shape Distance and Common Interfaces</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="histogram_cost_matrix.html"
+                        title="next chapter">Cost Matrix for Histograms Common Interface</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="shape-transformers-and-interfaces">
+<h1>Shape Transformers and Interfaces<a class="headerlink" href="#shape-transformers-and-interfaces" title="Permalink to this headline">¶</a></h1>
+<p>A virtual interface that ease the use of transforming algorithms in some pipelines, such as
+the Shape Context Matching Algorithm. Thus, all objects that implement shape transformation
+techniques inherit the
+<a class="reference internal" href="#ShapeTransformer : public Algorithm" title="class ShapeTransformer : public Algorithm"><tt class="xref ocv ocv-class docutils literal"><span class="pre">ShapeTransformer</span></tt></a> interface.</p>
+<div class="section" id="shapetransformer">
+<h2>ShapeTransformer<a class="headerlink" href="#shapetransformer" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ShapeTransformer : public Algorithm">
+<em class="property">class </em><tt class="descname">ShapeTransformer</tt> : <em class="property">public</em> <tt class="descname">Algorithm</tt><a class="headerlink" href="#ShapeTransformer : public Algorithm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Abstract base class for shape transformation algorithms.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS_W</span> <span class="nl">ShapeTransformer</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Algorithm</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">void</span> <span class="n">estimateTransformation</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">transformingShape</span><span class="p">,</span> <span class="n">InputArray</span> <span class="n">targetShape</span><span class="p">,</span>
+                                                 <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">float</span> <span class="n">applyTransformation</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">input</span><span class="p">,</span> <span class="n">OutputArray</span> <span class="n">output</span><span class="o">=</span><span class="n">noArray</span><span class="p">())</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">void</span> <span class="n">warpImage</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">transformingImage</span><span class="p">,</span> <span class="n">OutputArray</span> <span class="n">output</span><span class="p">,</span>
+                                   <span class="kt">int</span> <span class="n">flags</span><span class="o">=</span><span class="n">INTER_LINEAR</span><span class="p">,</span> <span class="kt">int</span> <span class="n">borderMode</span><span class="o">=</span><span class="n">BORDER_CONSTANT</span><span class="p">,</span>
+                                   <span class="k">const</span> <span class="n">Scalar</span><span class="o">&amp;</span> <span class="n">borderValue</span><span class="o">=</span><span class="n">Scalar</span><span class="p">())</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="shapetransformer-estimatetransformation">
+<h2>ShapeTransformer::estimateTransformation<a class="headerlink" href="#shapetransformer-estimatetransformation" title="Permalink to this headline">¶</a></h2>
+<p>Estimate the transformation parameters of the current transformer algorithm, based on point matches.</p>
+<dl class="function">
+<dt id="void estimateTransformation(InputArray transformingShape, InputArray targetShape, std::vector&lt;DMatch&gt;&amp; matches)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">estimateTransformation</tt><big>(</big>InputArray <strong>transformingShape</strong>, InputArray <strong>targetShape</strong>, std::vector&lt;DMatch&gt;&amp; <strong>matches</strong><big>)</big><a class="headerlink" href="#void estimateTransformation(InputArray transformingShape, InputArray targetShape, std::vector<DMatch>& matches)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>transformingShape</strong> &#8211; Contour defining first shape.</li>
+<li><strong>targetShape</strong> &#8211; Contour defining second shape (Target).</li>
+<li><strong>matches</strong> &#8211; Standard vector of Matches between points.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="shapetransformer-applytransformation">
+<h2>ShapeTransformer::applyTransformation<a class="headerlink" href="#shapetransformer-applytransformation" title="Permalink to this headline">¶</a></h2>
+<p>Apply a transformation, given a pre-estimated transformation parameters.</p>
+<dl class="function">
+<dt id="float applyTransformation(InputArray input, OutputArray output)">
+<strong>C++:</strong><tt class="descname"> </tt>float <tt class="descname">applyTransformation</tt><big>(</big>InputArray <strong>input</strong>, OutputArray <strong>output</strong>=noArray() <big>)</big><a class="headerlink" href="#float applyTransformation(InputArray input, OutputArray output)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>input</strong> &#8211; Contour (set of points) to apply the transformation.</li>
+<li><strong>output</strong> &#8211; Output contour.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="shapetransformer-warpimage">
+<h2>ShapeTransformer::warpImage<a class="headerlink" href="#shapetransformer-warpimage" title="Permalink to this headline">¶</a></h2>
+<p>Apply a transformation, given a pre-estimated transformation parameters, to an Image.</p>
+<dl class="function">
+<dt id="void warpImage(InputArray transformingImage, OutputArray output, int flags, int borderMode, const Scalar&amp; borderValue)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">warpImage</tt><big>(</big>InputArray <strong>transformingImage</strong>, OutputArray <strong>output</strong>, int <strong>flags</strong>=INTER_LINEAR, int <strong>borderMode</strong>=BORDER_CONSTANT, const Scalar&amp; <strong>borderValue</strong>=Scalar() <big>)</big><a class="headerlink" href="#void warpImage(InputArray transformingImage, OutputArray output, int flags, int borderMode, const Scalar& borderValue)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>transformingImage</strong> &#8211; Input image.</li>
+<li><strong>output</strong> &#8211; Output image.</li>
+<li><strong>flags</strong> &#8211; Image interpolation method.</li>
+<li><strong>borderMode</strong> &#8211; border style.</li>
+<li><strong>borderValue</strong> &#8211; border value.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="thinplatesplineshapetransformer">
+<h2>ThinPlateSplineShapeTransformer<a class="headerlink" href="#thinplatesplineshapetransformer" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ThinPlateSplineShapeTransformer : public Algorithm">
+<em class="property">class </em><tt class="descname">ThinPlateSplineShapeTransformer</tt> : <em class="property">public</em> <tt class="descname">Algorithm</tt><a class="headerlink" href="#ThinPlateSplineShapeTransformer : public Algorithm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Definition of the transformation ocupied in the paper &#8220;Principal Warps: Thin-Plate Splines and Decomposition
+of Deformations&#8221;, by F.L. Bookstein (PAMI 1989).</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS_W</span> <span class="nl">ThinPlateSplineShapeTransformer</span> <span class="p">:</span> <span class="k">public</span> <span class="n">ShapeTransformer</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setRegularizationParameter</span><span class="p">(</span><span class="kt">double</span> <span class="n">beta</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">double</span> <span class="n">getRegularizationParameter</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="cm">/* Complete constructor */</span>
+<span class="n">CV_EXPORTS_W</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">ThinPlateSplineShapeTransformer</span><span class="o">&gt;</span>
+    <span class="n">createThinPlateSplineShapeTransformer</span><span class="p">(</span><span class="kt">double</span> <span class="n">regularizationParameter</span><span class="o">=</span><span class="mi">0</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="thinplatesplineshapetransformer-setregularizationparameter">
+<h2>ThinPlateSplineShapeTransformer::setRegularizationParameter<a class="headerlink" href="#thinplatesplineshapetransformer-setregularizationparameter" title="Permalink to this headline">¶</a></h2>
+<p>Set the regularization parameter for relaxing the exact interpolation requirements of the TPS algorithm.</p>
+<dl class="function">
+<dt id="void setRegularizationParameter(double beta)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descname">setRegularizationParameter</tt><big>(</big>double <strong>beta</strong><big>)</big><a class="headerlink" href="#void setRegularizationParameter(double beta)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>beta</strong> &#8211; value of the regularization parameter.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="affinetransformer">
+<h2>AffineTransformer<a class="headerlink" href="#affinetransformer" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="AffineTransformer : public Algorithm">
+<em class="property">class </em><tt class="descname">AffineTransformer</tt> : <em class="property">public</em> <tt class="descname">Algorithm</tt><a class="headerlink" href="#AffineTransformer : public Algorithm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Wrapper class for the OpenCV Affine Transformation algorithm.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS_W</span> <span class="nl">AffineTransformer</span> <span class="p">:</span> <span class="k">public</span> <span class="n">ShapeTransformer</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setFullAffine</span><span class="p">(</span><span class="kt">bool</span> <span class="n">fullAffine</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">CV_WRAP</span> <span class="k">virtual</span> <span class="kt">bool</span> <span class="n">getFullAffine</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="cm">/* Complete constructor */</span>
+<span class="n">CV_EXPORTS_W</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">AffineTransformer</span><span class="o">&gt;</span> <span class="n">createAffineTransformer</span><span class="p">(</span><span class="kt">bool</span> <span class="n">fullAffine</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="histogram_cost_matrix.html" title="Cost Matrix for Histograms Common Interface"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="shape_distances.html" title="Shape Distance and Common Interfaces"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="shape.html" >shape. Shape Distance and Matching</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/shape/doc/shape_transformers.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

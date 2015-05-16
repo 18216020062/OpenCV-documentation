@@ -1,0 +1,470 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Video Encoding &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="cudacodec. CUDA-accelerated Video Encoding/Decoding" href="cudacodec.html" />
+    <link rel="next" title="cudafeatures2d. CUDA-accelerated Feature Detection and Description" href="../../cudafeatures2d/doc/cudafeatures2d.html" />
+    <link rel="prev" title="Video Decoding" href="videodec.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../cudafeatures2d/doc/cudafeatures2d.html" title="cudafeatures2d. CUDA-accelerated Feature Detection and Description"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="videodec.html" title="Video Decoding"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="cudacodec.html" accesskey="U">cudacodec. CUDA-accelerated Video Encoding/Decoding</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Video Encoding</a><ul>
+<li><a class="reference internal" href="#cudacodec-videowriter">cudacodec::VideoWriter</a></li>
+<li><a class="reference internal" href="#cudacodec-videowriter-write">cudacodec::VideoWriter::write</a></li>
+<li><a class="reference internal" href="#cudacodec-createvideowriter">cudacodec::createVideoWriter</a></li>
+<li><a class="reference internal" href="#cudacodec-encoderparams">cudacodec::EncoderParams</a></li>
+<li><a class="reference internal" href="#cudacodec-encoderparams-encoderparams">cudacodec::EncoderParams::EncoderParams</a></li>
+<li><a class="reference internal" href="#cudacodec-encoderparams-load">cudacodec::EncoderParams::load</a></li>
+<li><a class="reference internal" href="#cudacodec-encoderparams-save">cudacodec::EncoderParams::save</a></li>
+<li><a class="reference internal" href="#cudacodec-encodercallback">cudacodec::EncoderCallBack</a></li>
+<li><a class="reference internal" href="#cudacodec-encodercallback-acquirebitstream">cudacodec::EncoderCallBack::acquireBitStream</a></li>
+<li><a class="reference internal" href="#cudacodec-encodercallback-releasebitstream">cudacodec::EncoderCallBack::releaseBitStream</a></li>
+<li><a class="reference internal" href="#cudacodec-encodercallback-onbeginframe">cudacodec::EncoderCallBack::onBeginFrame</a></li>
+<li><a class="reference internal" href="#cudacodec-encodercallback-onendframe">cudacodec::EncoderCallBack::onEndFrame</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="videodec.html"
+                        title="previous chapter">Video Decoding</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../cudafeatures2d/doc/cudafeatures2d.html"
+                        title="next chapter">cudafeatures2d. CUDA-accelerated Feature Detection and Description</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="video-encoding">
+<h1>Video Encoding<a class="headerlink" href="#video-encoding" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="cudacodec-videowriter">
+<h2>cudacodec::VideoWriter<a class="headerlink" href="#cudacodec-videowriter" title="Permalink to this headline">¶</a></h2>
+<p>Video writer interface.</p>
+<dl class="class">
+<dt id="cudacodec::VideoWriter">
+<em class="property">class </em><tt class="descclassname">cudacodec::</tt><tt class="descname">VideoWriter</tt><a class="headerlink" href="#cudacodec::VideoWriter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The implementation uses H264 video codec.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Currently only Windows platform is supported.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example on how to use the videoWriter class can be found at opencv_source_code/samples/gpu/video_writer.cpp</li>
+</ul>
+</div>
+</div>
+<div class="section" id="cudacodec-videowriter-write">
+<h2>cudacodec::VideoWriter::write<a class="headerlink" href="#cudacodec-videowriter-write" title="Permalink to this headline">¶</a></h2>
+<p>Writes the next video frame.</p>
+<dl class="function">
+<dt id="void cudacodec::VideoWriter::write(InputArray frame, bool lastFrame) = 0">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cudacodec::VideoWriter::</tt><tt class="descname">write</tt><big>(</big>InputArray <strong>frame</strong>, bool <strong>lastFrame</strong>=false<big>)</big><tt class="descclassname"> = 0</tt><a class="headerlink" href="#void cudacodec::VideoWriter::write(InputArray frame, bool lastFrame) = 0" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>frame</strong> &#8211; The written frame.</li>
+<li><strong>lastFrame</strong> &#8211; Indicates that it is end of stream. The parameter can be ignored.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The method write the specified image to video file. The image must have the same size and the same surface format as has been specified when opening the video writer.</p>
+</div>
+<div class="section" id="cudacodec-createvideowriter">
+<h2>cudacodec::createVideoWriter<a class="headerlink" href="#cudacodec-createvideowriter" title="Permalink to this headline">¶</a></h2>
+<p>Creates video writer.</p>
+<dl class="function">
+<dt id="Ptr&lt;cudacodec::VideoWriter&gt; cudacodec::createVideoWriter(const String&amp; fileName, Size frameSize, double fps, SurfaceFormat format)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;cudacodec::VideoWriter&gt; <tt class="descclassname">cudacodec::</tt><tt class="descname">createVideoWriter</tt><big>(</big>const String&amp; <strong>fileName</strong>, Size <strong>frameSize</strong>, double <strong>fps</strong>, SurfaceFormat <strong>format</strong>=SF_BGR<big>)</big><a class="headerlink" href="#Ptr<cudacodec::VideoWriter> cudacodec::createVideoWriter(const String& fileName, Size frameSize, double fps, SurfaceFormat format)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Ptr&lt;cudacodec::VideoWriter&gt; cudacodec::createVideoWriter(const String&amp; fileName, Size frameSize, double fps, const EncoderParams&amp; params, SurfaceFormat format)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;cudacodec::VideoWriter&gt; <tt class="descclassname">cudacodec::</tt><tt class="descname">createVideoWriter</tt><big>(</big>const String&amp; <strong>fileName</strong>, Size <strong>frameSize</strong>, double <strong>fps</strong>, const EncoderParams&amp; <strong>params</strong>, SurfaceFormat <strong>format</strong>=SF_BGR<big>)</big><a class="headerlink" href="#Ptr<cudacodec::VideoWriter> cudacodec::createVideoWriter(const String& fileName, Size frameSize, double fps, const EncoderParams& params, SurfaceFormat format)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Ptr&lt;cudacodec::VideoWriter&gt; cudacodec::createVideoWriter(const Ptr&lt;EncoderCallBack&gt;&amp; encoderCallback, Size frameSize, double fps, SurfaceFormat format)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;cudacodec::VideoWriter&gt; <tt class="descclassname">cudacodec::</tt><tt class="descname">createVideoWriter</tt><big>(</big>const Ptr&lt;EncoderCallBack&gt;&amp; <strong>encoderCallback</strong>, Size <strong>frameSize</strong>, double <strong>fps</strong>, SurfaceFormat <strong>format</strong>=SF_BGR<big>)</big><a class="headerlink" href="#Ptr<cudacodec::VideoWriter> cudacodec::createVideoWriter(const Ptr<EncoderCallBack>& encoderCallback, Size frameSize, double fps, SurfaceFormat format)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Ptr&lt;cudacodec::VideoWriter&gt; cudacodec::createVideoWriter(const Ptr&lt;EncoderCallBack&gt;&amp; encoderCallback, Size frameSize, double fps, const EncoderParams&amp; params, SurfaceFormat format)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;cudacodec::VideoWriter&gt; <tt class="descclassname">cudacodec::</tt><tt class="descname">createVideoWriter</tt><big>(</big>const Ptr&lt;EncoderCallBack&gt;&amp; <strong>encoderCallback</strong>, Size <strong>frameSize</strong>, double <strong>fps</strong>, const EncoderParams&amp; <strong>params</strong>, SurfaceFormat <strong>format</strong>=SF_BGR<big>)</big><a class="headerlink" href="#Ptr<cudacodec::VideoWriter> cudacodec::createVideoWriter(const Ptr<EncoderCallBack>& encoderCallback, Size frameSize, double fps, const EncoderParams& params, SurfaceFormat format)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fileName</strong> &#8211; Name of the output video file. Only AVI file format is supported.</li>
+<li><strong>frameSize</strong> &#8211; Size of the input video frames.</li>
+<li><strong>fps</strong> &#8211; Framerate of the created video stream.</li>
+<li><strong>params</strong> &#8211; Encoder parameters. See <a class="reference internal" href="#cudacodec::EncoderParams" title="struct cudacodec::EncoderParams"><tt class="xref ocv ocv-struct docutils literal"><span class="pre">cudacodec::EncoderParams</span></tt></a> .</li>
+<li><strong>format</strong> &#8211; Surface format of input frames ( <tt class="docutils literal"><span class="pre">SF_UYVY</span></tt> , <tt class="docutils literal"><span class="pre">SF_YUY2</span></tt> , <tt class="docutils literal"><span class="pre">SF_YV12</span></tt> , <tt class="docutils literal"><span class="pre">SF_NV12</span></tt> , <tt class="docutils literal"><span class="pre">SF_IYUV</span></tt> , <tt class="docutils literal"><span class="pre">SF_BGR</span></tt> or <tt class="docutils literal"><span class="pre">SF_GRAY</span></tt>). BGR or gray frames will be converted to YV12 format before encoding, frames with other formats will be used as is.</li>
+<li><strong>encoderCallback</strong> &#8211; Callbacks for video encoder. See <a class="reference internal" href="#cudacodec::EncoderCallBack" title="class cudacodec::EncoderCallBack"><tt class="xref ocv ocv-class docutils literal"><span class="pre">cudacodec::EncoderCallBack</span></tt></a> . Use it if you want to work with raw video stream.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The constructors initialize video writer. FFMPEG is used to write videos. User can implement own multiplexing with <a class="reference internal" href="#cudacodec::EncoderCallBack" title="class cudacodec::EncoderCallBack"><tt class="xref ocv ocv-class docutils literal"><span class="pre">cudacodec::EncoderCallBack</span></tt></a> .</p>
+</div>
+<div class="section" id="cudacodec-encoderparams">
+<h2>cudacodec::EncoderParams<a class="headerlink" href="#cudacodec-encoderparams" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="cudacodec::EncoderParams">
+<em class="property">struct </em><tt class="descclassname">cudacodec::</tt><tt class="descname">EncoderParams</tt><a class="headerlink" href="#cudacodec::EncoderParams" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Different parameters for CUDA video encoder.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">struct</span> <span class="n">EncoderParams</span>
+<span class="p">{</span>
+    <span class="kt">int</span>       <span class="n">P_Interval</span><span class="p">;</span>      <span class="c1">//    NVVE_P_INTERVAL,</span>
+    <span class="kt">int</span>       <span class="n">IDR_Period</span><span class="p">;</span>      <span class="c1">//    NVVE_IDR_PERIOD,</span>
+    <span class="kt">int</span>       <span class="n">DynamicGOP</span><span class="p">;</span>      <span class="c1">//    NVVE_DYNAMIC_GOP,</span>
+    <span class="kt">int</span>       <span class="n">RCType</span><span class="p">;</span>          <span class="c1">//    NVVE_RC_TYPE,</span>
+    <span class="kt">int</span>       <span class="n">AvgBitrate</span><span class="p">;</span>      <span class="c1">//    NVVE_AVG_BITRATE,</span>
+    <span class="kt">int</span>       <span class="n">PeakBitrate</span><span class="p">;</span>     <span class="c1">//    NVVE_PEAK_BITRATE,</span>
+    <span class="kt">int</span>       <span class="n">QP_Level_Intra</span><span class="p">;</span>  <span class="c1">//    NVVE_QP_LEVEL_INTRA,</span>
+    <span class="kt">int</span>       <span class="n">QP_Level_InterP</span><span class="p">;</span> <span class="c1">//    NVVE_QP_LEVEL_INTER_P,</span>
+    <span class="kt">int</span>       <span class="n">QP_Level_InterB</span><span class="p">;</span> <span class="c1">//    NVVE_QP_LEVEL_INTER_B,</span>
+    <span class="kt">int</span>       <span class="n">DeblockMode</span><span class="p">;</span>     <span class="c1">//    NVVE_DEBLOCK_MODE,</span>
+    <span class="kt">int</span>       <span class="n">ProfileLevel</span><span class="p">;</span>    <span class="c1">//    NVVE_PROFILE_LEVEL,</span>
+    <span class="kt">int</span>       <span class="n">ForceIntra</span><span class="p">;</span>      <span class="c1">//    NVVE_FORCE_INTRA,</span>
+    <span class="kt">int</span>       <span class="n">ForceIDR</span><span class="p">;</span>        <span class="c1">//    NVVE_FORCE_IDR,</span>
+    <span class="kt">int</span>       <span class="n">ClearStat</span><span class="p">;</span>       <span class="c1">//    NVVE_CLEAR_STAT,</span>
+    <span class="kt">int</span>       <span class="n">DIMode</span><span class="p">;</span>          <span class="c1">//    NVVE_SET_DEINTERLACE,</span>
+    <span class="kt">int</span>       <span class="n">Presets</span><span class="p">;</span>         <span class="c1">//    NVVE_PRESETS,</span>
+    <span class="kt">int</span>       <span class="n">DisableCabac</span><span class="p">;</span>    <span class="c1">//    NVVE_DISABLE_CABAC,</span>
+    <span class="kt">int</span>       <span class="n">NaluFramingType</span><span class="p">;</span> <span class="c1">//    NVVE_CONFIGURE_NALU_FRAMING_TYPE</span>
+    <span class="kt">int</span>       <span class="n">DisableSPSPPS</span><span class="p">;</span>   <span class="c1">//    NVVE_DISABLE_SPS_PPS</span>
+
+    <span class="n">EncoderParams</span><span class="p">();</span>
+    <span class="k">explicit</span> <span class="nf">EncoderParams</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">configFile</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">load</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">configFile</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="n">save</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">configFile</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cudacodec-encoderparams-encoderparams">
+<h2>cudacodec::EncoderParams::EncoderParams<a class="headerlink" href="#cudacodec-encoderparams-encoderparams" title="Permalink to this headline">¶</a></h2>
+<p>Constructors.</p>
+<dl class="function">
+<dt id="cudacodec::EncoderParams::EncoderParams()">
+<strong>C++:</strong><tt class="descname"> </tt> <tt class="descclassname">cudacodec::EncoderParams::</tt><tt class="descname">EncoderParams</tt><big>(</big><big>)</big><a class="headerlink" href="#cudacodec::EncoderParams::EncoderParams()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="cudacodec::EncoderParams::EncoderParams(const String&amp; configFile)">
+<strong>C++:</strong><tt class="descname"> </tt> <tt class="descclassname">cudacodec::EncoderParams::</tt><tt class="descname">EncoderParams</tt><big>(</big>const String&amp; <strong>configFile</strong><big>)</big><a class="headerlink" href="#cudacodec::EncoderParams::EncoderParams(const String& configFile)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>configFile</strong> &#8211; Config file name.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Creates default parameters or reads parameters from config file.</p>
+</div>
+<div class="section" id="cudacodec-encoderparams-load">
+<h2>cudacodec::EncoderParams::load<a class="headerlink" href="#cudacodec-encoderparams-load" title="Permalink to this headline">¶</a></h2>
+<p>Reads parameters from config file.</p>
+<dl class="function">
+<dt id="void cudacodec::EncoderParams::load(const String&amp; configFile)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cudacodec::EncoderParams::</tt><tt class="descname">load</tt><big>(</big>const String&amp; <strong>configFile</strong><big>)</big><a class="headerlink" href="#void cudacodec::EncoderParams::load(const String& configFile)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>configFile</strong> &#8211; Config file name.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cudacodec-encoderparams-save">
+<h2>cudacodec::EncoderParams::save<a class="headerlink" href="#cudacodec-encoderparams-save" title="Permalink to this headline">¶</a></h2>
+<p>Saves parameters to config file.</p>
+<dl class="function">
+<dt id="void cudacodec::EncoderParams::save(const String&amp; configFile) const">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cudacodec::EncoderParams::</tt><tt class="descname">save</tt><big>(</big>const String&amp; <strong>configFile</strong><big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#void cudacodec::EncoderParams::save(const String& configFile) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>configFile</strong> &#8211; Config file name.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cudacodec-encodercallback">
+<h2>cudacodec::EncoderCallBack<a class="headerlink" href="#cudacodec-encodercallback" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cudacodec::EncoderCallBack">
+<em class="property">class </em><tt class="descclassname">cudacodec::</tt><tt class="descname">EncoderCallBack</tt><a class="headerlink" href="#cudacodec::EncoderCallBack" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Callbacks for CUDA video encoder.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">EncoderCallBack</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">enum</span> <span class="n">PicType</span>
+    <span class="p">{</span>
+        <span class="n">IFRAME</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">PFRAME</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">BFRAME</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="p">};</span>
+
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">EncoderCallBack</span><span class="p">()</span> <span class="p">{}</span>
+
+    <span class="k">virtual</span> <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">acquireBitStream</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">bufferSize</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">releaseBitStream</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">data</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">onBeginFrame</span><span class="p">(</span><span class="kt">int</span> <span class="n">frameNumber</span><span class="p">,</span> <span class="n">PicType</span> <span class="n">picType</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">onEndFrame</span><span class="p">(</span><span class="kt">int</span> <span class="n">frameNumber</span><span class="p">,</span> <span class="n">PicType</span> <span class="n">picType</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cudacodec-encodercallback-acquirebitstream">
+<h2>cudacodec::EncoderCallBack::acquireBitStream<a class="headerlink" href="#cudacodec-encodercallback-acquirebitstream" title="Permalink to this headline">¶</a></h2>
+<p>Callback function to signal the start of bitstream that is to be encoded.</p>
+<dl class="function">
+<dt id="virtual uchar* cudacodec::EncoderCallBack::acquireBitStream(int* bufferSize) = 0">
+<strong>C++:</strong><tt class="descname"> </tt><em class="property">virtual</em> uchar* <tt class="descclassname">cudacodec::EncoderCallBack::</tt><tt class="descname">acquireBitStream</tt><big>(</big>int* <strong>bufferSize</strong><big>)</big><tt class="descclassname"> = 0</tt><a class="headerlink" href="#virtual uchar* cudacodec::EncoderCallBack::acquireBitStream(int* bufferSize) = 0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Callback must allocate buffer for CUDA encoder and return pointer to it and it&#8217;s size.</p>
+</div>
+<div class="section" id="cudacodec-encodercallback-releasebitstream">
+<h2>cudacodec::EncoderCallBack::releaseBitStream<a class="headerlink" href="#cudacodec-encodercallback-releasebitstream" title="Permalink to this headline">¶</a></h2>
+<p>Callback function to signal that the encoded bitstream is ready to be written to file.</p>
+<dl class="function">
+<dt id="virtual void cudacodec::EncoderCallBack::releaseBitStream(unsigned char* data, int size) = 0">
+<strong>C++:</strong><tt class="descname"> </tt><em class="property">virtual</em> void <tt class="descclassname">cudacodec::EncoderCallBack::</tt><tt class="descname">releaseBitStream</tt><big>(</big>unsigned char* <strong>data</strong>, int <strong>size</strong><big>)</big><tt class="descclassname"> = 0</tt><a class="headerlink" href="#virtual void cudacodec::EncoderCallBack::releaseBitStream(unsigned char* data, int size) = 0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="cudacodec-encodercallback-onbeginframe">
+<h2>cudacodec::EncoderCallBack::onBeginFrame<a class="headerlink" href="#cudacodec-encodercallback-onbeginframe" title="Permalink to this headline">¶</a></h2>
+<p>Callback function to signal that the encoding operation on the frame has started.</p>
+<dl class="function">
+<dt id="virtual void cudacodec::EncoderCallBack::onBeginFrame(int frameNumber, PicType picType) = 0">
+<strong>C++:</strong><tt class="descname"> </tt><em class="property">virtual</em> void <tt class="descclassname">cudacodec::EncoderCallBack::</tt><tt class="descname">onBeginFrame</tt><big>(</big>int <strong>frameNumber</strong>, PicType <strong>picType</strong><big>)</big><tt class="descclassname"> = 0</tt><a class="headerlink" href="#virtual void cudacodec::EncoderCallBack::onBeginFrame(int frameNumber, PicType picType) = 0" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>picType</strong> &#8211; Specify frame type (I-Frame, P-Frame or B-Frame).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cudacodec-encodercallback-onendframe">
+<h2>cudacodec::EncoderCallBack::onEndFrame<a class="headerlink" href="#cudacodec-encodercallback-onendframe" title="Permalink to this headline">¶</a></h2>
+<p>Callback function signals that the encoding operation on the frame has finished.</p>
+<dl class="function">
+<dt id="virtual void cudacodec::EncoderCallBack::onEndFrame(int frameNumber, PicType picType) = 0">
+<strong>C++:</strong><tt class="descname"> </tt><em class="property">virtual</em> void <tt class="descclassname">cudacodec::EncoderCallBack::</tt><tt class="descname">onEndFrame</tt><big>(</big>int <strong>frameNumber</strong>, PicType <strong>picType</strong><big>)</big><tt class="descclassname"> = 0</tt><a class="headerlink" href="#virtual void cudacodec::EncoderCallBack::onEndFrame(int frameNumber, PicType picType) = 0" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>picType</strong> &#8211; Specify frame type (I-Frame, P-Frame or B-Frame).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../cudafeatures2d/doc/cudafeatures2d.html" title="cudafeatures2d. CUDA-accelerated Feature Detection and Description"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="videodec.html" title="Video Decoding"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="cudacodec.html" >cudacodec. CUDA-accelerated Video Encoding/Decoding</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/cudacodec/doc/videoenc.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

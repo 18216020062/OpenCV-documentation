@@ -1,0 +1,329 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Contours Hierarchy &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../../../index.html" />
+    <link rel="up" title="Contours in OpenCV" href="../py_table_of_contents_contours/py_table_of_contents_contours.html" />
+    <link rel="next" title="Histograms in OpenCV" href="../../py_histograms/py_table_of_contents_histograms/py_table_of_contents_histograms.html" />
+    <link rel="prev" title="Contours : More Functions" href="../py_contours_more_functions/py_contours_more_functions.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py_histograms/py_table_of_contents_histograms/py_table_of_contents_histograms.html" title="Histograms in OpenCV"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../py_contours_more_functions/py_contours_more_functions.html" title="Contours : More Functions"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../../py_table_of_contents_imgproc/py_table_of_contents_imgproc.html" >Image Processing in OpenCV</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_contours/py_table_of_contents_contours.html" accesskey="U">Contours in OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../../index.html">
+              <img class="logo" src="../../../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Contours Hierarchy</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#theory">Theory</a><ul>
+<li><a class="reference internal" href="#what-is-hierarchy">What is Hierarchy?</a></li>
+<li><a class="reference internal" href="#hierarchy-representation-in-opencv">Hierarchy Representation in OpenCV</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#contour-retrieval-mode">Contour Retrieval Mode</a><ul>
+<li><a class="reference internal" href="#retr-list">1. RETR_LIST</a></li>
+<li><a class="reference internal" href="#retr-external">2. RETR_EXTERNAL</a></li>
+<li><a class="reference internal" href="#retr-ccomp">3. RETR_CCOMP</a></li>
+<li><a class="reference internal" href="#retr-tree">4. RETR_TREE</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#additional-resources">Additional Resources</a></li>
+<li><a class="reference internal" href="#exercises">Exercises</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../py_contours_more_functions/py_contours_more_functions.html"
+                        title="previous chapter">Contours : More Functions</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../py_histograms/py_table_of_contents_histograms/py_table_of_contents_histograms.html"
+                        title="next chapter">Histograms in OpenCV</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="contours-hierarchy">
+<span id="id1"></span><h1>Contours Hierarchy<a class="headerlink" href="#contours-hierarchy" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>This time, we learn about the hierarchy of contours, i.e. the parent-child relationship in Contours.</p>
+</div>
+<div class="section" id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<p>In the last few articles on contours, we have worked with several functions related to contours provided by OpenCV. But when we found the contours in image using <strong>cv2.findContours()</strong> function, we have passed an argument, <strong>Contour Retrieval Mode</strong>. We usually passed <strong>cv2.RETR_LIST</strong> or <strong>cv2.RETR_TREE</strong> and it worked nice. But what does it actually mean ?</p>
+<p>Also, in the output, we got three arrays, first is the image, second is our contours, and one more output which we named as <strong>hierarchy</strong> (Please checkout the codes in previous articles). But we never used this hierarchy anywhere. Then what is this hierarchy and what is it for ? What is its relationship with the previous mentioned function argument ?</p>
+<p>That is what we are going to deal in this article.</p>
+<div class="section" id="what-is-hierarchy">
+<h3>What is Hierarchy?<a class="headerlink" href="#what-is-hierarchy" title="Permalink to this headline">¶</a></h3>
+<p>Normally we use the <strong>cv2.findContours()</strong> function to detect objects in an image, right ? Sometimes objects are in different locations. But in some cases, some shapes are inside other shapes. Just like nested figures. In this case, we call outer one as <strong>parent</strong> and inner one as <strong>child</strong>. This way, contours in an image has some relationship to each other. And we can specify how one contour is connected to each other, like, is it child of some other contour, or is it a parent etc. Representation of this relationship is called the <strong>Hierarchy</strong>.</p>
+<p>Consider an example image below :</p>
+<blockquote>
+<div><img alt="Hierarchy Representation" class="align-center" src="../../../../../_images/hierarchy.png" />
+</div></blockquote>
+<p>In this image, there are a few shapes which I have numbered from <strong>0-5</strong>. <em>2 and 2a</em> denotes the external and internal contours of the outermost box.</p>
+<p>Here, contours 0,1,2 are <strong>external or outermost</strong>. We can say, they are in <strong>hierarchy-0</strong> or simply they are in <strong>same hierarchy level</strong>.</p>
+<p>Next comes <strong>contour-2a</strong>. It can be considered as a <strong>child of contour-2</strong> (or in opposite way, contour-2 is parent of contour-2a). So let it be in <strong>hierarchy-1</strong>. Similarly contour-3 is child of contour-2 and it comes in next hierarchy. Finally contours 4,5 are the children of contour-3a, and they come in the last hierarchy level. From the way I numbered the boxes, I would say contour-4 is the first child of contour-3a (It can be contour-5 also).</p>
+<p>I mentioned these things to understand terms like <strong>same hierarchy level</strong>, <strong>external contour</strong>, <strong>child contour</strong>, <strong>parent contour</strong>, <strong>first child</strong> etc. Now let&#8217;s get into OpenCV.</p>
+</div>
+<div class="section" id="hierarchy-representation-in-opencv">
+<h3>Hierarchy Representation in OpenCV<a class="headerlink" href="#hierarchy-representation-in-opencv" title="Permalink to this headline">¶</a></h3>
+<p>So each contour has its own information regarding what hierarchy it is, who is its child, who is its parent etc. OpenCV represents it as an array of four values : <strong>[Next, Previous, First_Child, Parent]</strong></p>
+<p class="centered">
+<strong><em>&#8220;Next denotes next contour at the same hierarchical level.&#8221;</em></strong></p><p>For eg, take contour-0 in our picture. Who is next contour in its same level ? It is contour-1. So simply put <tt class="docutils literal"><span class="pre">Next</span> <span class="pre">=</span> <span class="pre">1</span></tt>. Similarly for Contour-1, next is contour-2. So <tt class="docutils literal"><span class="pre">Next</span> <span class="pre">=</span> <span class="pre">2</span></tt>.</p>
+<p>What about contour-2? There is no next contour in the same level. So simply, put <tt class="docutils literal"><span class="pre">Next</span> <span class="pre">=</span> <span class="pre">-1</span></tt>. What about contour-4? It is in same level with contour-5. So its next contour is contour-5, so <tt class="docutils literal"><span class="pre">Next</span> <span class="pre">=</span> <span class="pre">5</span></tt>.</p>
+<p class="centered">
+<strong><em>&#8220;Previous denotes previous contour at the same hierarchical level.&#8221;</em></strong></p><p>It is same as above. Previous contour of contour-1 is contour-0 in the same level. Similarly for contour-2, it is contour-1. And for contour-0, there is no previous, so put it as -1.</p>
+<p class="centered">
+<strong><em>&#8220;First_Child denotes its first child contour.&#8221;</em></strong></p><p>There is no need of any explanation. For contour-2, child is contour-2a. So it gets the corresponding index value of contour-2a. What about contour-3a? It has two children. But we take only first child. And it is contour-4. So <tt class="docutils literal"><span class="pre">First_Child</span> <span class="pre">=</span> <span class="pre">4</span></tt> for contour-3a.</p>
+<p class="centered">
+<strong><em>&#8220;Parent denotes index of its parent contour.&#8221;</em></strong></p><p>It is just opposite of <strong>First_Child</strong>. Both for contour-4 and contour-5, parent contour is contour-3a. For contour-3a, it is contour-3 and so on.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If there is no child or parent, that field is taken as -1</p>
+</div>
+<p>So now we know about the hierarchy style used in OpenCV, we can check into Contour Retrieval Modes in OpenCV with the help of same image given above. ie what do flags like cv2.RETR_LIST, cv2.RETR_TREE, cv2.RETR_CCOMP, cv2.RETR_EXTERNAL etc mean?</p>
+</div>
+</div>
+<div class="section" id="contour-retrieval-mode">
+<h2>Contour Retrieval Mode<a class="headerlink" href="#contour-retrieval-mode" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="retr-list">
+<h3>1. RETR_LIST<a class="headerlink" href="#retr-list" title="Permalink to this headline">¶</a></h3>
+<p>This is the simplest of the four flags (from explanation point of view). It simply retrieves all the contours, but doesn&#8217;t create any parent-child relationship. <strong>Parents and kids are equal under this rule, and they are just contours</strong>. ie they all belongs to same hierarchy level.</p>
+<p>So here, 3rd and 4th term in hierarchy array is always -1. But obviously, Next and Previous terms will have their corresponding values. Just check it yourself and verify it.</p>
+<p>Below is the result I got, and each row is hierarchy details of corresponding contour. For eg, first row corresponds to contour 0. Next contour is contour 1. So Next = 1. There is no previous contour, so Previous = 0. And the remaining two, as told before, it is -1.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">hierarchy</span>
+<span class="go">array([[[ 1, -1, -1, -1],</span>
+<span class="go">        [ 2,  0, -1, -1],</span>
+<span class="go">        [ 3,  1, -1, -1],</span>
+<span class="go">        [ 4,  2, -1, -1],</span>
+<span class="go">        [ 5,  3, -1, -1],</span>
+<span class="go">        [ 6,  4, -1, -1],</span>
+<span class="go">        [ 7,  5, -1, -1],</span>
+<span class="go">        [-1,  6, -1, -1]]])</span>
+</pre></div>
+</div>
+<p>This is the good choice to use in your code, if you are not using any hierarchy features.</p>
+</div>
+<div class="section" id="retr-external">
+<h3>2. RETR_EXTERNAL<a class="headerlink" href="#retr-external" title="Permalink to this headline">¶</a></h3>
+<p>If you use this flag, it returns only extreme outer flags. All child contours are left behind. <strong>We can say, under this law, Only the eldest in every family is taken care of. It doesn&#8217;t care about other members of the family :)</strong>.</p>
+<p>So, in our image, how many extreme outer contours are there? ie at hierarchy-0 level?. Only 3, ie contours 0,1,2, right? Now try to find the contours using this flag. Here also, values given to each element is same as above. Compare it with above result. Below is what I got :</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">hierarchy</span>
+<span class="go">array([[[ 1, -1, -1, -1],</span>
+<span class="go">        [ 2,  0, -1, -1],</span>
+<span class="go">        [-1,  1, -1, -1]]])</span>
+</pre></div>
+</div>
+<p>You can use this flag if you want to extract only the outer contours. It might be useful in some cases.</p>
+</div>
+<div class="section" id="retr-ccomp">
+<h3>3. RETR_CCOMP<a class="headerlink" href="#retr-ccomp" title="Permalink to this headline">¶</a></h3>
+<p>This flag retrieves all the contours and arranges them to a 2-level hierarchy. ie external contours of the object (ie its boundary) are placed in hierarchy-1. And the contours of holes inside object (if any) is placed in hierarchy-2. If any object inside it, its contour is placed again in hierarchy-1 only. And its hole in hierarchy-2 and so on.</p>
+<p>Just consider the image of a &#8220;big white zero&#8221; on a black background. Outer circle of zero belongs to first hierarchy, and inner circle of zero belongs to second hierarchy.</p>
+<p>We can explain it with a simple image. Here I have labelled the order of contours in red color and the hierarchy they belongs to, in green color (either 1 or 2). The order is same as the order OpenCV detects contours.</p>
+<blockquote>
+<div><img alt="CCOMP Hierarchy" class="align-center" src="../../../../../_images/ccomp_hierarchy.png" />
+</div></blockquote>
+<p>So consider first contour, ie contour-0. It is hierarchy-1. It has two holes, contours 1&amp;2, and they belong to hierarchy-2. So for contour-0, Next contour in same hierarchy level is contour-3. And there is no previous one. And its first is child is contour-1 in hierarchy-2. It has no parent, because it is in hierarchy-1. So its hierarchy array is [3,-1,1,-1]</p>
+<p>Now take contour-1. It is in hierarchy-2. Next one in same hierarchy (under the parenthood of contour-1) is contour-2. No previous one. No child, but parent is contour-0. So array is [2,-1,-1,0].</p>
+<p>Similarly contour-2 : It is in hierarchy-2. There is not next contour in same hierarchy under contour-0. So no Next. Previous is contour-1. No child, parent is contour-0. So array is [-1,1,-1,0].</p>
+<p>Contour - 3 : Next in hierarchy-1 is contour-5. Previous is contour-0. Child is contour-4 and no parent. So array is [5,0,4,-1].</p>
+<p>Contour - 4 : It is in hierarchy 2 under contour-3 and it has no sibling. So no next, no previous, no child, parent is contour-3. So array is [-1,-1,-1,3].</p>
+<p>Remaining you can fill up. This is the final answer I got:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">hierarchy</span>
+<span class="go">array([[[ 3, -1,  1, -1],</span>
+<span class="go">        [ 2, -1, -1,  0],</span>
+<span class="go">        [-1,  1, -1,  0],</span>
+<span class="go">        [ 5,  0,  4, -1],</span>
+<span class="go">        [-1, -1, -1,  3],</span>
+<span class="go">        [ 7,  3,  6, -1],</span>
+<span class="go">        [-1, -1, -1,  5],</span>
+<span class="go">        [ 8,  5, -1, -1],</span>
+<span class="go">        [-1,  7, -1, -1]]])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="retr-tree">
+<h3>4. RETR_TREE<a class="headerlink" href="#retr-tree" title="Permalink to this headline">¶</a></h3>
+<p>And this is the final guy, Mr.Perfect. It retrieves all the contours and creates a full family hierarchy list. <strong>It even tells, who is the grandpa, father, son, grandson and even beyond... :)</strong>.</p>
+<p>For examle, I took above image, rewrite the code for cv2.RETR_TREE, reorder the contours as per the result given by OpenCV and analyze it. Again, red letters give the contour number and green letters give the hierarchy order.</p>
+<blockquote>
+<div><img alt="CCOMP Hierarchy" class="align-center" src="../../../../../_images/tree_hierarchy.png" />
+</div></blockquote>
+<p>Take contour-0 : It is in hierarchy-0. Next contour in same hierarchy is contour-7. No previous contours. Child is contour-1. And no parent. So array is [7,-1,1,-1].</p>
+<p>Take contour-2 : It is in hierarchy-1. No contour in same level. No previous one. Child is contour-2. Parent is contour-0. So array is [-1,-1,2,0].</p>
+<p>And remaining, try yourself. Below is the full answer:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">hierarchy</span>
+<span class="go">array([[[ 7, -1,  1, -1],</span>
+<span class="go">        [-1, -1,  2,  0],</span>
+<span class="go">        [-1, -1,  3,  1],</span>
+<span class="go">        [-1, -1,  4,  2],</span>
+<span class="go">        [-1, -1,  5,  3],</span>
+<span class="go">        [ 6, -1, -1,  4],</span>
+<span class="go">        [-1,  5, -1,  4],</span>
+<span class="go">        [ 8,  0, -1, -1],</span>
+<span class="go">        [-1,  7, -1, -1]]])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py_histograms/py_table_of_contents_histograms/py_table_of_contents_histograms.html" title="Histograms in OpenCV"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../py_contours_more_functions/py_contours_more_functions.html" title="Contours : More Functions"
+             >previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../../py_table_of_contents_imgproc/py_table_of_contents_imgproc.html" >Image Processing in OpenCV</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_contours/py_table_of_contents_contours.html" >Contours in OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../../../_sources/doc/py_tutorials/py_imgproc/py_contours/py_contours_hierarchy/py_contours_hierarchy.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

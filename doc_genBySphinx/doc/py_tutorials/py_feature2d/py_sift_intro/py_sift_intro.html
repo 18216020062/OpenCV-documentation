@@ -1,0 +1,294 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Introduction to SIFT (Scale-Invariant Feature Transform) &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../../index.html" />
+    <link rel="up" title="Feature Detection and Description" href="../py_table_of_contents_feature2d/py_table_of_contents_feature2d.html" />
+    <link rel="next" title="Introduction to SURF (Speeded-Up Robust Features)" href="../py_surf_intro/py_surf_intro.html" />
+    <link rel="prev" title="Shi-Tomasi Corner Detector &amp; Good Features to Track" href="../py_shi_tomasi/py_shi_tomasi.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py_surf_intro/py_surf_intro.html" title="Introduction to SURF (Speeded-Up Robust Features)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../py_shi_tomasi/py_shi_tomasi.html" title="Shi-Tomasi Corner Detector &amp; Good Features to Track"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_feature2d/py_table_of_contents_feature2d.html" accesskey="U">Feature Detection and Description</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Introduction to SIFT (Scale-Invariant Feature Transform)</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#theory">Theory</a><ul>
+<li><a class="reference internal" href="#scale-space-extrema-detection">1. Scale-space Extrema Detection</a></li>
+<li><a class="reference internal" href="#keypoint-localization">2. Keypoint Localization</a></li>
+<li><a class="reference internal" href="#orientation-assignment">3. Orientation Assignment</a></li>
+<li><a class="reference internal" href="#keypoint-descriptor">4. Keypoint Descriptor</a></li>
+<li><a class="reference internal" href="#keypoint-matching">5. Keypoint Matching</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#sift-in-opencv">SIFT in OpenCV</a></li>
+<li><a class="reference internal" href="#additional-resources">Additional Resources</a></li>
+<li><a class="reference internal" href="#exercises">Exercises</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../py_shi_tomasi/py_shi_tomasi.html"
+                        title="previous chapter">Shi-Tomasi Corner Detector &amp; Good Features to Track</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../py_surf_intro/py_surf_intro.html"
+                        title="next chapter">Introduction to SURF (Speeded-Up Robust Features)</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="introduction-to-sift-scale-invariant-feature-transform">
+<span id="sift-intro"></span><h1>Introduction to SIFT (Scale-Invariant Feature Transform)<a class="headerlink" href="#introduction-to-sift-scale-invariant-feature-transform" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>In this chapter,</dt>
+<dd><ul class="first last simple">
+<li>We will learn about the concepts of SIFT algorithm</li>
+<li>We will learn to find SIFT Keypoints and Descriptors.</li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<p>In last couple of chapters, we saw some corner detectors like Harris etc. They are rotation-invariant, which means, even if the image is rotated, we can find the same corners. It is obvious because corners remain corners in rotated image also. But what about scaling? A corner may not be a corner if the image is scaled. For example, check a simple image below. A corner in a small image within a small window is flat when it is zoomed in the same window. So Harris corner is not scale invariant.</p>
+<blockquote>
+<div><img alt="Scale-Invariance" class="align-center" src="../../../../_images/sift_scale_invariant.jpg" />
+</div></blockquote>
+<p>So, in 2004, <strong>D.Lowe</strong>, University of British Columbia, came up with a new algorithm, Scale Invariant Feature Transform (SIFT) in his paper, <strong>Distinctive Image Features from Scale-Invariant Keypoints</strong>, which extract keypoints and compute its descriptors. <em>(This paper is easy to understand and considered to be best material available on SIFT. So this explanation is just a short summary of this paper)</em>.</p>
+<p>There are mainly four steps involved in SIFT algorithm. We will see them one-by-one.</p>
+<div class="section" id="scale-space-extrema-detection">
+<h3>1. Scale-space Extrema Detection<a class="headerlink" href="#scale-space-extrema-detection" title="Permalink to this headline">¶</a></h3>
+<p>From the image above, it is obvious that we can&#8217;t use the same window to detect keypoints with different scale. It is OK with small corner. But to detect larger corners we need larger windows. For this, scale-space filtering is used. In it, Laplacian of Gaussian is found for the image with various <span class="math">\sigma</span> values. LoG acts as a blob detector which detects blobs in various sizes due to change in <span class="math">\sigma</span>. In short, <span class="math">\sigma</span> acts as a scaling parameter. For eg, in the above image, gaussian kernel with low <span class="math">\sigma</span> gives high value for small corner while guassian kernel with high <span class="math">\sigma</span> fits well for larger corner. So, we can find the local maxima across the scale and space which gives us a list of <span class="math">(x,y,\sigma)</span> values which means there is a potential keypoint at (x,y) at <span class="math">\sigma</span> scale.</p>
+<p>But this LoG is a little costly, so SIFT algorithm uses Difference of Gaussians which is an approximation of LoG. Difference of Gaussian is obtained as the difference of Gaussian blurring of an image with two different <span class="math">\sigma</span>, let it be <span class="math">\sigma</span> and <span class="math">k\sigma</span>. This process is done for different octaves of the image in Gaussian Pyramid. It is represented in below image:</p>
+<blockquote>
+<div><img alt="Difference of Gaussian" class="align-center" src="../../../../_images/sift_dog.jpg" />
+</div></blockquote>
+<p>Once this DoG are found, images are searched for local extrema over scale and space. For eg, one pixel in an image is compared with its 8 neighbours as well as 9 pixels in next scale and 9 pixels in previous scales. If it is a local extrema, it is a potential keypoint. It basically means that keypoint is best represented in that scale. It is shown in below image:</p>
+<blockquote>
+<div><img alt="Difference of Gaussian" class="align-center" src="../../../../_images/sift_local_extrema.jpg" />
+</div></blockquote>
+<p>Regarding different parameters, the paper gives some empirical data which can be summarized as, number of octaves = 4, number of scale levels = 5, initial <span class="math">\sigma=1.6</span>, <span class="math">k=\sqrt{2}</span> etc as optimal values.</p>
+</div>
+<div class="section" id="keypoint-localization">
+<h3>2. Keypoint Localization<a class="headerlink" href="#keypoint-localization" title="Permalink to this headline">¶</a></h3>
+<p>Once potential keypoints locations are found, they have to be refined to get more accurate results. They used Taylor series expansion of scale space to get more accurate location of extrema, and if the intensity at this extrema is less than a threshold value (0.03 as per the paper), it is rejected. This threshold is called <strong>contrastThreshold</strong> in OpenCV</p>
+<p>DoG has higher response for edges, so edges also need to be removed. For this, a concept similar to Harris corner detector is used. They used a 2x2 Hessian matrix (H) to compute the pricipal curvature. We know from Harris corner detector that for edges, one eigen value is larger than the other. So here they used a simple function,</p>
+<p>If this ratio is greater than a threshold, called <strong>edgeThreshold</strong> in OpenCV, that keypoint is discarded. It is given as 10 in paper.</p>
+<p>So it eliminates any low-contrast keypoints and edge keypoints and what remains is strong interest points.</p>
+</div>
+<div class="section" id="orientation-assignment">
+<h3>3. Orientation Assignment<a class="headerlink" href="#orientation-assignment" title="Permalink to this headline">¶</a></h3>
+<p>Now an orientation is assigned to each keypoint to achieve invariance to image rotation. A neigbourhood is taken around the keypoint location depending on the scale, and the gradient magnitude and direction is calculated in that region. An orientation histogram with 36 bins covering 360 degrees is created. (It is weighted by gradient magnitude and gaussian-weighted circular window with <span class="math">\sigma</span> equal to 1.5 times the scale of keypoint. The highest peak in the histogram is taken and any peak above 80% of it is also considered to calculate the orientation. It creates keypoints with same location and scale, but different directions. It contribute to stability of matching.</p>
+</div>
+<div class="section" id="keypoint-descriptor">
+<h3>4. Keypoint Descriptor<a class="headerlink" href="#keypoint-descriptor" title="Permalink to this headline">¶</a></h3>
+<p>Now keypoint descriptor is created. A 16x16 neighbourhood around the keypoint is taken. It is devided into 16 sub-blocks of 4x4 size. For each sub-block, 8 bin orientation histogram is created. So a total of 128 bin values are available. It is represented as a vector to form keypoint descriptor. In addition to this, several measures are taken to achieve robustness against illumination changes, rotation etc.</p>
+</div>
+<div class="section" id="keypoint-matching">
+<h3>5. Keypoint Matching<a class="headerlink" href="#keypoint-matching" title="Permalink to this headline">¶</a></h3>
+<p>Keypoints between two images are matched by identifying their nearest neighbours. But in some cases, the second closest-match may be very near to the first. It may happen due to noise or some other reasons. In that case, ratio of closest-distance to second-closest distance is taken. If it is greater than 0.8, they are rejected. It eliminaters around 90% of false matches while discards only 5% correct matches, as per the paper.</p>
+<p>So this is a summary of SIFT algorithm. For more details and understanding, reading the original paper is highly recommended. Remember one thing, this algorithm is patented. So this algorithm is included in Non-free module in OpenCV.</p>
+</div>
+</div>
+<div class="section" id="sift-in-opencv">
+<h2>SIFT in OpenCV<a class="headerlink" href="#sift-in-opencv" title="Permalink to this headline">¶</a></h2>
+<p>So now let&#8217;s see SIFT functionalities available in OpenCV. Let&#8217;s start with keypoint detection and draw them. First we have to construct a SIFT object. We can pass different parameters to it which are optional and they are well explained in docs.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">&#39;home.jpg&#39;</span><span class="p">)</span>
+<span class="n">gray</span><span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
+
+<span class="n">sift</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">SIFT</span><span class="p">()</span>
+<span class="n">kp</span> <span class="o">=</span> <span class="n">sift</span><span class="o">.</span><span class="n">detect</span><span class="p">(</span><span class="n">gray</span><span class="p">,</span><span class="bp">None</span><span class="p">)</span>
+
+<span class="n">img</span><span class="o">=</span><span class="n">cv2</span><span class="o">.</span><span class="n">drawKeypoints</span><span class="p">(</span><span class="n">gray</span><span class="p">,</span><span class="n">kp</span><span class="p">)</span>
+
+<span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="s">&#39;sift_keypoints.jpg&#39;</span><span class="p">,</span><span class="n">img</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>sift.detect()</strong> function finds the keypoint in the images. You can pass a mask if you want to search only a part of image. Each keypoint is a special structure which has many attributes like its (x,y) coordinates, size of the meaningful neighbourhood, angle which specifies its orientation, response that specifies strength of keypoints etc.</p>
+<p>OpenCV also provides <strong>cv2.drawKeyPoints()</strong> function which draws the small circles on the locations of keypoints. If you pass a flag, <strong>cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS</strong> to it, it will draw a circle with size of keypoint and it will even show its orientation. See below example.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">img</span><span class="o">=</span><span class="n">cv2</span><span class="o">.</span><span class="n">drawKeypoints</span><span class="p">(</span><span class="n">gray</span><span class="p">,</span><span class="n">kp</span><span class="p">,</span><span class="n">flags</span><span class="o">=</span><span class="n">cv2</span><span class="o">.</span><span class="n">DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS</span><span class="p">)</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="s">&#39;sift_keypoints.jpg&#39;</span><span class="p">,</span><span class="n">img</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See the two results below:</p>
+<blockquote>
+<div><img alt="SIFT Keypoints" class="align-center" src="../../../../_images/sift_keypoints.jpg" />
+</div></blockquote>
+<p>Now to calculate the descriptor, OpenCV provides two methods.</p>
+<ol class="arabic simple">
+<li>Since you already found keypoints, you can call <strong>sift.compute()</strong> which computes the descriptors from the keypoints we have found. Eg: <tt class="docutils literal"><span class="pre">kp,des</span> <span class="pre">=</span> <span class="pre">sift.compute(gray,kp)</span></tt></li>
+<li>If you didn&#8217;t find keypoints, directly find keypoints and descriptors in a single step with the function, <strong>sift.detectAndCompute()</strong>.</li>
+</ol>
+<p>We will see the second method:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sift</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">SIFT</span><span class="p">()</span>
+<span class="n">kp</span><span class="p">,</span> <span class="n">des</span> <span class="o">=</span> <span class="n">sift</span><span class="o">.</span><span class="n">detectAndCompute</span><span class="p">(</span><span class="n">gray</span><span class="p">,</span><span class="bp">None</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here kp will be a list of keypoints and des is a numpy array of shape <span class="math">Number\_of\_Keypoints \times 128</span>.</p>
+<p>So we got keypoints, descriptors etc. Now we want to see how to match keypoints in different images. That we will learn in coming chapters.</p>
+</div>
+<div class="section" id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py_surf_intro/py_surf_intro.html" title="Introduction to SURF (Speeded-Up Robust Features)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../py_shi_tomasi/py_shi_tomasi.html" title="Shi-Tomasi Corner Detector &amp; Good Features to Track"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../py_tutorials.html" >OpenCV-Python Tutorials</a> &raquo;</li>
+          <li><a href="../py_table_of_contents_feature2d/py_table_of_contents_feature2d.html" >Feature Detection and Description</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../../_sources/doc/py_tutorials/py_feature2d/py_sift_intro/py_sift_intro.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

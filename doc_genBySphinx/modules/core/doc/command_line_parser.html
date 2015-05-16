@@ -1,0 +1,348 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Command Line Parser &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="core. The Core Functionality" href="core.html" />
+    <link rel="next" title="Basic C Structures and Operations" href="old_basic_structures.html" />
+    <link rel="prev" title="Basic Structures" href="basic_structures.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="old_basic_structures.html" title="Basic C Structures and Operations"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="basic_structures.html" title="Basic Structures"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="core.html" accesskey="U">core. The Core Functionality</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Command Line Parser</a><ul>
+<li><a class="reference internal" href="#commandlineparser">CommandLineParser</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="basic_structures.html"
+                        title="previous chapter">Basic Structures</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="old_basic_structures.html"
+                        title="next chapter">Basic C Structures and Operations</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="command-line-parser">
+<h1>Command Line Parser<a class="headerlink" href="#command-line-parser" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="commandlineparser">
+<h2>CommandLineParser<a class="headerlink" href="#commandlineparser" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="CommandLineParser">
+<em class="property">class </em><tt class="descname">CommandLineParser</tt><a class="headerlink" href="#CommandLineParser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The CommandLineParser class is designed for command line arguments parsing</p>
+<blockquote>
+<div><dl class="function">
+<dt id="CommandLineParser::CommandLineParser(int argc, const char* const argv[], const String&amp; keys)">
+<strong>C++:</strong><tt class="descname"> </tt> <tt class="descclassname">CommandLineParser::</tt><tt class="descname">CommandLineParser</tt><big>(</big>int <strong>argc</strong>, const char* const <strong>argv</strong>[], const String&amp; <strong>keys</strong><big>)</big><a class="headerlink" href="#CommandLineParser::CommandLineParser(int argc, const char* const argv[], const String& keys)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>argc</strong> &#8211; </li>
+<li><strong>argv</strong> &#8211; </li>
+<li><strong>keys</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="template&lt;typename T&gt; T CommandLineParser::get&lt;T&gt;(const String&amp; name, bool space_delete)">
+<strong>C++:</strong><tt class="descname"> </tt>template&lt;typename T&gt; T <tt class="descclassname">CommandLineParser::</tt><tt class="descname">get&lt;T&gt;</tt><big>(</big>const String&amp; <strong>name</strong>, bool <strong>space_delete</strong>=true<big>)</big><a class="headerlink" href="#template<typename T> T CommandLineParser::get<T>(const String& name, bool space_delete)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> &#8211; </li>
+<li><strong>space_delete</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="template&lt;typename T&gt; T CommandLineParser::get&lt;T&gt;(int index, bool space_delete)">
+<strong>C++:</strong><tt class="descname"> </tt>template&lt;typename T&gt; T <tt class="descclassname">CommandLineParser::</tt><tt class="descname">get&lt;T&gt;</tt><big>(</big>int <strong>index</strong>, bool <strong>space_delete</strong>=true<big>)</big><a class="headerlink" href="#template<typename T> T CommandLineParser::get<T>(int index, bool space_delete)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>index</strong> &#8211; </li>
+<li><strong>space_delete</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="bool CommandLineParser::has(const String&amp; name)">
+<strong>C++:</strong><tt class="descname"> </tt>bool <tt class="descclassname">CommandLineParser::</tt><tt class="descname">has</tt><big>(</big>const String&amp; <strong>name</strong><big>)</big><a class="headerlink" href="#bool CommandLineParser::has(const String& name)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="bool CommandLineParser::check()">
+<strong>C++:</strong><tt class="descname"> </tt>bool <tt class="descclassname">CommandLineParser::</tt><tt class="descname">check</tt><big>(</big><big>)</big><a class="headerlink" href="#bool CommandLineParser::check()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void CommandLineParser::about(const String&amp; message)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">CommandLineParser::</tt><tt class="descname">about</tt><big>(</big>const String&amp; <strong>message</strong><big>)</big><a class="headerlink" href="#void CommandLineParser::about(const String& message)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>message</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="void CommandLineParser::printMessage()">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">CommandLineParser::</tt><tt class="descname">printMessage</tt><big>(</big><big>)</big><a class="headerlink" href="#void CommandLineParser::printMessage()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void CommandLineParser::printErrors()">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">CommandLineParser::</tt><tt class="descname">printErrors</tt><big>(</big><big>)</big><a class="headerlink" href="#void CommandLineParser::printErrors()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="String CommandLineParser::getPathToApplication()">
+<strong>C++:</strong><tt class="descname"> </tt>String <tt class="descclassname">CommandLineParser::</tt><tt class="descname">getPathToApplication</tt><big>(</big><big>)</big><a class="headerlink" href="#String CommandLineParser::getPathToApplication()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div></blockquote>
+<p>The sample below demonstrates how to use CommandLineParser:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">CommandLineParser</span> <span class="nf">parser</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="n">keys</span><span class="p">);</span>
+<span class="n">parser</span><span class="p">.</span><span class="n">about</span><span class="p">(</span><span class="s">&quot;Application name v1.0.0&quot;</span><span class="p">);</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">parser</span><span class="p">.</span><span class="n">has</span><span class="p">(</span><span class="s">&quot;help&quot;</span><span class="p">))</span>
+<span class="p">{</span>
+    <span class="n">parser</span><span class="p">.</span><span class="n">printMessage</span><span class="p">();</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">parser</span><span class="p">.</span><span class="n">get</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;N&quot;</span><span class="p">);</span>
+<span class="kt">double</span> <span class="n">fps</span> <span class="o">=</span> <span class="n">parser</span><span class="p">.</span><span class="n">get</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;fps&quot;</span><span class="p">);</span>
+<span class="n">String</span> <span class="n">path</span> <span class="o">=</span> <span class="n">parser</span><span class="p">.</span><span class="n">get</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;path&quot;</span><span class="p">);</span>
+
+<span class="n">use_time_stamp</span> <span class="o">=</span> <span class="n">parser</span><span class="p">.</span><span class="n">has</span><span class="p">(</span><span class="s">&quot;timestamp&quot;</span><span class="p">);</span>
+
+<span class="n">String</span> <span class="n">img1</span> <span class="o">=</span> <span class="n">parser</span><span class="p">.</span><span class="n">get</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="n">String</span> <span class="n">img2</span> <span class="o">=</span> <span class="n">parser</span><span class="p">.</span><span class="n">get</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="n">repeat</span> <span class="o">=</span> <span class="n">parser</span><span class="p">.</span><span class="n">get</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">parser</span><span class="p">.</span><span class="n">check</span><span class="p">())</span>
+<span class="p">{</span>
+    <span class="n">parser</span><span class="p">.</span><span class="n">printErrors</span><span class="p">();</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Syntax:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">const</span> <span class="n">String</span> <span class="n">keys</span> <span class="o">=</span>
+    <span class="s">&quot;{help h usage ? |      | print this message   }&quot;</span>
+    <span class="s">&quot;{@image1        |      | image1 for compare   }&quot;</span>
+    <span class="s">&quot;{@image2        |      | image2 for compare   }&quot;</span>
+    <span class="s">&quot;{@repeat        |1     | number               }&quot;</span>
+    <span class="s">&quot;{path           |.     | path to file         }&quot;</span>
+    <span class="s">&quot;{fps            | -1.0 | fps for output video }&quot;</span>
+    <span class="s">&quot;{N count        |100   | count of objects     }&quot;</span>
+    <span class="s">&quot;{ts timestamp   |      | use time stamp       }&quot;</span>
+    <span class="p">;</span>
+</pre></div>
+</div>
+<p>Use:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp"># ./app -N=200 1.png 2.jpg 19 -ts</span>
+
+<span class="cp"># ./app -fps=aaa</span>
+<span class="nl">ERRORS</span><span class="p">:</span>
+<span class="nl">Exception</span><span class="p">:</span> <span class="n">can</span> <span class="n">not</span> <span class="nl">convert</span><span class="p">:</span> <span class="p">[</span><span class="n">aaa</span><span class="p">]</span> <span class="n">to</span> <span class="p">[</span><span class="kt">double</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="old_basic_structures.html" title="Basic C Structures and Operations"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="basic_structures.html" title="Basic Structures"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="core.html" >core. The Core Functionality</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/core/doc/command_line_parser.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,491 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Image Processing &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="cudaimgproc. CUDA-accelerated Image Processing" href="cudaimgproc.html" />
+    <link rel="next" title="cudaoptflow. CUDA-accelerated Optical Flow" href="../../cudaoptflow/doc/cudaoptflow.html" />
+    <link rel="prev" title="Feature Detection" href="feature_detection.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../cudaoptflow/doc/cudaoptflow.html" title="cudaoptflow. CUDA-accelerated Optical Flow"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="feature_detection.html" title="Feature Detection"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="cudaimgproc.html" accesskey="U">cudaimgproc. CUDA-accelerated Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Image Processing</a><ul>
+<li><a class="reference internal" href="#cuda-cannyedgedetector">cuda::CannyEdgeDetector</a></li>
+<li><a class="reference internal" href="#cuda-cannyedgedetector-detect">cuda::CannyEdgeDetector::detect</a></li>
+<li><a class="reference internal" href="#cuda-createcannyedgedetector">cuda::createCannyEdgeDetector</a></li>
+<li><a class="reference internal" href="#cuda-meanshiftfiltering">cuda::meanShiftFiltering</a></li>
+<li><a class="reference internal" href="#cuda-meanshiftproc">cuda::meanShiftProc</a></li>
+<li><a class="reference internal" href="#cuda-meanshiftsegmentation">cuda::meanShiftSegmentation</a></li>
+<li><a class="reference internal" href="#cuda-templatematching">cuda::TemplateMatching</a></li>
+<li><a class="reference internal" href="#cuda-templatematching-match">cuda::TemplateMatching::match</a></li>
+<li><a class="reference internal" href="#cuda-createtemplatematching">cuda::createTemplateMatching</a></li>
+<li><a class="reference internal" href="#cuda-bilateralfilter">cuda::bilateralFilter</a></li>
+<li><a class="reference internal" href="#cuda-blendlinear">cuda::blendLinear</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="feature_detection.html"
+                        title="previous chapter">Feature Detection</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../cudaoptflow/doc/cudaoptflow.html"
+                        title="next chapter">cudaoptflow. CUDA-accelerated Optical Flow</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="image-processing">
+<h1>Image Processing<a class="headerlink" href="#image-processing" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="cuda-cannyedgedetector">
+<h2>cuda::CannyEdgeDetector<a class="headerlink" href="#cuda-cannyedgedetector" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cuda::CannyEdgeDetector : public Algorithm">
+<em class="property">class </em><tt class="descclassname">cuda::</tt><tt class="descname">CannyEdgeDetector</tt> : <em class="property">public</em> <tt class="descname">Algorithm</tt><a class="headerlink" href="#cuda::CannyEdgeDetector : public Algorithm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base class for Canny Edge Detector.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">CannyEdgeDetector</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Algorithm</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">detect</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">image</span><span class="p">,</span> <span class="n">OutputArray</span> <span class="n">edges</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">detect</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">dx</span><span class="p">,</span> <span class="n">InputArray</span> <span class="n">dy</span><span class="p">,</span> <span class="n">OutputArray</span> <span class="n">edges</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setLowThreshold</span><span class="p">(</span><span class="kt">double</span> <span class="n">low_thresh</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">double</span> <span class="n">getLowThreshold</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setHighThreshold</span><span class="p">(</span><span class="kt">double</span> <span class="n">high_thresh</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">double</span> <span class="n">getHighThreshold</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setAppertureSize</span><span class="p">(</span><span class="kt">int</span> <span class="n">apperture_size</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">getAppertureSize</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">setL2Gradient</span><span class="p">(</span><span class="kt">bool</span> <span class="n">L2gradient</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">bool</span> <span class="n">getL2Gradient</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cuda-cannyedgedetector-detect">
+<h2>cuda::CannyEdgeDetector::detect<a class="headerlink" href="#cuda-cannyedgedetector-detect" title="Permalink to this headline">¶</a></h2>
+<p>Finds edges in an image using the <a class="reference internal" href="../../imgproc/doc/feature_detection.html#canny86" id="id1">[Canny86]</a> algorithm.</p>
+<dl class="function">
+<dt id="void cuda::CannyEdgeDetector::detect(InputArray image, OutputArray edges)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::CannyEdgeDetector::</tt><tt class="descname">detect</tt><big>(</big>InputArray <strong>image</strong>, OutputArray <strong>edges</strong><big>)</big><a class="headerlink" href="#void cuda::CannyEdgeDetector::detect(InputArray image, OutputArray edges)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void cuda::CannyEdgeDetector::detect(InputArray dx, InputArray dy, OutputArray edges)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::CannyEdgeDetector::</tt><tt class="descname">detect</tt><big>(</big>InputArray <strong>dx</strong>, InputArray <strong>dy</strong>, OutputArray <strong>edges</strong><big>)</big><a class="headerlink" href="#void cuda::CannyEdgeDetector::detect(InputArray dx, InputArray dy, OutputArray edges)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; Single-channel 8-bit input image.</li>
+<li><strong>dx</strong> &#8211; First derivative of image in the vertical direction. Support only <tt class="docutils literal"><span class="pre">CV_32S</span></tt> type.</li>
+<li><strong>dy</strong> &#8211; First derivative of image in the horizontal direction. Support only <tt class="docutils literal"><span class="pre">CV_32S</span></tt> type.</li>
+<li><strong>edges</strong> &#8211; Output edge map. It has the same size and type as  <tt class="docutils literal"><span class="pre">image</span></tt> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-createcannyedgedetector">
+<h2>cuda::createCannyEdgeDetector<a class="headerlink" href="#cuda-createcannyedgedetector" title="Permalink to this headline">¶</a></h2>
+<p>Creates implementation for <a class="reference internal" href="#cuda::CannyEdgeDetector : public Algorithm" title="class cuda::CannyEdgeDetector : public Algorithm"><tt class="xref ocv ocv-class docutils literal"><span class="pre">cuda::CannyEdgeDetector</span></tt></a> .</p>
+<dl class="function">
+<dt id="Ptr&lt;CannyEdgeDetector&gt; cuda::createCannyEdgeDetector(double low_thresh, double high_thresh, int apperture_size , bool L2gradient)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;CannyEdgeDetector&gt; <tt class="descclassname">cuda::</tt><tt class="descname">createCannyEdgeDetector</tt><big>(</big>double <strong>low_thresh</strong>, double <strong>high_thresh</strong>, int <strong>apperture_size</strong>=3, bool <strong>L2gradient</strong>=false<big>)</big><a class="headerlink" href="#Ptr<CannyEdgeDetector> cuda::createCannyEdgeDetector(double low_thresh, double high_thresh, int apperture_size , bool L2gradient)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>low_thresh</strong> &#8211; First threshold for the hysteresis procedure.</li>
+<li><strong>high_thresh</strong> &#8211; Second threshold for the hysteresis procedure.</li>
+<li><strong>apperture_size</strong> &#8211; Aperture size for the  <a class="reference internal" href="../../imgproc/doc/filtering.html#void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)" title="void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">Sobel()</span></tt></a>  operator.</li>
+<li><strong>L2gradient</strong> &#8211; Flag indicating whether a more accurate  <span class="math">L_2</span>  norm  <span class="math">=\sqrt{(dI/dx)^2 + (dI/dy)^2}</span>  should be used to compute the image gradient magnitude ( <tt class="docutils literal"><span class="pre">L2gradient=true</span></tt> ), or a faster default  <span class="math">L_1</span>  norm  <span class="math">=|dI/dx|+|dI/dy|</span>  is enough ( <tt class="docutils literal"><span class="pre">L2gradient=false</span></tt> ).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-meanshiftfiltering">
+<h2>cuda::meanShiftFiltering<a class="headerlink" href="#cuda-meanshiftfiltering" title="Permalink to this headline">¶</a></h2>
+<p>Performs mean-shift filtering for each point of the source image.</p>
+<dl class="function">
+<dt id="void cuda::meanShiftFiltering(InputArray src, OutputArray dst, int sp, int sr, TermCriteria criteria , Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">meanShiftFiltering</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, int <strong>sp</strong>, int <strong>sr</strong>, TermCriteria <strong>criteria</strong>=TermCriteria(TermCriteria::MAX_ITER + TermCriteria::EPS, 5, 1), Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::meanShiftFiltering(InputArray src, OutputArray dst, int sp, int sr, TermCriteria criteria , Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image. Only  <tt class="docutils literal"><span class="pre">CV_8UC4</span></tt> images are supported for now.</li>
+<li><strong>dst</strong> &#8211; Destination image containing the color of mapped points. It has the same size and type as  <tt class="docutils literal"><span class="pre">src</span></tt> .</li>
+<li><strong>sp</strong> &#8211; Spatial window radius.</li>
+<li><strong>sr</strong> &#8211; Color window radius.</li>
+<li><strong>criteria</strong> &#8211; Termination criteria. See <a class="reference internal" href="../../core/doc/basic_structures.html#TermCriteria" title="class TermCriteria"><tt class="xref ocv ocv-class docutils literal"><span class="pre">TermCriteria</span></tt></a>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>It maps each point of the source image into another point. As a result, you have a new color and new position of each point.</p>
+</div>
+<div class="section" id="cuda-meanshiftproc">
+<h2>cuda::meanShiftProc<a class="headerlink" href="#cuda-meanshiftproc" title="Permalink to this headline">¶</a></h2>
+<p>Performs a mean-shift procedure and stores information about processed points (their colors and positions) in two images.</p>
+<dl class="function">
+<dt id="void cuda::meanShiftProc(InputArray src, OutputArray dstr, OutputArray dstsp, int sp, int sr, TermCriteria criteria , Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">meanShiftProc</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dstr</strong>, OutputArray <strong>dstsp</strong>, int <strong>sp</strong>, int <strong>sr</strong>, TermCriteria <strong>criteria</strong>=TermCriteria(TermCriteria::MAX_ITER + TermCriteria::EPS, 5, 1), Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::meanShiftProc(InputArray src, OutputArray dstr, OutputArray dstsp, int sp, int sr, TermCriteria criteria , Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image. Only  <tt class="docutils literal"><span class="pre">CV_8UC4</span></tt> images are supported for now.</li>
+<li><strong>dstr</strong> &#8211; Destination image containing the color of mapped points. The size and type is the same as  <tt class="docutils literal"><span class="pre">src</span></tt> .</li>
+<li><strong>dstsp</strong> &#8211; Destination image containing the position of mapped points. The size is the same as  <tt class="docutils literal"><span class="pre">src</span></tt> size. The type is  <tt class="docutils literal"><span class="pre">CV_16SC2</span></tt> .</li>
+<li><strong>sp</strong> &#8211; Spatial window radius.</li>
+<li><strong>sr</strong> &#8211; Color window radius.</li>
+<li><strong>criteria</strong> &#8211; Termination criteria. See <a class="reference internal" href="../../core/doc/basic_structures.html#TermCriteria" title="class TermCriteria"><tt class="xref ocv ocv-class docutils literal"><span class="pre">TermCriteria</span></tt></a>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void cuda::meanShiftFiltering(InputArray src, OutputArray dst, int sp, int sr, TermCriteria criteria , Stream&amp; stream)" title="void cuda::meanShiftFiltering(InputArray src, OutputArray dst, int sp, int sr, TermCriteria criteria , Stream&amp; stream)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">cuda::meanShiftFiltering()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-meanshiftsegmentation">
+<h2>cuda::meanShiftSegmentation<a class="headerlink" href="#cuda-meanshiftsegmentation" title="Permalink to this headline">¶</a></h2>
+<p>Performs a mean-shift segmentation of the source image and eliminates small segments.</p>
+<dl class="function">
+<dt id="void cuda::meanShiftSegmentation(InputArray src, OutputArray dst, int sp, int sr, int minsize, TermCriteria criteria)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">meanShiftSegmentation</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, int <strong>sp</strong>, int <strong>sr</strong>, int <strong>minsize</strong>, TermCriteria <strong>criteria</strong>=TermCriteria(TermCriteria::MAX_ITER + TermCriteria::EPS, 5, 1)<big>)</big><a class="headerlink" href="#void cuda::meanShiftSegmentation(InputArray src, OutputArray dst, int sp, int sr, int minsize, TermCriteria criteria)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image. Only  <tt class="docutils literal"><span class="pre">CV_8UC4</span></tt> images are supported for now.</li>
+<li><strong>dst</strong> &#8211; Segmented image with the same size and type as  <tt class="docutils literal"><span class="pre">src</span></tt> (host memory).</li>
+<li><strong>sp</strong> &#8211; Spatial window radius.</li>
+<li><strong>sr</strong> &#8211; Color window radius.</li>
+<li><strong>minsize</strong> &#8211; Minimum segment size. Smaller segments are merged.</li>
+<li><strong>criteria</strong> &#8211; Termination criteria. See <a class="reference internal" href="../../core/doc/basic_structures.html#TermCriteria" title="class TermCriteria"><tt class="xref ocv ocv-class docutils literal"><span class="pre">TermCriteria</span></tt></a>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-templatematching">
+<h2>cuda::TemplateMatching<a class="headerlink" href="#cuda-templatematching" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cuda::TemplateMatching : public Algorithm">
+<em class="property">class </em><tt class="descclassname">cuda::</tt><tt class="descname">TemplateMatching</tt> : <em class="property">public</em> <tt class="descname">Algorithm</tt><a class="headerlink" href="#cuda::TemplateMatching : public Algorithm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base class for Template Matching.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">TemplateMatching</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Algorithm</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">match</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">image</span><span class="p">,</span> <span class="n">InputArray</span> <span class="n">templ</span><span class="p">,</span> <span class="n">OutputArray</span> <span class="n">result</span><span class="p">,</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="o">::</span><span class="n">Null</span><span class="p">())</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cuda-templatematching-match">
+<h2>cuda::TemplateMatching::match<a class="headerlink" href="#cuda-templatematching-match" title="Permalink to this headline">¶</a></h2>
+<p>Computes a proximity map for a raster template and an image where the template is searched for.</p>
+<dl class="function">
+<dt id="void cuda::TemplateMatching::match(InputArray image, InputArray templ, OutputArray result, Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::TemplateMatching::</tt><tt class="descname">match</tt><big>(</big>InputArray <strong>image</strong>, InputArray <strong>templ</strong>, OutputArray <strong>result</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::TemplateMatching::match(InputArray image, InputArray templ, OutputArray result, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; Source image.</li>
+<li><strong>templ</strong> &#8211; Template image with the size and type the same as  <tt class="docutils literal"><span class="pre">image</span></tt> .</li>
+<li><strong>result</strong> &#8211; Map containing comparison results ( <tt class="docutils literal"><span class="pre">CV_32FC1</span></tt> ). If  <tt class="docutils literal"><span class="pre">image</span></tt> is  <em>W x H</em>  and <tt class="docutils literal"><span class="pre">templ</span></tt> is  <em>w x h</em>, then  <tt class="docutils literal"><span class="pre">result</span></tt> must be <em>W-w+1 x H-h+1</em>.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cuda-createtemplatematching">
+<h2>cuda::createTemplateMatching<a class="headerlink" href="#cuda-createtemplatematching" title="Permalink to this headline">¶</a></h2>
+<p>Creates implementation for <a class="reference internal" href="#cuda::TemplateMatching : public Algorithm" title="class cuda::TemplateMatching : public Algorithm"><tt class="xref ocv ocv-class docutils literal"><span class="pre">cuda::TemplateMatching</span></tt></a> .</p>
+<dl class="function">
+<dt id="Ptr&lt;TemplateMatching&gt; cuda::createTemplateMatching(int srcType, int method, Size user_block_size)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;TemplateMatching&gt; <tt class="descclassname">cuda::</tt><tt class="descname">createTemplateMatching</tt><big>(</big>int <strong>srcType</strong>, int <strong>method</strong>, Size <strong>user_block_size</strong>=Size()<big>)</big><a class="headerlink" href="#Ptr<TemplateMatching> cuda::createTemplateMatching(int srcType, int method, Size user_block_size)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>srcType</strong> &#8211; Input source type. <tt class="docutils literal"><span class="pre">CV_32F</span></tt> and  <tt class="docutils literal"><span class="pre">CV_8U</span></tt> depth images (1..4 channels) are supported for now.</li>
+<li><strong>method</strong> &#8211; Specifies the way to compare the template with the image.</li>
+<li><strong>user_block_size</strong> &#8211; You can use field <cite>user_block_size</cite> to set specific block size. If you leave its default value <cite>Size(0,0)</cite> then automatic estimation of block size will be used (which is optimized for speed). By varying <cite>user_block_size</cite> you can reduce memory requirements at the cost of speed.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The following methods are supported for the <tt class="docutils literal"><span class="pre">CV_8U</span></tt> depth images for now:</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">CV_TM_SQDIFF</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">CV_TM_SQDIFF_NORMED</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">CV_TM_CCORR</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">CV_TM_CCORR_NORMED</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">CV_TM_CCOEFF</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">CV_TM_CCOEFF_NORMED</span></tt></li>
+</ul>
+</div></blockquote>
+<p>The following methods are supported for the <tt class="docutils literal"><span class="pre">CV_32F</span></tt> images for now:</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">CV_TM_SQDIFF</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">CV_TM_CCORR</span></tt></li>
+</ul>
+</div></blockquote>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/object_detection.html#void matchTemplate(InputArray image, InputArray templ, OutputArray result, int method)" title="void matchTemplate(InputArray image, InputArray templ, OutputArray result, int method)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">matchTemplate()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-bilateralfilter">
+<h2>cuda::bilateralFilter<a class="headerlink" href="#cuda-bilateralfilter" title="Permalink to this headline">¶</a></h2>
+<p>Performs bilateral filtering of passed image</p>
+<dl class="function">
+<dt id="void cuda::bilateralFilter(InputArray src, OutputArray dst, int kernel_size, float sigma_color, float sigma_spatial, int borderMode, Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">bilateralFilter</tt><big>(</big>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, int <strong>kernel_size</strong>, float <strong>sigma_color</strong>, float <strong>sigma_spatial</strong>, int <strong>borderMode</strong>=BORDER_DEFAULT, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::bilateralFilter(InputArray src, OutputArray dst, int kernel_size, float sigma_color, float sigma_spatial, int borderMode, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image. Supports only (channles != 2 &amp;&amp; depth() != CV_8S &amp;&amp; depth() != CV_32S &amp;&amp; depth() != CV_64F).</li>
+<li><strong>dst</strong> &#8211; Destination imagwe.</li>
+<li><strong>kernel_size</strong> &#8211; Kernel window size.</li>
+<li><strong>sigma_color</strong> &#8211; Filter sigma in the color space.</li>
+<li><strong>sigma_spatial</strong> &#8211; Filter sigma in the coordinate space.</li>
+<li><strong>borderMode</strong> &#8211; Border type. See <a class="reference internal" href="../../core/doc/operations_on_arrays.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></tt></a> for details. <tt class="docutils literal"><span class="pre">BORDER_REFLECT101</span></tt> , <tt class="docutils literal"><span class="pre">BORDER_REPLICATE</span></tt> , <tt class="docutils literal"><span class="pre">BORDER_CONSTANT</span></tt> , <tt class="docutils literal"><span class="pre">BORDER_REFLECT</span></tt> and <tt class="docutils literal"><span class="pre">BORDER_WRAP</span></tt> are supported for now.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/filtering.html#void bilateralFilter(InputArray src, OutputArray dst, int d, double sigmaColor, double sigmaSpace, int borderType)" title="void bilateralFilter(InputArray src, OutputArray dst, int d, double sigmaColor, double sigmaSpace, int borderType)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">bilateralFilter()</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="cuda-blendlinear">
+<h2>cuda::blendLinear<a class="headerlink" href="#cuda-blendlinear" title="Permalink to this headline">¶</a></h2>
+<p>Performs linear blending of two images.</p>
+<dl class="function">
+<dt id="void cuda::blendLinear(InputArray img1, InputArray img2, InputArray weights1, InputArray weights2, OutputArray result, Stream&amp; stream)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">cuda::</tt><tt class="descname">blendLinear</tt><big>(</big>InputArray <strong>img1</strong>, InputArray <strong>img2</strong>, InputArray <strong>weights1</strong>, InputArray <strong>weights2</strong>, OutputArray <strong>result</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<big>)</big><a class="headerlink" href="#void cuda::blendLinear(InputArray img1, InputArray img2, InputArray weights1, InputArray weights2, OutputArray result, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>img1</strong> &#8211; First image. Supports only <tt class="docutils literal"><span class="pre">CV_8U</span></tt> and <tt class="docutils literal"><span class="pre">CV_32F</span></tt> depth.</li>
+<li><strong>img2</strong> &#8211; Second image. Must have the same size and the same type as <tt class="docutils literal"><span class="pre">img1</span></tt> .</li>
+<li><strong>weights1</strong> &#8211; Weights for first image. Must have tha same size as <tt class="docutils literal"><span class="pre">img1</span></tt> . Supports only <tt class="docutils literal"><span class="pre">CV_32F</span></tt> type.</li>
+<li><strong>weights2</strong> &#8211; Weights for second image. Must have tha same size as <tt class="docutils literal"><span class="pre">img2</span></tt> . Supports only <tt class="docutils literal"><span class="pre">CV_32F</span></tt> type.</li>
+<li><strong>result</strong> &#8211; Destination image.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../cudaoptflow/doc/cudaoptflow.html" title="cudaoptflow. CUDA-accelerated Optical Flow"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="feature_detection.html" title="Feature Detection"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="cudaimgproc.html" >cudaimgproc. CUDA-accelerated Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/cudaimgproc/doc/imgproc.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>

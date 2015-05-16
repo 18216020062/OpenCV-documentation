@@ -1,0 +1,469 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Neural Networks &mdash; OpenCV 3.0.0-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/insertIframe.js"></script>
+    <link rel="top" title="OpenCV 3.0.0-beta documentation" href="../../../index.html" />
+    <link rel="up" title="ml. Machine Learning" href="ml.html" />
+    <link rel="next" title="Logistic Regression" href="logistic_regression.html" />
+    <link rel="prev" title="Expectation Maximization" href="expectation_maximization.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="logistic_regression.html" title="Logistic Regression"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="expectation_maximization.html" title="Expectation Maximization"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" accesskey="U">ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo2.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Neural Networks</a><ul>
+<li><a class="reference internal" href="#ann-mlp-params">ANN_MLP::Params</a></li>
+<li><a class="reference internal" href="#ann-mlp-params-params">ANN_MLP::Params::Params</a></li>
+<li><a class="reference internal" href="#ann-mlp">ANN_MLP</a></li>
+<li><a class="reference internal" href="#ann-mlp-create">ANN_MLP::create</a></li>
+<li><a class="reference internal" href="#ann-mlp-setparams">ANN_MLP::setParams</a></li>
+<li><a class="reference internal" href="#ann-mlp-getparams">ANN_MLP::getParams</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="expectation_maximization.html"
+                        title="previous chapter">Expectation Maximization</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="logistic_regression.html"
+                        title="next chapter">Logistic Regression</a></p>
+        </div>
+      </div>
+  <body>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="neural-networks">
+<h1>Neural Networks<a class="headerlink" href="#neural-networks" title="Permalink to this headline">¶</a></h1>
+<p>ML implements feed-forward artificial neural networks or, more particularly, multi-layer perceptrons (MLP), the most commonly used type of neural networks. MLP consists of the input layer, output layer, and one or more hidden layers. Each layer of MLP includes one or more neurons directionally linked with the neurons from the previous and the next layer. The example below represents a 3-layer perceptron with three inputs, two outputs, and the hidden layer including five neurons:</p>
+<img alt="../../../_images/mlp.png" src="../../../_images/mlp.png" />
+<p>All the neurons in MLP are similar. Each of them has several input links (it takes the output values from several neurons in the previous layer as input) and several output links (it passes the response to several neurons in the next layer). The values retrieved from the previous layer are summed up with certain weights, individual for each neuron, plus the bias term. The sum is transformed using the activation function
+<span class="math">f</span> that may be also different for different neurons.</p>
+<img alt="../../../_images/neuron_model.png" src="../../../_images/neuron_model.png" />
+<p>In other words, given the outputs
+<span class="math">x_j</span> of the layer
+<span class="math">n</span> , the outputs
+<span class="math">y_i</span> of the layer
+<span class="math">n+1</span> are computed as:</p>
+<div class="math">
+<p><span class="math">u_i =  \sum _j (w^{n+1}_{i,j}*x_j) + w^{n+1}_{i,bias}</span></p>
+</div><div class="math">
+<p><span class="math">y_i = f(u_i)</span></p>
+</div><p>Different activation functions may be used. ML implements three standard functions:</p>
+<ul>
+<li><p class="first">Identity function ( <tt class="docutils literal"><span class="pre">ANN_MLP::IDENTITY</span></tt>     ):
+<span class="math">f(x)=x</span></p>
+</li>
+<li><p class="first">Symmetrical sigmoid ( <tt class="docutils literal"><span class="pre">ANN_MLP::SIGMOID_SYM</span></tt>     ):
+<span class="math">f(x)=\beta*(1-e^{-\alpha x})/(1+e^{-\alpha x}</span>     ), which is the default choice for MLP. The standard sigmoid with
+<span class="math">\beta =1, \alpha =1</span>     is shown below:</p>
+<img alt="../../../_images/sigmoid_bipolar.png" src="../../../_images/sigmoid_bipolar.png" />
+</li>
+<li><p class="first">Gaussian function ( <tt class="docutils literal"><span class="pre">ANN_MLP::GAUSSIAN</span></tt>     ):
+<span class="math">f(x)=\beta e^{-\alpha x*x}</span>     , which is not completely supported at the moment.</p>
+</li>
+</ul>
+<p>In ML, all the neurons have the same activation functions, with the same free parameters (
+<span class="math">\alpha, \beta</span> ) that are specified by user and are not altered by the training algorithms.</p>
+<p>So, the whole trained network works as follows:</p>
+<ol class="arabic simple">
+<li>Take the feature vector as input. The vector size is equal to the size of the input layer.</li>
+<li>Pass values as input to the first hidden layer.</li>
+<li>Compute outputs of the hidden layer using the weights and the activation functions.</li>
+<li>Pass outputs further downstream until you compute the output layer.</li>
+</ol>
+<p>So, to compute the network, you need to know all the
+weights
+<span class="math">w^{n+1)}_{i,j}</span> . The weights are computed by the training
+algorithm. The algorithm takes a training set, multiple input vectors
+with the corresponding output vectors, and iteratively adjusts the
+weights to enable the network to give the desired response to the
+provided input vectors.</p>
+<p>The larger the network size (the number of hidden layers and their sizes) is,
+the more the potential network flexibility is. The error on the
+training set could be made arbitrarily small. But at the same time the
+learned network also &#8220;learns&#8221; the noise present in the training set,
+so the error on the test set usually starts increasing after the network
+size reaches a limit. Besides, the larger networks are trained much
+longer than the smaller ones, so it is reasonable to pre-process the data,
+using
+<a class="reference internal" href="../../core/doc/operations_on_arrays.html#PCA&amp; PCA::operator()(InputArray data, InputArray mean, int flags, int maxComponents)" title="PCA&amp; PCA::operator()(InputArray data, InputArray mean, int flags, int maxComponents)"><tt class="xref ocv ocv-funcx docutils literal"><span class="pre">PCA::operator()</span></tt></a> or similar technique, and train a smaller network
+on only essential features.</p>
+<p>Another MLP feature is an inability to handle categorical
+data as is. However, there is a workaround. If a certain feature in the
+input or output (in case of <tt class="docutils literal"><span class="pre">n</span></tt> -class classifier for
+<span class="math">n&gt;2</span> ) layer is categorical and can take
+<span class="math">M&gt;2</span> different values, it makes sense to represent it as a binary tuple of <tt class="docutils literal"><span class="pre">M</span></tt> elements, where the <tt class="docutils literal"><span class="pre">i</span></tt> -th element is 1 if and only if the
+feature is equal to the <tt class="docutils literal"><span class="pre">i</span></tt> -th value out of <tt class="docutils literal"><span class="pre">M</span></tt> possible. It
+increases the size of the input/output layer but speeds up the
+training algorithm convergence and at the same time enables &#8220;fuzzy&#8221; values
+of such variables, that is, a tuple of probabilities instead of a fixed value.</p>
+<p>ML implements two algorithms for training MLP&#8217;s. The first algorithm is a classical
+random sequential back-propagation algorithm.
+The second (default) one is a batch RPROP algorithm.</p>
+<table class="docutils citation" frame="void" id="backpropwikipedia" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[BackPropWikipedia]</td><td><a class="reference external" href="http://en.wikipedia.org/wiki/Backpropagation">http://en.wikipedia.org/wiki/Backpropagation</a>. Wikipedia article about the back-propagation algorithm.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="lecun98" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[LeCun98]</td><td><ol class="first last upperalpha simple" start="25">
+<li>LeCun, L. Bottou, G.B. Orr and K.-R. Muller, <em>Efficient backprop</em>, in Neural Networks&#8212;Tricks of the Trade, Springer Lecture Notes in Computer Sciences 1524, pp.5-50, 1998.</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="rprop93" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[RPROP93]</a></td><td><ol class="first last upperalpha simple" start="13">
+<li>Riedmiller and H. Braun, <em>A Direct Adaptive Method for Faster Backpropagation Learning: The RPROP Algorithm</em>, Proc. ICNN, San Francisco (1993).</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+<div class="section" id="ann-mlp-params">
+<h2>ANN_MLP::Params<a class="headerlink" href="#ann-mlp-params" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ANN_MLP::Params">
+<em class="property">class </em><tt class="descclassname">ANN_MLP::</tt><tt class="descname">Params</tt><a class="headerlink" href="#ANN_MLP::Params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parameters of the MLP and of the training algorithm. You can initialize the structure by a constructor or the individual parameters can be adjusted after the structure is created.</p>
+<p>The network structure:</p>
+<dl class="member">
+<dt id="Mat layerSizes">
+Mat <tt class="descname">layerSizes</tt><a class="headerlink" href="#Mat layerSizes" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of elements in each layer of network. The very first element specifies the number of elements in the input layer. The last element - number of elements in the output layer.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int activateFunc">
+int <tt class="descname">activateFunc</tt><a class="headerlink" href="#int activateFunc" title="Permalink to this definition">¶</a></dt>
+<dd><p>The activation function. Currently the only fully supported activation function is <tt class="docutils literal"><span class="pre">ANN_MLP::SIGMOID_SYM</span></tt>.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="double fparam1">
+double <tt class="descname">fparam1</tt><a class="headerlink" href="#double fparam1" title="Permalink to this definition">¶</a></dt>
+<dd><p>The first parameter of activation function, 0 by default.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="double fparam2">
+double <tt class="descname">fparam2</tt><a class="headerlink" href="#double fparam2" title="Permalink to this definition">¶</a></dt>
+<dd><p>The second parameter of the activation function, 0 by default.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you are using the default <tt class="docutils literal"><span class="pre">ANN_MLP::SIGMOID_SYM</span></tt> activation function with the default parameter values fparam1=0 and fparam2=0 then the function used is y = 1.7159*tanh(2/3 * x), so the output will range from [-1.7159, 1.7159], instead of [0,1].</p>
+</div>
+</dd></dl>
+
+<p>The back-propagation algorithm parameters:</p>
+<dl class="member">
+<dt id="double bpDWScale">
+double <tt class="descname">bpDWScale</tt><a class="headerlink" href="#double bpDWScale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Strength of the weight gradient term. The recommended value is about 0.1.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="double bpMomentScale">
+double <tt class="descname">bpMomentScale</tt><a class="headerlink" href="#double bpMomentScale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Strength of the momentum term (the difference between weights on the 2 previous iterations). This parameter provides some inertia to smooth the random fluctuations of the weights. It can vary from 0 (the feature is disabled) to 1 and beyond. The value 0.1 or so is good enough</p>
+</dd></dl>
+
+<p>The RPROP algorithm parameters (see <a class="reference internal" href="#rprop93" id="id1">[RPROP93]</a> for details):</p>
+<dl class="member">
+<dt id="double prDW0">
+double <tt class="descname">prDW0</tt><a class="headerlink" href="#double prDW0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initial value <span class="math">\Delta_0</span> of update-values <span class="math">\Delta_{ij}</span>.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="double rpDWPlus">
+double <tt class="descname">rpDWPlus</tt><a class="headerlink" href="#double rpDWPlus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increase factor <span class="math">\eta^+</span>. It must be &gt;1.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="double rpDWMinus">
+double <tt class="descname">rpDWMinus</tt><a class="headerlink" href="#double rpDWMinus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decrease factor <span class="math">\eta^-</span>. It must be &lt;1.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="double rpDWMin">
+double <tt class="descname">rpDWMin</tt><a class="headerlink" href="#double rpDWMin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update-values lower limit <span class="math">\Delta_{min}</span>. It must be positive.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="double rpDWMax">
+double <tt class="descname">rpDWMax</tt><a class="headerlink" href="#double rpDWMax" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update-values upper limit <span class="math">\Delta_{max}</span>. It must be &gt;1.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="ann-mlp-params-params">
+<h2>ANN_MLP::Params::Params<a class="headerlink" href="#ann-mlp-params-params" title="Permalink to this headline">¶</a></h2>
+<p>Construct the parameter structure</p>
+<dl class="function">
+<dt id="ANN_MLP::Params()">
+<strong>C++:</strong><tt class="descname"> </tt> <tt class="descclassname">ANN_MLP::</tt><tt class="descname">Params</tt><big>(</big><big>)</big><a class="headerlink" href="#ANN_MLP::Params()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ANN_MLP::Params::Params(const Mat&amp; layerSizes, int activateFunc, double fparam1, double fparam2, TermCriteria termCrit, int trainMethod, double param1, double param2)">
+<strong>C++:</strong><tt class="descname"> </tt> <tt class="descclassname">ANN_MLP::Params::</tt><tt class="descname">Params</tt><big>(</big>const Mat&amp; <strong>layerSizes</strong>, int <strong>activateFunc</strong>, double <strong>fparam1</strong>, double <strong>fparam2</strong>, TermCriteria <strong>termCrit</strong>, int <strong>trainMethod</strong>, double <strong>param1</strong>, double <strong>param2</strong>=0 <big>)</big><a class="headerlink" href="#ANN_MLP::Params::Params(const Mat& layerSizes, int activateFunc, double fparam1, double fparam2, TermCriteria termCrit, int trainMethod, double param1, double param2)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>layerSizes</strong> &#8211; Integer vector specifying the number of neurons in each layer including the input and output layers.</li>
+<li><strong>activateFunc</strong> &#8211; Parameter specifying the activation function for each neuron: one of  <tt class="docutils literal"><span class="pre">ANN_MLP::IDENTITY</span></tt>, <tt class="docutils literal"><span class="pre">ANN_MLP::SIGMOID_SYM</span></tt>, and <tt class="docutils literal"><span class="pre">ANN_MLP::GAUSSIAN</span></tt>.</li>
+<li><strong>fparam1</strong> &#8211; The first parameter of the activation function, <span class="math">\alpha</span>. See the formulas in the introduction section.</li>
+<li><strong>fparam2</strong> &#8211; The second parameter of the activation function, <span class="math">\beta</span>. See the formulas in the introduction section.</li>
+<li><strong>termCrit</strong> &#8211; Termination criteria of the training algorithm. You can specify the maximum number of iterations (<tt class="docutils literal"><span class="pre">maxCount</span></tt>) and/or how much the error could change between the iterations to make the algorithm continue (<tt class="docutils literal"><span class="pre">epsilon</span></tt>).</li>
+<li><strong>train_method</strong> &#8211; <p>Training method of the MLP. Possible values are:</p>
+<ul>
+<li><strong>ANN_MLP_TrainParams::BACKPROP</strong> The back-propagation algorithm.</li>
+<li><strong>ANN_MLP_TrainParams::RPROP</strong> The RPROP algorithm.</li>
+</ul>
+</li>
+<li><strong>param1</strong> &#8211; Parameter of the training method. It is <tt class="docutils literal"><span class="pre">rp_dw0</span></tt> for <tt class="docutils literal"><span class="pre">RPROP</span></tt> and <tt class="docutils literal"><span class="pre">bp_dw_scale</span></tt> for <tt class="docutils literal"><span class="pre">BACKPROP</span></tt>.</li>
+<li><strong>param2</strong> &#8211; Parameter of the training method. It is <tt class="docutils literal"><span class="pre">rp_dw_min</span></tt> for <tt class="docutils literal"><span class="pre">RPROP</span></tt> and <tt class="docutils literal"><span class="pre">bp_moment_scale</span></tt> for <tt class="docutils literal"><span class="pre">BACKPROP</span></tt>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>By default the RPROP algorithm is used:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">ANN_MLP_TrainParams</span><span class="o">::</span><span class="n">ANN_MLP_TrainParams</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">layerSizes</span> <span class="o">=</span> <span class="n">Mat</span><span class="p">();</span>
+    <span class="n">activateFun</span> <span class="o">=</span> <span class="n">SIGMOID_SYM</span><span class="p">;</span>
+    <span class="n">fparam1</span> <span class="o">=</span> <span class="n">fparam2</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">term_crit</span> <span class="o">=</span> <span class="n">TermCriteria</span><span class="p">(</span> <span class="n">TermCriteria</span><span class="o">::</span><span class="n">MAX_ITER</span> <span class="o">+</span> <span class="n">TermCriteria</span><span class="o">::</span><span class="n">EPS</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mf">0.01</span> <span class="p">);</span>
+    <span class="n">train_method</span> <span class="o">=</span> <span class="n">RPROP</span><span class="p">;</span>
+    <span class="n">bpDWScale</span> <span class="o">=</span> <span class="n">bpMomentScale</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">;</span>
+    <span class="n">rpDW0</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">;</span> <span class="n">rpDWPlus</span> <span class="o">=</span> <span class="mf">1.2</span><span class="p">;</span> <span class="n">rpDWMinus</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">;</span>
+    <span class="n">rpDWMin</span> <span class="o">=</span> <span class="n">FLT_EPSILON</span><span class="p">;</span> <span class="n">rpDWMax</span> <span class="o">=</span> <span class="mf">50.</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ann-mlp">
+<h2>ANN_MLP<a class="headerlink" href="#ann-mlp" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ANN_MLP : public StatModel">
+<em class="property">class </em><tt class="descname">ANN_MLP</tt> : <em class="property">public</em> <tt class="descname">StatModel</tt><a class="headerlink" href="#ANN_MLP : public StatModel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>MLP model.</p>
+<p>Unlike many other models in ML that are constructed and trained at once, in the MLP model these steps are separated. First, a network with the specified topology is created using the non-default constructor or the method <a class="reference internal" href="#Ptr&lt;ANN_MLP&gt; ANN_MLP::create(const Params&amp; params)" title="Ptr&lt;ANN_MLP&gt; ANN_MLP::create(const Params&amp; params)"><tt class="xref ocv ocv-func docutils literal"><span class="pre">ANN_MLP::create()</span></tt></a>. All the weights are set to zeros. Then, the network is trained using a set of input and output vectors. The training procedure can be repeated more than once, that is, the weights can be adjusted based on the new training data.</p>
+</div>
+<div class="section" id="ann-mlp-create">
+<h2>ANN_MLP::create<a class="headerlink" href="#ann-mlp-create" title="Permalink to this headline">¶</a></h2>
+<p>Creates empty model</p>
+<dl class="function">
+<dt id="Ptr&lt;ANN_MLP&gt; ANN_MLP::create(const Params&amp; params)">
+<strong>C++:</strong><tt class="descname"> </tt>Ptr&lt;ANN_MLP&gt; <tt class="descclassname">ANN_MLP::</tt><tt class="descname">create</tt><big>(</big>const Params&amp; <strong>params</strong>=Params()<big>)</big><a class="headerlink" href="#Ptr<ANN_MLP> ANN_MLP::create(const Params& params)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Use <tt class="docutils literal"><span class="pre">StatModel::train</span></tt> to train the model, <tt class="docutils literal"><span class="pre">StatModel::train&lt;ANN_MLP&gt;(traindata,</span> <span class="pre">params)</span></tt> to create and train the model, <tt class="docutils literal"><span class="pre">StatModel::load&lt;ANN_MLP&gt;(filename)</span></tt> to load the pre-trained model. Note that the train method has optional flags, and the following flags are handled by <tt class="docutils literal"><span class="pre">ANN_MLP</span></tt>:</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>UPDATE_WEIGHTS</strong> Algorithm updates the network weights, rather than computes them from scratch. In the latter case the weights are initialized using the Nguyen-Widrow algorithm.</li>
+<li><strong>NO_INPUT_SCALE</strong> Algorithm does not normalize the input vectors. If this flag is not set, the training algorithm normalizes each input feature independently, shifting its mean value to 0 and making the standard deviation equal to 1. If the network is assumed to be updated frequently, the new training data could be much different from original one. In this case, you should take care of proper normalization.</li>
+<li><strong>NO_OUTPUT_SCALE</strong> Algorithm does not normalize the output vectors. If the flag is not set, the training algorithm normalizes each output feature independently, by transforming it to the certain range depending on the used activation function.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="ann-mlp-setparams">
+<h2>ANN_MLP::setParams<a class="headerlink" href="#ann-mlp-setparams" title="Permalink to this headline">¶</a></h2>
+<p>Sets the new network parameters</p>
+<dl class="function">
+<dt id="void ANN_MLP::setParams(const Params&amp; params)">
+<strong>C++:</strong><tt class="descname"> </tt>void <tt class="descclassname">ANN_MLP::</tt><tt class="descname">setParams</tt><big>(</big>const Params&amp; <strong>params</strong><big>)</big><a class="headerlink" href="#void ANN_MLP::setParams(const Params& params)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>params</strong> &#8211; The new parameters</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The existing network, if any, will be destroyed and new empty one will be created. It should be re-trained after that.</p>
+</div>
+<div class="section" id="ann-mlp-getparams">
+<h2>ANN_MLP::getParams<a class="headerlink" href="#ann-mlp-getparams" title="Permalink to this headline">¶</a></h2>
+<p>Retrieves the current network parameters</p>
+<dl class="function">
+<dt id="Params ANN_MLP::getParams() const">
+<strong>C++:</strong><tt class="descname"> </tt>Params <tt class="descclassname">ANN_MLP::</tt><tt class="descname">getParams</tt><big>(</big><big>)</big><tt class="descclassname"> const</tt><a class="headerlink" href="#Params ANN_MLP::getParams() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="logistic_regression.html" title="Logistic Regression"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="expectation_maximization.html" title="Expectation Maximization"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 3.0.0-beta documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" >ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on May 16, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      <a href="../../../_sources/modules/ml/doc/neural_networks.txt" rel="nofollow">Show this page source.</a>
+    </div>
+  </body>
+</html>
